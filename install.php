@@ -1,6 +1,7 @@
 <?php
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
 if ($_GET['install_lang'] == '' && !isset($_POST['submit'])) {
     header('Location:install.php?install_lang=spanish');
 }
@@ -18,8 +19,8 @@ if (!function_exists('date_default_timezone_set')) {
 
 define('ROOT_PATH', './');
 
-function addslashes_array($array)
-{
+function addslashes_array($array){
+	
     foreach ($array as $key => $val) {
         $array[$key] = (is_array($val)) ? addslashes_array($val) : addslashes($val);
     }
@@ -84,12 +85,12 @@ if (file_exists('config.php')) {
     header('Location:install.php');
 } else {
     if (!isset($HTTP_GET_VARS)) {
-        $HTTP_GET_VARS = &$_GET;
-        $HTTP_POST_VARS = &$_POST;
-        $HTTP_COOKIE_VARS = &$_COOKIE;
-        $HTTP_POST_FILES = &$_FILES;
-        $HTTP_SERVER_VARS = &$_SERVER;
-        $HTTP_ENV_VARS = &$_ENV;
+        $HTTP_GET_VARS = $_GET;
+        $HTTP_POST_VARS = $_POST;
+        $HTTP_COOKIE_VARS = $_COOKIE;
+        $HTTP_POST_FILES = $_FILES;
+        $HTTP_SERVER_VARS = $_SERVER;
+        $HTTP_ENV_VARS = $_ENV;
     }
 
     if (get_magic_quotes_gpc() == 0) {
@@ -180,6 +181,12 @@ if (file_exists('config.php')) {
   <link rel="stylesheet" href="admin/cpstyle.css">
   <link rel="icon" type="image/ico" href="img/favicon_2.ico">
   <title>4images Installer</title>
+  <style>
+  *{
+	  text-align:center;
+	  margin:auto;
+  }
+  </style>
 </head>
 <body>
 	<nav>
@@ -225,6 +232,8 @@ if (file_exists('config.php')) {
         $dwes->query('CREATE DATABASE '.$_POST['db_name']);
         $dwes->query('DROP DATABASE usuarios');
         $dwes->query('CREATE DATABASE usuarios');
+		$dwes->close();
+		$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'usuarios');
         $dwes->query('CREATE TABLE usuarios (
 	id int(11) AUTO_INCREMENT PRIMARY KEY,
 	Nombre varchar(50) NOT NULL UNIQUE,
@@ -234,7 +243,8 @@ if (file_exists('config.php')) {
 	
 	$dwes->query('DROP DATABASE '.$_POST['db_name'].'_idiomas');
     $dwes->query('CREATE DATABASE '.$_POST['db_name'].'_idiomas');
-	
+	$dwes->close();
+	$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name'].'_idiomas');
 	$nombre='data/database/default/idiomas.sql';
 	
 	if(file_exists($nombre)){
@@ -288,8 +298,6 @@ if (file_exists('config.php')) {
 		
 		     $current_time = time();
 			  $admin_pass_hashed = salted_hash($admin_password);
-			  
-			 	  
 			     
     }
 
@@ -368,7 +376,10 @@ if (file_exists('config.php')) {
 		  'UPDATE '.$table_prefix."users
               SET user_name = '$admin_user', user_password = '".$admin_pass_hashed."', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
               WHERE user_name = 'admin'");
-
+$dwes->query(
+		  'UPDATE '.$table_prefix."users
+              SET user_name = '$admin_user', user_password = '".$admin_pass_hashed."', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
+              WHERE user_name = 'admin'");
 	   $dwes->close();
 	           header('Location:index.php');
 

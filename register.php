@@ -22,7 +22,7 @@ if (isset($_GET['activationkey'])) {
     $_GET['activationkey'] = eliminar_espacios($_GET['activationkey']);
 
     if (isset($_GET['action']) && $_GET['action'] == 'activate' && $_GET['activationkey'] != '') {
-        mysqli_query($conexion, 'UPDATE '.$table_prefix."users SET user_level=2 WHERE user_activationkey='".$_GET['activationkey']."'");
+        mysqli_query($GLOBALS['conexion'], 'UPDATE '.$table_prefix."users SET user_level=2 WHERE user_activationkey='".$_GET['activationkey']."'");
 		mensaje(ver_dato('activacion_exitosa',$GLOBALS['idioma']));
 		print '<script>location.href="index.php";</script>';
 		
@@ -39,10 +39,10 @@ if (isset($_POST['submit'])) {
 		$SESSION['error'] = true;
     }
 	
-			  $consulta = mysqli_query($conexion, 'SELECT user_id FROM '.$table_prefix."users WHERE user_name='".$_POST['user_name']."'"); 
-			  $comprobacion1=mysqli_affected_rows($conexion);
-			  $consulta = mysqli_query($conexion, 'SELECT user_id FROM '.$table_prefix."users WHERE user_email='".$_POST['email']."'"); 
-			  $comprobacion2=mysqli_affected_rows($conexion);
+			  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$table_prefix."users WHERE user_name='".$_POST['user_name']."'"); 
+			  $comprobacion1=mysqli_affected_rows($GLOBALS['conexion']);
+			  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$table_prefix."users WHERE user_email='".$_POST['email']."'"); 
+			  $comprobacion2=mysqli_affected_rows($GLOBALS['conexion']);
 			  
 if($comprobacion1==0 && $comprobacion2==0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password']) && !$SESSION['error']){
 	  include ('includes/functions.php');
@@ -56,18 +56,18 @@ $mensaje=str_replace("url",'http://comandpromt.dscloud.biz/hoopfetish/register.p
       
 	 $user_password_hashed = salted_hash($_POST['user_password']);
 
-  print 'INSERT INTO '.$table_prefix.'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,permitir_mensajes,user_icq)
-		VALUES(1,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,0)';
+        mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$table_prefix.'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,permitir_mensajes)
+		VALUES(1,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,1,0)');
 
-      
-
-        mysqli_query($conexion, 'INSERT INTO '.$table_prefix.'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,permitir_mensajes,user_icq)
-		VALUES(1,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,0)');
-
-        enviar($_POST['email'], $site_name,$mensaje, '', $admin_email, 'gmail');
-
+if(mysqli_affected_rows($GLOBALS['conexion'])>0){
+	
+	  enviar($_POST['email'], $site_name,$mensaje, '', $admin_email, 'gmail');
         echo '<h1>Gracias por registrarse</h1>
 <h2>Recibira un correo para activar su cuenta</h2>';
+}
+ else{
+	print '<h1>Error</h1>'; 
+ }     
 $terminado=true;
 }
 

@@ -1,19 +1,17 @@
 <?php
 
-
-
+include_once('/../config.php');
 
 function ver_dato($accion,$idioma){
 
-	mysqli_query($GLOBALS['conexion'],'use '.$GLOBALS['table_prefix'].'idiomas');
+	mysqli_query($GLOBALS['conexion'],'use '.$GLOBALS['db_name'].'_idiomas');
 	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
 
 	$fila = mysqli_fetch_row($consulta);
 	return $fila[0];
 }
 
-function menu_lateral()
-{
+function menu_lateral(){
     echo '<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="padding-left:70px;padding-right:20px;width:220px;overflow-x: hidden;" id="mySidebar"><br>
   <div  class="w3-container">
     <a  href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
@@ -121,7 +119,7 @@ function menu_lateral()
         $vars = get_defined_vars();
 
         $administrators = array();
-        $consulta = mysqli_query($conexion, 'SELECT user_name FROM '.$table_prefix.'_users WHERE user_level=9');
+        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_name FROM '.$GLOBALS['table_prefix'].'_users WHERE user_level=9');
         while ($administradores = mysqli_fetch_array($consulta)) {
             $administrators[] = $administradores[0];
         }
@@ -138,8 +136,7 @@ function menu_lateral()
 </nav>';
 }
 
-function menu_categorias()
-{
+function menu_categorias(){
     echo '
 <div id="navega"  >
 <div id="menu">
@@ -156,8 +153,7 @@ function menu_categorias()
  ';
 }
 
-function salted_hash($value, $salt = null, $length = 9, $hash_algo = 'md5')
-{
+function salted_hash($value, $salt = null, $length = 9, $hash_algo = 'md5'){
     if ($salt === null) {
         $salt = random_string($length);
     }
@@ -173,8 +169,7 @@ function salted_hash($value, $salt = null, $length = 9, $hash_algo = 'md5')
     return $salt.':'.$hash;
 }
 
-function secure_compare($a, $b)
-{
+function secure_compare($a, $b){
     if (strlen($a) !== strlen($b)) {
         return false;
     }
@@ -186,8 +181,7 @@ function secure_compare($a, $b)
     return $result == 0;
 }
 
-function compare_passwords($plain, $hashed)
-{
+function compare_passwords($plain, $hashed){
     if (strpos($hashed, ':') === false) {
         return secure_compare(md5($plain), $hashed);
     }
@@ -195,8 +189,7 @@ function compare_passwords($plain, $hashed)
     return secure_compare(salted_hash($plain, $hashed), $hashed);
 }
 
-function random_string($length, $letters_only = false)
-{
+function random_string($length, $letters_only = false){
     $str = '';
 
     if (!$letters_only) {
@@ -221,13 +214,9 @@ function random_string($length, $letters_only = false)
     return $str;
 }
 
-function poner_menu()
-{
+function poner_menu(){
     echo '
 	<div style="padding-left:60%;float:right;" >
-
-
-
 
 				<div  class="column">
 					<div id="dl-menu" class="dl-menuwrapper">
@@ -332,28 +321,25 @@ function poner_menu()
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div>';
 
-	';
-
-    include 'config.php';
     $id_categorias = array();
-    $consulta = mysqli_query($conexion, 'SELECT DISTINCT(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id
-IN(SELECT  distinct(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id>0)
+    $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id
+IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
     while ($recuento = mysqli_fetch_array($consulta)) {
         $id_categorias[] = $recuento[0];
     }
 
     for ($x = 0; $x < count($id_categorias); ++$x) {
-        $consulta = mysqli_query($conexion, 'SELECT cat_name FROM '.$table_prefix.'categories WHERE cat_id='.$id_categorias[$x]);
+        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
         $nombre = mysqli_fetch_array($consulta);
         echo '<li style="color:#1842EC;padding-left:30px;margin-top:-20px;">
 			<a style="font-size:30px;" href="#resume"><img alt="'.$nombre[0].'" style="width:100px;height:100px;" src="img/Categories/'.$nombre[0].'.png"/>
 			</a>
 			<br/><br/>
 			<ul style="width:10em;" class="menu">';
-        $consulta = mysqli_query($conexion, 'SELECT cat_id,cat_name FROM '.$table_prefix.'categories WHERE cat_parent_id='.$id_categorias[$x]);
+        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
         while ($subcategorias = mysqli_fetch_array($consulta)) {
             echo '<li style="height:10em;" ><a href="categories.php?cat_id='.$subcategorias[0].'">
 				<img alt="'.$subcategorias[1].'" src="img/Categories/Subcategories/'.$subcategorias[1].'.png" style="width:100px;height:100px;"/></a></li>';
@@ -364,18 +350,18 @@ IN(SELECT  distinct(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_pa
     }
 }
 
-function imagen_aleatoria()
-{
-    include 'config.php';
+function imagen_aleatoria(){
+    
     $ids = array();
 
-    $consulta = mysqli_query($conexion,
-        'SELECT image_id FROM '.$table_prefix.'images WHERE image_active=1 ORDER BY 1');
-    if (mysqli_affected_rows($conexion) > 0) {
+    $consulta = mysqli_query($GLOBALS['conexion'],
+        'SELECT image_id FROM '.$GLOBALS['table_prefix'].'images WHERE image_active=1 ORDER BY 1');
+
+	if (mysqli_affected_rows($GLOBALS['conexion']) > 0) {
         while ($recuento = mysqli_fetch_array($consulta)) {
             $ids[] = $recuento[0];
         }
-        $consulta = mysqli_query($conexion, 'SELECT cat_id,image_thumb_file,image_id,image_name FROM '.$table_prefix.'images WHERE image_id='.$ids[array_rand($ids)]);
+        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_thumb_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$ids[array_rand($ids)]);
         $imagen_aleatoria = mysqli_fetch_array($consulta);
 
         return $imagen_aleatoria[0].'-'.$imagen_aleatoria[1].'*'.$imagen_aleatoria[2].'#'.$imagen_aleatoria[3];
@@ -384,8 +370,7 @@ function imagen_aleatoria()
     }
 }
 
-function enviar($para, $asunto, $mensaje, $archivo, $remitente, $tipo)
-{
+function enviar($para, $asunto, $mensaje, $archivo, $remitente, $tipo){
     switch ($tipo) {
         case 'gmail':
             $seguridad = 'ssl';
@@ -419,13 +404,11 @@ function enviar($para, $asunto, $mensaje, $archivo, $remitente, $tipo)
     $mail->Subject = $asunto;
     $mail->Body = $mensaje;
 
-    //$mail->AddAttachment($archivo['tmp_name'], $archivo['name']);
     $mail->MsgHTML($mensaje);
     $mail->From = $mail->Username;
 }
 
-function consecutivos(array $array)
-{
+function consecutivos(array $array){
     if (count($array) > 0 && $array[0] != null && $array[0] == 1) {
         asort($array);
         for ($x = 0; $x < count($array); ++$x) {
@@ -447,8 +430,7 @@ function consecutivos(array $array)
     return $numero;
 }
 
-function comprobar_si_es_valido($cadena, array $lista_negra)
-{
+function comprobar_si_es_valido($cadena, array $lista_negra){
     $valido = true;
 
     for ($x = 0; $x < count($lista_negra); ++$x) {
@@ -467,25 +449,20 @@ function comprobar_si_es_valido($cadena, array $lista_negra)
     return $valido;
 }
 
-function conectarBd()
-{
+function conectarBd(){
     include_once '../config.php';
 
     return mysqli_connect($db_host, $db_user, $db_password, $db_name) or die('No se pudo conectar a la base de datos');
 }
 
-function eliminar_espacios($cadena)
-{
+function eliminar_espacios($cadena){
     $cadena = trim($cadena);
     $cadena = str_replace('  ', ' ', $cadena);
     $cadena = strip_tags($cadena);
-    $cadena = strtolower($cadena);
-
     return $cadena;
 }
 
-function png_a_jpg($imagen)
-{
+function png_a_jpg($imagen){
     if (substr($imagen, -3) == 'png' && file_exists($imagen)) {
         $jpg = substr($imagen, 0, -3).'jpg';
         $image = imagecreatefrompng($imagen);
@@ -494,8 +471,7 @@ function png_a_jpg($imagen)
     }
 }
 
-function redimensionarJPG($max_ancho, $max_alto, $ruta)
-{
+function redimensionarJPG($max_ancho, $max_alto, $ruta){
     if ($max_ancho == 100 && $max_alto == 125) {
         copy($ruta, substr($ruta, 0, -4).'_Thumb'.substr($ruta, -4));
         $ruta = substr($ruta, 0, -4).'_Thumb'.substr($ruta, -4);
@@ -522,3 +498,4 @@ function redimensionarJPG($max_ancho, $max_alto, $ruta)
     imagedestroy($img_original);
     imagejpeg($tmp, $ruta, 100);
 }
+?>
