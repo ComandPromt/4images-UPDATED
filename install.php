@@ -19,8 +19,9 @@ if (!function_exists('date_default_timezone_set')) {
 
 define('ROOT_PATH', './');
 
-function addslashes_array($array){
-	
+function addslashes_array($array)
+{
+
     foreach ($array as $key => $val) {
         $array[$key] = (is_array($val)) ? addslashes_array($val) : addslashes($val);
     }
@@ -99,8 +100,8 @@ if (file_exists('config.php')) {
         $HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
     }
 
-    if (@file_exists(ROOT_PATH.'config.php')) {
-        include ROOT_PATH.'config.php';
+    if (@file_exists(ROOT_PATH . 'config.php')) {
+        include ROOT_PATH . 'config.php';
     } else {
         date_default_timezone_set('CET');
     }
@@ -122,10 +123,10 @@ if (file_exists('config.php')) {
 
     $lang_select = '';
     $folderlist = array();
-    $handle = opendir(ROOT_PATH.'lang');
+    $handle = opendir(ROOT_PATH . 'lang');
 
     while ($folder = @readdir($handle)) {
-        if (@is_dir(ROOT_PATH."lang/$folder") && $folder != '.' && $folder != '..') {
+        if (@is_dir(ROOT_PATH . "lang/$folder") && $folder != '.' && $folder != '..') {
             $folderlist[] = $folder;
         }
     }
@@ -133,7 +134,7 @@ if (file_exists('config.php')) {
     sort($folderlist);
 
     for ($i = 0; $i < sizeof($folderlist); ++$i) {
-        $lang_select .= '<a href="install.php?install_lang='.$folderlist[$i].'"><img alt="'.$folderlist[$i].'" style="height:100px;width:100px;" src="img/Install/'.$folderlist[$i].'.png"/></a>';
+        $lang_select .= '<a href="install.php?install_lang=' . $folderlist[$i] . '"><img alt="' . $folderlist[$i] . '" style="height:100px;width:100px;" src="img/Install/' . $folderlist[$i] . '.png"/></a>';
     }
 
     closedir($handle);
@@ -147,7 +148,7 @@ if (file_exists('config.php')) {
     }
 
     $lang = array();
-    include ROOT_PATH.'lang/'.$install_lang.'/install.php';
+    include ROOT_PATH . 'lang/' . $install_lang . '/install.php';
 
     $db_servertype = (isset($HTTP_POST_VARS['db_servertype'])) ? trim($HTTP_POST_VARS['db_servertype']) : 'mysqli';
     $db_host = (isset($HTTP_POST_VARS['db_host'])) ? trim($HTTP_POST_VARS['db_host']) : '';
@@ -161,7 +162,7 @@ if (file_exists('config.php')) {
     $selected_timezone = (isset($HTTP_POST_VARS['timezone_select'])) ? trim($HTTP_POST_VARS['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
 
-    include ROOT_PATH.'includes/constants.php';
+    include ROOT_PATH . 'includes/constants.php';
 
     if ($action == 'downloadconfig') {
         header('Content-Type: text/x-delimtext; name="config.php"');
@@ -200,7 +201,7 @@ if (file_exists('config.php')) {
 		</ul>
 	</nav>
 <div>
-	<form action="'.$_SERVER['PHP_SELF'].'" name="form" method="post">
+	<form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
 	<br/>';
 
     if (isset($_POST['submit'])) {
@@ -228,38 +229,31 @@ if (file_exists('config.php')) {
 
         $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
         $dwes->set_charset('utf8');
-        $dwes->query('DROP DATABASE '.$_POST['db_name']);
-        $dwes->query('CREATE DATABASE '.$_POST['db_name']);
-        $dwes->query('DROP DATABASE usuarios');
-        $dwes->query('CREATE DATABASE usuarios');
-		$dwes->close();
-		$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'usuarios');
-        $dwes->query('CREATE TABLE usuarios (
+        $dwes->query('DROP DATABASE ' . $_POST['db_name']);
+        $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
+
+        $dwes->query('CREATE TABLE notas (
 	id int(11) AUTO_INCREMENT PRIMARY KEY,
 	Nombre varchar(50) NOT NULL UNIQUE,
 	tipo varchar(50) NOT NULL,
 	descripcion varchar(255) NOT NULL
 	)');
-	
-	$dwes->query('DROP DATABASE '.$_POST['db_name'].'_idiomas');
-    $dwes->query('CREATE DATABASE '.$_POST['db_name'].'_idiomas');
-	$dwes->close();
-	$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name'].'_idiomas');
-	$nombre='data/database/default/idiomas.sql';
-	
-	if(file_exists($nombre)){
-		$texto = file_get_contents($nombre);
-		$sentencia = explode(";", $texto);
-				
-		for ($i = 0; $i < (count($sentencia) - 1); $i++) {
-			$sentencia[$i] .= ";";
-		$dwes->query($sentencia[$i]);
-			
-			}
-		
-	}
-	
-       $dwes->close();
+
+        $nombre = 'data/database/default/idiomas.sql';
+
+        if (file_exists($nombre)) {
+            $texto = file_get_contents($nombre);
+            $sentencia = explode(";", $texto);
+
+            for ($i = 0; $i < (count($sentencia) - 1); $i++) {
+                $sentencia[$i] .= ";";
+                $dwes->query($sentencia[$i]);
+
+            }
+
+        }
+
+        $dwes->close();
 
         if (file_exists('config.php')) {
             unlink('config.php');
@@ -269,36 +263,36 @@ if (file_exists('config.php')) {
 
         $php = '<?php
 	session_start();
-	date_default_timezone_set("'.$selected_timezone.'");
-	$site_name = "'.$_POST['site'].'";
-	$db_servertype = "'.$_POST['db_servertype'].'";
-	$db_host = "'.$_POST['db_host'].'";
-	$db_name = "'.$_POST['db_name'].'";
-	$db_user = "'.$_POST['db_user'].'";
-	$db_password = "'.$_POST['db_password'].'";
-	$table_prefix = "'.$_POST['table_prefix'].'";
-	$admin_email = "'.$_POST['admin_email'].'";
-	$admin_emailpass = "'.$_POST['admin_emailpass'].'";
-	$facebook="'.$_POST['facebook'].'";
-	$instagram="'.$_POST['instagram'].'";
-	$twitter="'.$_POST['twitter'].'";
-	$youtube="'.$_POST['youtube'].'";
-	$github="'.$_POST['github'].'";
-	$debianart="'.$_POST['debianart'].'";
-	$slideshare="'.$_POST['slideshare'].'";
+	date_default_timezone_set("' . $selected_timezone . '");
+	$site_name = "' . $_POST['site'] . '";
+	$db_servertype = "' . $_POST['db_servertype'] . '";
+	$db_host = "' . $_POST['db_host'] . '";
+	$db_name = "' . $_POST['db_name'] . '";
+	$db_user = "' . $_POST['db_user'] . '";
+	$db_password = "' . $_POST['db_password'] . '";
+	$table_prefix = "' . $_POST['table_prefix'] . '";
+	$admin_email = "' . $_POST['admin_email'] . '";
+	$admin_emailpass = "' . $_POST['admin_emailpass'] . '";
+	$facebook="' . $_POST['facebook'] . '";
+	$instagram="' . $_POST['instagram'] . '";
+	$twitter="' . $_POST['twitter'] . '";
+	$youtube="' . $_POST['youtube'] . '";
+	$github="' . $_POST['github'] . '";
+	$debianart="' . $_POST['debianart'] . '";
+	$slideshare="' . $_POST['slideshare'] . '";
 	define("4IMAGES_ACTIVE", 1);
 	$conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
 	$select_db = mysqli_select_db($conexion, $db_name);
-	$idioma="'.$_POST['idioma'].'";
+	$idioma="' . $_POST['idioma'] . '";
 	?>';
 
         fwrite($miArchivo, $php);
         fclose($miArchivo);
         chmod('config.php', 0777);
-		
-		     $current_time = time();
-			  $admin_pass_hashed = salted_hash($admin_password);
-			     
+
+        $current_time = time();
+        $admin_pass_hashed = salted_hash($admin_password);
+
     }
 
     if ($action == 'startinstall') {
@@ -337,20 +331,20 @@ if (file_exists('config.php')) {
         } else {
             $error_log = array();
             $error_msg = '';
-            include ROOT_PATH.'includes/db_'.strtolower($db_servertype).'.php';
+            include ROOT_PATH . 'includes/db_' . strtolower($db_servertype) . '.php';
             $site_db = new Db($db_host, $db_user, $db_password, $db_name);
 
             if (!$site_db->connection) {
                 $error_log[] = 'No connection to database!';
             }
 
-            include ROOT_PATH.'includes/db_utils.php';
+            include ROOT_PATH . 'includes/db_utils.php';
 
-            $db_file = ROOT_PATH.DATABASE_DIR.'/default/'.strtolower($db_servertype).'_default.sql';
+            $db_file = ROOT_PATH . DATABASE_DIR . '/default/' . strtolower($db_servertype) . '_default.sql';
             $cont = @fread(@fopen($db_file, 'r'), @filesize($db_file));
 
             if (empty($cont)) {
-                $error_log[] = 'Could not load: '.$db_file;
+                $error_log[] = 'Could not load: ' . $db_file;
             }
 
             if (empty($error_log)) {
@@ -365,23 +359,21 @@ if (file_exists('config.php')) {
                     }
                 }
 
-          
-
             }
 
             if (empty($error_log)) {
                 $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
-        $dwes->set_charset('utf8');
-			  $dwes->query(
-		  'UPDATE '.$table_prefix."users
-              SET user_name = '$admin_user', user_password = '".$admin_pass_hashed."', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
+                $dwes->set_charset('utf8');
+                $dwes->query(
+                    'UPDATE ' . $table_prefix . "users
+              SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
               WHERE user_name = 'admin'");
-$dwes->query(
-		  'UPDATE '.$table_prefix."users
-              SET user_name = '$admin_user', user_password = '".$admin_pass_hashed."', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
+                $dwes->query(
+                    'UPDATE ' . $table_prefix . "users
+              SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
               WHERE user_name = 'admin'");
-	   $dwes->close();
-	           header('Location:index.php');
+                $dwes->close();
+                header('Location:index.php');
 
             } else {
                 $msg = $lang['database_error'];
@@ -391,10 +383,10 @@ $dwes->query(
                 }
                 $error_msg .= '</ol>';
             }
-            echo '<p>'.$msg.$error_msg.'</p>';
+            echo '<p>' . $msg . $error_msg . '</p>';
 
             if (isset($cant_write_config)) {
-                echo '<input title="enviar" type="submit" value="'.$lang['config_download'].'" class="button" name="submit">
+                echo '<input title="enviar" type="submit" value="' . $lang['config_download'] . '" class="button" name="submit">
 		   <hr/>';
             }
         }
@@ -403,67 +395,67 @@ $dwes->query(
     if ($action == 'intro') {
         $db_servertype_select = '<select title="db_servertype" style="font-weight:bold;width:15%;" name="db_servertype">';
         $db_types = array();
-        $handle = opendir(ROOT_PATH.'includes');
+        $handle = opendir(ROOT_PATH . 'includes');
 
         while ($file = @readdir($handle)) {
             if (preg_match("/db_(.*)\.php/", $file, $regs)) {
-                if (file_exists(ROOT_PATH.'data/database/default/'.$regs[1].'_default.sql') && function_exists($regs[1].'_connect')) {
+                if (file_exists(ROOT_PATH . 'data/database/default/' . $regs[1] . '_default.sql') && function_exists($regs[1] . '_connect')) {
                     $db_types[] = $regs[1];
                 }
             }
         }
 
         foreach ($db_types as $db_type) {
-            $db_servertype_select .= '<option value="'.$db_type.'"'.(($db_servertype == $db_type) ? ' selected="selected"' : '').'>'.$db_type.'</option>';
+            $db_servertype_select .= '<option value="' . $db_type . '"' . (($db_servertype == $db_type) ? ' selected="selected"' : '') . '>' . $db_type . '</option>';
         }
 
         $db_servertype_select .= '</select>';
 
         if (!empty($error)) {
-            $lang['start_install_desc'] = $lang['start_install_desc'].sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
+            $lang['start_install_desc'] = $lang['start_install_desc'] . sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
         }
 
-        echo $lang_select.'<h2 id="home">'.$lang['db_servertype'].'</h2>
+        echo $lang_select . '<h2 id="home">' . $lang['db_servertype'] . '</h2>
 
-              <p>'.$db_servertype_select.'</p>
+              <p>' . $db_servertype_select . '</p>
 
-              <h2>'.$lang['db_host'].'</h2>
+              <h2>' . $lang['db_host'] . '</h2>
 
               <p>
                 <input title="db_host" type="text" name="db_host" value="localhost" required/>
               </p>
 
-              <h2>'.$lang['db_name'].'</h2>
+              <h2>' . $lang['db_name'] . '</h2>
 
               <p>
                 <input title="db_name" type="text"  name="db_name" required/>
               </p>
 
-              <h2>'.$lang['db_user'].'</h2>
+              <h2>' . $lang['db_user'] . '</h2>
 
               <p>
                 <input title="db_user"  type="text"  name="db_user" required/>
               </p>
 
-              <h2>'.$lang['db_password'].'</h2>
+              <h2>' . $lang['db_password'] . '</h2>
 
               <p>
                 <input title="db_password" type="password"  name="db_password" required/>
               </p>
 
-              <h2>'.$lang['table_prefix'].'</h2>
+              <h2>' . $lang['table_prefix'] . '</h2>
 			  <p>
                 <input title="table_prefix" type="text" value="4images_" name="table_prefix" required/>
               </p>
 			  <br/>
            <hr/>
 		   <br/>
-		   <h2 id="site">'.$lang['site'].' <input title="site" type="text"  name="site"/></h2>
+		   <h2 id="site">' . $lang['site'] . ' <input title="site" type="text"  name="site"/></h2>
 
 			  <br/>
 			  <hr/>
 
-             <h2 id="zonahoraria">'.$lang['timezone_select'].'</h2>
+             <h2 id="zonahoraria">' . $lang['timezone_select'] . '</h2>
 
               <p>
                 <select title="timezone_select" name="timezone_select">
@@ -513,19 +505,19 @@ $dwes->query(
 				<br/>
 				<hr/>
 
-				<h2 id="admin">'.$lang['admin_user'].'</h2>
+				<h2 id="admin">' . $lang['admin_user'] . '</h2>
 
 				<p><img alt="admin" class="imagen" src="img/director.png"/>
 					<input title="admin_user" type="text"  placeholder="admin" name="admin_user" required/>
 				</p>
 				<br/>
-				<h2>'.$lang['admin_password'].'</h2>
+				<h2>' . $lang['admin_password'] . '</h2>
 
 				<p><img alt="pass admin" class="imagen" src="img/user_pass.png"/>
 					<input title="admin_password" type="password" placeholder="password" name="admin_password" required/>
 				</p>
 
-				<h2>'.$lang['admin_password2'].'</h2>
+				<h2>' . $lang['admin_password2'] . '</h2>
 
 				<p>
 					<input title="admin_password2" type="password"  name="admin_password2" required/>
@@ -534,7 +526,7 @@ $dwes->query(
         <br/>
 
 				<hr/>
-              <h2 id="email">'.$lang['des_email'].'
+              <h2 id="email">' . $lang['des_email'] . '
         </h2>
 
 					<img alt="email admin" class="install" src="img/emaill.png"/> <input title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
@@ -543,7 +535,7 @@ $dwes->query(
 				</p>
 				<br/>
 				<hr/>
-			  <p id="socials">'.$lang['nota'].'</p>
+			  <p id="socials">' . $lang['nota'] . '</p>
 
 				<p>
 					<img alt="facebook" class="install" src="img/Social/facebook.png"/>  <input title="facebook" type="text" placeholder="facebook" name="facebook">
@@ -578,8 +570,8 @@ $dwes->query(
 
         <br/>
 
-				<input name="idioma" value="'.$_GET['install_lang'].'" type="hidden"></input>
-        <input title="enviar" type="submit" value="'.$lang['start_install'].'" class="button" name="submit"/>
+				<input name="idioma" value="' . $_GET['install_lang'] . '" type="hidden"></input>
+        <input title="enviar" type="submit" value="' . $lang['start_install'] . '" class="button" name="submit"/>
 
 				<br/><br/></form>
 		</div>';

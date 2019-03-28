@@ -1,12 +1,5 @@
-# --------------------------------------------------------
-# 4images MySQL-Dump - DON'T EDIT THIS FILE!!!!!!!!!!!!!!!
-# --------------------------------------------------------
+DROP TABLE IF EXISTS 4images_categories;
 
-#
-# Table structure for table 4images_categories
-#
-
-#DROP TABLE IF EXISTS 4images_categories;
 CREATE TABLE 4images_categories (
   cat_id int(10) unsigned NOT NULL auto_increment,
   cat_name varchar(255) NOT NULL default '',
@@ -26,13 +19,10 @@ CREATE TABLE 4images_categories (
   PRIMARY KEY  (cat_id),
   KEY cat_parent_id (cat_parent_id),
   KEY cat_order (cat_order)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_comments
-#
+DROP TABLE IF EXISTS 4images_comments;
 
-#DROP TABLE IF EXISTS 4images_comments;
 CREATE TABLE 4images_comments (
   comment_id int(10) unsigned NOT NULL auto_increment,
   image_id int(10) unsigned NOT NULL default '0',
@@ -46,13 +36,10 @@ CREATE TABLE 4images_comments (
   KEY image_id (image_id),
   KEY user_id (user_id),
   KEY comment_date (comment_date)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_groupaccess
-#
+DROP TABLE IF EXISTS 4images_groupaccess;
 
-#DROP TABLE IF EXISTS 4images_groupaccess;
 CREATE TABLE 4images_groupaccess (
   group_id int(10) unsigned NOT NULL default '0',
   cat_id int(10) unsigned NOT NULL default '0',
@@ -67,13 +54,10 @@ CREATE TABLE 4images_groupaccess (
   auth_postcomment tinyint(1) NOT NULL default '0',
   KEY group_id (group_id),
   KEY cat_id (cat_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_groupmatch
-#
+DROP TABLE IF EXISTS 4images_groupmatch;
 
-#DROP TABLE IF EXISTS 4images_groupmatch;
 CREATE TABLE 4images_groupmatch (
   group_id int(10) unsigned NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
@@ -81,25 +65,19 @@ CREATE TABLE 4images_groupmatch (
   groupmatch_enddate int(11) unsigned NOT NULL default '0',
   KEY group_id (group_id),
   KEY user_id (user_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_groups
-#
+DROP TABLE IF EXISTS 4images_groups;
 
-#DROP TABLE IF EXISTS 4images_groups;
 CREATE TABLE 4images_groups (
   group_id int(10) unsigned NOT NULL auto_increment,
   group_name varchar(100) NOT NULL default '',
   group_type tinyint(2) NOT NULL default '1',
   PRIMARY KEY  (group_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_images
-#
+DROP TABLE IF EXISTS 4images_images;
 
-#DROP TABLE IF EXISTS 4images_images;
 CREATE TABLE 4images_images (
   image_id int(10) unsigned NOT NULL auto_increment,
   cat_id int(10) unsigned NOT NULL default '0',
@@ -123,13 +101,10 @@ CREATE TABLE 4images_images (
   KEY user_id (user_id),
   KEY image_date (image_date),
   KEY image_active (image_active)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_images_temp
-#
+DROP TABLE IF EXISTS 4images_images_temp;
 
-#DROP TABLE IF EXISTS 4images_images_temp;
 CREATE TABLE 4images_images_temp (
   image_id int(10) unsigned NOT NULL auto_increment,
   cat_id int(10) unsigned NOT NULL default '0',
@@ -144,13 +119,10 @@ CREATE TABLE 4images_images_temp (
   PRIMARY KEY  (image_id),
   KEY cat_id (cat_id),
   KEY user_id (user_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_lightboxes
-#
+DROP TABLE IF EXISTS 4images_lightboxes;
 
-#DROP TABLE IF EXISTS 4images_lightboxes;
 CREATE TABLE 4images_lightboxes (
   lightbox_id varchar(32) NOT NULL default '',
   user_id int(11) NOT NULL default '0',
@@ -158,13 +130,10 @@ CREATE TABLE 4images_lightboxes (
   lightbox_image_ids text,
   KEY lightbox_id (lightbox_id),
   KEY user_id (user_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_postcards
-#
+DROP TABLE IF EXISTS 4images_postcards;
 
-#DROP TABLE IF EXISTS 4images_postcards;
 CREATE TABLE 4images_postcards (
   postcard_id varchar(32) NOT NULL default '',
   image_id int(10) unsigned NOT NULL default '0',
@@ -180,13 +149,10 @@ CREATE TABLE 4images_postcards (
   postcard_headline varchar(255) NOT NULL default '',
   postcard_message text NOT NULL,
   PRIMARY KEY  (postcard_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_sessions
-#
+DROP TABLE IF EXISTS 4images_sessions;
 
-#DROP TABLE IF EXISTS 4images_sessions;
 CREATE TABLE 4images_sessions (
   session_id varchar(32) NOT NULL default '',
   session_user_id int(11) NOT NULL default '0',
@@ -196,34 +162,24 @@ CREATE TABLE 4images_sessions (
   PRIMARY KEY  (session_id),
   KEY session_user_id (session_user_id),
   KEY session_id_ip_user_id (session_id,session_ip,session_user_id)
-) ENGINE=HEAP;
-
-#
-# Table structure for table `4images_sessionvars`
-#
+) ;
 
 DROP TABLE IF EXISTS 4images_sessionvars;
+
 CREATE TABLE 4images_sessionvars (
   session_id varchar(32) NOT NULL default '',
   sessionvars_name varchar(30) NOT NULL default '',
   sessionvars_value text,
   KEY session_id (session_id)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_settings
-#
+DROP TABLE IF EXISTS 4images_settings;
 
-#DROP TABLE IF EXISTS 4images_settings;
 CREATE TABLE 4images_settings (
   setting_name varchar(255) NOT NULL default '',
   setting_value mediumtext NOT NULL,
   PRIMARY KEY  (setting_name)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table 4images_settings
-#
+) ;
 
 INSERT INTO 4images_settings VALUES ('site_name', '4images - Image Gallery Management System');
 INSERT INTO 4images_settings VALUES ('site_email', 'admin@yourdomain.com');
@@ -286,11 +242,8 @@ INSERT INTO 4images_settings VALUES ('session_timeout', '15');
 INSERT INTO 4images_settings VALUES ('display_whosonline', '1');
 INSERT INTO 4images_settings VALUES ('highlight_admin', '1');
 
-#
-# Table structure for table 4images_users
-#
+DROP TABLE IF EXISTS 4images_users;
 
-#DROP TABLE IF EXISTS 4images_users;
 CREATE TABLE 4images_users (
   user_id int(11) NOT NULL auto_increment,
   user_level int(11) NOT NULL default '1',
@@ -311,33 +264,22 @@ CREATE TABLE 4images_users (
   PRIMARY KEY  (user_id),
   KEY user_lastaction (user_lastaction),
   KEY user_name (user_name)
-) ENGINE=MyISAM;
-
-#
-# Dumping data for table 4images_users
-#
+) ;
 
 INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, '', 0, 0, '', '');
 INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 1, 0, 1016023608, '1e3457c0b2052a9633b886fd75ef91e0', 1016023608, '', 0, 0, '', '');
 
+DROP TABLE IF EXISTS 4images_wordlist;
 
-#
-# Table structure for table 4images_wordlist
-#
-
-#DROP TABLE IF EXISTS 4images_wordlist;
 CREATE TABLE 4images_wordlist (
   word_text varchar(50) NOT NULL default '',
   word_id int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (word_id),
   UNIQUE KEY word_text (word_text)
-) ENGINE=MyISAM;
+) ;
 
-#
-# Table structure for table 4images_wordmatch
-#
+DROP TABLE IF EXISTS 4images_wordmatch;
 
-#DROP TABLE IF EXISTS 4images_wordmatch;
 CREATE TABLE 4images_wordmatch (
   image_id int(10) unsigned NOT NULL default '0',
   word_id int(10) unsigned NOT NULL default '0',
@@ -345,4 +287,4 @@ CREATE TABLE 4images_wordmatch (
   desc_match tinyint(1) NOT NULL default '0',
   keys_match tinyint(1) NOT NULL default '0',
   UNIQUE KEY image_word_id (image_id,word_id)
-) ENGINE=MyISAM;
+) ;
