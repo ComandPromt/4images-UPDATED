@@ -228,35 +228,6 @@ if (file_exists('config.php')) {
             $selected_timezone = 'Europe/Madrid';
         }
 
-        $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
-        $dwes->set_charset('utf8');
-        $dwes->query('DROP DATABASE ' . $_POST['db_name']);
-        $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
-		$dwes->query('use ' . $_POST['db_name']);
-
-        $dwes->query('CREATE TABLE notas (
-	id int(11) AUTO_INCREMENT PRIMARY KEY,
-	Nombre varchar(50) NOT NULL UNIQUE,
-	tipo varchar(50) NOT NULL,
-	descripcion varchar(255) NOT NULL
-	)');
-
-        $nombre = 'data/database/default/idiomas.sql';
-
-        if (file_exists($nombre)) {
-            $texto = file_get_contents($nombre);
-            $sentencia = explode(";", $texto);
-
-            for ($i = 0; $i < (count($sentencia) - 1); $i++) {
-                $sentencia[$i] .= ";";
-                $dwes->query($sentencia[$i]);
-
-            }
-
-        }
-
-        $dwes->close();
-
         if (file_exists('config.php')) {
             unlink('config.php');
         }
@@ -291,6 +262,37 @@ if (file_exists('config.php')) {
         fwrite($miArchivo, $php);
         fclose($miArchivo);
         chmod('config.php', 0777);
+
+        $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
+        $dwes->set_charset('utf8');
+        $dwes->query('DROP DATABASE ' . $_POST['db_name']);
+        $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
+		$dwes->query('use ' . $_POST['db_name']);
+
+        $dwes->query('CREATE TABLE notas (
+	id int(11) AUTO_INCREMENT PRIMARY KEY,
+	Nombre varchar(50) NOT NULL UNIQUE,
+	tipo varchar(50) NOT NULL,
+	descripcion varchar(255) NOT NULL
+	)');
+
+        $nombre = 'data/database/default/idiomas.sql';
+
+        if (file_exists($nombre)) {
+            $texto = file_get_contents($nombre);
+            $sentencia = explode(";", $texto);
+
+            for ($i = 0; $i < (count($sentencia) - 1); $i++) {
+                $sentencia[$i] .= ";";
+                $dwes->query($sentencia[$i]);
+
+            }
+
+        }
+
+        $dwes->close();
+
+    
 
         $current_time = time();
         $admin_pass_hashed = salted_hash($admin_password);
