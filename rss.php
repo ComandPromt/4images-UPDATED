@@ -1,24 +1,4 @@
 <?php
-/**************************************************************************
- *                                                                        *
- *    4images - A Web Based Image Gallery Management System               *
- *    ----------------------------------------------------------------    *
- *                                                                        *
- *             File: rss.php                                              *
- *        Copyright: (C) 2002-2016 4homepages.de                          *
- *            Email: 4images@4homepages.de                                * 
- *              Web: http://www.4homepages.de                             * 
- *    Scriptversion: 1.8                                                  *
- *                                                                        *
- **************************************************************************
- *                                                                        *
- *    Dieses Script ist KEINE Freeware. Bitte lesen Sie die Lizenz-       *
- *    bedingungen (Lizenz.txt) für weitere Informationen.                 *
- *    ---------------------------------------------------------------     *
- *    This script is NOT freeware! Please read the Copyright Notice       *
- *    (Licence.txt) for further information.                              *
- *                                                                        *
- *************************************************************************/
 
 $main_template = 'rss';
 
@@ -158,7 +138,7 @@ switch ($action) {
     $sql = "SELECT i.image_id, i.cat_id, i.user_id, i.image_name, i.image_description, i.image_keywords, i.image_date, i.image_active, i.image_media_file, i.image_thumb_file, i.image_download_url, i.image_allow_comments, i.image_comments, i.image_downloads, i.image_votes, i.image_rating, i.image_hits, c.cat_name".get_user_table_field(", u.", "user_name").get_user_table_field(", u.", "user_email")."
             FROM (".IMAGES_TABLE." i,  ".CATEGORIES_TABLE." c)
             LEFT JOIN ".USERS_TABLE." u ON (".get_user_table_field("u.", "user_id")." = i.user_id)
-            WHERE i.image_id = $image_id AND c.cat_id = i.cat_id";
+            WHERE i.image_id = $image_id AND c.cat_id = i.cat_id ORDER BY i.image_id DESC";
     $image_row = $site_db->query_firstrow($sql);
 
     if (!isset($image_row['image_id'])) {
@@ -239,7 +219,7 @@ switch ($action) {
               $cat_sql
               AND c.cat_id = i.cat_id
               AND i.cat_id NOT IN (".get_auth_cat_sql("auth_viewcat", "NOTIN").")
-            ORDER BY i.image_date DESC, i.image_id DESC
+            ORDER BY i.image_id DESC
             LIMIT $num_items";
     $result = $site_db->query($sql);
 

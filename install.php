@@ -180,7 +180,7 @@ if (file_exists('config.php')) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="admin/cpstyle.css">
-  <link rel="icon" type="image/ico" href="img/favicon_2.ico">
+  <link rel="icon" type="image/ico" href="img/favicon.ico">
   <title>4images Installer</title>
   <style>
   *{
@@ -231,7 +231,7 @@ if (file_exists('config.php')) {
         $dwes->set_charset('utf8');
         $dwes->query('DROP DATABASE ' . $_POST['db_name']);
         $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
-
+		$dwes->query('use ' . $_POST['db_name']);
         $dwes->query('CREATE TABLE notas (
 	id int(11) AUTO_INCREMENT PRIMARY KEY,
 	Nombre varchar(50) NOT NULL UNIQUE,

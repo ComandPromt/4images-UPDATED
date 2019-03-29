@@ -172,8 +172,7 @@ a:hover {
 	.column {
 		width: 100%;
 		min-width: auto;
-		min-height: auto;
-		padding: 3em 2em; 
+			padding: 3em 2em; 
 	}
 
 	.column p {

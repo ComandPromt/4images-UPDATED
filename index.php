@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 $tablas = array();
 if (file_exists('config.php')) {
 
