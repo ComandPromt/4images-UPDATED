@@ -1,6 +1,20 @@
 <?php
 
-include_once ('config.php');
+function crear_carpetas(){
+	if(!file_exists('data/media')){
+			mkdir('data/media', 0777, true);
+		}
+	
+	if(!file_exists('data/thumbnails')){
+		mkdir('data/thumbnails', 0777, true);
+	}
+	if(!file_exists('data/tmp_media')){
+		mkdir('data/tmp_media', 0777, true);
+	}
+	if(!file_exists('data/tmp_thumbnails')){
+		mkdir('data/tmp_thumbnails', 0777, true);
+	}
+}
 
 function ver_dato($accion,$idioma){
 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");

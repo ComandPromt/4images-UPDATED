@@ -267,8 +267,8 @@ CREATE TABLE 4images_users (
   KEY user_name (user_name)
 ) ;
 
-INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, '', 0, 0, '', '');
-INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 1, 0, 1016023608, '1e3457c0b2052a9633b886fd75ef91e0', 1016023608, '', 0, 0, '', '');
+INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, '', 0, 0, '', '',1);
+INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 1, 0, 1016023608, '1e3457c0b2052a9633b886fd75ef91e0', 1016023608, '', 0, 0, '', '',1);
 
 DROP TABLE IF EXISTS 4images_wordlist;
 

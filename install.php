@@ -1,6 +1,7 @@
 <?php
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+include_once('includes/funciones.php');
+crear_carpetas();
 
 if ($_GET['install_lang'] == '' && !isset($_POST['submit'])) {
     header('Location:install.php?install_lang=spanish');
@@ -180,7 +181,7 @@ if (file_exists('config.php')) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="admin/cpstyle.css">
-  <link rel="icon" type="image/ico" href="img/favicon.ico">
+  <link rel="icon" type="image/ico" href="img/favicon_2.ico">
   <title>4images Installer</title>
   <style>
   *{
@@ -205,7 +206,7 @@ if (file_exists('config.php')) {
 	<br/>';
 
     if (isset($_POST['submit'])) {
-        include 'includes/funciones.php';
+
         $_POST['site'] = eliminar_espacios($_POST['site']);
         $_POST['timezone_select'] = eliminar_espacios($_POST['timezone_select']);
         $_POST['db_host'] = eliminar_espacios($_POST['db_host']);
@@ -232,6 +233,7 @@ if (file_exists('config.php')) {
         $dwes->query('DROP DATABASE ' . $_POST['db_name']);
         $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
 		$dwes->query('use ' . $_POST['db_name']);
+
         $dwes->query('CREATE TABLE notas (
 	id int(11) AUTO_INCREMENT PRIMARY KEY,
 	Nombre varchar(50) NOT NULL UNIQUE,
