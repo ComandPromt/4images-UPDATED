@@ -1,5 +1,21 @@
 <?php
 
+function obtener_direccion(){
+	if(strlen($_SERVER['SERVER_NAME'])>9){
+		$adicional="";
+
+		if(!empty($_SERVER["REQUEST_URI"])){
+			$adicional=$_SERVER["REQUEST_URI"];
+			$adicional=substr($adicional,0,strripos($adicional,'/')+1);
+		}
+		
+		return $_SERVER['SERVER_NAME'].$adicional;
+	}
+	else{
+		return 'localhost/';
+	}
+}
+
 function crear_carpetas(){
 	if(!file_exists('data/media')){
 			mkdir('data/media', 0777, true);
@@ -63,8 +79,8 @@ print '
 	}
 print '<br/>';
 
-if($login){
-
+if($login ){
+	
 		print '
 		
 <a href="messages/index.php"><img style="height:55px;width:55px;" src="img/email.png"></a>
@@ -99,7 +115,9 @@ if($login){
       </form>
 	  <hr/>
 	  <a style="font-size:15px;" href="./register.php"><img alt="registar" style="height:80px;width:80px;margin:auto;float:left;" src="img/registrar.png"></a>
-	  <a style="font-size:15px;" href="./member.php?action=lostpassword"><img alt="contraseña olvidada" style="height:80px;width:80px;margin:auto;float:right;" src="img/forgot_password.png"></a>
+	  <a  data-toggle="modal" data-target="#exampleModal">
+	  <img alt="Recordar contraseña" style="height:80px;width:80px;margin:auto;float:left;" src="img/forgot_password.png">
+	 </a>
 	  <br/><br/><br/><br/>
 	  ';
 	}
@@ -170,7 +188,7 @@ if($login){
 		  $administrators[]=$administradores[0];
 		
 	  }
-	  mysqli_close;
+	 mysqli_close($GLOBALS['conexion']);
 if(in_array($_POST['user_name'], $administrators)){
 	
 	print '<br/><a href="admin/index.php"><img class="icono" src="img/admin.png"  border="0"></a><br/>';
@@ -185,7 +203,7 @@ print '
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
 </nav>';
-mysqli_close($GLOBALS['conexion']);
+
 }
 
 function menu_categorias(){
@@ -456,8 +474,8 @@ function enviar($para, $asunto, $mensaje, $archivo,$remitente,$tipo){
   
   }
   
-      include_once 'class.phpmailer.php';
-      include_once 'class.smtp.php';
+      include_once ('class.phpmailer.php');
+      include_once ('class.smtp.php');
   
       $mail = new PHPMailer();
       $mail->IsSMTP();

@@ -2,7 +2,7 @@
 date_default_timezone_set('Europe/Madrid');
 
 	session_start();
-
+include_once('config.php');
 include_once('includes/funciones.php');
 ?>
 <!DOCTYPE html>
@@ -222,7 +222,7 @@ include_once('includes/funciones.php');
 		else if (document.all && !document.getElementById){
 			document.onmousedown = right;
 		}
-		var txt = "<?php echo $site_name;?>";
+		var txt = "<?php echo $GLOBALS['site_name'];?>";
 			document.oncontextmenu = new Function("alert('© Copyright by "+txt+"');return false");
 		
 			txt=txt.toUpperCase();
@@ -239,14 +239,14 @@ include_once('includes/funciones.php');
 			rotulo_title();
 	
 	</script>
-	<link rel="alternate" type="application/rss+xml" title="<?php print 'RSS Feed: '.$site_name." (Nuevas imágenes)";?>" href="rss.php?action=images">
+	<link rel="alternate" type="application/rss+xml" title="<?php print 'RSS Feed: '.$GLOBALS['site_name']." (Nuevas imágenes)";?>" href="rss.php?action=images">
 	</head>
 <body  >
 
 <?php
 menu_categorias();
  menu_lateral();
- 
+
 print ' 
   
 </div</div> ';

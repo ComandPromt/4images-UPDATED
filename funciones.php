@@ -1,5 +1,12 @@
 <?php
 
+  function set_cookie_data($name, $value, $permanent = 1) {
+    $cookie_expire = ($permanent) ? $this->current_time + 60 * 60 * 24 * 365 : 0;
+    $cookie_name = COOKIE_NAME.$name;
+    setcookie($cookie_name, $value, $cookie_expire, COOKIE_PATH, COOKIE_DOMAIN, COOKIE_SECURE);
+    $HTTP_COOKIE_VARS[$cookie_name] = $value;
+  }
+  
 function salted_hash($value, $salt = null, $length = 9, $hash_algo = 'md5') {
   if ($salt === null) {
     $salt = random_string($length);

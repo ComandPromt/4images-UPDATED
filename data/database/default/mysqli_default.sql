@@ -96,6 +96,7 @@ CREATE TABLE 4images_images (
   image_votes int(10) unsigned NOT NULL default '0',
   image_rating decimal(4,2) NOT NULL default '0.00',
   image_hits int(10) unsigned NOT NULL default '0',
+  sha256 varchar(64) NOT NULL,
   PRIMARY KEY  (image_id),
   KEY cat_id (cat_id),
   KEY user_id (user_id),
@@ -262,6 +263,7 @@ CREATE TABLE 4images_users (
   user_homepage varchar(255) NOT NULL default '',
   user_icq varchar(20) NOT NULL default '',
   permitir_mensajes boolean default 1,
+  nacionalidad varchar(15) default 'spanish' not null,
   PRIMARY KEY  (user_id),
   KEY user_lastaction (user_lastaction),
   KEY user_name (user_name)
