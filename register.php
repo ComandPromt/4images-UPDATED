@@ -72,10 +72,8 @@ if (isset($_POST['submit'])) {
                 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
                 $activacion = md5(uniqid(microtime()));
 
-print 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,nacionalidad)
-				VALUES(2,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,DEFAULT)';
-                mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,nacionalidad)
-				VALUES(2,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,DEFAULT)');
+                mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,nacionalidad)
+				VALUES(2,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,default,default,DEFAULT)');
 
                 $mensaje = ver_dato('mensaje_activacion', $GLOBALS['idioma']);
                 $mensaje = str_replace('usuario', $_POST['user_name'], $mensaje);
