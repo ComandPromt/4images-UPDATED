@@ -94,12 +94,12 @@ CREATE TABLE ruso (
 
 INSERT INTO spanish (id, accion, texto) VALUES
 (1, 'activacion_exitosa', 'El usuario se ha activado correctamente'),
-(2, 'registro_exitoso', 'Gracias por registrarse. Recibirá un correo para activar su cuenta'),
+(2, 'registro_exitoso', 'Gracias por registrarse'),
 (3, 'error', 'Datos incorrectos'),
-(4, 'mensaje_activacion', 'Estimado usuario,Le damos las gracias por registrarse en sitio. Por favor haga click en el siguiente enlace para activar su cuenta : url'),
+(4, 'ultima_visita', 'Última visita'),
 (5, 'error_captcha', 'Captcha inválido'),
 (6, 'agreement', 'Condiciones del registro'),
-(7, 'register_msg', 'Por favor, rellene todos los campos. Introduzca una dirección de correo válido para poder proporcionarle su código de activación'),
+(7, 'register_msg', 'Por favor, rellene todos los campos.'),
 (8, 'user_name', 'Usuario'),
 (9, 'password', 'Contraseña'),
 (10, 'email', 'Correo'),
@@ -109,4 +109,8 @@ INSERT INTO spanish (id, accion, texto) VALUES
 (14, 'captcha', 'Captcha'),
 (15, 'ok', 'Ok'),
 (16, 'recordar', 'Recordar'),
-(17, 'login', 'Entrar');
+(17, 'login', 'Entrar'),
+(18, 'nota_email', 'El email será útil a la hora de recuperar tu contraseña'),
+(19, 'nueva_pass', 'Nueva contraseña'),
+(20, 'cambiar_pass', 'Cambiar contraseña'),
+(21, 'cambio_pass_exitoso', 'La contraseña ha sido cambiada correctamente');

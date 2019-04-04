@@ -262,7 +262,6 @@ CREATE TABLE 4images_users (
   user_comments int(10) unsigned NOT NULL default '0',
   user_homepage varchar(255) NOT NULL default '',
   user_icq varchar(20) NOT NULL default '',
-  permitir_mensajes boolean default 1,
   nacionalidad varchar(15) default 'spanish' not null,
   PRIMARY KEY  (user_id),
   KEY user_lastaction (user_lastaction),
