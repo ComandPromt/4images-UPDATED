@@ -1,5 +1,11 @@
 <?php
 
+function mensaje($mensaje){
+	if(!empty($mensaje)){
+		echo '<script>alert("'.$mensaje.'");</script>';
+	}
+}
+
 function obtener_direccion(){
 	if(strlen($_SERVER['SERVER_NAME'])>9){
 		$adicional="";
@@ -33,7 +39,7 @@ function crear_carpetas(){
 }
 
 function ver_dato($accion,$idioma){
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
 	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
 
@@ -52,16 +58,13 @@ function menu_lateral(){
 		$_POST['user_name']=eliminar_espacios($_POST['user_name']);
 		$_POST['user_password']=eliminar_espacios($_POST['user_password']);
 		
-	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_name,user_password FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
-	$usuario = mysqli_fetch_row($consulta);
+		$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_name,user_password FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
+		$usuario = mysqli_fetch_row($consulta);
+		
+		if(gettype($usuario[0])=='string' && compare_passwords($_POST['user_password'],$usuario[1])){
+			$login=true;
+		}
 	
-	if(gettype($usuario[0])=='string' && compare_passwords($_POST['user_password'],$usuario[1])){
-	
-		$login=true;
-	
-	}
-	
-
 	}
 	
 print '
@@ -74,28 +77,16 @@ print '
    
   </div>
   <div style="margin-left:-50px;" class="w3-bar-block">';
+  
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
 		print '<p><a href="index.php"><img alt="inicio" class="icono" src="img/home.png" ></a><br/><br/></p><hr/>';
 	}
+	
 print '<br/>';
 
-if($login ){
-	
-		print '
-		
-<a href="messages/index.php"><img style="height:55px;width:55px;" src="img/email.png"></a>
-	  <img class="icono" src="img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$_POST['user_name'].'</span>
-      <a href="lightbox.php"><br/><br/><img class="icono" src="img/fav.png"></a><br>
-	  <br><a href="member.php?action=editprofile"><img class="icono" src="img/settings.png"></a><br/>
-       <br>
-	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
-	   <a href="'.$_SERVER['PHP_SELF'].'?l=yes" ><img class="icono" src="img/logout.png"></a>
-	   </form>';
-
-}
-	else{
-		
-		print '<form method="post" action="'.$_SERVER['PHP_SELF'].'" >
+	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" ){
+		$_COOKIE['4images_userid']="-1";
+		print '<form method="post" action="login.php" >
 
        <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="img/user.png">
 		<br/><br/><input title="user name" style="text-align:center;height:40px;font-size:30px;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
@@ -104,24 +95,41 @@ if($login ){
 		<img alt="contraseña" class="icono" style="margin:auto;" src="img/user_pass.png"><br/><br/>
         <input title="user password" style="text-align:center;height:40px;font-size:30px;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
-<p><img alt="recordar contraseña" class="icono"  src="img/remember.png"/>
-            <span style="margin-left:-12px;font-size:35px;padding-left:15px;" class="smalltext">'.ver_dato('recordar',$GLOBALS['idioma']).'</span>
-			<br/><br/><input title="autologin" style=" -ms-transform: scale(3); 
-  -moz-transform: scale(3); 
-  -webkit-transform: scale(3); 
-  -o-transform: scale(3);" type="checkbox" name="auto_login" value="1"/>
-      <br/><br/>
+
 		<input style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
 	  <hr/>
 	  <a style="font-size:15px;" href="./register.php"><img alt="registar" style="height:80px;width:80px;margin:auto;float:left;" src="img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
-	  <img alt="Recordar contraseña" style="height:80px;width:80px;margin:auto;float:left;" src="img/forgot_password.png">
+	  <img alt="Recordar contraseña" style="height:80px;width:60px;margin:auto;float:left;" src="img/forgot_password.png"/>
 	 </a>
-	  <br/><br/><br/><br/>
-	  ';
+	  <br/><br/><br/>';
 	}
+	else{
+		if($login || $_COOKIE['4images_userid']>=0 ){
+
+if(empty($_POST['user_name'])){
 	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
+	$fila = mysqli_fetch_row($consulta);
+	$_POST['user_name']=$fila[0];
+	mysqli_close($GLOBALS['conexion']);
+}
+		print '
+		
+<a href="messages/index.php"><img style="height:55px;width:55px;" src="img/email.png"></a>
+	  <img class="icono" src="img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$_POST['user_name'].'</span>
+      <a href="lightbox.php"><br/><br/><img class="icono" src="img/fav.png"></a><br>
+	  <br><a href="member.php?action=editprofile"><img class="icono" src="img/settings.png"></a><br/>
+       <br>
+	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
+	   <a href="logout.php" ><img class="icono" src="img/logout.png"></a>
+	   </form>';
+
+}
+
+	}
 print '<br/><hr/>';
 
 $imagen_aleatoria=imagen_aleatoria();
@@ -189,6 +197,7 @@ if($login){
 		
 	  }
 	 mysqli_close($GLOBALS['conexion']);
+	 
 if(in_array($_POST['user_name'], $administrators)){
 	
 	print '<br/><a href="admin/index.php"><img class="icono" src="img/admin.png"  border="0"></a><br/>';
@@ -433,7 +442,7 @@ IN(SELECT  distinct(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_pa
 }
 
 function imagen_aleatoria(){
-
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT MAX(image_id) FROM '.$GLOBALS['table_prefix'].'images WHERE image_active=1');
 
  if(mysqli_affected_rows($GLOBALS['conexion'])>0){
@@ -456,54 +465,7 @@ return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#
 
 }
 
-function enviar($para, $asunto, $mensaje, $archivo,$remitente,$tipo){
 
-  switch($tipo){
-  
-      case 'gmail':
-      $seguridad="ssl";
-      $host="smtp.gmail.com";
-      $puerto=465;
-      break;
-  
-      case 'hotmail':
-      $seguridad="tls";
-      $host="smtp.live.com";
-      $puerto=587;
-      break;
-  
-  }
-  
-      include_once ('class.phpmailer.php');
-      include_once ('class.smtp.php');
-  
-      $mail = new PHPMailer();
-      $mail->IsSMTP();
-      $mail->SMTPAuth = true;
-  
-      $mail->SMTPSecure = $seguridad;
-      $mail->Host = $host;
-      $mail->Port = $puerto;
-  
-      $mail->Username = 'grulargo@gmail.com';
-      $mail->Password = 'minions1'; 
-  
-      $mail->FromName = $remitente;
-      $mail->AddAddress($para);
-      $mail->Subject = $asunto;
-      $mail->Body = $mensaje;
-  
-      /*  Añadir una imagen incrustada
-          $mail->AddEmbeddedImage("rocks.png", "my-attach", "rocks.png"); 
-          $mail->Body = 'Embedded Image: <img alt="PHPMailer" src="cid:my-attach">'; 
-      */
-
-    //  $mail->AddAttachment($archivo['tmp_name'], $archivo['name']);
-      //$mail->MsgHTML($mensaje);
-      $mail->From = $mail->Username;
-  $mail->Send();
-    
-  }
 function consecutivos(array $array){
 	if(count($array)>0 && $array[0]!=null && $array[0]==1){
         asort($array);
