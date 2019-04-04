@@ -31,10 +31,13 @@ include_once('includes/funciones.php');
 		<link rel="stylesheet" type="text/css" href="css/component.css" />
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
-						       
+				<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
+			       
 	<title>Web</title>
-	          <style type="text/css">
-
+	          <style>
+			  *{
+				  background-color:#ffffff;
+			  }
                             /******************* WINDOWS VISTA SCROLLBAR *******************/
 
                             .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
@@ -241,7 +244,7 @@ include_once('includes/funciones.php');
 	</script>
 	<link rel="alternate" type="application/rss+xml" title="<?php print 'RSS Feed: '.$GLOBALS['site_name']." (Nuevas imágenes)";?>" href="rss.php?action=images">
 	</head>
-<body  >
+<body>
 
 <?php
 menu_categorias();

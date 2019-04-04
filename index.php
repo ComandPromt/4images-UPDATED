@@ -14,7 +14,9 @@ if (file_exists('config.php')) {
     
 }
 if (!in_array($db_name, $tablas)) {
-  unlink('config.php');
+	 if (file_exists('config.php')) {
+		unlink('config.php');
+	 }
   unset($tablas);
   if (file_exists('install.php')) {
       header('Location:install.php');

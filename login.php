@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $main_template = 0;
 
 $nozip = 1;
@@ -13,7 +13,8 @@ if ($user_info['user_level'] != GUEST || empty($HTTP_POST_VARS['user_name']) || 
     redirect($url);
   }
   else {
-    redirect("index.php");
+  redirect($_SESSION['pagina']);
+
   }
 }
 else {
@@ -27,16 +28,14 @@ else {
     }
     else {
 
-      redirect("index.php");
+       redirect($_SESSION['pagina']);
+
     }
   }
-  else {
-    $error = $lang['invalid_login'];
-  }
+  
 }
-if ($error) {
-  $main_template = "error";
-  include(ROOT_PATH.'includes/page_header.php');
-  show_error_page($error);
-}
+
+
+  redirect($_SESSION['pagina']);
+
 ?>

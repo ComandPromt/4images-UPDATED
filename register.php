@@ -6,31 +6,29 @@ include_once ('config.php');
 
 include ('cabecera.php');
 
-function mensaje($mensaje){
+$_SESSION['pagina']='register.php';
+
+if(isset($_POST['restablecer_pass']) && !empty($_POST['correo_restablecimiento'])
+&& !empty($_POST['nombre_usuario'])){
 	
-	if(!empty($mensaje)){
-		echo '<script>alert("'.$mensaje.'");</script>';
-	}
-}
+	$numero_restablecimiento=mt_rand(0,16585);
 
-/////////////////////////////
-
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-   	$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
-	$fila = mysqli_fetch_row($consulta);
-
-
-	mysqli_close($GLOBALS['conexion']);
-	setcookie("4images_userid",1);
-	print 'tu cookie '.$_COOKIE["4images_userid"];
-	
-	//setcookie("4images_userid",jghj,time()+3600);
-
-if(isset($_POST['cambiar_pass']) && !empty($_POST['nueva_pass']) && $_COOKIE["4images_userid"]!="-1" ){
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-   	$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE '.$GLOBALS['table_prefix']."users SET user_password='".salted_hash($_POST['nueva_pass'])."' WHERE user_id=".$_COOKIE["4images_userid"]);
-	mensaje(ver_dato('cambio_pass_exitoso', $GLOBALS['idioma']));
+
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['nombre_usuario']."' AND  user_email='".$_POST['correo_restablecimiento']."'");
+            $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
+	
+	if($comprobacion==1){
+
+		$fila = mysqli_fetch_row($consulta);	
+		$_SESSION['correo_restablecimiento']=$_POST['correo_restablecimiento'];
+		$_SESSION['id_usuario']=$fila[0];
+		 echo '<script>location.href="restablecer_pass.php";</script>';
+
+	}
+	
 	mysqli_close($GLOBALS['conexion']);
+
 }
 
 $SESSION['error'] = false;
@@ -65,29 +63,26 @@ if (isset($_POST['submit'])) {
             $SESSION['error'] = true;
         } else {
 			
-            $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
-            $comprobacion1 = mysqli_affected_rows($GLOBALS['conexion']);
-            $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_email='".$_POST['email']."'");
-            $comprobacion2 = mysqli_affected_rows($GLOBALS['conexion']);
+            $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."' AND user_email='".$_POST['email']."'");
+            $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
 
-            if ($comprobacion1 == 0 && $comprobacion2 == 0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password']) && !$SESSION['error']) {
+
+            if ($comprobacion == 0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password']) && !$SESSION['error']) {
                 $user_password_hashed = salted_hash($_POST['user_password']);
                 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
                 $activacion = md5(uniqid(microtime()));
 
-                mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,permitir_mensajes,user_icq)
-				VALUES(1,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,0)');
-
-                //include 'includes/functions.php';
+print 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,nacionalidad)
+				VALUES(2,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,DEFAULT)';
+                mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix'].'users (user_level,user_name,user_password,user_email,user_showemail,user_allowemails,user_invisible,user_joindate,user_activationkey,user_lastaction,user_location,user_lastvisit,user_comments,user_homepage,user_icq,nacionalidad)
+				VALUES(2,'."'".$_POST['user_name']."'".','."'".$user_password_hashed."'".",'".$_POST['email']."'".',0,1,0,'.time().','."'".$activacion."'".',0,'."''".',0,0,0,0,DEFAULT)');
 
                 $mensaje = ver_dato('mensaje_activacion', $GLOBALS['idioma']);
                 $mensaje = str_replace('usuario', $_POST['user_name'], $mensaje);
-                $mensaje = str_replace('sitio', $site_name, $mensaje);
+                $mensaje = str_replace('sitio', $_POST['site_name'], $mensaje);
                 $mensaje = str_replace('url', 'http://'.obtener_direccion().'register.php?action=activate&activationkey='.$activacion, $mensaje);
 
-                enviar($_POST['email'], $site_name, $mensaje, '', $admin_email, 'gmail');
-
-                echo '<h1 class="titulo">'.ver_dato('registro_exitoso', $GLOBALS['idioma']).'</h1>';
+                echo '<br/><h1 class="titulo">'.ver_dato('registro_exitoso', $GLOBALS['idioma']).'</h1>';
 
                 $terminado = true;
             } else {
@@ -103,7 +98,7 @@ if (!$terminado && (isset($_POST['envio']))) {
 	
     $SESSION['licencia'] = false;
 
-    echo '<h1 style="padding-left:60px;" class="titulo">'.ver_dato('register_msg', $GLOBALS['idioma']).'</h1><br/>
+    echo '<h1 style="padding-left:60px;" class="titulo"><br/>'.ver_dato('register_msg', $GLOBALS['idioma']).'</h1><br/>
 	<form  style="padding-left:60px;" method="post" action="'.$_SERVER['PHP_SELF'].'">
 
 					<div class="row1 texto"><img alt="usuario para registrar" class="icono2" src="img/user.png"/>
@@ -118,8 +113,10 @@ if (!$terminado && (isset($_POST['envio']))) {
                         <br/>
 				    </div>
 
-					<div class="row1 texto"><img alt="user_email" class="icono2" src="img/email.png"/>
+					<div class="row1 texto">
 
+					<img  alt="user_email" class="icono2" src="img/email.png"/>
+					<span id="palabra2" onmouseover="mostrarTooltip(this,\''.ver_dato('nota_email', $GLOBALS['idioma']).'\');"/>*</span> 
 					    <input type="email" title="user email" id="email" name="email" value="'.$SESSION['email'].'
 	                    " required pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" name="user_email" size="30" class="input" placeholder="'.ver_dato('email', $GLOBALS['idioma']).'" />
                         <br/>
@@ -150,8 +147,8 @@ if (!$terminado && $SESSION['licencia']) {
 	
     echo '<div  class="demo ">
 	<div   class="titulo scrollbar-vista">
-	<h1 class="cabecera" style="margin:auto;height:60px;" >'.ver_dato('agreement', $GLOBALS['idioma']).'</h1>
-	<div style="height:350px;width:70%;"><br/><hr/>	<h2  style="text-align:center;padding-bottom:10px;" class="texto">'.ver_dato('agreement_terms', $GLOBALS['idioma']).'</h2></div>
+	<br/><h3 class="cabecera" style="margin:auto;height:50px;padding-left:30px;" >'.ver_dato('agreement', $GLOBALS['idioma']).'</h3>
+	<div style="height:350px;width:70%;"><hr/>	<h2  style="text-align:center;padding-bottom:10px;" class="texto">'.ver_dato('agreement_terms', $GLOBALS['idioma']).'</h2></div>
     </div>';
 	
     echo '<form method="post" action="'.$_SERVER['PHP_SELF'].'">';
@@ -165,21 +162,28 @@ echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
 <div class="modal-header">
-<h3 class="modal-title titulo" id="exampleModalLabel">'.ver_dato('titulo_cambiar_pass', $GLOBALS['idioma']).'</h3>
+<h3 class="modal-title titulo" id="exampleModalLabel">'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'</h3>
 <button style="margin-left:20px;float:right;" type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
+
 </div>
 <div class="modal-body">
           <form method="post" action="'.$_SERVER['PHP_SELF'].'">
         <div class="form-group">
-        <label for="recipient-name" class="col-form-label"><h3>'.
-		ver_dato('nueva_pass', $GLOBALS['idioma']).'</h3></label>
-        <input  name="nueva_pass" type="text" class="form-control" id="recipient-name"/>
-        </div>
+		<img alt="usuario para registrar" class="icono2" src="img/user.png"/>
+      
+		<input  name="nombre_usuario" placeholder="'.ver_dato('user_name', $GLOBALS['idioma']).'" type="text" class="form-control" id="recipient-name"/>
+<br/>
+<img alt="usuario para registrar" class="icono2" src="img/email.png"/>
+      
+        <input  name="correo_restablecimiento" placeholder="Introduzca un email valido" type="text" class="form-control" id="recipient-name"/>
+      <br/>    
+	  </div>
 		<br/><br/>
-           <input name="cambiar_pass" type="submit" value="'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'" />
-         </form>
+           <input name="restablecer_pass" type="submit" value="'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'" />
+
+		 </form>
 </div>
 </div>
 </div>
