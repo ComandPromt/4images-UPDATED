@@ -231,8 +231,8 @@ unset($next_prev_cache);
 //--- Save Comment ------------------------------------
 //-----------------------------------------------------
 $error = 0;
-if ($action == "postcomment" && isset($HTTP_POST_VARS[URL_ID])) {
-  $id = intval($HTTP_POST_VARS[URL_ID]);
+if ($action == "postcomment" && isset($_POST[URL_ID])) {
+  $id = intval($_POST[URL_ID]);
   $sql = "SELECT cat_id, image_allow_comments
           FROM ".IMAGES_TABLE."
           WHERE image_id = $id";
@@ -242,11 +242,11 @@ if ($action == "postcomment" && isset($HTTP_POST_VARS[URL_ID])) {
     $msg = $lang['comments_deactivated'];
   }
   else {
-    $user_name = un_htmlspecialchars(trim($HTTP_POST_VARS['user_name']));
-    $comment_headline = un_htmlspecialchars(trim($HTTP_POST_VARS['comment_headline']));
-    $comment_text = un_htmlspecialchars(trim($HTTP_POST_VARS['comment_text']));
+    $user_name = un_htmlspecialchars(trim($_POST['user_name']));
+    $comment_headline = un_htmlspecialchars(trim($_POST['comment_headline']));
+    $comment_text = un_htmlspecialchars(trim($_POST['comment_text']));
 
-    $captcha = (isset($HTTP_POST_VARS['captcha'])) ? un_htmlspecialchars(trim($HTTP_POST_VARS['captcha'])) : "";
+    $captcha = (isset($_POST['captcha'])) ? un_htmlspecialchars(trim($_POST['captcha'])) : "";
 
     // Flood Check
     $sql = "SELECT comment_ip, comment_date
@@ -459,9 +459,9 @@ if ($image_allow_comments == 1) {
     $comment_form = "";
   }
   else {
-    $user_name = (isset($HTTP_POST_VARS['user_name']) && $error) ? format_text(trim(stripslashes($HTTP_POST_VARS['user_name'])), 2) : (($user_info['user_level'] != GUEST) ? format_text($user_info['user_name'], 2) : "");
-    $comment_headline = (isset($HTTP_POST_VARS['comment_headline']) && $error) ? format_text(trim(stripslashes($HTTP_POST_VARS['comment_headline'])), 2) : "";
-    $comment_text = (isset($HTTP_POST_VARS['comment_text']) && $error) ? format_text(trim(stripslashes($HTTP_POST_VARS['comment_text'])), 2) : "";
+    $user_name = (isset($_POST['user_name']) && $error) ? format_text(trim(stripslashes($_POST['user_name'])), 2) : (($user_info['user_level'] != GUEST) ? format_text($user_info['user_name'], 2) : "");
+    $comment_headline = (isset($_POST['comment_headline']) && $error) ? format_text(trim(stripslashes($_POST['comment_headline'])), 2) : "";
+    $comment_text = (isset($_POST['comment_text']) && $error) ? format_text(trim(stripslashes($_POST['comment_text'])), 2) : "";
 
     $site_template->register_vars(array(
       "bbcode" => $bbcode,

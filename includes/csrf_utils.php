@@ -70,13 +70,13 @@ function csrf_token() {
 }
 
 function csrf_check($use_show_error = false) {
-    global $HTTP_SERVER_VARS, $HTTP_POST_VARS, $site_sess, $csrf_protection_name, $csrf_protection_expires;
+    global $HTTP_SERVER_VARS, $_POST, $site_sess, $csrf_protection_name, $csrf_protection_expires;
 
     if ($HTTP_SERVER_VARS['REQUEST_METHOD'] !== 'POST') {
         return;
     }
 
-    if (isset($HTTP_POST_VARS[$csrf_protection_name])) {
+    if (isset($_POST[$csrf_protection_name])) {
         $session = $site_sess->get_session_var($csrf_protection_name);
 
         if (!is_array($session)) {
@@ -86,7 +86,7 @@ function csrf_check($use_show_error = false) {
         $found = false;
 
         foreach ($session as $token => $time) {
-            if (!secure_compare($token, (string) $HTTP_POST_VARS[$csrf_protection_name])) {
+            if (!secure_compare($token, (string) $_POST[$csrf_protection_name])) {
                 continue;
             }
 

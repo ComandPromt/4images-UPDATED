@@ -425,12 +425,12 @@ function show_num_select_row($title, $option, $desc = "") {
 }
 
 function show_upload_row($title, $name, $extra = "", $value = "") {
-  global $error, $HTTP_POST_VARS, $textinput_size;
+  global $error, $_POST, $textinput_size;
   if (isset($error[$name]) || isset($error['remote_'.$name])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS['remote_'.$name])/* && $value == ""*/) {
-    $value = stripslashes($HTTP_POST_VARS['remote_'.$name]);
+  if (isset($_POST['remote_'.$name])/* && $value == ""*/) {
+    $value = stripslashes($_POST['remote_'.$name]);
   }
 
   echo "<tr class=\"".get_row_bg()."\" valign='top'>\n<td><p class=\"rowtitle\">$title</p></td>\n";
@@ -441,7 +441,7 @@ function show_upload_row($title, $name, $extra = "", $value = "") {
 }
 
 function show_image_row($title, $src, $border = 0, $delete_box = "", $height = 0, $width = 0) {
-  global $HTTP_POST_VARS, $lang;
+  global $_POST, $lang;
   $dimension = "";
   if ($height) {
     $dimension .= " height=\"".$height."\"";
@@ -453,7 +453,7 @@ function show_image_row($title, $src, $border = 0, $delete_box = "", $height = 0
   echo "<td><img src=\"".$src."\"".$dimension." border=\"".$border."\" alt=\"\">";
   if ($delete_box != "") {
     $checked = '';
-    if (isset($HTTP_POST_VARS[$delete_box]) && $HTTP_POST_VARS[$delete_box] == 1) {
+    if (isset($_POST[$delete_box]) && $_POST[$delete_box] == 1) {
       $checked = ' checked="checked"';
     }
     echo "<input type=\"checkbox\" name=\"".$delete_box."\" value=\"1\"".$checked."> ".$lang['delete'];
@@ -466,9 +466,9 @@ function show_description_row($text, $colspan = 2) {
 }
 
 function show_radio_row($title, $name, $value = 1) {
-  global $HTTP_POST_VARS, $lang;
-  if (isset($HTTP_POST_VARS[$name])) {
-    $value = $HTTP_POST_VARS[$name];
+  global $_POST, $lang;
+  if (isset($_POST[$name])) {
+    $value = $_POST[$name];
   }
   echo "<tr class=\"".get_row_bg()."\">\n";
   echo "<td><p class=\"rowtitle\">".$title."</p></td>\n<td><p>";
@@ -486,25 +486,25 @@ function show_radio_row($title, $name, $value = 1) {
 }
 
 function show_input_row($title, $name, $value = "", $size = "") {
-  global $error, $HTTP_POST_VARS, $textinput_size;
+  global $error, $_POST, $textinput_size;
   $size = (empty($size)) ? $textinput_size : $size;
   if (isset($error[$name])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS[$name])/* && $value == ""*/) {
-    $value = stripslashes($HTTP_POST_VARS[$name]);
+  if (isset($_POST[$name])/* && $value == ""*/) {
+    $value = stripslashes($_POST[$name]);
   }
   echo "<tr class=\"".get_row_bg()."\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n<td><p><input type=\"text\" size=\"".$size."\" name=\"".$name."\" value=\"".format_text($value, 2)."\"></p></td>\n</tr>\n";
 }
 
 function show_date_input_row($title, $name, $value = "", $size = "") {
-  global $error, $HTTP_POST_VARS, $textinput_size;
+  global $error, $_POST, $textinput_size;
   $size = (empty($size)) ? $textinput_size : $size;
   if (isset($error[$name])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS[$name])/* && $value == ""*/) {
-    $value = stripslashes($HTTP_POST_VARS[$name]);
+  if (isset($_POST[$name])/* && $value == ""*/) {
+    $value = stripslashes($_POST[$name]);
   }
 
   echo "<tr class=\"".get_row_bg()."\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n<td><input type=\"text\" size=\"".$size."\" name=\"".$name."\" id=\"".$name."\" value=\"".format_text($value, 2)."\"> ";
@@ -513,19 +513,19 @@ function show_date_input_row($title, $name, $value = "", $size = "") {
 }
 
 function show_textarea_row($title, $name, $value = "", $cols = "", $rows = 10) {
-  global $error, $HTTP_POST_VARS, $textarea_size;
+  global $error, $_POST, $textarea_size;
   $cols = (empty($cols)) ? $textarea_size : $cols;
   if (isset($error[$name])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS[$name])/* && $value == ""*/) {
-    $value = stripslashes($HTTP_POST_VARS[$name]);
+  if (isset($_POST[$name])/* && $value == ""*/) {
+    $value = stripslashes($_POST[$name]);
   }
   echo "<tr class=\"".get_row_bg()."\" valign=\"top\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n<td><p><textarea name=\"".$name."\" rows=\"".$rows."\" cols=\"".$cols."\">".format_text($value, 2)."</textarea></p></td>\n</tr>\n";
 }
 
 function show_user_select_row($title, $user_id, $i = 0) {
-  global $error, $lang, $HTTP_POST_VARS, $site_db, $user_table_fields, $user_select_row_cache;
+  global $error, $lang, $_POST, $site_db, $user_table_fields, $user_select_row_cache;
 
   if (empty($user_select_row_cache)) {
     $sql = "SELECT ".get_user_table_field("", "user_id").get_user_table_field(", ", "user_name")."
@@ -542,11 +542,11 @@ function show_user_select_row($title, $user_id, $i = 0) {
   if (isset($error['user_id_'.$i]) || isset($error['user_id'])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS['user_id_'.$i])) {
-    $user_id = $HTTP_POST_VARS['user_id_'.$i];
+  if (isset($_POST['user_id_'.$i])) {
+    $user_id = $_POST['user_id_'.$i];
   }
-  elseif (isset($HTTP_POST_VARS['user_id'])) {
-    $user_id = $HTTP_POST_VARS['user_id'];
+  elseif (isset($_POST['user_id'])) {
+    $user_id = $_POST['user_id'];
   }
   $i = ($i) ? "_".$i : "";
   echo "<tr class=\"".get_row_bg()."\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n";
@@ -566,29 +566,29 @@ function show_user_select_row($title, $user_id, $i = 0) {
 }
 
 function show_cat_select_row($title, $cat_id, $admin = 0, $i = 0) {
-  global $error, $HTTP_POST_VARS;
+  global $error, $_POST;
   if (isset($error['cat_id_'.$i]) || isset($error['cat_id']) || isset($error['cat_parent_id'])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS['cat_parent_id'])) {
-    $cat_id = $HTTP_POST_VARS['cat_parent_id'];
+  if (isset($_POST['cat_parent_id'])) {
+    $cat_id = $_POST['cat_parent_id'];
   }
-  elseif (isset($HTTP_POST_VARS['cat_id_'.$i])) {
-    $cat_id = $HTTP_POST_VARS['cat_id_'.$i];
+  elseif (isset($_POST['cat_id_'.$i])) {
+    $cat_id = $_POST['cat_id_'.$i];
   }
-  elseif (isset($HTTP_POST_VARS['cat_id'])) {
-    $cat_id = $HTTP_POST_VARS['cat_id'];
+  elseif (isset($_POST['cat_id'])) {
+    $cat_id = $_POST['cat_id'];
   }
   echo "<tr class=\"".get_row_bg()."\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n<td>".get_category_dropdown($cat_id, 0, $admin, $i)."</td>\n</tr>\n";
 }
 
 function show_userlevel_select_row($title, $name = "user_level", $userlevel = "") {
-  global $lang, $error, $HTTP_POST_VARS;
+  global $lang, $error, $_POST;
   if (isset($error[$name])) {
     $title = sprintf("<span class=\"marktext\">%s *</span>", $title);
   }
-  if (isset($HTTP_POST_VARS[$name])/* && $userlevel == ""*/) {
-    $userlevel = stripslashes($HTTP_POST_VARS[$name]);
+  if (isset($_POST[$name])/* && $userlevel == ""*/) {
+    $userlevel = stripslashes($_POST[$name]);
   }
   echo "<tr class=\"".get_row_bg()."\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n<td>\n";
   echo "<select name=".$name.">\n";

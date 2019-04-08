@@ -32,12 +32,12 @@ if ($action == "") {
 show_admin_header();
 
 if ($action == "updatestats") {
-  $cat_id = intval($HTTP_POST_VARS['cat_id']);
-  $cat_hits = trim($HTTP_POST_VARS['cat_hits']);
-  $image_hits = trim($HTTP_POST_VARS['image_hits']);
-  $image_downloads = trim($HTTP_POST_VARS['image_downloads']);
-  $image_rating = trim($HTTP_POST_VARS['image_rating']);
-  $image_votes = trim($HTTP_POST_VARS['image_votes']);
+  $cat_id = intval($_POST['cat_id']);
+  $cat_hits = trim($_POST['cat_hits']);
+  $image_hits = trim($_POST['image_hits']);
+  $image_downloads = trim($_POST['image_downloads']);
+  $image_rating = trim($_POST['image_rating']);
+  $image_votes = trim($_POST['image_votes']);
 
   $where_sql = ($cat_id) ? " WHERE cat_id = $cat_id" : "";
 

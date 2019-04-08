@@ -159,8 +159,8 @@ if ($action == "lightbox") {
   }
 }
 elseif ($image_id) {
-  if (isset($HTTP_GET_VARS['size']) || isset($HTTP_POST_VARS['size'])) {
-    $size = (isset($HTTP_GET_VARS['size'])) ? intval($HTTP_GET_VARS['size']) : intval($HTTP_POST_VARS['size']);
+  if (isset($HTTP_GET_VARS['size']) || isset($_POST['size'])) {
+    $size = (isset($HTTP_GET_VARS['size'])) ? intval($HTTP_GET_VARS['size']) : intval($_POST['size']);
   }
   else {
     $size = 0;

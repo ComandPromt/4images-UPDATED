@@ -33,8 +33,8 @@ show_admin_header();
 
 if ($action == "sendemails") {
   $error = array();
-  $subject = stripslashes(trim($HTTP_POST_VARS['subject']));
-  $message = stripslashes(trim($HTTP_POST_VARS['message']));
+  $subject = stripslashes(trim($_POST['subject']));
+  $message = stripslashes(trim($_POST['message']));
 
   if ($subject == "") {
     $error['subject'] = 1;
@@ -42,7 +42,7 @@ if ($action == "sendemails") {
   if ($message == "") {
     $error['message'] = 1;
   }
-  if (!isset($HTTP_POST_VARS['emails']) || empty($HTTP_POST_VARS['emails'])) {
+  if (!isset($_POST['emails']) || empty($_POST['emails'])) {
     $error['emails'] = 1;
   }
   if (empty($error)) {
@@ -57,7 +57,7 @@ if ($action == "sendemails") {
       "site_name" => $config['site_name']
     ));
     $site_email->set_body("admin_email", $config['language_dir']);
-    $emails = $HTTP_POST_VARS['emails'];
+    $emails = $_POST['emails'];
     $site_email->set_bcc($emails);
     echo ($site_email->send_email()) ? $lang['send_emails_success'] : $lang['send_emails_error'];
     echo "<p>";
@@ -103,7 +103,7 @@ if ($action == "emailusers") {
     }
     $user_email = $row[$user_table_fields['user_email']];
     $user_name = $row[$user_table_fields['user_name']];
-    $selected = (isset($HTTP_POST_VARS['emails']) && !in_array($user_email, $HTTP_POST_VARS['emails'])) ? "" : " selected=\"selected\"";
+    $selected = (isset($_POST['emails']) && !in_array($user_email, $_POST['emails'])) ? "" : " selected=\"selected\"";
     $select .= "<option value=\"".$user_email."\"".$selected.">&raquo; ".format_text($user_name, 2)." (".$user_email.")</option>\n";
     $level = $user_level;
   }

@@ -133,8 +133,8 @@ function delete_images($image_ids, $delfromserver = 1) {
 show_admin_header();
 
 if ($action == "deleteimage") {
-  $deleteimages = (isset($HTTP_POST_VARS['deleteimages'])) ? $HTTP_POST_VARS['deleteimages'] : array();
-  $delfromserver = (isset($HTTP_POST_VARS['delfromserver'])) ? intval($HTTP_POST_VARS['delfromserver']) : 1;
+  $deleteimages = (isset($_POST['deleteimages'])) ? $_POST['deleteimages'] : array();
+  $delfromserver = (isset($_POST['delfromserver'])) ? intval($_POST['delfromserver']) : 1;
   $image_ids = "";
   if (!empty($deleteimages)) {
     foreach ($deleteimages as $val) {
@@ -167,12 +167,12 @@ if ($action == "deleteimage") {
 
 if ($action == "removeimage") {
   $image_ids = array();
-  if (isset($HTTP_GET_VARS['image_id']) || isset($HTTP_POST_VARS['image_id'])) {
-    $image_id = (isset($HTTP_GET_VARS['image_id'])) ? intval($HTTP_GET_VARS['image_id']) : intval($HTTP_POST_VARS['image_id']);
+  if (isset($HTTP_GET_VARS['image_id']) || isset($_POST['image_id'])) {
+    $image_id = (isset($HTTP_GET_VARS['image_id'])) ? intval($HTTP_GET_VARS['image_id']) : intval($_POST['image_id']);
     $image_ids[] = $image_id;
   }
-  elseif (isset($HTTP_POST_VARS['deleteimages'])) {
-    $image_ids = $HTTP_POST_VARS['deleteimages'];
+  elseif (isset($_POST['deleteimages'])) {
+    $image_ids = $_POST['deleteimages'];
   }
   else {
    $image_ids[] = 0;
@@ -193,37 +193,37 @@ if ($action == "updateimage") {
   $error_msg = "";
   $error = array();
 
-  $image_id = (isset($HTTP_POST_VARS['image_id'])) ? intval($HTTP_POST_VARS['image_id']) : intval($HTTP_GET_VARS['image_id']);
-  $image_name = un_htmlspecialchars(trim($HTTP_POST_VARS['image_name']));
-  $image_description = un_htmlspecialchars(trim($HTTP_POST_VARS['image_description']));
+  $image_id = (isset($_POST['image_id'])) ? intval($_POST['image_id']) : intval($HTTP_GET_VARS['image_id']);
+  $image_name = un_htmlspecialchars(trim($_POST['image_name']));
+  $image_description = un_htmlspecialchars(trim($_POST['image_description']));
 
-  $image_keywords = un_htmlspecialchars(trim($HTTP_POST_VARS['image_keywords']));
+  $image_keywords = un_htmlspecialchars(trim($_POST['image_keywords']));
   $image_keywords = preg_replace("/[\n\r]/is", ",", $image_keywords);
   $image_keywords_arr = explode(',', $image_keywords);
   array_walk($image_keywords_arr, 'trim_value');
   $image_keywords = implode(',', array_unique(array_filter($image_keywords_arr)));
 
-  $cat_id = intval($HTTP_POST_VARS['cat_id']);
-  $old_cat_id = intval($HTTP_POST_VARS['old_cat_id']);
+  $cat_id = intval($_POST['cat_id']);
+  $old_cat_id = intval($_POST['old_cat_id']);
 
-  $user_id = (intval($HTTP_POST_VARS['user_id']) != 0) ? intval($HTTP_POST_VARS['user_id']) : $user_info['user_id'];
+  $user_id = (intval($_POST['user_id']) != 0) ? intval($_POST['user_id']) : $user_info['user_id'];
 
-  $image_date = (trim($HTTP_POST_VARS['image_date']) != "") ? "UNIX_TIMESTAMP('".trim($HTTP_POST_VARS['image_date'])."')" : time();
-  $image_active = intval($HTTP_POST_VARS['image_active']);
-  $image_allow_comments = intval($HTTP_POST_VARS['image_allow_comments']);
-  $image_downloads = (trim($HTTP_POST_VARS['image_downloads']) != "") ? intval($HTTP_POST_VARS['image_downloads']) : 0;
-  $image_votes = (trim($HTTP_POST_VARS['image_votes']) != "") ? intval($HTTP_POST_VARS['image_votes']) : 0;
-  $image_rating = (trim($HTTP_POST_VARS['image_rating']) != "") ? sprintf("%.2f", trim($HTTP_POST_VARS['image_rating'])) : "0.00";
-  $image_hits = (trim($HTTP_POST_VARS['image_hits']) != "") ? intval(trim($HTTP_POST_VARS['image_hits'])) : 0;
+  $image_date = (trim($_POST['image_date']) != "") ? "UNIX_TIMESTAMP('".trim($_POST['image_date'])."')" : time();
+  $image_active = intval($_POST['image_active']);
+  $image_allow_comments = intval($_POST['image_allow_comments']);
+  $image_downloads = (trim($_POST['image_downloads']) != "") ? intval($_POST['image_downloads']) : 0;
+  $image_votes = (trim($_POST['image_votes']) != "") ? intval($_POST['image_votes']) : 0;
+  $image_rating = (trim($_POST['image_rating']) != "") ? sprintf("%.2f", trim($_POST['image_rating'])) : "0.00";
+  $image_hits = (trim($_POST['image_hits']) != "") ? intval(trim($_POST['image_hits'])) : 0;
 
-  $remote_file = trim($HTTP_POST_VARS['remote_file']);
-  $remote_thumb_file = trim($HTTP_POST_VARS['remote_thumb_file']);
+  $remote_file = trim($_POST['remote_file']);
+  $remote_thumb_file = trim($_POST['remote_thumb_file']);
 
-  $old_file_name = trim($HTTP_POST_VARS['old_file_name']);
-  $old_thumb_file_name = trim($HTTP_POST_VARS['old_thumb_file_name']);
+  $old_file_name = trim($_POST['old_file_name']);
+  $old_thumb_file_name = trim($_POST['old_thumb_file_name']);
 
-  $image_download_url = trim($HTTP_POST_VARS['image_download_url']);
-  $delete_thumb_file = (isset($HTTP_POST_VARS['delete_thumb_file']) && $HTTP_POST_VARS['delete_thumb_file'] == 1) ? 1 : 0;
+  $image_download_url = trim($_POST['image_download_url']);
+  $delete_thumb_file = (isset($_POST['delete_thumb_file']) && $_POST['delete_thumb_file'] == 1) ? 1 : 0;
 
   if ($image_name == "") {
     $error['image_name'] = 1;
@@ -244,14 +244,14 @@ if ($action == "updateimage") {
 
   if (!empty($additional_image_fields)) {
     foreach ($additional_image_fields as $key => $val) {
-      if (isset($HTTP_POST_VARS[$key]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key]) == "") {
+      if (isset($_POST[$key]) && intval($val[2]) == 1 && trim($_POST[$key]) == "") {
         $error[$key] = 1;
       }
     }
   }
 
   if (!empty($HTTP_POST_FILES['file']['tmp_name']) && $HTTP_POST_FILES['file']['tmp_name'] != "none" && !$error) {
-    unset($HTTP_POST_VARS['remote_file']);
+    unset($_POST['remote_file']);
     @rename(MEDIA_PATH."/".$old_cat_id."/".$old_file_name, MEDIA_PATH."/".$old_cat_id."/".$old_file_name.".bak");
     $new_name = $site_upload->upload_file("file", "media", $cat_id);
     if (!$new_name) {
@@ -284,10 +284,10 @@ if ($action == "updateimage") {
       unlink(THUMB_PATH."/".$old_cat_id."/".$old_thumb_file_name);
     }
     $new_thumb_name = "";
-    unset($HTTP_POST_VARS['remote_thumb_file']);
+    unset($_POST['remote_thumb_file']);
   }
   elseif (!empty($HTTP_POST_FILES['thumb_file']['tmp_name']) && $HTTP_POST_FILES['thumb_file']['tmp_name'] != "none" && !$error) {
-    unset($HTTP_POST_VARS['remote_thumb_file']);
+    unset($_POST['remote_thumb_file']);
     @rename(THUMB_PATH."/".$old_cat_id."/".$old_thumb_file_name, THUMB_PATH."/".$old_cat_id."/".$old_thumb_file_name.".bak");
     $new_thumb_name = $site_upload->upload_file("thumb_file", "thumb", $cat_id, get_basefile($new_name));
     if (!$new_thumb_name) {
@@ -320,8 +320,8 @@ if ($action == "updateimage") {
     if (!empty($additional_image_fields)) {
       $table_fields = $site_db->get_table_fields(IMAGES_TABLE);
       foreach ($additional_image_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key]) && isset($table_fields[$key])) {
-          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key]))."'";
+        if (isset($_POST[$key]) && isset($table_fields[$key])) {
+          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($_POST[$key]))."'";
         }
       }
     }
@@ -338,8 +338,8 @@ if ($action == "updateimage") {
     if ($result) {
       $search_words = array();
       foreach ($search_match_fields as $image_column => $match_column) {
-        if (isset($HTTP_POST_VARS[$image_column])) {
-          $search_words[$image_column] = stripslashes($HTTP_POST_VARS[$image_column]);
+        if (isset($_POST[$image_column])) {
+          $search_words[$image_column] = stripslashes($_POST[$image_column]);
         }
       }
       remove_searchwords($image_id);
@@ -364,7 +364,7 @@ if ($action == "editimage") {
   }
   printf("<p>%s</p>\n", $lang['upload_note']);
 
-  $image_id = (isset($HTTP_POST_VARS['image_id'])) ? intval($HTTP_POST_VARS['image_id']) : intval($HTTP_GET_VARS['image_id']);
+  $image_id = (isset($_POST['image_id'])) ? intval($_POST['image_id']) : intval($HTTP_GET_VARS['image_id']);
 
   $sql = "SELECT *, FROM_UNIXTIME(image_date) AS image_date
           FROM ".IMAGES_TABLE."
@@ -427,16 +427,16 @@ if ($action == "saveimages") {
   $date = time();
   $ip = getenv("REMOTE_ADDR");
   $error_msg = "";
-  $num_newimages = $HTTP_POST_VARS['num_newimages'];
+  $num_newimages = $_POST['num_newimages'];
 
   $error = array();
   for ($i = 1; $i <= $num_newimages; $i++) {
-    $image_name = un_htmlspecialchars(trim($HTTP_POST_VARS['image_name_'.$i]));
-    $cat_id = intval($HTTP_POST_VARS['cat_id_'.$i]);
-    $user_id = (intval($HTTP_POST_VARS['user_id_'.$i]) != 0) ? intval($HTTP_POST_VARS['user_id_'.$i]) : $user_info['user_id'];
-    $remote_file = trim($HTTP_POST_VARS['remote_file_'.$i]);
-    $remote_thumb_file = trim($HTTP_POST_VARS['remote_thumb_file_'.$i]);
-    $image_download_url = trim($HTTP_POST_VARS['image_download_url_'.$i]);
+    $image_name = un_htmlspecialchars(trim($_POST['image_name_'.$i]));
+    $cat_id = intval($_POST['cat_id_'.$i]);
+    $user_id = (intval($_POST['user_id_'.$i]) != 0) ? intval($_POST['user_id_'.$i]) : $user_info['user_id'];
+    $remote_file = trim($_POST['remote_file_'.$i]);
+    $remote_thumb_file = trim($_POST['remote_thumb_file_'.$i]);
+    $image_download_url = trim($_POST['image_download_url_'.$i]);
 
     if ($image_name == "") {
       $error['image_name_'.$i] = 1;
@@ -456,7 +456,7 @@ if ($action == "saveimages") {
 
     if (!empty($additional_image_fields)) {
       foreach ($additional_image_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key.'_'.$i]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key.'_'.$i]) == "") {
+        if (isset($_POST[$key.'_'.$i]) && intval($val[2]) == 1 && trim($_POST[$key.'_'.$i]) == "") {
           $error[$key.'_'.$i] = 1;
         }
       }
@@ -467,14 +467,14 @@ if ($action == "saveimages") {
     for ($i = 1; $i <= $num_newimages; $i++) {
       $log = array();
       $uploaderror = 0;
-      $image_name = un_htmlspecialchars(trim($HTTP_POST_VARS['image_name_'.$i]));
-      $cat_id = intval($HTTP_POST_VARS['cat_id_'.$i]);
-      $remote_file = trim($HTTP_POST_VARS['remote_file_'.$i]);
-      $remote_thumb_file = trim($HTTP_POST_VARS['remote_thumb_file_'.$i]);
+      $image_name = un_htmlspecialchars(trim($_POST['image_name_'.$i]));
+      $cat_id = intval($_POST['cat_id_'.$i]);
+      $remote_file = trim($_POST['remote_file_'.$i]);
+      $remote_thumb_file = trim($_POST['remote_thumb_file_'.$i]);
 
       //Upload Image
       $file = "file_".$i;
-      $remote_file = trim($HTTP_POST_VARS['remote_file_'.$i]);
+      $remote_file = trim($_POST['remote_file_'.$i]);
       if (!empty($HTTP_POST_FILES[$file]['tmp_name']) && $HTTP_POST_FILES[$file]['tmp_name'] != "none") {
         $new_name = $site_upload->upload_file($file, "media", $cat_id);
         if (!$new_name) {
@@ -491,7 +491,7 @@ if ($action == "saveimages") {
 
       //Upload Thumbnail if exists
       $thumb_file = "thumb_file_".$i;
-      $remote_thumb_file = trim($HTTP_POST_VARS['remote_thumb_file_'.$i]);
+      $remote_thumb_file = trim($_POST['remote_thumb_file_'.$i]);
       $new_thumb_name = "";
       if (!empty($HTTP_POST_FILES[$thumb_file]['tmp_name']) && $HTTP_POST_FILES[$thumb_file]['tmp_name'] != "none" && !$uploaderror) {
         $new_thumb_name = $site_upload->upload_file($thumb_file, "thumb", $cat_id, get_basefile($new_name));
@@ -511,27 +511,27 @@ if ($action == "saveimages") {
 
       //Save to Database
       if (!$uploaderror) {
-        $image_description = un_htmlspecialchars(trim($HTTP_POST_VARS['image_description_'.$i]));
+        $image_description = un_htmlspecialchars(trim($_POST['image_description_'.$i]));
 
-        $image_keywords = un_htmlspecialchars(trim($HTTP_POST_VARS['image_keywords_'.$i]));
+        $image_keywords = un_htmlspecialchars(trim($_POST['image_keywords_'.$i]));
         $image_keywords = preg_replace("/[\n\r]/is", ",", $image_keywords);
         $image_keywords_arr = explode(',', $image_keywords);
         array_walk($image_keywords_arr, 'trim_value');
         $image_keywords = implode(',', array_unique(array_filter($image_keywords_arr)));
 
-        $image_active = trim($HTTP_POST_VARS['image_active_'.$i]);
-        $image_allow_comments = trim($HTTP_POST_VARS['image_allow_comments_'.$i]);
+        $image_active = trim($_POST['image_active_'.$i]);
+        $image_allow_comments = trim($_POST['image_allow_comments_'.$i]);
 
-        $image_download_url = trim($HTTP_POST_VARS['image_download_url_'.$i]);
+        $image_download_url = trim($_POST['image_download_url_'.$i]);
 
         $additional_field_sql = "";
         $additional_value_sql = "";
         if (!empty($additional_image_fields)) {
           $table_fields = $site_db->get_table_fields(IMAGES_TABLE);
           foreach ($additional_image_fields as $key => $val) {
-            if (isset($HTTP_POST_VARS[$key.'_'.$i]) && isset($table_fields[$key])) {
+            if (isset($_POST[$key.'_'.$i]) && isset($table_fields[$key])) {
               $additional_field_sql .= ", $key";
-              $additional_value_sql .= ", '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key.'_'.$i]))."'";
+              $additional_value_sql .= ", '".un_htmlspecialchars(trim($_POST[$key.'_'.$i]))."'";
             }
           }
         }
@@ -547,8 +547,8 @@ if ($action == "saveimages") {
         if ($result) {
           $search_words = array();
           foreach ($search_match_fields as $image_column => $match_column) {
-            if (isset($HTTP_POST_VARS[$image_column.'_'.$i])) {
-              $search_words[$image_column] = stripslashes($HTTP_POST_VARS[$image_column.'_'.$i]);
+            if (isset($_POST[$image_column.'_'.$i])) {
+              $search_words[$image_column] = stripslashes($_POST[$image_column.'_'.$i]);
             }
           }
           add_searchwords($image_id, $search_words);
@@ -582,8 +582,8 @@ if ($action == "saveimages") {
 }
 
 if ($action == "addimages") {
-  if (isset($HTTP_GET_VARS['num_newimages']) || isset($HTTP_POST_VARS['num_newimages'])) {
-    $num_newimages = (isset($HTTP_GET_VARS['num_newimages'])) ? intval($HTTP_GET_VARS['num_newimages']) : intval($HTTP_POST_VARS['num_newimages']);
+  if (isset($HTTP_GET_VARS['num_newimages']) || isset($_POST['num_newimages'])) {
+    $num_newimages = (isset($HTTP_GET_VARS['num_newimages'])) ? intval($HTTP_GET_VARS['num_newimages']) : intval($_POST['num_newimages']);
   }
   else {
     $num_newimages = 1;
@@ -660,94 +660,94 @@ if ($action == "findimages") {
 
 	$condition = "1=1";
 
-  $image_id = intval($HTTP_POST_VARS['image_id']);
+  $image_id = intval($_POST['image_id']);
   if ($image_id != "") {
     $condition .= " AND INSTR(LCASE(i.image_id),'$image_id')>0";
   }
-  $image_name = trim($HTTP_POST_VARS['image_name']);
+  $image_name = trim($_POST['image_name']);
   if ($image_name != "") {
     $condition .= " AND INSTR(LCASE(i.image_name),'".strtolower($image_name)."')>0";
   }
-  $image_description = trim($HTTP_POST_VARS['image_description']);
+  $image_description = trim($_POST['image_description']);
   if ($image_description != "") {
     $condition .= " AND INSTR(LCASE(i.image_description),'".strtolower($image_description)."')>0";
   }
-  $image_keywords = trim($HTTP_POST_VARS['image_keywords']);
+  $image_keywords = trim($_POST['image_keywords']);
   if ($image_keywords != "") {
     $condition .= " AND INSTR(LCASE(i.image_keywords),'".strtolower($image_keywords)."')>0";
   }
-  $cat_id = intval(trim($HTTP_POST_VARS['cat_id']));
+  $cat_id = intval(trim($_POST['cat_id']));
   if ($cat_id != 0 && $cat_id != "") {
     $condition .= " AND i.cat_id = '$cat_id'";
   }
-  $image_media_file = trim($HTTP_POST_VARS['image_media_file']);
+  $image_media_file = trim($_POST['image_media_file']);
   if ($image_media_file != "") {
     $condition .= " AND INSTR(LCASE(i.image_media_file),'".strtolower($image_media_file)."')>0";
   }
-  $image_thumb_file = trim($HTTP_POST_VARS['image_thumb_file']);
+  $image_thumb_file = trim($_POST['image_thumb_file']);
   if ($image_thumb_file != "") {
     $condition .= " AND INSTR(LCASE(i.image_thumb_file),'".strtolower($image_thumb_file)."')>0";
   }
-  $dateafter = trim($HTTP_POST_VARS['dateafter']);
+  $dateafter = trim($_POST['dateafter']);
   if ($dateafter != "") {
     $condition .= " AND i.image_date > UNIX_TIMESTAMP('$dateafter')";
   }
-  $datebefore = trim($HTTP_POST_VARS['datebefore']);
+  $datebefore = trim($_POST['datebefore']);
   if ($datebefore != "") {
     $condition .= " AND i.image_date < UNIX_TIMESTAMP('$datebefore')";
   }
-  $downloadslower = trim($HTTP_POST_VARS['downloadslower']);
+  $downloadslower = trim($_POST['downloadslower']);
   if ($downloadslower != "") {
     $condition .= " AND i.image_downloads < '$downloadslower'";
   }
-  $downloadsupper = trim($HTTP_POST_VARS['downloadsupper']);
+  $downloadsupper = trim($_POST['downloadsupper']);
   if ($downloadsupper != "") {
     $condition .= " AND i.image_downloads > '$downloadsupper'";
   }
-  $ratinglower = trim($HTTP_POST_VARS['ratinglower']);
+  $ratinglower = trim($_POST['ratinglower']);
   if ($ratinglower != "") {
     $condition .= " AND i.image_rating < '$ratinglower'";
   }
-  $ratingupper = trim($HTTP_POST_VARS['ratingupper']);
+  $ratingupper = trim($_POST['ratingupper']);
   if ($ratingupper != "") {
     $condition .= " AND i.image_rating > '$ratingupper'";
   }
-  $voteslower = trim($HTTP_POST_VARS['voteslower']);
+  $voteslower = trim($_POST['voteslower']);
   if ($voteslower != "") {
     $condition .= " AND i.image_votes < '$voteslower'";
   }
-  $votesupper = trim($HTTP_POST_VARS['votesupper']);
+  $votesupper = trim($_POST['votesupper']);
   if ($votesupper != "") {
     $condition .= " AND i.image_votes > '$votesupper'";
   }
-  $hitslower = trim($HTTP_POST_VARS['hitslower']);
+  $hitslower = trim($_POST['hitslower']);
   if ($hitslower != "") {
     $condition .= " AND i.image_hits < '$hitslower'";
   }
-  $hitsupper = trim($HTTP_POST_VARS['hitsupper']);
+  $hitsupper = trim($_POST['hitsupper']);
   if ($hitsupper != "") {
     $condition .= " AND i.image_hits > '$hitsupper'";
   }
-  $orderby = trim($HTTP_POST_VARS['orderby']);
+  $orderby = trim($_POST['orderby']);
   if (!isset($orderbyOptions[$orderby])) {
     $orderby = "i.image_name";
   }
 
-  $limitstart = (isset($HTTP_POST_VARS['limitstart'])) ? trim($HTTP_POST_VARS['limitstart']) : "";
+  $limitstart = (isset($_POST['limitstart'])) ? trim($_POST['limitstart']) : "";
   if ($limitstart == "") {
     $limitstart = 0;
   }
   else {
     $limitstart--;
   }
-  $limitnumber = trim($HTTP_POST_VARS['limitnumber']);
+  $limitnumber = trim($_POST['limitnumber']);
   if ($limitnumber == "") {
     $limitnumber = 5000;
   }
 
   $direction = "ASC";
-  if (isset($HTTP_GET_VARS['direction']) || isset($HTTP_POST_VARS['direction'])) {
-    $requestedDirection = (isset($HTTP_GET_VARS['direction'])) ? trim($HTTP_GET_VARS['direction']) : trim($HTTP_POST_VARS['direction']);
+  if (isset($HTTP_GET_VARS['direction']) || isset($_POST['direction'])) {
+    $requestedDirection = (isset($HTTP_GET_VARS['direction'])) ? trim($HTTP_GET_VARS['direction']) : trim($_POST['direction']);
 
     if ('DESC' === $requestedDirection) {
       $direction = "DESC";

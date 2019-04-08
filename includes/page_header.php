@@ -269,8 +269,8 @@ unset($random_image);
 //-----------------------------------------------------
 //--- Set Paging Vars ---------------------------------
 //-----------------------------------------------------
-if (isset($HTTP_POST_VARS['setperpage'])) {
-  $setperpage = intval($HTTP_POST_VARS['setperpage']);
+if (isset($_POST['setperpage'])) {
+  $setperpage = intval($_POST['setperpage']);
   if ($setperpage) {
     $site_sess->set_session_var("perpage", $setperpage);
     $session_info['perpage'] = $setperpage;
@@ -345,7 +345,7 @@ if ($action == "clearlightbox") {
 //--- Save Rating -------------------------------------
 //-----------------------------------------------------
 if ($action == "rateimage" && $id) {
-  $rating = intval($HTTP_POST_VARS['rating']);
+  $rating = intval($_POST['rating']);
   $cookie_name = (defined("COOKIE_NAME")) ? COOKIE_NAME : "4images_";
   $cookie_rated = isset($HTTP_COOKIE_VARS[$cookie_name.'rated']) ? explode(" ", stripslashes((string)$HTTP_COOKIE_VARS[$cookie_name.'rated'])) : array();
   if ($rating && $rating <= MAX_RATING && $id) {

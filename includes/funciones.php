@@ -51,22 +51,6 @@ function ver_dato($accion,$idioma){
 
 function menu_lateral(){
 	
-	$login=false;
-	
-	if(isset($_POST['user_name']) && isset($_POST['user_password'])){
-		
-		$_POST['user_name']=eliminar_espacios($_POST['user_name']);
-		$_POST['user_password']=eliminar_espacios($_POST['user_password']);
-		
-		$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_name,user_password FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
-		$usuario = mysqli_fetch_row($consulta);
-		
-		if(gettype($usuario[0])=='string' && compare_passwords($_POST['user_password'],$usuario[1])){
-			$login=true;
-		}
-	
-	}
-	
 print '
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:220px;overflow-x: hidden;" id="mySidebar"><br>
@@ -84,8 +68,8 @@ print '
 	
 print '<br/>';
 
-	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" ){
-		$_COOKIE['4images_userid']="-1";
+	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
+		
 		print '<form method="post" action="login.php" >
 
        <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="img/user.png">
@@ -106,31 +90,29 @@ print '<br/>';
 	  <br/><br/><br/>';
 	}
 	else{
-		if($login || $_COOKIE['4images_userid']>=0 ){
 
-if(empty($_POST['user_name'])){
-	
+
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 	$fila = mysqli_fetch_row($consulta);
-	$_POST['user_name']=$fila[0];
+
 	mysqli_close($GLOBALS['conexion']);
-}
+
 		print '
 		
 <a href="messages/index.php"><img style="height:55px;width:55px;" src="img/email.png"></a>
-	  <img class="icono" src="img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$_POST['user_name'].'</span>
+	  <img class="icono" src="img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$fila[0].'</span>
       <a href="lightbox.php"><br/><br/><img class="icono" src="img/fav.png"></a><br>
 	  <br><a href="member.php?action=editprofile"><img class="icono" src="img/settings.png"></a><br/>
        <br>
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
-	   <a href="logout.php" ><img class="icono" src="img/logout.png"></a>
+	   <a href="logout.php" ><img style="padding-bottom:10px;" class="icono" src="img/logout.png"></a>
 	   </form>';
 
-}
+
 
 	}
-print '<br/><hr/>';
+print '<hr/>';
 
 $imagen_aleatoria=imagen_aleatoria();
 if($imagen_aleatoria!="vacio" && file_exists('./data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
@@ -149,42 +131,42 @@ if($imagen_aleatoria!="vacio" && file_exists('./data/thumbnails/'.substr($imagen
 	<hr/>
 	';
 }
-  if(gettype($facebook)=='string' && $facebook!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$facebook.'"><img alt="Facebook" class="social" src="img/Social/facebook.png"/></a>';  
+  if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
+	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="img/Social/facebook.png"/></a>';  
   }
-  if(gettype($instagram)=='string' && $instagram!=""){
-	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$instagram.'/"><img alt="Instagram" class="social" src="img/Social/instagram.png"/></a>';  
+  if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
+	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="img/Social/instagram.png"/></a>';  
   }
-    if(gettype($twitter)=='string' && $twitter!=""){
-	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$twitter.'"><img alt="Twitter" class="social" src="img/Social/twitter.png"/></a>';  
+    if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
+	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="img/Social/twitter.png"/></a>';  
   }
-    if(gettype($youtube)=='string' && $youtube!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$youtube.'"><img alt="Youtube" class="social" src="img/Social/youtube.png"/></a>';   
+    if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
+	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="img/Social/youtube.png"/></a>';   
   }
-    if(gettype($debianart)=='string' && $debianart!=""){
-	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$debianart.'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="img/Social/debianart.png"/></a>';   
+    if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
+	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="img/Social/debianart.png"/></a>';   
   }
-    if(gettype($slideshare)=='string' && $slideshare!=""){
-		if(empty($debianart)){
+    if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
+		if(empty($GLOBALS['deviantart'])){
 			$redes_sociales.='<br/>';
 		}
-	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$slideshare.'"><img class="social" alt="Slideshare" src="img/Social/slideshare.png"/></a>';  
+	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="img/Social/slideshare.png"/></a>';  
     }
-    if(gettype($github)=='string' && $github!=""){
-		if(empty($debianart) && empty($instagram)){
+    if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
+		if(empty($GLOBALS['debianart']) && empty($GLOBALS['instagram'])){
 			$redes_sociales.='<br/>';
 		}
-	$redes_sociales.='<a target="_blank" href="https://github.com/'.$github.'"><img class="social" alt="Github" src="img/Social/github.png"/></a>';    
+	$redes_sociales.='<a target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="img/Social/github.png"/></a>';    
   }
       
 
      if(!empty($redes_sociales)){
-		print '<div style="-moz-transform: scale(1.5,1.5);zoom:150%;padding-top:20px;" class="w3-panel w3-large">';
-		print $redes_sociales.'<br/></div><br/>
+		print '<div style="-moz-transform: scale(1.5,1.5);zoom:150%;" class="w3-panel w3-large">';
+		print $redes_sociales.'</div>
 <hr/>';
 	 }        	     
 
-if($login){
+if($_COOKIE['4images_userid']>=0){
 	
 	  $vars = get_defined_vars();  
 
@@ -208,7 +190,7 @@ if(in_array($_POST['user_name'], $administrators)){
 
 print '
 <br/>
-  <a href="rss.php?action=images"><img src="img/rss.png" alt="RSS Feed: HoopFetish (Nuevas imágenes)" style="width:70px;height:70px;"/></a>
+  <a href="rss.php?action=images"><img class="icono" src="img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
 </nav>';

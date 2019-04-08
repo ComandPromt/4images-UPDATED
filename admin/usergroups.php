@@ -43,13 +43,13 @@ $access_field_array = array(
 );
 
 function show_usergroup_row($group_id, $group_name, $start_date = "", $end_date = "", $i = 0) {
-  global $HTTP_POST_VARS, $lang, $usergroup_match_array, $textinput_size2;
+  global $_POST, $lang, $usergroup_match_array, $textinput_size2;
   $i = ($i) ? "_".$i : "";
-  if (isset($HTTP_POST_VARS['user_groups'.$i][$group_id]) && $HTTP_POST_VARS['user_groups'.$i][$group_id] == 1) {
+  if (isset($_POST['user_groups'.$i][$group_id]) && $_POST['user_groups'.$i][$group_id] == 1) {
     $yes_checked = " checked=\"checked\"";
     $no_checked = "";
   }
-  elseif (!isset($HTTP_POST_VARS['user_groups'.$i][$group_id]) && isset($usergroup_match_array[$group_id])) {
+  elseif (!isset($_POST['user_groups'.$i][$group_id]) && isset($usergroup_match_array[$group_id])) {
     $yes_checked = " checked=\"checked\"";
     $no_checked = "";
   }
@@ -69,8 +69,8 @@ function show_usergroup_row($group_id, $group_name, $start_date = "", $end_date 
   echo "<table border=\"0\">";
   echo "<tr><td valign=\"top\"><b>".$lang['activate_date']."</b></td><td rowspan=\"2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td valign=\"top\"><b>".$lang['expire_date']."</b></td></tr>";
   echo "<tr><td valign=\"top\">";
-  if (isset($HTTP_POST_VARS['group_start_date'.$i][$group_id])) {
-    $start_date = trim($HTTP_POST_VARS['group_start_date'.$i][$group_id]);
+  if (isset($_POST['group_start_date'.$i][$group_id])) {
+    $start_date = trim($_POST['group_start_date'.$i][$group_id]);
   }
   if (!check_admin_date($start_date)) {
     $start_date = date("Y-m-d H:i:s", time());
@@ -80,8 +80,8 @@ function show_usergroup_row($group_id, $group_name, $start_date = "", $end_date 
   echo get_calendar_js("group_start_date".$i."_".$group_id, $start_date);
   echo $lang['date_desc'].$lang['date_format'];
   echo "</td><td valign=\"top\">";
-  if (isset($HTTP_POST_VARS['group_end_date'.$i][$group_id])) {
-    $end_date = trim($HTTP_POST_VARS['group_end_date'.$i][$group_id]);
+  if (isset($_POST['group_end_date'.$i][$group_id])) {
+    $end_date = trim($_POST['group_end_date'.$i][$group_id]);
   }
   if ((!check_admin_date($end_date) && $end_date != 0) || $end_date == "") {
     $end_date = 0;
@@ -207,8 +207,8 @@ show_admin_header('
 ');
 
 if ($action == "updateuser") {
-  $user_groups = (isset($HTTP_POST_VARS['user_groups'])) ? $HTTP_POST_VARS['user_groups'] : "";
-  $user_id = intval($HTTP_POST_VARS['user_id']);
+  $user_groups = (isset($_POST['user_groups'])) ? $_POST['user_groups'] : "";
+  $user_id = intval($_POST['user_id']);
 
   if (!empty($user_groups)) {
     $group_delete_sql = "";
@@ -223,10 +223,10 @@ if ($action == "updateuser") {
 
     foreach ($user_groups as $key => $val) {
       if ($val == 1) {
-        $start_date = trim($HTTP_POST_VARS['group_start_date'][$key]);
+        $start_date = trim($_POST['group_start_date'][$key]);
         $start_date = ($start_date != "" && check_admin_date($start_date)) ? "UNIX_TIMESTAMP('$start_date')" : time();
 
-        $end_date = trim($HTTP_POST_VARS['group_end_date'][$key]);
+        $end_date = trim($_POST['group_end_date'][$key]);
         $end_date = ($end_date != "" && check_admin_date($end_date)) ? "UNIX_TIMESTAMP('$end_date')" : 0;
 
         $sql = "INSERT INTO ".GROUP_MATCH_TABLE."
@@ -245,7 +245,7 @@ if ($action == "edituser") {
   if ($msg != "") {
     printf("<b>%s</b>\n", $msg);
   }
-  $user_id = (isset($HTTP_POST_VARS['user_id'])) ? intval($HTTP_POST_VARS['user_id']) : intval($HTTP_GET_VARS['user_id']);
+  $user_id = (isset($_POST['user_id'])) ? intval($_POST['user_id']) : intval($HTTP_GET_VARS['user_id']);
   $user_row = get_user_info($user_id);
 
   $sql = "SELECT group_id, group_name
@@ -290,8 +290,8 @@ if ($action == "edituser") {
 }
 
 if ($action == "updatepermissions") {
-  $group_id = (isset($HTTP_POST_VARS['group_id'])) ? intval($HTTP_POST_VARS['group_id']) : intval($HTTP_GET_VARS['group_id']);
-  $auth = (isset($HTTP_POST_VARS['auth'])) ? $HTTP_POST_VARS['auth'] : array();
+  $group_id = (isset($_POST['group_id'])) ? intval($_POST['group_id']) : intval($HTTP_GET_VARS['group_id']);
+  $auth = (isset($_POST['auth'])) ? $_POST['auth'] : array();
 
   $sql = "DELETE FROM ".GROUP_ACCESS_TABLE."
           WHERE group_id = $group_id";
@@ -321,15 +321,15 @@ if ($action == "updatepermissions") {
 }
 
 if ($action == "editpermissions") {
-  if (isset($HTTP_GET_VARS['group_id']) || isset($HTTP_POST_VARS['group_id'])) {
-    $group_id = (isset($HTTP_GET_VARS['group_id'])) ? intval($HTTP_GET_VARS['group_id']) : intval($HTTP_POST_VARS['group_id']);
+  if (isset($HTTP_GET_VARS['group_id']) || isset($_POST['group_id'])) {
+    $group_id = (isset($HTTP_GET_VARS['group_id'])) ? intval($HTTP_GET_VARS['group_id']) : intval($_POST['group_id']);
   }
   else {
     $group_id = 0;
   }
 
-  if (isset($HTTP_GET_VARS['user_id']) || isset($HTTP_POST_VARS['user_id'])) {
-    $user_id = (isset($HTTP_GET_VARS['user_id'])) ? intval($HTTP_GET_VARS['user_id']) : intval($HTTP_POST_VARS['user_id']);
+  if (isset($HTTP_GET_VARS['user_id']) || isset($_POST['user_id'])) {
+    $user_id = (isset($HTTP_GET_VARS['user_id'])) ? intval($HTTP_GET_VARS['user_id']) : intval($_POST['user_id']);
   }
   else {
     $user_id = 0;
@@ -394,7 +394,7 @@ if ($action == "editpermissions") {
 }
 
 if ($action == "deletegroup") {
-  $group_id = intval($HTTP_POST_VARS['group_id']);
+  $group_id = intval($_POST['group_id']);
 
   $sql = "DELETE FROM ".GROUPS_TABLE."
           WHERE  group_id = $group_id";
@@ -413,7 +413,7 @@ if ($action == "deletegroup") {
 }
 
 if ($action == "removegroup") {
-  $group_id = (isset($HTTP_POST_VARS['group_id'])) ? intval($HTTP_POST_VARS['group_id']) : intval($HTTP_GET_VARS['group_id']);
+  $group_id = (isset($_POST['group_id'])) ? intval($_POST['group_id']) : intval($HTTP_GET_VARS['group_id']);
 
   $sql = "SELECT group_id, group_name
           FROM ".GROUPS_TABLE."
@@ -428,7 +428,7 @@ if ($action == "removegroup") {
 }
 
 if ($action == "addgroup") {
-  $group_name = trim($HTTP_POST_VARS['group_name']);
+  $group_name = trim($_POST['group_name']);
   if ($group_name != "") {
     $sql = "INSERT INTO ".GROUPS_TABLE."
             (group_name, group_type)
@@ -443,8 +443,8 @@ if ($action == "addgroup") {
 
 if ($action == "updategroup") {
   $error = array();
-  $group_id = (isset($HTTP_POST_VARS['group_id'])) ? intval($HTTP_POST_VARS['group_id']) : intval($HTTP_GET_VARS['group_id']);
-  $group_name = trim($HTTP_POST_VARS['group_name']);
+  $group_id = (isset($_POST['group_id'])) ? intval($_POST['group_id']) : intval($HTTP_GET_VARS['group_id']);
+  $group_name = trim($_POST['group_name']);
 
   if ($group_name == "") {
     $error['group_name'] = 1;
@@ -468,7 +468,7 @@ if ($action == "editgroup") {
   if ($msg != "") {
     printf("<b>%s</b>\n", $msg);
   }
-  $group_id = (isset($HTTP_POST_VARS['group_id'])) ? intval($HTTP_POST_VARS['group_id']) : intval($HTTP_GET_VARS['group_id']);
+  $group_id = (isset($_POST['group_id'])) ? intval($_POST['group_id']) : intval($HTTP_GET_VARS['group_id']);
 
   $sql = "SELECT group_id, group_name
           FROM ".GROUPS_TABLE."

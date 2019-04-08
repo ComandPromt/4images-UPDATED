@@ -1,41 +1,25 @@
 <?php
 session_start();
-$main_template = 0;
 
-$nozip = 1;
-define('ROOT_PATH', './');
-include(ROOT_PATH.'global.php');
-require(ROOT_PATH.'includes/sessions.php');
+include_once('config.php');
 
-$error = 0;
-if ($user_info['user_level'] != GUEST || empty($HTTP_POST_VARS['user_name']) || empty($HTTP_POST_VARS['user_password'])) {
-  if (!preg_match("/index\.php/", $url) && !preg_match("/login\.php/", $url) && !preg_match("/register\.php/", $url) && !preg_match("/member\.php/", $url)) {
-    redirect($url);
-  }
-  else {
-  redirect($_SESSION['pagina']);
+include_once('includes/funciones.php');
 
-  }
+$_POST['user_name']=trim($_POST['user_name']);
+$_POST['user_password']=trim($_POST['user_password']);
+
+$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_password,user_id
+FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['user_name']."'");
+
+if(mysqli_affected_rows($GLOBALS['conexion'])==1){
+	
+$fila = mysqli_fetch_row($consulta);
+
+if(compare_passwords($_POST['user_password'], $fila[0])){
+	setcookie('4images_userid',$fila[1],time()+3600);
 }
-else {
-  $user_name = trim($HTTP_POST_VARS['user_name']);
-  $user_password = trim($HTTP_POST_VARS['user_password']);
-  $auto_login = (isset($HTTP_POST_VARS['auto_login']) && $HTTP_POST_VARS['auto_login'] == 1) ? 1 : 0;
-
-  if ($site_sess->login($user_name, $user_password, $auto_login)) {
-    if (!preg_match("/index\.php/", $url) && !preg_match("/login\.php/", $url) && !preg_match("/register\.php/", $url) && !preg_match("/member\.php/", $url)) {
-      redirect($url);
-    }
-    else {
-
-       redirect($_SESSION['pagina']);
-
-    }
-  }
-  
 }
 
-
-  redirect($_SESSION['pagina']);
-
+mysqli_close($GLOBALS['conexion']);	
+echo '<script>location.href="'.$_SESSION['pagina'].'";</script>';
 ?>

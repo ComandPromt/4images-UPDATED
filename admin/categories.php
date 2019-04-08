@@ -56,9 +56,9 @@ $access_array = array(
 );
 
 function show_access_select($title = "", $type, $status) {
-  global $access_array, $HTTP_POST_VARS;
-  if (isset($HTTP_POST_VARS[$type])) {
-    $status = $HTTP_POST_VARS[$type];
+  global $access_array, $_POST;
+  if (isset($_POST[$type])) {
+    $status = $_POST[$type];
   }
   echo "<tr class=\"".get_row_bg()."\" valign=\"top\">\n<td><p class=\"rowtitle\">".$title."</p></td>\n";
   echo "<td>\n<select name=\"".$type."\">\n";
@@ -254,7 +254,7 @@ function update_cat_order($parent_id = 0) {
 }
 
 function get_cat_order_dropdown($parent_id = 0, $cat_order = 0) {
-  global $cat_cache, $cat_parent_cache, $lang, $HTTP_POST_VARS;
+  global $cat_cache, $cat_parent_cache, $lang, $_POST;
 
   $category_list = "
 <script language=\"JavaScript\" type=\"text/JavaScript\">
@@ -293,25 +293,25 @@ function update_order_select(x) {
 
   $category_list .= "\n<select name=\"cat_order\" class=\"categoryselect\">\n";
   $category_list .= "<option value=\"0\"";
-  if (isset($HTTP_POST_VARS['cat_order']) && $HTTP_POST_VARS['cat_order'] == 0) {
+  if (isset($_POST['cat_order']) && $_POST['cat_order'] == 0) {
     $category_list .= " selected";
   }
   $category_list .= ">".$lang['at_end']."</option>\n";
   $category_list .= "<option value=\"5\"";
-  if (isset($HTTP_POST_VARS['cat_order']) && $HTTP_POST_VARS['cat_order'] == 5) {
+  if (isset($_POST['cat_order']) && $_POST['cat_order'] == 5) {
     $category_list .= " selected";
   }
-  elseif (!isset($HTTP_POST_VARS['cat_order']) && $cat_order == 10) {
+  elseif (!isset($_POST['cat_order']) && $cat_order == 10) {
     $category_list .= " selected";
   }
   $category_list .= ">".$lang['at_beginning']."</option>\n";
   if (isset($cat_parent_cache[$parent_id])) {
     foreach ($cat_parent_cache[$parent_id] as $key => $val) {
       $category_list .= "<option value=\"".($cat_cache[$val]['cat_order'] + 5)."\"";
-      if (isset($HTTP_POST_VARS['cat_order']) && $HTTP_POST_VARS['cat_order'] == ($cat_cache[$val]['cat_order'] + 5)) {
+      if (isset($_POST['cat_order']) && $_POST['cat_order'] == ($cat_cache[$val]['cat_order'] + 5)) {
         $category_list .= " selected";
       }
-      elseif (!isset($HTTP_POST_VARS['cat_order']) && $cat_cache[$val]['cat_order'] == $cat_order - 10) {
+      elseif (!isset($_POST['cat_order']) && $cat_cache[$val]['cat_order'] == $cat_order - 10) {
         $category_list .= " selected";
       }
       $category_list .= ">".$lang['after']." ".format_text($cat_cache[$val]['cat_name'], 2)."</option>\n";
@@ -348,8 +348,8 @@ function forward_to_modify($msg) {
 }
 
 if ($action == "ordercat") {
-  $cat_id = (isset($HTTP_POST_VARS['cat_id'])) ? intval($HTTP_POST_VARS['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
-  $move = (isset($HTTP_POST_VARS['move'])) ? trim($HTTP_POST_VARS['move']) : trim($HTTP_GET_VARS['move']);
+  $cat_id = (isset($_POST['cat_id'])) ? intval($_POST['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
+  $move = (isset($_POST['move'])) ? trim($_POST['move']) : trim($HTTP_GET_VARS['move']);
 
   $number = ($move == "up") ? -15 : 15;
 
@@ -367,7 +367,7 @@ if ($action == "deletecat") {
   $error_log = array();
   show_admin_header();
   show_table_header($lang['main_category'], 1);
-  $cat_id = (isset($HTTP_POST_VARS['cat_id'])) ? intval($HTTP_POST_VARS['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
+  $cat_id = (isset($_POST['cat_id'])) ? intval($_POST['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
 
   $sql = "SELECT cat_id, cat_name, cat_parent_id
           FROM ".CATEGORIES_TABLE."
@@ -466,7 +466,7 @@ if ($action == "deletecat") {
 }
 
 if ($action == "removecat") {
-  $cat_id = (isset($HTTP_POST_VARS['cat_id'])) ? intval($HTTP_POST_VARS['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
+  $cat_id = (isset($_POST['cat_id'])) ? intval($_POST['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
 
   show_admin_header();
   show_form_header("categories.php", "deletecat");
@@ -478,20 +478,20 @@ if ($action == "removecat") {
 
 if ($action == "savecat") {
   $error = array();
-  $cat_name = un_htmlspecialchars(trim($HTTP_POST_VARS['cat_name']));
-  $cat_description = un_htmlspecialchars(trim($HTTP_POST_VARS['cat_description']));
-  $cat_parent_id = intval($HTTP_POST_VARS['cat_parent_id']);
-  $cat_order = (isset($HTTP_POST_VARS['cat_order'])) ? intval($HTTP_POST_VARS['cat_order']) : 0;
+  $cat_name = un_htmlspecialchars(trim($_POST['cat_name']));
+  $cat_description = un_htmlspecialchars(trim($_POST['cat_description']));
+  $cat_parent_id = intval($_POST['cat_parent_id']);
+  $cat_order = (isset($_POST['cat_order'])) ? intval($_POST['cat_order']) : 0;
 
-  $auth_viewcat = intval($HTTP_POST_VARS['auth_viewcat']);
-  $auth_viewimage = intval($HTTP_POST_VARS['auth_viewimage']);
-  $auth_download = intval($HTTP_POST_VARS['auth_download']);
-  $auth_upload = intval($HTTP_POST_VARS['auth_upload']);
-  $auth_directupload = intval($HTTP_POST_VARS['auth_directupload']);
-  $auth_vote = intval($HTTP_POST_VARS['auth_vote']);
-  $auth_sendpostcard = intval($HTTP_POST_VARS['auth_sendpostcard']);
-  $auth_readcomment = intval($HTTP_POST_VARS['auth_readcomment']);
-  $auth_postcomment = intval($HTTP_POST_VARS['auth_postcomment']);
+  $auth_viewcat = intval($_POST['auth_viewcat']);
+  $auth_viewimage = intval($_POST['auth_viewimage']);
+  $auth_download = intval($_POST['auth_download']);
+  $auth_upload = intval($_POST['auth_upload']);
+  $auth_directupload = intval($_POST['auth_directupload']);
+  $auth_vote = intval($_POST['auth_vote']);
+  $auth_sendpostcard = intval($_POST['auth_sendpostcard']);
+  $auth_readcomment = intval($_POST['auth_readcomment']);
+  $auth_postcomment = intval($_POST['auth_postcomment']);
 
   if ($cat_name == "") {
     $error['cat_name'] = 1;
@@ -591,23 +591,23 @@ if ($action == "addcat") {
 
 if ($action == "updatecat") {
   $error = array();
-  $cat_id = (isset($HTTP_POST_VARS['cat_id'])) ? intval($HTTP_POST_VARS['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
+  $cat_id = (isset($_POST['cat_id'])) ? intval($_POST['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
 
-  $cat_parent_id = intval($HTTP_POST_VARS['cat_parent_id']);
-  $cat_name = un_htmlspecialchars(trim($HTTP_POST_VARS['cat_name']));
-  $cat_description = strip_tags(un_htmlspecialchars(trim($HTTP_POST_VARS['cat_description'])), '<div><p><a><strong><bold><i><em><u><h1><h2><h3><h4><h5><h6><span>');
-  $cat_hits = intval(trim($HTTP_POST_VARS['cat_hits']));
-  $cat_order = (isset($HTTP_POST_VARS['cat_order'])) ? intval($HTTP_POST_VARS['cat_order']) : 0;
+  $cat_parent_id = intval($_POST['cat_parent_id']);
+  $cat_name = un_htmlspecialchars(trim($_POST['cat_name']));
+  $cat_description = strip_tags(un_htmlspecialchars(trim($_POST['cat_description'])), '<div><p><a><strong><bold><i><em><u><h1><h2><h3><h4><h5><h6><span>');
+  $cat_hits = intval(trim($_POST['cat_hits']));
+  $cat_order = (isset($_POST['cat_order'])) ? intval($_POST['cat_order']) : 0;
 
-  $auth_viewcat = intval($HTTP_POST_VARS['auth_viewcat']);
-  $auth_viewimage = intval($HTTP_POST_VARS['auth_viewimage']);
-  $auth_download = intval($HTTP_POST_VARS['auth_download']);
-  $auth_upload = intval($HTTP_POST_VARS['auth_upload']);
-  $auth_directupload = intval($HTTP_POST_VARS['auth_directupload']);
-  $auth_vote = intval($HTTP_POST_VARS['auth_vote']);
-  $auth_sendpostcard = intval($HTTP_POST_VARS['auth_sendpostcard']);
-  $auth_readcomment = intval($HTTP_POST_VARS['auth_readcomment']);
-  $auth_postcomment = intval($HTTP_POST_VARS['auth_postcomment']);
+  $auth_viewcat = intval($_POST['auth_viewcat']);
+  $auth_viewimage = intval($_POST['auth_viewimage']);
+  $auth_download = intval($_POST['auth_download']);
+  $auth_upload = intval($_POST['auth_upload']);
+  $auth_directupload = intval($_POST['auth_directupload']);
+  $auth_vote = intval($_POST['auth_vote']);
+  $auth_sendpostcard = intval($_POST['auth_sendpostcard']);
+  $auth_readcomment = intval($_POST['auth_readcomment']);
+  $auth_postcomment = intval($_POST['auth_postcomment']);
 
   $subcat_ids = array();
   get_subcategories_id($cat_id);
@@ -658,7 +658,7 @@ if ($action == "editcat") {
   if ($msg != "") {
     printf("<b>%s</b>\n", $msg);
   }
-  $cat_id = (isset($HTTP_POST_VARS['cat_id'])) ? intval($HTTP_POST_VARS['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
+  $cat_id = (isset($_POST['cat_id'])) ? intval($_POST['cat_id']) : intval($HTTP_GET_VARS['cat_id']);
 
   $sql = "SELECT cat_name, cat_description, cat_parent_id, cat_hits, cat_order, auth_viewcat, auth_viewimage, auth_download, auth_upload, auth_directupload, auth_vote, auth_sendpostcard, auth_readcomment, auth_postcomment
           FROM ".CATEGORIES_TABLE."

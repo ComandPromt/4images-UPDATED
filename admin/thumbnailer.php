@@ -40,10 +40,10 @@ if ($convert_options['convert_error']) {
 }
 
 if ($action == "createthumbnails") {
-  $dimension = (isset($HTTP_POST_VARS['dimension']) && intval($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : 100;
-  $resize_type = (isset($HTTP_POST_VARS['resize_type']) && intval($HTTP_POST_VARS['resize_type'])) ? intval($HTTP_POST_VARS['resize_type']) : 1;
-  $quality = (isset($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) <= 100) ? intval($HTTP_POST_VARS['quality']) : 100;
-  $image_list = (isset($HTTP_POST_VARS['image_list'])) ? $HTTP_POST_VARS['image_list'] : "";
+  $dimension = (isset($_POST['dimension']) && intval($_POST['dimension'])) ? intval($_POST['dimension']) : 100;
+  $resize_type = (isset($_POST['resize_type']) && intval($_POST['resize_type'])) ? intval($_POST['resize_type']) : 1;
+  $quality = (isset($_POST['quality']) && intval($_POST['quality']) && intval($_POST['quality']) <= 100) ? intval($_POST['quality']) : 100;
+  $image_list = (isset($_POST['image_list'])) ? $_POST['image_list'] : "";
 
   if (!empty($image_list)) {
     $image_id_sql = "";
@@ -97,7 +97,7 @@ if ($action == "createthumbnails") {
 }
 
 if ($action == "checkthumbnails") {
-  $num_newimages = (isset($HTTP_POST_VARS['num_newimages']) && intval($HTTP_POST_VARS['num_newimages'])) ? intval($HTTP_POST_VARS['num_newimages']) : 10;
+  $num_newimages = (isset($_POST['num_newimages']) && intval($_POST['num_newimages'])) ? intval($_POST['num_newimages']) : 10;
 
   show_form_header("thumbnailer.php", "checkthumbnails");
   show_table_header($lang['check_thumbnails'], 2);
@@ -108,7 +108,7 @@ if ($action == "checkthumbnails") {
   echo "</form>";
 }
 
-if (isset($HTTP_POST_VARS['action']) && $HTTP_POST_VARS['action'] == "checkthumbnails") {
+if (isset($_POST['action']) && $_POST['action'] == "checkthumbnails") {
   $sql = "SELECT image_id, image_name, cat_id, image_media_file, image_thumb_file
           FROM ".IMAGES_TABLE;
   $result = $site_db->query($sql);

@@ -86,7 +86,7 @@ if (file_exists('config.php')) {
 } else {
     if (!isset($HTTP_GET_VARS)) {
         $HTTP_GET_VARS = $_GET;
-        $HTTP_POST_VARS = $_POST;
+        $_POST = $_POST;
         $HTTP_COOKIE_VARS = $_COOKIE;
         $HTTP_POST_FILES = $_FILES;
         $HTTP_SERVER_VARS = $_SERVER;
@@ -95,7 +95,7 @@ if (file_exists('config.php')) {
 
     if (get_magic_quotes_gpc() == 0) {
         $HTTP_GET_VARS = addslashes_array($HTTP_GET_VARS);
-        $HTTP_POST_VARS = addslashes_array($HTTP_POST_VARS);
+        $_POST = addslashes_array($_POST);
         $HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
     }
 
@@ -110,8 +110,8 @@ if (file_exists('config.php')) {
         exit;
     }
 
-    if (isset($HTTP_GET_VARS['action']) || isset($HTTP_POST_VARS['action'])) {
-        $action = (isset($HTTP_GET_VARS['action'])) ? stripslashes(trim($HTTP_GET_VARS['action'])) : stripslashes(trim($HTTP_POST_VARS['action']));
+    if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
+        $action = (isset($HTTP_GET_VARS['action'])) ? stripslashes(trim($HTTP_GET_VARS['action'])) : stripslashes(trim($_POST['action']));
     } else {
         $action = '';
     }
@@ -138,8 +138,8 @@ if (file_exists('config.php')) {
 
     closedir($handle);
 
-    if (isset($HTTP_GET_VARS['install_lang']) || isset($HTTP_POST_VARS['install_lang'])) {
-        $install_lang = (isset($HTTP_GET_VARS['install_lang'])) ? trim($HTTP_GET_VARS['install_lang']) : trim($HTTP_POST_VARS['install_lang']);
+    if (isset($HTTP_GET_VARS['install_lang']) || isset($_POST['install_lang'])) {
+        $install_lang = (isset($HTTP_GET_VARS['install_lang'])) ? trim($HTTP_GET_VARS['install_lang']) : trim($_POST['install_lang']);
     }
 
     if (isset($_POST['submit'])) {
@@ -149,16 +149,16 @@ if (file_exists('config.php')) {
     $lang = array();
     include ROOT_PATH . 'lang/' . $install_lang . '/install.php';
 
-    $db_servertype = (isset($HTTP_POST_VARS['db_servertype'])) ? trim($HTTP_POST_VARS['db_servertype']) : 'mysqli';
-    $db_host = (isset($HTTP_POST_VARS['db_host'])) ? trim($HTTP_POST_VARS['db_host']) : '';
-    $db_name = (isset($HTTP_POST_VARS['db_name'])) ? trim($HTTP_POST_VARS['db_name']) : '';
-    $db_user = (isset($HTTP_POST_VARS['db_user'])) ? trim($HTTP_POST_VARS['db_user']) : '';
-    $db_password = (isset($HTTP_POST_VARS['db_password'])) ? trim($HTTP_POST_VARS['db_password']) : '';
-    $table_prefix = (isset($HTTP_POST_VARS['table_prefix'])) ? trim($HTTP_POST_VARS['table_prefix']) : '4images_';
-    $admin_user = (isset($HTTP_POST_VARS['admin_user'])) ? trim($HTTP_POST_VARS['admin_user']) : '';
-    $admin_password = (isset($HTTP_POST_VARS['admin_password'])) ? trim($HTTP_POST_VARS['admin_password']) : '';
-    $admin_password2 = (isset($HTTP_POST_VARS['admin_password2'])) ? trim($HTTP_POST_VARS['admin_password2']) : '';
-    $selected_timezone = (isset($HTTP_POST_VARS['timezone_select'])) ? trim($HTTP_POST_VARS['timezone_select']) : '1';
+    $db_servertype = (isset($_POST['db_servertype'])) ? trim($_POST['db_servertype']) : 'mysqli';
+    $db_host = (isset($_POST['db_host'])) ? trim($_POST['db_host']) : '';
+    $db_name = (isset($_POST['db_name'])) ? trim($_POST['db_name']) : '';
+    $db_user = (isset($_POST['db_user'])) ? trim($_POST['db_user']) : '';
+    $db_password = (isset($_POST['db_password'])) ? trim($_POST['db_password']) : '';
+    $table_prefix = (isset($_POST['table_prefix'])) ? trim($_POST['table_prefix']) : '4images_';
+    $admin_user = (isset($_POST['admin_user'])) ? trim($_POST['admin_user']) : '';
+    $admin_password = (isset($_POST['admin_password'])) ? trim($_POST['admin_password']) : '';
+    $admin_password2 = (isset($_POST['admin_password2'])) ? trim($_POST['admin_password2']) : '';
+    $selected_timezone = (isset($_POST['timezone_select'])) ? trim($_POST['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
 
     include ROOT_PATH . 'includes/constants.php';
@@ -166,7 +166,7 @@ if (file_exists('config.php')) {
     if ($action == 'downloadconfig') {
         header('Content-Type: text/x-delimtext; name="config.php"');
         header('Content-disposition: attachment; filename=config.php');
-        $config_file = stripslashes(trim($HTTP_POST_VARS['config_file']));
+        $config_file = stripslashes(trim($_POST['config_file']));
         echo $config_file;
         exit;
     }

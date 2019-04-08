@@ -8,7 +8,6 @@ CREATE TABLE 4images_users (
   user_allowemails tinyint(1) NOT NULL default '1',
   user_invisible tinyint(1) NOT NULL default '0',
   user_joindate int(11)  NOT NULL ,
-  user_activationkey varchar(32) NOT NULL default '',
   user_lastaction int(11)  NOT NULL default '0',
   user_location varchar(255) NOT NULL default '',
   user_lastvisit int(11)  NOT NULL default '0',

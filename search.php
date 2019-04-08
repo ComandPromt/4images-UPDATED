@@ -33,16 +33,16 @@ include(ROOT_PATH.'includes/search_utils.php');
 $org_search_keywords = $search_keywords;
 $org_search_user = $search_user;
 
-if (isset($HTTP_GET_VARS['search_terms']) || isset($HTTP_POST_VARS['search_terms'])) {
-  $search_terms = isset($HTTP_POST_VARS['search_terms']) ? $HTTP_POST_VARS['search_terms'] : $HTTP_GET_VARS['search_terms'];
+if (isset($HTTP_GET_VARS['search_terms']) || isset($_POST['search_terms'])) {
+  $search_terms = isset($_POST['search_terms']) ? $_POST['search_terms'] : $HTTP_GET_VARS['search_terms'];
   $search_terms = $search_terms == "all" ? 1 : 0;
 }
 else {
   $search_terms = 0;
 }
 
-if (isset($HTTP_GET_VARS['search_fields']) || isset($HTTP_POST_VARS['search_fields'])) {
-  $search_fields = isset($HTTP_POST_VARS['search_fields']) ? trim($HTTP_POST_VARS['search_fields']) : trim($HTTP_GET_VARS['search_fields']);
+if (isset($HTTP_GET_VARS['search_fields']) || isset($_POST['search_fields'])) {
+  $search_fields = isset($_POST['search_fields']) ? trim($_POST['search_fields']) : trim($HTTP_GET_VARS['search_fields']);
 }
 else {
   $search_fields = "all";

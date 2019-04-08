@@ -24,8 +24,8 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 set_magic_quotes_runtime(0);
 define('ROOT_PATH', './');
 
-if (isset($HTTP_GET_VARS['action']) || isset($HTTP_POST_VARS['action'])) {
-  $action = (isset($HTTP_GET_VARS['action'])) ? trim($HTTP_GET_VARS['action']) : trim($HTTP_POST_VARS['action']);
+if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
+  $action = (isset($HTTP_GET_VARS['action'])) ? trim($HTTP_GET_VARS['action']) : trim($_POST['action']);
 }
 else {
   $action = "intro";
@@ -206,15 +206,15 @@ if ($action == "emptyindex") {
 }
 
 if ($action == "buildsearchindex") {
-  if (isset($HTTP_GET_VARS['batchstart']) || isset($HTTP_POST_VARS['batchstart'])) {
-    $batchstart = (isset($HTTP_GET_VARS['batchstart'])) ? intval($HTTP_GET_VARS['batchstart']) : intval($HTTP_POST_VARS['batchstart']);
+  if (isset($HTTP_GET_VARS['batchstart']) || isset($_POST['batchstart'])) {
+    $batchstart = (isset($HTTP_GET_VARS['batchstart'])) ? intval($HTTP_GET_VARS['batchstart']) : intval($_POST['batchstart']);
   }
   else {
     $batchstart = 0;
   }
 
-  if (isset($HTTP_GET_VARS['batchsize']) || isset($HTTP_POST_VARS['batchsize'])) {
-    $batchsize = (isset($HTTP_GET_VARS['batchsize'])) ? intval($HTTP_GET_VARS['batchsize']) : intval($HTTP_POST_VARS['batchsize']);
+  if (isset($HTTP_GET_VARS['batchsize']) || isset($_POST['batchsize'])) {
+    $batchsize = (isset($HTTP_GET_VARS['batchsize'])) ? intval($HTTP_GET_VARS['batchsize']) : intval($_POST['batchsize']);
     if (!$batchsize) {
       $batchsize = 100;
     }

@@ -38,8 +38,8 @@ $txt_clickstream = "";
 
 $sendprocess = 0;
 
-if (isset($HTTP_GET_VARS[URL_COMMENT_ID]) || isset($HTTP_POST_VARS[URL_COMMENT_ID])) {
-  $comment_id = (isset($HTTP_GET_VARS[URL_COMMENT_ID])) ? intval($HTTP_GET_VARS[URL_COMMENT_ID]) : intval($HTTP_POST_VARS[URL_COMMENT_ID]);
+if (isset($HTTP_GET_VARS[URL_COMMENT_ID]) || isset($_POST[URL_COMMENT_ID])) {
+  $comment_id = (isset($HTTP_GET_VARS[URL_COMMENT_ID])) ? intval($HTTP_GET_VARS[URL_COMMENT_ID]) : intval($_POST[URL_COMMENT_ID]);
 }
 else {
   $comment_id = 0;
@@ -145,8 +145,8 @@ if ($action == "updatecomment") {
 
   $error = 0;
 
-  $comment_headline = un_htmlspecialchars(trim($HTTP_POST_VARS['comment_headline']));
-  $comment_text = un_htmlspecialchars(trim($HTTP_POST_VARS['comment_text']));
+  $comment_headline = un_htmlspecialchars(trim($_POST['comment_headline']));
+  $comment_text = un_htmlspecialchars(trim($_POST['comment_text']));
 
   if ($comment_headline == "")  {
     $error = 1;
@@ -190,8 +190,8 @@ if ($action == "editcomment") {
   $txt_clickstream = get_category_path($comment_row['cat_id'], 1).$config['category_separator']."<a href=\"".$site_sess->url(ROOT_PATH."details.php?".URL_IMAGE_ID."=".$comment_row['image_id'])."\" class=\"clickstream\">".format_text($comment_row['image_name'], 2)."</a>".$config['category_separator'];
   $txt_clickstream .= $lang['comment_edit'];
 
-  $comment_headline = (isset($HTTP_POST_VARS['comment_headline'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['comment_headline']))) : $comment_row['comment_headline'];
-  $comment_text = (isset($HTTP_POST_VARS['comment_text'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['comment_text']))) : $comment_row['comment_text'];
+  $comment_headline = (isset($_POST['comment_headline'])) ? un_htmlspecialchars(stripslashes(trim($_POST['comment_headline']))) : $comment_row['comment_headline'];
+  $comment_text = (isset($_POST['comment_text'])) ? un_htmlspecialchars(stripslashes(trim($_POST['comment_text']))) : $comment_row['comment_text'];
 
   if (isset($comment_row[$user_table_fields['user_name']]) && $comment_row['comment_user_id'] != GUEST) {
     $user_name = $comment_row[$user_table_fields['user_name']];
@@ -339,9 +339,9 @@ if ($action == "updateimage") {
 
   $error = 0;
 
-  $image_name = un_htmlspecialchars(trim($HTTP_POST_VARS['image_name']));
-  $image_description = un_htmlspecialchars(trim($HTTP_POST_VARS['image_description']));
-  $image_keywords = un_htmlspecialchars(trim($HTTP_POST_VARS['image_keywords']));
+  $image_name = un_htmlspecialchars(trim($_POST['image_name']));
+  $image_description = un_htmlspecialchars(trim($_POST['image_description']));
+  $image_keywords = un_htmlspecialchars(trim($_POST['image_keywords']));
 
   $image_keywords = preg_replace("/[\n\r]/is", ",", $image_keywords);
   $image_keywords_arr = explode(',', $image_keywords);
@@ -356,7 +356,7 @@ if ($action == "updateimage") {
 
   if (!empty($additional_image_fields)) {
     foreach ($additional_image_fields as $key => $val) {
-      if (isset($HTTP_POST_VARS[$key]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key]) == "") {
+      if (isset($_POST[$key]) && intval($val[2]) == 1 && trim($_POST[$key]) == "") {
         $error = 1;
         $field_error = preg_replace("/".$site_template->start."field_name".$site_template->end."/siU", str_replace(":", "", $val[0]), $lang['field_required']);
         $msg .= (($msg != "") ? "<br />" : "").$field_error;
@@ -367,15 +367,15 @@ if ($action == "updateimage") {
   if (!$error) {
     $additional_sql = "";
 
-    if (isset($HTTP_POST_VARS['image_allow_comments'])) {
-      $additional_sql .= ", image_allow_comments = ".intval($HTTP_POST_VARS['image_allow_comments']);
+    if (isset($_POST['image_allow_comments'])) {
+      $additional_sql .= ", image_allow_comments = ".intval($_POST['image_allow_comments']);
     }
 
     if (!empty($additional_image_fields)) {
       $table_fields = $site_db->get_table_fields(IMAGES_TABLE);
       foreach ($additional_image_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key]) && isset($table_fields[$key])) {
-          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key]))."'";
+        if (isset($_POST[$key]) && isset($table_fields[$key])) {
+          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($_POST[$key]))."'";
         }
       }
     }
@@ -388,8 +388,8 @@ if ($action == "updateimage") {
       include(ROOT_PATH.'includes/search_utils.php');
       $search_words = array();
       foreach ($search_match_fields as $image_column => $match_column) {
-        if (isset($HTTP_POST_VARS[$image_column])) {
-          $search_words[$image_column] = stripslashes($HTTP_POST_VARS[$image_column]);
+        if (isset($_POST[$image_column])) {
+          $search_words[$image_column] = stripslashes($_POST[$image_column]);
         }
       }
       remove_searchwords($image_id);
@@ -428,10 +428,10 @@ if ($action == "editimage") {
   $txt_clickstream = get_category_path($image_row['cat_id'], 1).$config['category_separator']."<a href=\"".$site_sess->url(ROOT_PATH."details.php?".URL_IMAGE_ID."=".$image_id)."\" class=\"clickstream\">".format_text($image_row['image_name'], 2)."</a>".$config['category_separator'];
   $txt_clickstream .= $lang['image_edit'];
 
-  $image_name = (isset($HTTP_POST_VARS['image_name'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['image_name']))) : $image_row['image_name'];
-  $image_description = (isset($HTTP_POST_VARS['image_description'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['image_description']))) : $image_row['image_description'];
-  $image_keywords = (isset($HTTP_POST_VARS['image_keywords'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['image_keywords']))) : $image_row['image_keywords'];
-  $image_allow_comments = (isset($HTTP_POST_VARS['image_allow_comments'])) ? intval($HTTP_POST_VARS['image_allow_comments']) : $image_row['image_allow_comments'];
+  $image_name = (isset($_POST['image_name'])) ? un_htmlspecialchars(stripslashes(trim($_POST['image_name']))) : $image_row['image_name'];
+  $image_description = (isset($_POST['image_description'])) ? un_htmlspecialchars(stripslashes(trim($_POST['image_description']))) : $image_row['image_description'];
+  $image_keywords = (isset($_POST['image_keywords'])) ? un_htmlspecialchars(stripslashes(trim($_POST['image_keywords']))) : $image_row['image_keywords'];
+  $image_allow_comments = (isset($_POST['image_allow_comments'])) ? intval($_POST['image_allow_comments']) : $image_row['image_allow_comments'];
 
   $site_template->register_vars(array(
     "image_id" => $image_id,
@@ -455,7 +455,7 @@ if ($action == "editimage") {
     $additional_field_array = array();
     foreach ($additional_image_fields as $key => $val) {
       if ($val[1] == "radio") {
-        $value = (isset($HTTP_POST_VARS[$key])) ? intval($HTTP_POST_VARS[$key]) : $image_row[$key];
+        $value = (isset($_POST[$key])) ? intval($_POST[$key]) : $image_row[$key];
         if ($value == 1) {
           $additional_field_array[$key.'_yes'] = " checked=\"checked\"";
           $additional_field_array[$key.'_no'] = "";
@@ -466,7 +466,7 @@ if ($action == "editimage") {
         }
       }
       else {
-        $value = (isset($HTTP_POST_VARS[$key])) ? format_text(stripslashes(trim($HTTP_POST_VARS[$key]))) : $image_row[$key];
+        $value = (isset($_POST[$key])) ? format_text(stripslashes(trim($_POST[$key]))) : $image_row[$key];
       }
       $additional_field_array[$key] = $value;
       $additional_field_array['lang_'.$key] = $val[0];
@@ -490,23 +490,23 @@ if ($action == "uploadimage") {
   }
   $txt_clickstream .= $lang['user_upload'];
 
-  $remote_media_file = format_url(un_htmlspecialchars(trim($HTTP_POST_VARS['remote_media_file'])));
-  $remote_thumb_file = format_url(un_htmlspecialchars(trim($HTTP_POST_VARS['remote_thumb_file'])));
+  $remote_media_file = format_url(un_htmlspecialchars(trim($_POST['remote_media_file'])));
+  $remote_thumb_file = format_url(un_htmlspecialchars(trim($_POST['remote_thumb_file'])));
 
-  $image_name = un_htmlspecialchars(trim($HTTP_POST_VARS['image_name']));
-  $image_description = un_htmlspecialchars(trim($HTTP_POST_VARS['image_description']));
-  $image_keywords = un_htmlspecialchars(trim($HTTP_POST_VARS['image_keywords']));
+  $image_name = un_htmlspecialchars(trim($_POST['image_name']));
+  $image_description = un_htmlspecialchars(trim($_POST['image_description']));
+  $image_keywords = un_htmlspecialchars(trim($_POST['image_keywords']));
 
   $image_keywords = preg_replace("/[\n\r]/is", ",", $image_keywords);
   $image_keywords_arr = explode(',', $image_keywords);
   array_walk($image_keywords_arr, 'trim_value');
   $image_keywords = implode(',', array_unique(array_filter($image_keywords_arr)));
 
-  $image_active = (isset($HTTP_POST_VARS['image_active']) && $HTTP_POST_VARS['image_active'] == 0) ? 0 : 1;
-  $image_allow_comments = (isset($HTTP_POST_VARS['image_allow_comments']) && $HTTP_POST_VARS['image_allow_comments'] == 0) ? 0 : 1;
-  $image_download_url = (isset($HTTP_POST_VARS['image_download_url'])) ? format_url(un_htmlspecialchars(trim($HTTP_POST_VARS['image_download_url']))) : "";
+  $image_active = (isset($_POST['image_active']) && $_POST['image_active'] == 0) ? 0 : 1;
+  $image_allow_comments = (isset($_POST['image_allow_comments']) && $_POST['image_allow_comments'] == 0) ? 0 : 1;
+  $image_download_url = (isset($_POST['image_download_url'])) ? format_url(un_htmlspecialchars(trim($_POST['image_download_url']))) : "";
 
-  $captcha = (isset($HTTP_POST_VARS['captcha'])) ? un_htmlspecialchars(trim($HTTP_POST_VARS['captcha'])) : "";
+  $captcha = (isset($_POST['captcha'])) ? un_htmlspecialchars(trim($_POST['captcha'])) : "";
 
   $direct_upload = (check_permission("auth_directupload", $cat_id)) ? 1 : 0;
   $upload_cat = ($direct_upload) ? $cat_id : 0;
@@ -536,7 +536,7 @@ if ($action == "uploadimage") {
 
   if (!empty($additional_image_fields)) {
     foreach ($additional_image_fields as $key => $val) {
-      if (isset($HTTP_POST_VARS[$key]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key]) == "") {
+      if (isset($_POST[$key]) && intval($val[2]) == 1 && trim($_POST[$key]) == "") {
         $error = 1;
         $field_error = preg_replace("/".$site_template->start."field_name".$site_template->end."/siU", str_replace(":", "", $val[0]), $lang['field_required']);
         $msg .= (($msg != "") ? "<br />" : "").$field_error;
@@ -623,9 +623,9 @@ if ($action == "uploadimage") {
         $table = ($direct_upload) ? IMAGES_TABLE : IMAGES_TEMP_TABLE;
         $table_fields = $site_db->get_table_fields($table);
         foreach ($additional_image_fields as $key => $val) {
-          if (isset($HTTP_POST_VARS[$key]) && isset($table_fields[$key])) {
+          if (isset($_POST[$key]) && isset($table_fields[$key])) {
             $additional_field_sql .= ", $key";
-            $additional_value_sql .= ", '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key]))."'";
+            $additional_value_sql .= ", '".un_htmlspecialchars(trim($_POST[$key]))."'";
           }
         }
       }
@@ -642,8 +642,8 @@ if ($action == "uploadimage") {
           include(ROOT_PATH.'includes/search_utils.php');
           $search_words = array();
           foreach ($search_match_fields as $image_column => $match_column) {
-            if (isset($HTTP_POST_VARS[$image_column])) {
-              $search_words[$image_column] = stripslashes($HTTP_POST_VARS[$image_column]);
+            if (isset($_POST[$image_column])) {
+              $search_words[$image_column] = stripslashes($_POST[$image_column]);
             }
           }
           add_searchwords($image_id, $search_words);
@@ -776,7 +776,7 @@ if ($action == "uploadform") {
     $additional_field_array = array();
     foreach ($additional_image_fields as $key => $val) {
       if ($val[1] == "radio") {
-        $value = (isset($HTTP_POST_VARS[$key])) ? intval($HTTP_POST_VARS[$key]) : 1;
+        $value = (isset($_POST[$key])) ? intval($_POST[$key]) : 1;
         if ($value == 1) {
           $additional_field_array[$key.'_yes'] = " checked=\"checked\"";
           $additional_field_array[$key.'_no'] = "";
@@ -787,7 +787,7 @@ if ($action == "uploadform") {
         }
       }
       else {
-        $value = (isset($HTTP_POST_VARS[$key])) ? format_text(stripslashes(trim($HTTP_POST_VARS[$key]))) : "";
+        $value = (isset($_POST[$key])) ? format_text(stripslashes(trim($_POST[$key]))) : "";
       }
       $additional_field_array[$key] = $value;
       $additional_field_array['lang_'.$key] = $val[0];
@@ -801,15 +801,15 @@ if ($action == "uploadform") {
 
 if ($action == "emailuser") {
   $txt_clickstream = $lang['profile'];
-  $user_id = (isset($HTTP_POST_VARS[URL_USER_ID])) ? intval($HTTP_POST_VARS[URL_USER_ID]) : GUEST;
+  $user_id = (isset($_POST[URL_USER_ID])) ? intval($_POST[URL_USER_ID]) : GUEST;
   $error = 0;
 
   if ($user_info['user_level'] == GUEST || $user_info['user_level'] == USER_AWAITING) {
     show_error_page($lang['no_permission']);
     exit;
   }
-  $subject = stripslashes(trim($HTTP_POST_VARS['subject']));
-  $message = stripslashes(trim($HTTP_POST_VARS['message']));
+  $subject = stripslashes(trim($_POST['subject']));
+  $message = stripslashes(trim($_POST['message']));
 
   if ($subject == "" || $message == "") {
     $msg = $lang['lostfield_error'];
@@ -854,8 +854,8 @@ if ($action == "emailuser") {
 
 if ($action == "mailform") {
   $txt_clickstream = $lang['profile'];
-  if (isset($HTTP_GET_VARS[URL_USER_ID]) || isset($HTTP_POST_VARS[URL_USER_ID])) {
-    $user_id = (isset($HTTP_GET_VARS[URL_USER_ID])) ? intval($HTTP_GET_VARS[URL_USER_ID]) : intval($HTTP_POST_VARS[URL_USER_ID]);
+  if (isset($HTTP_GET_VARS[URL_USER_ID]) || isset($_POST[URL_USER_ID])) {
+    $user_id = (isset($HTTP_GET_VARS[URL_USER_ID])) ? intval($HTTP_GET_VARS[URL_USER_ID]) : intval($_POST[URL_USER_ID]);
     if (!$user_id) {
       $user_id = GUEST;
     }
@@ -903,8 +903,8 @@ if ($action == "mailform") {
 //-----------------------------------------------------
 if ($action == "showprofile") {
   $txt_clickstream = $lang['profile'];
-  if (isset($HTTP_GET_VARS[URL_USER_ID]) || isset($HTTP_POST_VARS[URL_USER_ID])) {
-    $user_id = (isset($HTTP_GET_VARS[URL_USER_ID])) ? intval($HTTP_GET_VARS[URL_USER_ID]) : intval($HTTP_POST_VARS[URL_USER_ID]);
+  if (isset($HTTP_GET_VARS[URL_USER_ID]) || isset($_POST[URL_USER_ID])) {
+    $user_id = (isset($HTTP_GET_VARS[URL_USER_ID])) ? intval($HTTP_GET_VARS[URL_USER_ID]) : intval($_POST[URL_USER_ID]);
     if (!$user_id) {
       $user_id = GUEST;
     }
@@ -996,7 +996,7 @@ if ($action == "showprofile") {
 //-----------------------------------------------------
 if ($action == "sendpassword") {
   $txt_clickstream = $lang['lost_password'];
-  $user_email = un_htmlspecialchars(trim($HTTP_POST_VARS['user_email']));
+  $user_email = un_htmlspecialchars(trim($_POST['user_email']));
 
   if ($user_email != "") {
     $sql = "SELECT ".get_user_table_field("", "user_id").get_user_table_field(", ", "user_name").get_user_table_field(", ", "user_password")."
@@ -1025,7 +1025,7 @@ if ($action == "sendpassword") {
       $site_email->send_email();
 
       $msg = $lang['send_password_success'];
-      $HTTP_POST_VARS['user_email'] = "";
+      $_POST['user_email'] = "";
     }
     else {
       $msg = $lang['invalid_email'];
@@ -1037,7 +1037,7 @@ if ($action == "sendpassword") {
 
 if ($action == "lostpassword") {
   $txt_clickstream = $lang['lost_password'];
-  $user_email = (isset($HTTP_POST_VARS['user_email'])) ? format_text(stripslashes($HTTP_POST_VARS['user_email']), 2) : "";
+  $user_email = (isset($_POST['user_email'])) ? format_text(stripslashes($_POST['user_email']), 2) : "";
   $site_template->register_vars(array(
     "lang_email" => $lang['email'],
     "lang_lost_password" => $lang['lost_password'],
@@ -1059,13 +1059,13 @@ if ($action == "updateprofile") {
     show_error_page($lang['no_permission']);
     exit;
   }
-  $user_email = (isset($HTTP_POST_VARS['user_email'])) ? un_htmlspecialchars(trim($HTTP_POST_VARS['user_email'])) : "";
-  $user_email2 = (isset($HTTP_POST_VARS['user_email2'])) ? un_htmlspecialchars(trim($HTTP_POST_VARS['user_email2'])) : "";
-  $user_homepage = (isset($HTTP_POST_VARS['user_homepage'])) ? format_url(un_htmlspecialchars(trim($HTTP_POST_VARS['user_homepage']))) : "";
-  $user_icq = (isset($HTTP_POST_VARS['user_icq'])) ? ((intval(trim($HTTP_POST_VARS['user_icq']))) ? intval(trim($HTTP_POST_VARS['user_icq'])) : "") : "";
-  $user_showemail = (isset($HTTP_POST_VARS['user_showemail'])) ? intval($HTTP_POST_VARS['user_showemail']) : 0;
-  $user_allowemails = (isset($HTTP_POST_VARS['user_allowemails'])) ? intval($HTTP_POST_VARS['user_allowemails']) : 0;
-  $user_invisible = (isset($HTTP_POST_VARS['user_invisible'])) ? intval($HTTP_POST_VARS['user_invisible']) : 0;
+  $user_email = (isset($_POST['user_email'])) ? un_htmlspecialchars(trim($_POST['user_email'])) : "";
+  $user_email2 = (isset($_POST['user_email2'])) ? un_htmlspecialchars(trim($_POST['user_email2'])) : "";
+  $user_homepage = (isset($_POST['user_homepage'])) ? format_url(un_htmlspecialchars(trim($_POST['user_homepage']))) : "";
+  $user_icq = (isset($_POST['user_icq'])) ? ((intval(trim($_POST['user_icq']))) ? intval(trim($_POST['user_icq'])) : "") : "";
+  $user_showemail = (isset($_POST['user_showemail'])) ? intval($_POST['user_showemail']) : 0;
+  $user_allowemails = (isset($_POST['user_allowemails'])) ? intval($_POST['user_allowemails']) : 0;
+  $user_invisible = (isset($_POST['user_invisible'])) ? intval($_POST['user_invisible']) : 0;
 
   $error = 0;
   if ($user_info['user_email'] != $user_email && $checkuser = $site_db->query_firstrow("SELECT ".get_user_table_field("", "user_id")." FROM ".USERS_TABLE." WHERE ".get_user_table_field("", "user_email")." = '$user_email' AND ".get_user_table_field("", "user_id")." <> '".$user_info['user_id']."'")) {
@@ -1089,7 +1089,7 @@ if ($action == "updateprofile") {
 
   if (!empty($additional_user_fields)) {
     foreach ($additional_user_fields as $key => $val) {
-      if (isset($HTTP_POST_VARS[$key]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key]) == "") {
+      if (isset($_POST[$key]) && intval($val[2]) == 1 && trim($_POST[$key]) == "") {
         $error = 1;
         $field_error = preg_replace("/".$site_template->start."field_name".$site_template->end."/siU", str_replace(":", "", $val[0]), $lang['field_required']);
         $msg .= (($msg != "") ? "<br />" : "").$field_error;
@@ -1158,8 +1158,8 @@ if ($action == "updateprofile") {
     if (!empty($additional_user_fields)) {
       $table_fields = $site_db->get_table_fields(USERS_TABLE);
       foreach ($additional_user_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key]) && isset($table_fields[$key])) {
-          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key]))."'";
+        if (isset($_POST[$key]) && isset($table_fields[$key])) {
+          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($_POST[$key]))."'";
         }
       }
     }
@@ -1188,9 +1188,9 @@ if ($action == "updatepassword") {
     exit;
   }
   $error = 0;
-  $current_user_password = trim($HTTP_POST_VARS['current_user_password']);
-  $user_password = trim($HTTP_POST_VARS['user_password']);
-  $user_password2 = trim($HTTP_POST_VARS['user_password2']);
+  $current_user_password = trim($_POST['current_user_password']);
+  $user_password = trim($_POST['user_password']);
+  $user_password2 = trim($_POST['user_password2']);
   if (!compare_passwords($current_user_password, $user_info['user_password'])) {
     $msg .= (($msg != "") ? "<br />" : "").$lang['update_password_error'];
     $error = 1;
@@ -1298,7 +1298,7 @@ if ($action == "editprofile") {
     $additional_field_array = array();
     foreach ($additional_user_fields as $key => $val) {
       if ($val[1] == "radio") {
-        $value = (isset($HTTP_POST_VARS[$key])) ? intval($HTTP_POST_VARS[$key]) : intval($user_info[$key]);
+        $value = (isset($_POST[$key])) ? intval($_POST[$key]) : intval($user_info[$key]);
         if ($value == 1) {
           $additional_field_array[$key.'_yes'] = " checked=\"checked\"";
           $additional_field_array[$key.'_no'] = "";
@@ -1309,7 +1309,7 @@ if ($action == "editprofile") {
         }
       }
       else {
-        $value = (isset($HTTP_POST_VARS[$key])) ? format_text(trim($HTTP_POST_VARS[$key]), 2) : $user_info[$key];
+        $value = (isset($_POST[$key])) ? format_text(trim($_POST[$key]), 2) : $user_info[$key];
       }
       $additional_field_array[$key] = $value;
       $additional_field_array['lang_'.$key] = $val[0];

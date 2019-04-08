@@ -219,27 +219,27 @@ if ($action == "savenewimages")
 
 	$date = time();
 	$error = array();
-	$num_newimages = $HTTP_POST_VARS['num_newimages'];
-	$detailed = $HTTP_POST_VARS['detailed'];
-	$auto_resize = (isset($HTTP_POST_VARS['auto_resize']) && $HTTP_POST_VARS['auto_resize'] == 1) ? 1 : 0;
-	$auto_thumbs = (isset($HTTP_POST_VARS['auto_thumbs']) && $HTTP_POST_VARS['auto_thumbs'] == 1) ? 1 : 0;
-	$dimension = (isset($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : $dimension_default;
-	$resize_type = (isset($HTTP_POST_VARS['resize_type'])) ? intval($HTTP_POST_VARS['resize_type']) : 1;
-	$quality = (isset($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) <= 100) ? intval($HTTP_POST_VARS['quality']) : $quality_default;
-	$dimension_thumbs = (isset($HTTP_POST_VARS['dimension_thumbs'])) ? intval($HTTP_POST_VARS['dimension_thumbs']) : $dimension_thumbs_default;
-	$resize_type_thumbs = (isset($HTTP_POST_VARS['resize_type_thumbs'])) ? intval($HTTP_POST_VARS['resize_type_thumbs']) : 1;
-	$quality_thumbs = (isset($HTTP_POST_VARS['quality_thumbs']) && intval($HTTP_POST_VARS['quality_thumbs']) && intval($HTTP_POST_VARS['quality_thumbs']) <= 100) ? intval($HTTP_POST_VARS['quality_thumbs']) : $quality_thumbs_default;
-	$big = (isset($HTTP_POST_VARS['big']) && $HTTP_POST_VARS['big'] == 1) ? 1 : $big_default;
-	$annotate = (isset($HTTP_POST_VARS['annotate']) && $HTTP_POST_VARS['annotate'] == 1) ? 1 : $annotate_default;
-	$big_folder = (isset($HTTP_POST_VARS['big_folder'])) ? trim($HTTP_POST_VARS['big_folder']) : $big_folder_default;
+	$num_newimages = $_POST['num_newimages'];
+	$detailed = $_POST['detailed'];
+	$auto_resize = (isset($_POST['auto_resize']) && $_POST['auto_resize'] == 1) ? 1 : 0;
+	$auto_thumbs = (isset($_POST['auto_thumbs']) && $_POST['auto_thumbs'] == 1) ? 1 : 0;
+	$dimension = (isset($_POST['dimension'])) ? intval($_POST['dimension']) : $dimension_default;
+	$resize_type = (isset($_POST['resize_type'])) ? intval($_POST['resize_type']) : 1;
+	$quality = (isset($_POST['quality']) && intval($_POST['quality']) && intval($_POST['quality']) <= 100) ? intval($_POST['quality']) : $quality_default;
+	$dimension_thumbs = (isset($_POST['dimension_thumbs'])) ? intval($_POST['dimension_thumbs']) : $dimension_thumbs_default;
+	$resize_type_thumbs = (isset($_POST['resize_type_thumbs'])) ? intval($_POST['resize_type_thumbs']) : 1;
+	$quality_thumbs = (isset($_POST['quality_thumbs']) && intval($_POST['quality_thumbs']) && intval($_POST['quality_thumbs']) <= 100) ? intval($_POST['quality_thumbs']) : $quality_thumbs_default;
+	$big = (isset($_POST['big']) && $_POST['big'] == 1) ? 1 : $big_default;
+	$annotate = (isset($_POST['annotate']) && $_POST['annotate'] == 1) ? 1 : $annotate_default;
+	$big_folder = (isset($_POST['big_folder'])) ? trim($_POST['big_folder']) : $big_folder_default;
 	for ($i = 1; $i <= $num_newimages; $i++)
 	{
-		$addimage = (isset($HTTP_POST_VARS['addimage_'.$i]) && $HTTP_POST_VARS['addimage_'.$i] == 1) ? 1 : 0;
+		$addimage = (isset($_POST['addimage_'.$i]) && $_POST['addimage_'.$i] == 1) ? 1 : 0;
 		if ($addimage)
 		{
-			$image_name = trim($HTTP_POST_VARS['image_name_'.$i]);
-			$cat_id = intval($HTTP_POST_VARS['cat_id_'.$i]);
-			$image_download_url = (isset($HTTP_POST_VARS['image_download_url_'.$i])) ? trim($HTTP_POST_VARS['image_download_url_'.$i]) : "";
+			$image_name = trim($_POST['image_name_'.$i]);
+			$cat_id = intval($_POST['cat_id_'.$i]);
+			$image_download_url = (isset($_POST['image_download_url_'.$i])) ? trim($_POST['image_download_url_'.$i]) : "";
 
 			if ($image_name == "")
 			{
@@ -258,7 +258,7 @@ if ($action == "savenewimages")
 			{
 				foreach ($additional_image_fields as $key => $val)
 				{
-					if (isset($HTTP_POST_VARS[$key.'_'.$i]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key.'_'.$i]) == "")
+					if (isset($_POST[$key.'_'.$i]) && intval($val[2]) == 1 && trim($_POST[$key.'_'.$i]) == "")
 					{
 						$error[$key.'_'.$i] = 1;
 					}
@@ -283,29 +283,29 @@ if ($action == "savenewimages")
 		{
 			$log = array();
 			$backup = false;
-			$addimage = (isset($HTTP_POST_VARS['addimage_'.$i]) && $HTTP_POST_VARS['addimage_'.$i] == 1) ? 1 : 0;
+			$addimage = (isset($_POST['addimage_'.$i]) && $_POST['addimage_'.$i] == 1) ? 1 : 0;
 			$result = false;
 			$error_minor = false;
 			$error_major = false;
 			if ($addimage)
 			{
-				$image_media_file = stripslashes(trim($HTTP_POST_VARS['image_media_file_'.$i]));
-				$image_thumb_file = stripslashes(trim($HTTP_POST_VARS['image_thumb_file_'.$i]));
-				$image_name = trim($HTTP_POST_VARS['image_name_'.$i]);
+				$image_media_file = stripslashes(trim($_POST['image_media_file_'.$i]));
+				$image_thumb_file = stripslashes(trim($_POST['image_thumb_file_'.$i]));
+				$image_name = trim($_POST['image_name_'.$i]);
 
-				$cat_id = intval($HTTP_POST_VARS['cat_id_'.$i]);
-				$old_cat_id = intval($HTTP_POST_VARS['old_cat_id_'.$i]);
+				$cat_id = intval($_POST['cat_id_'.$i]);
+				$old_cat_id = intval($_POST['old_cat_id_'.$i]);
 
-				$user_id = (isset($HTTP_POST_VARS['user_id_'.$i]) && intval($HTTP_POST_VARS['user_id_'.$i]) != 0) ? intval($HTTP_POST_VARS['user_id_'.$i]) : "";
-				$user_id = ($user_id) ? $user_id : ((isset($HTTP_POST_VARS['user_id']) && intval($HTTP_POST_VARS['user_id']) != 0) ? intval($HTTP_POST_VARS['user_id']) : $user_info['user_id']);
+				$user_id = (isset($_POST['user_id_'.$i]) && intval($_POST['user_id_'.$i]) != 0) ? intval($_POST['user_id_'.$i]) : "";
+				$user_id = ($user_id) ? $user_id : ((isset($_POST['user_id']) && intval($_POST['user_id']) != 0) ? intval($_POST['user_id']) : $user_info['user_id']);
 
-				$image_description = (isset($HTTP_POST_VARS['image_description_'.$i])) ? trim($HTTP_POST_VARS['image_description_'.$i]) : "";
-				$image_date = (isset($HTTP_POST_VARS['image_date_'.$i])) ? ((trim($HTTP_POST_VARS['image_date_'.$i] != "")) ? "UNIX_TIMESTAMP('".trim($HTTP_POST_VARS['image_date_'.$i])."')" : time()) : time();
-				$image_download_url = (isset($HTTP_POST_VARS['image_download_url_'.$i])) ? trim($HTTP_POST_VARS['image_download_url_'.$i]) : "";
+				$image_description = (isset($_POST['image_description_'.$i])) ? trim($_POST['image_description_'.$i]) : "";
+				$image_date = (isset($_POST['image_date_'.$i])) ? ((trim($_POST['image_date_'.$i] != "")) ? "UNIX_TIMESTAMP('".trim($_POST['image_date_'.$i])."')" : time()) : time();
+				$image_download_url = (isset($_POST['image_download_url_'.$i])) ? trim($_POST['image_download_url_'.$i]) : "";
 
-				if (isset($HTTP_POST_VARS['image_keywords_'.$i]))
+				if (isset($_POST['image_keywords_'.$i]))
 				{
-					$image_keywords = trim($HTTP_POST_VARS['image_keywords_'.$i]);
+					$image_keywords = trim($_POST['image_keywords_'.$i]);
 					$image_keywords = preg_replace("/[\n\r]/is", ",", $image_keywords);
 					$image_keywords_arr = explode(',', $image_keywords);
 					array_walk($image_keywords_arr, 'trim_value');
@@ -315,8 +315,8 @@ if ($action == "savenewimages")
 				{
 					$image_keywords = "";
 				}
-				$image_active = intval($HTTP_POST_VARS['image_active_'.$i]);
-				$image_allow_comments = intval($HTTP_POST_VARS['image_allow_comments_'.$i]);
+				$image_active = intval($_POST['image_active_'.$i]);
+				$image_allow_comments = intval($_POST['image_allow_comments_'.$i]);
 
 				$additional_field_sql = "";
 				$additional_value_sql = "";
@@ -325,10 +325,10 @@ if ($action == "savenewimages")
 					$table_fields = $site_db->get_table_fields(IMAGES_TABLE);
 					foreach ($additional_image_fields as $key => $val)
 					{
-						if (isset($HTTP_POST_VARS[$key.'_'.$i]) && isset($table_fields[$key]))
+						if (isset($_POST[$key.'_'.$i]) && isset($table_fields[$key]))
 						{
 							$additional_field_sql .= ", $key";
-							$additional_value_sql .= ", '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key.'_'.$i]))."'";
+							$additional_value_sql .= ", '".un_htmlspecialchars(trim($_POST[$key.'_'.$i]))."'";
 						}
 					}
 				}
@@ -580,9 +580,9 @@ if ($action == "savenewimages")
 					$search_words = array();
 					foreach ($search_match_fields as $image_column => $match_column)
 					{
-						if (isset($HTTP_POST_VARS[$image_column.'_'.$i]))
+						if (isset($_POST[$image_column.'_'.$i]))
 						{
-							$search_words[$image_column] = stripslashes($HTTP_POST_VARS[$image_column.'_'.$i]);
+							$search_words[$image_column] = stripslashes($_POST[$image_column.'_'.$i]);
 						}
 					}
 					add_searchwords($image_id, $search_words);
@@ -595,19 +595,19 @@ if ($action == "savenewimages")
 					$log[] = $lang['cni_error'];
 				}
 				$log[] = "";
-				unset($HTTP_POST_VARS['image_name_'.$i]);
-				unset($HTTP_POST_VARS['image_media_file_'.$i]);
-				unset($HTTP_POST_VARS['image_thumb_file_'.$i]);
-				unset($HTTP_POST_VARS['image_name_'.$i]);
-				unset($HTTP_POST_VARS['cat_id_'.$i]);
-				unset($HTTP_POST_VARS['old_cat_id_'.$i]);
-				unset($HTTP_POST_VARS['user_id_'.$i]);
-				unset($HTTP_POST_VARS['image_description_'.$i]);
-				unset($HTTP_POST_VARS['image_date_'.$i]);
-				unset($HTTP_POST_VARS['image_download_url_'.$i]);
-				unset($HTTP_POST_VARS['image_keywords_'.$i]);
-				unset($HTTP_POST_VARS['image_active_'.$i]);
-				unset($HTTP_POST_VARS['image_allow_comments_'.$i]);
+				unset($_POST['image_name_'.$i]);
+				unset($_POST['image_media_file_'.$i]);
+				unset($_POST['image_thumb_file_'.$i]);
+				unset($_POST['image_name_'.$i]);
+				unset($_POST['cat_id_'.$i]);
+				unset($_POST['old_cat_id_'.$i]);
+				unset($_POST['user_id_'.$i]);
+				unset($_POST['image_description_'.$i]);
+				unset($_POST['image_date_'.$i]);
+				unset($_POST['image_download_url_'.$i]);
+				unset($_POST['image_keywords_'.$i]);
+				unset($_POST['image_active_'.$i]);
+				unset($_POST['image_allow_comments_'.$i]);
 				unset($error['image_name_'.$i]);
 				unset($error['image_media_file_'.$i]);
 				unset($error['image_thumb_file_'.$i]);
@@ -625,7 +625,7 @@ if ($action == "savenewimages")
 				{
 					foreach ($additional_image_fields as $key => $val)
 					{
-						unset($HTTP_POST_VARS[$key.'_'.$i]);
+						unset($_POST[$key.'_'.$i]);
 						unset($error[$key.'_'.$i]);
 					}
 				}
@@ -655,36 +655,36 @@ if ($action == "savenewimages")
 	}
 	if (!$rescan)
 	{
-		unset($HTTP_POST_VARS['action']);
+		unset($_POST['action']);
 	}
 }
 
 if ($action == "checkimages")
 {
-	$max_dimension = (isset($HTTP_POST_VARS['max_dimension'])) ? $HTTP_POST_VARS['max_dimension'] : $max_dimension_default;
-	$cat_id = (isset($HTTP_POST_VARS['cat_id_p'])) ? intval($HTTP_POST_VARS['cat_id_p']) : 0;
-	$num_newimages = (isset($HTTP_POST_VARS['num_newimages'])) ? intval($HTTP_POST_VARS['num_newimages']) : $num_newimages_default;
-	$detailed = (isset($HTTP_POST_VARS['detailed'])) ? intval($HTTP_POST_VARS['detailed']) : $detailed_default;
+	$max_dimension = (isset($_POST['max_dimension'])) ? $_POST['max_dimension'] : $max_dimension_default;
+	$cat_id = (isset($_POST['cat_id_p'])) ? intval($_POST['cat_id_p']) : 0;
+	$num_newimages = (isset($_POST['num_newimages'])) ? intval($_POST['num_newimages']) : $num_newimages_default;
+	$detailed = (isset($_POST['detailed'])) ? intval($_POST['detailed']) : $detailed_default;
 	$detailed_checked = ($detailed == 1) ? " checked=\"checked\"" : "";
-	$auto_resize = (isset($HTTP_POST_VARS['auto_resize'])) ? intval($HTTP_POST_VARS['auto_resize']) : $auto_resize_default;
+	$auto_resize = (isset($_POST['auto_resize'])) ? intval($_POST['auto_resize']) : $auto_resize_default;
 	$auto_resize_checked = ($auto_resize == 1) ? " checked=\"checked\"" : "";
-	$auto_thumbs = (isset($HTTP_POST_VARS['auto_thumbs'])) ? intval($HTTP_POST_VARS['auto_thumbs']) : $auto_thumbs_default;
+	$auto_thumbs = (isset($_POST['auto_thumbs'])) ? intval($_POST['auto_thumbs']) : $auto_thumbs_default;
 	$auto_thumbs_checked = ($auto_thumbs == 1) ? " checked=\"checked\"" : "";
-	$iptc_date = (isset($HTTP_POST_VARS['iptc_date'])) ? intval($HTTP_POST_VARS['iptc_date']) : $iptc_date_default;
-	$iptc_description = (isset($HTTP_POST_VARS['iptc_description'])) ? intval($HTTP_POST_VARS['iptc_description']) : $iptc_description_default;
-	$iptc_keywords = (isset($HTTP_POST_VARS['iptc_keywords'])) ? intval($HTTP_POST_VARS['iptc_keywords']) : $iptc_keywords_default;
-	$iptc_name = (isset($HTTP_POST_VARS['iptc_name'])) ? intval($HTTP_POST_VARS['iptc_name']) : $iptc_name_default;
-	$dimension = (isset($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : $dimension_default;
-	$user_id = (isset($HTTP_POST_VARS['user_id'])) ? intval($HTTP_POST_VARS['user_id']) : $user_info['user_id'];
-	$resize_type = (isset($HTTP_POST_VARS['resize_type'])) ? intval($HTTP_POST_VARS['resize_type']) : 1;
-	$quality = (isset($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) <= 100) ? intval($HTTP_POST_VARS['quality']) : $quality_default;
-	$dimension_thumbs = (isset($HTTP_POST_VARS['dimension_thumbs'])) ? intval($HTTP_POST_VARS['dimension_thumbs']) : $dimension_thumbs_default;
-	$resize_type_thumbs = (isset($HTTP_POST_VARS['resize_type_thumbs'])) ? intval($HTTP_POST_VARS['resize_type_thumbs']) : 1;
-	$quality_thumbs = (isset($HTTP_POST_VARS['quality_thumbs']) && intval($HTTP_POST_VARS['quality_thumbs']) && intval($HTTP_POST_VARS['quality_thumbs']) <= 100) ? intval($HTTP_POST_VARS['quality_thumbs']) : $quality_thumbs_default;
-	$big = (isset($HTTP_POST_VARS['big'])) ? $HTTP_POST_VARS['big'] : $big_default;
-	$annotate = (isset($HTTP_POST_VARS['annotate'])) ? $HTTP_POST_VARS['annotate'] : $annotate_default;
-	$big_folder = (isset($HTTP_POST_VARS['big_folder'])) ? trim($HTTP_POST_VARS['big_folder']) : $big_folder_default;
-	$subcats = (isset($HTTP_POST_VARS['subcats'])) ? trim($HTTP_POST_VARS['subcats']) : $subcats_default;
+	$iptc_date = (isset($_POST['iptc_date'])) ? intval($_POST['iptc_date']) : $iptc_date_default;
+	$iptc_description = (isset($_POST['iptc_description'])) ? intval($_POST['iptc_description']) : $iptc_description_default;
+	$iptc_keywords = (isset($_POST['iptc_keywords'])) ? intval($_POST['iptc_keywords']) : $iptc_keywords_default;
+	$iptc_name = (isset($_POST['iptc_name'])) ? intval($_POST['iptc_name']) : $iptc_name_default;
+	$dimension = (isset($_POST['dimension'])) ? intval($_POST['dimension']) : $dimension_default;
+	$user_id = (isset($_POST['user_id'])) ? intval($_POST['user_id']) : $user_info['user_id'];
+	$resize_type = (isset($_POST['resize_type'])) ? intval($_POST['resize_type']) : 1;
+	$quality = (isset($_POST['quality']) && intval($_POST['quality']) && intval($_POST['quality']) <= 100) ? intval($_POST['quality']) : $quality_default;
+	$dimension_thumbs = (isset($_POST['dimension_thumbs'])) ? intval($_POST['dimension_thumbs']) : $dimension_thumbs_default;
+	$resize_type_thumbs = (isset($_POST['resize_type_thumbs'])) ? intval($_POST['resize_type_thumbs']) : 1;
+	$quality_thumbs = (isset($_POST['quality_thumbs']) && intval($_POST['quality_thumbs']) && intval($_POST['quality_thumbs']) <= 100) ? intval($_POST['quality_thumbs']) : $quality_thumbs_default;
+	$big = (isset($_POST['big'])) ? $_POST['big'] : $big_default;
+	$annotate = (isset($_POST['annotate'])) ? $_POST['annotate'] : $annotate_default;
+	$big_folder = (isset($_POST['big_folder'])) ? trim($_POST['big_folder']) : $big_folder_default;
+	$subcats = (isset($_POST['subcats'])) ? trim($_POST['subcats']) : $subcats_default;
 	$subcats_checked = ($subcats == 1) ? " checked=\"checked\"" : "";
 	if ($num_newimages == "" || !$num_newimages)
 	{
@@ -709,9 +709,9 @@ if ($action == "checkimages")
 	echo "</form>";
 }
 
-if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
+if (isset($_POST['action']) && $action == "checkimages")
 {
-	if (isset($HTTP_POST_VARS['detailed']) && $HTTP_POST_VARS['detailed'] == 1)
+	if (isset($_POST['detailed']) && $_POST['detailed'] == 1)
 	{
 		$detailed = 1;
 		$colspan = 2;
@@ -721,7 +721,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 		$detailed = 0;
 		$colspan = 7;
 	}
-	$cat_id = (isset($HTTP_POST_VARS['cat_id_p'])) ? intval($HTTP_POST_VARS['cat_id_p']) : 0;
+	$cat_id = (isset($_POST['cat_id_p'])) ? intval($_POST['cat_id_p']) : 0;
 	$cat_id_p = $cat_id;
 	$image_list_sql = array();
 	$cats = array($cat_id);
@@ -963,7 +963,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 			$image_name = str_replace("_", " ", $image_name);
 			$image_name = str_replace("%20", " ", $image_name);
 
-			$checked = (isset($HTTP_POST_VARS['image_name_'.$i]) && (!isset($HTTP_POST_VARS['addimage_'.$i]) || $HTTP_POST_VARS['addimage_'.$i] != 1) || $status) ? "" : " checked=\"checked\"";
+			$checked = (isset($_POST['image_name_'.$i]) && (!isset($_POST['addimage_'.$i]) || $_POST['addimage_'.$i] != 1) || $status) ? "" : " checked=\"checked\"";
 
 			if ($detailed)
 			{
@@ -1045,7 +1045,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 				show_input_row($lang['field_download_url'].$lang['download_url_desc'], "image_download_url_".$i, "", $textinput_size);
 
 
-				$image_name = (isset($error['image_name_'.$i]) && isset($HTTP_POST_VARS['image_name_'.$i])) ? $HTTP_POST_VARS['image_name_'.$i] : str_replace("_"," ", $image_name);
+				$image_name = (isset($error['image_name_'.$i]) && isset($_POST['image_name_'.$i])) ? $_POST['image_name_'.$i] : str_replace("_"," ", $image_name);
 				$iptc = "";
 				if (isset($info['APP13']))
 				{
@@ -1174,12 +1174,12 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 				if (isset($error['image_name_'.$i]))
 				{
 					$field_image_name = sprintf("<span class=\"marktext\">%s</span>", $lang['field_image_name']);
-					$image_name = $HTTP_POST_VARS['image_name_'.$i];
+					$image_name = $_POST['image_name_'.$i];
 				}
 				else
 				{
 					$field_image_name = $lang['field_image_name'];//sprintf("%s", $lang['field_image_name']);
-					$image_name = (isset($HTTP_POST_VARS['image_name_'.$i])) ? $HTTP_POST_VARS['image_name_'.$i] : str_replace("_"," ", $image_name);
+					$image_name = (isset($_POST['image_name_'.$i])) ? $_POST['image_name_'.$i] : str_replace("_"," ", $image_name);
 					if ($iptc_auto_now)
 					{
 						if (isset($info['APP13']))
@@ -1219,7 +1219,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 				{
 					$field_category = sprintf("<span class=\"marktext\">%s</span>", $lang['field_category']);
 				}
-				$cat_id_selected = (isset($HTTP_POST_VARS['cat_id_'.$i])) ? intval($HTTP_POST_VARS['cat_id_'.$i]) : $cat_id;
+				$cat_id_selected = (isset($_POST['cat_id_'.$i])) ? intval($_POST['cat_id_'.$i]) : $cat_id;
 				echo "<td>".$field_category.":<br />".get_category_dropdown($cat_id_selected, 0, 3, $i)."</td>\n";
 				show_hidden_input("old_cat_id_".$i, $cat_id);
 				show_hidden_input("image_description_".$i, htmlspecialchars($caption));
@@ -1227,7 +1227,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 				show_hidden_input("image_date_".$i, htmlspecialchars($date));
 
 				echo "<td>".$lang['field_free'].":<br />";
-				if (isset($HTTP_POST_VARS['image_active_'.$i]) && $HTTP_POST_VARS['image_active_'.$i] == 0)
+				if (isset($_POST['image_active_'.$i]) && $_POST['image_active_'.$i] == 0)
 				{
 					$c1 = "";
 					$c2 = " checked=\"checked\"";
@@ -1242,7 +1242,7 @@ if (isset($HTTP_POST_VARS['action']) && $action == "checkimages")
 				echo "</td>\n";
 
 				echo "<td>".$lang['field_allow_comments'].":<br />";
-				if (isset($HTTP_POST_VARS['image_allow_comments_'.$i]) && $HTTP_POST_VARS['image_allow_comments_'.$i] == 0)
+				if (isset($_POST['image_allow_comments_'.$i]) && $_POST['image_allow_comments_'.$i] == 0)
 				{
 					$c1 = "";
 					$c2 = " checked=\"checked\"";

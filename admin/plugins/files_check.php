@@ -30,8 +30,8 @@ if ($action == "") {
   $action = "intro";
 }
 $ids = array();
-if (isset($HTTP_GET_VARS['thumbs']) || isset($HTTP_POST_VARS['thumbs'])) {
-  $thumbs = (isset($HTTP_GET_VARS['thumbs'])) ? intval($HTTP_GET_VARS['thumbs']) : intval($HTTP_POST_VARS['thumbs']);
+if (isset($HTTP_GET_VARS['thumbs']) || isset($_POST['thumbs'])) {
+  $thumbs = (isset($HTTP_GET_VARS['thumbs'])) ? intval($HTTP_GET_VARS['thumbs']) : intval($_POST['thumbs']);
 }
 else {
   $thumbs = 0;
@@ -215,8 +215,8 @@ show_admin_header();
 
 
 if ($action == "deleteimage") {
-  $selectimages = (isset($HTTP_POST_VARS['selectimages'])) ? $HTTP_POST_VARS['selectimages'] : array();
-  $delfromserver = (isset($HTTP_POST_VARS['delfromserver'])) ? intval($HTTP_POST_VARS['delfromserver']) : 1;
+  $selectimages = (isset($_POST['selectimages'])) ? $_POST['selectimages'] : array();
+  $delfromserver = (isset($_POST['delfromserver'])) ? intval($_POST['delfromserver']) : 1;
   $image_ids = "";
   if (!empty($selectimages)) {
     foreach ($selectimages as $val) {
@@ -249,12 +249,12 @@ if ($action == "deleteimage") {
 
 if ($action == "removeimage") {
   $image_ids = array();
-  if ((isset($HTTP_GET_VARS['image_id']) && intval($HTTP_GET_VARS['image_id'])) || (isset($HTTP_POST_VARS['image_id']) && intval($HTTP_POST_VARS['image_id']))) {
-    $image_id = (isset($HTTP_GET_VARS['image_id'])) ? intval($HTTP_GET_VARS['image_id']) : intval($HTTP_POST_VARS['image_id']);
+  if ((isset($HTTP_GET_VARS['image_id']) && intval($HTTP_GET_VARS['image_id'])) || (isset($_POST['image_id']) && intval($_POST['image_id']))) {
+    $image_id = (isset($HTTP_GET_VARS['image_id'])) ? intval($HTTP_GET_VARS['image_id']) : intval($_POST['image_id']);
     $image_ids[] = $image_id;
   }
-  elseif (isset($HTTP_POST_VARS['selectimages'])) {
-    $image_ids = $HTTP_POST_VARS['selectimages'];
+  elseif (isset($_POST['selectimages'])) {
+    $image_ids = $_POST['selectimages'];
   }
   else {
    $image_ids[] = 0;
@@ -304,14 +304,14 @@ if ($action == "intro") {
 }
 
 if ($action == "checkimages") {
-  if (isset($HTTP_GET_VARS['cat']) || isset($HTTP_POST_VARS['cat'])) {
-    $cat = (isset($HTTP_GET_VARS['cat'])) ? intval($HTTP_GET_VARS['cat']) : intval($HTTP_POST_VARS['cat']);
+  if (isset($HTTP_GET_VARS['cat']) || isset($_POST['cat'])) {
+    $cat = (isset($HTTP_GET_VARS['cat'])) ? intval($HTTP_GET_VARS['cat']) : intval($_POST['cat']);
   }
   else {
     $cat = 0;
   }
-  if (isset($HTTP_GET_VARS['subcat']) || isset($HTTP_POST_VARS['subcat'])) {
-    $subcat = (isset($HTTP_GET_VARS['subcat'])) ? intval($HTTP_GET_VARS['subcat']) : intval($HTTP_POST_VARS['subcat']);
+  if (isset($HTTP_GET_VARS['subcat']) || isset($_POST['subcat'])) {
+    $subcat = (isset($HTTP_GET_VARS['subcat'])) ? intval($HTTP_GET_VARS['subcat']) : intval($_POST['subcat']);
   }
   else {
     $subcat = 0;
@@ -332,8 +332,8 @@ if ($cat) {
 }else{
 	$condition = "";
 }
-  if (isset($HTTP_GET_VARS['imchksize']) || isset($HTTP_POST_VARS['imchksize'])) {
-    $imchksize = (isset($HTTP_GET_VARS['imchksize'])) ? intval($HTTP_GET_VARS['imchksize']) : intval($HTTP_POST_VARS['imchksize']);
+  if (isset($HTTP_GET_VARS['imchksize']) || isset($_POST['imchksize'])) {
+    $imchksize = (isset($HTTP_GET_VARS['imchksize'])) ? intval($HTTP_GET_VARS['imchksize']) : intval($_POST['imchksize']);
     if (!$imchksize) {
       $imchksize = 25;
     }
@@ -342,20 +342,20 @@ if ($cat) {
     $imchksize = 50;
   }
 
-  if (isset($HTTP_GET_VARS['autoredirect']) || isset($HTTP_POST_VARS['autoredirect'])) {
-    $autoredirect = (isset($HTTP_GET_VARS['autoredirect'])) ? intval($HTTP_GET_VARS['autoredirect']) : intval($HTTP_POST_VARS['autoredirect']);
+  if (isset($HTTP_GET_VARS['autoredirect']) || isset($_POST['autoredirect'])) {
+    $autoredirect = (isset($HTTP_GET_VARS['autoredirect'])) ? intval($HTTP_GET_VARS['autoredirect']) : intval($_POST['autoredirect']);
   }
   else {
     $autoredirect = 0;
   }
-  if (isset($HTTP_GET_VARS['local']) || isset($HTTP_POST_VARS['local'])) {
-    $local = (isset($HTTP_GET_VARS['local'])) ? intval($HTTP_GET_VARS['local']) : intval($HTTP_POST_VARS['local']);
+  if (isset($HTTP_GET_VARS['local']) || isset($_POST['local'])) {
+    $local = (isset($HTTP_GET_VARS['local'])) ? intval($HTTP_GET_VARS['local']) : intval($_POST['local']);
   }
   else {
     $local = 0;
   }
-  if (isset($HTTP_GET_VARS['imchkstart']) || isset($HTTP_POST_VARS['imchkstart'])) {
-    $imchkstart = (isset($HTTP_GET_VARS['imchkstart'])) ? intval($HTTP_GET_VARS['imchkstart']) : intval($HTTP_POST_VARS['imchkstart']);
+  if (isset($HTTP_GET_VARS['imchkstart']) || isset($_POST['imchkstart'])) {
+    $imchkstart = (isset($HTTP_GET_VARS['imchkstart'])) ? intval($HTTP_GET_VARS['imchkstart']) : intval($_POST['imchkstart']);
   }
   else {
     $imchkstart = 0;

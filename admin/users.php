@@ -169,9 +169,9 @@ function delete_users($user_ids, $delcomments = 1, $delimages = 1) {
 show_admin_header();
 
 if ($action == "deleteuser") {
-  $deleteusers = (isset($HTTP_POST_VARS['deleteusers'])) ? $HTTP_POST_VARS['deleteusers'] : array();
-  $delcomments = intval($HTTP_POST_VARS['delcomments']);
-  $delimages = intval($HTTP_POST_VARS['delimages']);
+  $deleteusers = (isset($_POST['deleteusers'])) ? $_POST['deleteusers'] : array();
+  $delcomments = intval($_POST['delcomments']);
+  $delimages = intval($_POST['delimages']);
   $user_ids = "";
   if (!empty($deleteusers)) {
     foreach ($deleteusers as $val) {
@@ -204,12 +204,12 @@ if ($action == "deleteuser") {
 
 if ($action == "removeuser") {
   $user_ids = array();
-  if (isset($HTTP_GET_VARS['user_id']) || isset($HTTP_POST_VARS['user_id'])) {
-    $user_id = (isset($HTTP_GET_VARS['user_id'])) ? intval($HTTP_GET_VARS['user_id']) : intval($HTTP_POST_VARS['user_id']);
+  if (isset($HTTP_GET_VARS['user_id']) || isset($_POST['user_id'])) {
+    $user_id = (isset($HTTP_GET_VARS['user_id'])) ? intval($HTTP_GET_VARS['user_id']) : intval($_POST['user_id']);
     $user_ids[] = $user_id;
   }
-  elseif (isset($HTTP_POST_VARS['deleteusers'])) {
-    $user_ids = $HTTP_POST_VARS['deleteusers'];
+  elseif (isset($_POST['deleteusers'])) {
+    $user_ids = $_POST['deleteusers'];
   }
   else {
    $user_ids[] = 0;
@@ -229,23 +229,23 @@ if ($action == "removeuser") {
 
 if ($action == "updateuser") {
   $error = array();
-  $user_id = (isset($HTTP_POST_VARS['user_id'])) ? intval($HTTP_POST_VARS['user_id']) : intval($HTTP_GET_VARS['user_id']);
+  $user_id = (isset($_POST['user_id'])) ? intval($_POST['user_id']) : intval($HTTP_GET_VARS['user_id']);
 
-  $user_level = intval($HTTP_POST_VARS['user_level']);
-  $user_name = trim($HTTP_POST_VARS['user_name']);
-  $user_email = trim($HTTP_POST_VARS['user_email']);
-  $user_password = trim($HTTP_POST_VARS['user_password']);
-  $user_homepage = trim($HTTP_POST_VARS['user_homepage']);
-  $user_icq = (intval(trim($HTTP_POST_VARS['user_icq']))) ? intval(trim($HTTP_POST_VARS['user_icq'])) : "";
-  $user_joindate = trim($HTTP_POST_VARS['user_joindate']);
-  $user_lastaction = trim($HTTP_POST_VARS['user_lastaction']);
-  $user_showemail = intval($HTTP_POST_VARS['user_showemail']);
-  $user_allowemails = intval($HTTP_POST_VARS['user_allowemails']);
-  $user_invisible = intval($HTTP_POST_VARS['user_invisible']);
+  $user_level = intval($_POST['user_level']);
+  $user_name = trim($_POST['user_name']);
+  $user_email = trim($_POST['user_email']);
+  $user_password = trim($_POST['user_password']);
+  $user_homepage = trim($_POST['user_homepage']);
+  $user_icq = (intval(trim($_POST['user_icq']))) ? intval(trim($_POST['user_icq'])) : "";
+  $user_joindate = trim($_POST['user_joindate']);
+  $user_lastaction = trim($_POST['user_lastaction']);
+  $user_showemail = intval($_POST['user_showemail']);
+  $user_allowemails = intval($_POST['user_allowemails']);
+  $user_invisible = intval($_POST['user_invisible']);
 
   $current = get_user_info($user_id);
 
-  $activation = intval($HTTP_POST_VARS['activation']);
+  $activation = intval($_POST['activation']);
   if ($current['user_level'] != USER_AWAITING) {
     $activation = 0;
   }
@@ -270,7 +270,7 @@ if ($action == "updateuser") {
 
   if (!empty($additional_user_fields)) {
     foreach ($additional_user_fields as $key => $val) {
-      if (isset($HTTP_POST_VARS[$key]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key]) == "") {
+      if (isset($_POST[$key]) && intval($val[2]) == 1 && trim($_POST[$key]) == "") {
         $error[$key] = 1;
       }
     }
@@ -285,8 +285,8 @@ if ($action == "updateuser") {
     if (!empty($additional_user_fields)) {
       $table_fields = $site_db->get_table_fields(USERS_TABLE);
       foreach ($additional_user_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key]) && isset($table_fields[$key])) {
-          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key]))."'";
+        if (isset($_POST[$key]) && isset($table_fields[$key])) {
+          $additional_sql .= ", $key = '".un_htmlspecialchars(trim($_POST[$key]))."'";
         }
       }
     }
@@ -322,14 +322,14 @@ if ($action == "edituser") {
     printf("<b>%s</b>\n", $msg);
   }
 
-  $user_id = (isset($HTTP_POST_VARS['user_id'])) ? intval($HTTP_POST_VARS['user_id']) : intval($HTTP_GET_VARS['user_id']);
+  $user_id = (isset($_POST['user_id'])) ? intval($_POST['user_id']) : intval($HTTP_GET_VARS['user_id']);
 
   $user_row = get_user_info($user_id);
   $user_row['user_joindate'] = date("Y-m-d H:i", $user_row['user_joindate']);
   $user_row['user_lastaction'] = date("Y-m-d H:i", $user_row['user_lastaction']);
 
-  if (isset($HTTP_GET_VARS['activation']) || isset($HTTP_POST_VARS['activation'])) {
-    $activation = (isset($HTTP_GET_VARS['activation'])) ? intval($HTTP_GET_VARS['activation']) : intval($HTTP_POST_VARS['activation']);
+  if (isset($HTTP_GET_VARS['activation']) || isset($_POST['activation'])) {
+    $activation = (isset($HTTP_GET_VARS['activation'])) ? intval($HTTP_GET_VARS['activation']) : intval($_POST['activation']);
     if ($user_row['user_level'] != USER_AWAITING) {
       $activation = 0;
     }
@@ -349,7 +349,7 @@ if ($action == "edituser") {
   show_userlevel_select_row($lang['field_userlevel'], "user_level", $user_row['user_level']);
   show_input_row($lang['field_username'], "user_name", $user_row['user_name'], $textinput_size);
   show_input_row($lang['field_email'], "user_email", $user_row['user_email'], $textinput_size);
-  unset($HTTP_POST_VARS['user_password']);
+  unset($_POST['user_password']);
   show_input_row($lang['field_password_ext'], "user_password", "", $textinput_size);
   show_input_row($lang['field_homepage'], "user_homepage", $user_row['user_homepage'], $textinput_size);
   show_input_row($lang['field_icq'], "user_icq", $user_row['user_icq'], $textinput_size);
@@ -395,53 +395,53 @@ if ($action == "findusers") {
 
   $condition = "1=1";
 
-  $user_level = intval($HTTP_POST_VARS['user_level']);
+  $user_level = intval($_POST['user_level']);
   if ($user_level != GUEST) {
     $condition .= " AND ".get_user_table_field("", "user_level")." = $user_level";
   }
-  $user_name = trim($HTTP_POST_VARS['user_name']);
+  $user_name = trim($_POST['user_name']);
   if ($user_name != "") {
     $condition .= " AND INSTR(LCASE(".get_user_table_field("", "user_name")."),'".strtolower($user_name)."')>0";
   }
-  $user_email = trim($HTTP_POST_VARS['user_email']);
+  $user_email = trim($_POST['user_email']);
   if ($user_email != "") {
     $condition .= " AND INSTR(LCASE(".get_user_table_field("", "user_email")."),'".strtolower($user_email)."')>0";
   }
-  $dateafter = trim($HTTP_POST_VARS['dateafter']);
+  $dateafter = trim($_POST['dateafter']);
   if ($dateafter != "") {
     $condition .= " AND ".get_user_table_field("", "user_joindate")." > UNIX_TIMESTAMP('$dateafter')";
   }
-  $datebefore = trim($HTTP_POST_VARS['datebefore']);
+  $datebefore = trim($_POST['datebefore']);
   if ($datebefore != "") {
     $condition .= " AND ".get_user_table_field("", "user_joindate")." < UNIX_TIMESTAMP('$datebefore')";
   }
-  $lastactionafter = trim($HTTP_POST_VARS['lastactionafter']);
+  $lastactionafter = trim($_POST['lastactionafter']);
   if ($lastactionafter != "") {
     $condition .= " AND ".get_user_table_field("", "user_lastaction")." > UNIX_TIMESTAMP('$lastactionafter')";
   }
-  $lastactionbefore = trim($HTTP_POST_VARS['lastactionbefore']);
+  $lastactionbefore = trim($_POST['lastactionbefore']);
   if ($lastactionbefore != "") {
     $condition .= " AND ".get_user_table_field("", "user_lastaction")." < UNIX_TIMESTAMP('$lastactionbefore')";
   }
-  $orderby = trim($HTTP_POST_VARS['orderby']);
+  $orderby = trim($_POST['orderby']);
   if (!isset($orderbyOptions[$orderby])) {
     $orderby = get_user_table_field("", "user_name");
   }
-  $limitstart = (isset($HTTP_POST_VARS['limitstart'])) ? trim($HTTP_POST_VARS['limitstart']) : "";
+  $limitstart = (isset($_POST['limitstart'])) ? trim($_POST['limitstart']) : "";
   if ($limitstart == "") {
     $limitstart = 0;
   }
   else {
     $limitstart--;
   }
-  $limitnumber = (isset($HTTP_POST_VARS['limitnumber'])) ? trim($HTTP_POST_VARS['limitnumber']) : "";
+  $limitnumber = (isset($_POST['limitnumber'])) ? trim($_POST['limitnumber']) : "";
   if ($limitnumber == "") {
     $limitnumber = 5000;
   }
 
   $direction = "ASC";
-  if (isset($HTTP_GET_VARS['direction']) || isset($HTTP_POST_VARS['direction'])) {
-    $requestedDirection = (isset($HTTP_GET_VARS['direction'])) ? trim($HTTP_GET_VARS['direction']) : trim($HTTP_POST_VARS['direction']);
+  if (isset($HTTP_GET_VARS['direction']) || isset($_POST['direction'])) {
+    $requestedDirection = (isset($HTTP_GET_VARS['direction'])) ? trim($HTTP_GET_VARS['direction']) : trim($_POST['direction']);
 
     if ('DESC' === $requestedDirection) {
       $direction = "DESC";
@@ -542,12 +542,12 @@ if ($action == "findusers") {
 
 if ($action == "saveusers") {
   $error = array();
-  $num_newusers = $HTTP_POST_VARS['num_newusers'];
+  $num_newusers = $_POST['num_newusers'];
   for ($i = 1; $i <= $num_newusers; $i++) {
-    $user_level = intval($HTTP_POST_VARS['user_level_'.$i]);
-    $user_name = trim($HTTP_POST_VARS['user_name_'.$i]);
-    $user_email = trim($HTTP_POST_VARS['user_email_'.$i]);
-    $user_password = trim($HTTP_POST_VARS['user_password_'.$i]);
+    $user_level = intval($_POST['user_level_'.$i]);
+    $user_name = trim($_POST['user_name_'.$i]);
+    $user_email = trim($_POST['user_email_'.$i]);
+    $user_password = trim($_POST['user_password_'.$i]);
 
     if ($user_name == "") {
       $error['user_name_'.$i] = 1;
@@ -584,7 +584,7 @@ if ($action == "saveusers") {
 
     if (!empty($additional_user_fields)) {
       foreach ($additional_user_fields as $key => $val) {
-        if (isset($HTTP_POST_VARS[$key.'_'.$i]) && intval($val[2]) == 1 && trim($HTTP_POST_VARS[$key.'_'.$i]) == "") {
+        if (isset($_POST[$key.'_'.$i]) && intval($val[2]) == 1 && trim($_POST[$key.'_'.$i]) == "") {
           $error[$key.'_'.$i] = 1;
         }
       }
@@ -593,18 +593,18 @@ if ($action == "saveusers") {
   if (empty($error)) {
     for ($i = 1; $i <= $num_newusers; $i++) {
       $log = array();
-      $user_level = trim($HTTP_POST_VARS['user_level_'.$i]);
-      $user_name = trim($HTTP_POST_VARS['user_name_'.$i]);
-      $user_email = trim($HTTP_POST_VARS['user_email_'.$i]);
-      $user_password = trim($HTTP_POST_VARS['user_password_'.$i]);
-      $user_homepage = trim($HTTP_POST_VARS['user_homepage_'.$i]);
-      $user_icq = intval(trim($HTTP_POST_VARS['user_icq_'.$i]));
+      $user_level = trim($_POST['user_level_'.$i]);
+      $user_name = trim($_POST['user_name_'.$i]);
+      $user_email = trim($_POST['user_email_'.$i]);
+      $user_password = trim($_POST['user_password_'.$i]);
+      $user_homepage = trim($_POST['user_homepage_'.$i]);
+      $user_icq = intval(trim($_POST['user_icq_'.$i]));
       if (!$user_icq) {
       	$user_icq = "";
       }
-      $user_showemail = intval($HTTP_POST_VARS['user_showemail_'.$i]);
-      $user_allowemails = intval($HTTP_POST_VARS['user_allowemails_'.$i]);
-      $user_invisible = intval($HTTP_POST_VARS['user_invisible_'.$i]);
+      $user_showemail = intval($_POST['user_showemail_'.$i]);
+      $user_allowemails = intval($_POST['user_allowemails_'.$i]);
+      $user_invisible = intval($_POST['user_invisible_'.$i]);
 
       $activationkey = get_random_key(USERS_TABLE, get_user_table_field("", "user_activationkey"));
       $user_id = $site_db->get_next_id(get_user_table_field("", "user_id"), USERS_TABLE);
@@ -614,9 +614,9 @@ if ($action == "saveusers") {
       if (!empty($additional_user_fields)) {
         $table_fields = $site_db->get_table_fields(USERS_TABLE);
         foreach ($additional_user_fields as $key => $val) {
-          if (isset($HTTP_POST_VARS[$key.'_'.$i]) && isset($table_fields[$key])) {
+          if (isset($_POST[$key.'_'.$i]) && isset($table_fields[$key])) {
             $additional_field_sql .= ", $key";
-            $additional_value_sql .= ", '".un_htmlspecialchars(trim($HTTP_POST_VARS[$key.'_'.$i]))."'";
+            $additional_value_sql .= ", '".un_htmlspecialchars(trim($_POST[$key.'_'.$i]))."'";
           }
         }
       }
@@ -669,8 +669,8 @@ if ($action == "saveusers") {
 }
 
 if ($action == "addusers") {
-  if (isset($HTTP_GET_VARS['num_newusers']) || isset($HTTP_POST_VARS['num_newusers'])) {
-    $num_newusers = (isset($HTTP_GET_VARS['num_newusers'])) ? intval($HTTP_GET_VARS['num_newusers']) : intval($HTTP_POST_VARS['num_newusers']);
+  if (isset($HTTP_GET_VARS['num_newusers']) || isset($_POST['num_newusers'])) {
+    $num_newusers = (isset($HTTP_GET_VARS['num_newusers'])) ? intval($HTTP_GET_VARS['num_newusers']) : intval($_POST['num_newusers']);
   }
   else {
     $num_newusers = 1;

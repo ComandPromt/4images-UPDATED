@@ -28,16 +28,16 @@ if ($action == "") {
   $action = "modifytemplates";
 }
 
-if (isset($HTTP_GET_VARS['template_folder']) || isset($HTTP_POST_VARS['template_folder'])) {
-  $template_folder = (isset($HTTP_GET_VARS['template_folder'])) ? trim($HTTP_GET_VARS['template_folder']) : trim($HTTP_POST_VARS['template_folder']);
+if (isset($HTTP_GET_VARS['template_folder']) || isset($_POST['template_folder'])) {
+  $template_folder = (isset($HTTP_GET_VARS['template_folder'])) ? trim($HTTP_GET_VARS['template_folder']) : trim($_POST['template_folder']);
   $template_folder = str_replace('.', '', $template_folder);
 }
 else {
   $template_folder = "";
 }
 
-if (isset($HTTP_GET_VARS['template_file_name']) || isset($HTTP_POST_VARS['template_file_name'])) {
-  $template_file_name = (isset($HTTP_GET_VARS['template_file_name'])) ? trim($HTTP_GET_VARS['template_file_name']) : trim($HTTP_POST_VARS['template_file_name']);
+if (isset($HTTP_GET_VARS['template_file_name']) || isset($_POST['template_file_name'])) {
+  $template_file_name = (isset($HTTP_GET_VARS['template_file_name'])) ? trim($HTTP_GET_VARS['template_file_name']) : trim($_POST['template_file_name']);
   $template_file_name = (strpos($template_file_name, 'media/') !== false ? 'media/' : '') . basename($template_file_name);
 }
 else {
@@ -128,8 +128,8 @@ if ($action == "loadtemplate") {
 }
 
 if ($action == "savetemplate") {
-  if (isset($HTTP_POST_VARS['content'])) {
-    $content = trim($HTTP_POST_VARS['content']);
+  if (isset($_POST['content'])) {
+    $content = trim($_POST['content']);
   }
   else {
     $content = "";

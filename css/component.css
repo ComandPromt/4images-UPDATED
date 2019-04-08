@@ -92,7 +92,7 @@
 .dl-menuwrapper li > a:not(:only-child):after {
 	position: absolute;
 	top: 0;
-	line-height: 50px;
+	line-height: 60px;
 	font-family: 'icomoon';
 	speak: none;
 	-webkit-font-smoothing: antialiased;

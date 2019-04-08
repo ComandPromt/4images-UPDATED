@@ -44,8 +44,8 @@ if (!in_array($db_name, $tablas)) {
     require(ROOT_PATH.'includes/sessions.php');
     $user_access = get_permission();
     
-    if (isset($HTTP_GET_VARS['template']) || isset($HTTP_POST_VARS['template'])) {
-      $template = (isset($HTTP_GET_VARS['template'])) ? get_basefile(stripslashes($HTTP_GET_VARS['template'])) : get_basefile(stripslashes($HTTP_POST_VARS['template']));
+    if (isset($HTTP_GET_VARS['template']) || isset($_POST['template'])) {
+      $template = (isset($HTTP_GET_VARS['template'])) ? get_basefile(stripslashes($HTTP_GET_VARS['template'])) : get_basefile(stripslashes($_POST['template']));
       if (!file_exists(TEMPLATE_PATH."/".$template.".".$site_template->template_extension)) {
         $template = "";
       }

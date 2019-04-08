@@ -194,7 +194,7 @@ function show_setting_row($setting_name, $value_option = "", $htmlspecialchars =
 show_admin_header();
 
 if ($action == "updatesettings") {
-  $setting_item = $HTTP_POST_VARS['setting_item'];
+  $setting_item = $_POST['setting_item'];
   foreach ($setting_item as $key => $val) {
     $val = trim($val);
     
@@ -213,8 +213,8 @@ if ($action == "updatesettings") {
     $res = $site_db->query($sql);
   }
 
-  if ($HTTP_POST_VARS['setting_item']['language_dir'] != $config['language_dir']) {
-    include(ROOT_PATH.'lang/'.$HTTP_POST_VARS['setting_item']['language_dir'].'/admin.php');
+  if ($_POST['setting_item']['language_dir'] != $config['language_dir']) {
+    include(ROOT_PATH.'lang/'.$_POST['setting_item']['language_dir'].'/admin.php');
 ?>
     <script language="javascript">
     <!--

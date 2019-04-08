@@ -1,7 +1,5 @@
 <?php
 date_default_timezone_set('Europe/Madrid');
-
-	session_start();
 include_once('config.php');
 include_once('includes/funciones.php');
 ?>
@@ -31,8 +29,12 @@ include_once('includes/funciones.php');
 		<link rel="stylesheet" type="text/css" href="css/component.css" />
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
-				<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
-			       
+		<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
+	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
+	      <link rel="stylesheet" type="text/css" href="css/lib/control/iconselect.css" >
+        <script type="text/javascript" src="lib/control/iconselect.js"></script>
+   <script type="text/javascript" src="lib/iscroll.js"></script>
+	<script type="text/javascript" src="tooltip/js/tooltip.js"></script>		       
 	<title>Web</title>
 	          <style>
 			  *{
@@ -164,13 +166,36 @@ include_once('includes/funciones.php');
                             .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-arrow_more { bottom: 17px;}
                             .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_inner { top: -51px;}
                             .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_size { top: -51px;}
-                        </style>
-	<style>
+
 	@media only screen and (min-width: 900px) {
 	#menu_usuario {
 		opacity:0;
 	}
 }
+
+.tooltip {
+
+  display: inline-block;
+
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+ 
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 	</style>
 	<script>
 		//Especificar a que elementos afectará, añadiendo o quitando de la lista:

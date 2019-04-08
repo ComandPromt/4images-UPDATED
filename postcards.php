@@ -27,8 +27,8 @@ include(ROOT_PATH.'global.php');
 require(ROOT_PATH.'includes/sessions.php');
 $user_access = get_permission();
 
-if (isset($HTTP_GET_VARS[URL_POSTCARD_ID]) || isset($HTTP_POST_VARS[URL_POSTCARD_ID])) {
-  $postcard_id = (isset($HTTP_GET_VARS[URL_POSTCARD_ID])) ? trim($HTTP_GET_VARS[URL_POSTCARD_ID]) : trim($HTTP_POST_VARS[URL_POSTCARD_ID]);
+if (isset($HTTP_GET_VARS[URL_POSTCARD_ID]) || isset($_POST[URL_POSTCARD_ID])) {
+  $postcard_id = (isset($HTTP_GET_VARS[URL_POSTCARD_ID])) ? trim($HTTP_GET_VARS[URL_POSTCARD_ID]) : trim($_POST[URL_POSTCARD_ID]);
 }
 else {
   $postcard_id = 0;
@@ -38,7 +38,7 @@ if ($action == "") {
   $action = ($postcard_id) ? "showcard" : "createcard";
 }
 
-if (isset($HTTP_GET_VARS['modifycard']) || isset($HTTP_POST_VARS['modifycard'])) {
+if (isset($HTTP_GET_VARS['modifycard']) || isset($_POST['modifycard'])) {
   $action = "modifycard";
 }
 
@@ -70,23 +70,23 @@ if ($action == "sendcard") {
           WHERE (postcard_date < $expiry)";
   $site_db->query($sql);
 
-  $bg_color = un_htmlspecialchars(trim($HTTP_POST_VARS['bg_color']));
-  $border_color = un_htmlspecialchars(trim($HTTP_POST_VARS['border_color']));
-  $font_color = un_htmlspecialchars(trim($HTTP_POST_VARS['font_color']));
-  $font_face = un_htmlspecialchars(trim($HTTP_POST_VARS['font_face']));
+  $bg_color = un_htmlspecialchars(trim($_POST['bg_color']));
+  $border_color = un_htmlspecialchars(trim($_POST['border_color']));
+  $font_color = un_htmlspecialchars(trim($_POST['font_color']));
+  $font_face = un_htmlspecialchars(trim($_POST['font_face']));
 
-  $sender_name = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_name']));
-  $sender_email = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_email']));
-  $recipient_name = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_name']));
-  $recipient_email = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_email']));
+  $sender_name = un_htmlspecialchars(trim($_POST['sender_name']));
+  $sender_email = un_htmlspecialchars(trim($_POST['sender_email']));
+  $recipient_name = un_htmlspecialchars(trim($_POST['recipient_name']));
+  $recipient_email = un_htmlspecialchars(trim($_POST['recipient_email']));
 
-  $headline = un_htmlspecialchars(trim($HTTP_POST_VARS['headline']));
-  $message = un_htmlspecialchars(trim($HTTP_POST_VARS['message']));
+  $headline = un_htmlspecialchars(trim($_POST['headline']));
+  $message = un_htmlspecialchars(trim($_POST['message']));
   $message = strip_tags($message);
 
-  $captcha = (isset($HTTP_POST_VARS['captcha'])) ? un_htmlspecialchars(trim($HTTP_POST_VARS['captcha'])) : "";
+  $captcha = (isset($_POST['captcha'])) ? un_htmlspecialchars(trim($_POST['captcha'])) : "";
 
-  $back_url = (!empty($HTTP_POST_VARS['back_url'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['back_url']))) : $site_sess->url(ROOT_PATH."index.php", "&");
+  $back_url = (!empty($_POST['back_url'])) ? un_htmlspecialchars(stripslashes(trim($_POST['back_url']))) : $site_sess->url(ROOT_PATH."index.php", "&");
 
   $postcard_id = get_random_key(POSTCARDS_TABLE, "postcard_id");
   $current_time = time();
@@ -176,20 +176,20 @@ if ($action == "showcard") {
 
 if ($action == "previewcard") {
   $error = 0;
-  $bg_color = un_htmlspecialchars(trim($HTTP_POST_VARS['bg_color']));
-  $border_color = un_htmlspecialchars(trim($HTTP_POST_VARS['border_color']));
-  $font_color = un_htmlspecialchars(trim($HTTP_POST_VARS['font_color']));
-  $font_face = un_htmlspecialchars(trim($HTTP_POST_VARS['font_face']));
+  $bg_color = un_htmlspecialchars(trim($_POST['bg_color']));
+  $border_color = un_htmlspecialchars(trim($_POST['border_color']));
+  $font_color = un_htmlspecialchars(trim($_POST['font_color']));
+  $font_face = un_htmlspecialchars(trim($_POST['font_face']));
 
-  $sender_name = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_name']));
-  $sender_email = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_email']));
-  $recipient_name = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_name']));
-  $recipient_email = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_email']));
+  $sender_name = un_htmlspecialchars(trim($_POST['sender_name']));
+  $sender_email = un_htmlspecialchars(trim($_POST['sender_email']));
+  $recipient_name = un_htmlspecialchars(trim($_POST['recipient_name']));
+  $recipient_email = un_htmlspecialchars(trim($_POST['recipient_email']));
 
-  $headline = un_htmlspecialchars(trim($HTTP_POST_VARS['headline']));
-  $message = un_htmlspecialchars(trim($HTTP_POST_VARS['message']));
+  $headline = un_htmlspecialchars(trim($_POST['headline']));
+  $message = un_htmlspecialchars(trim($_POST['message']));
 
-  $back_url = (!empty($HTTP_POST_VARS['back_url'])) ? un_htmlspecialchars(stripslashes(trim($HTTP_POST_VARS['back_url']))) : $site_sess->url(ROOT_PATH."index.php", "&");
+  $back_url = (!empty($_POST['back_url'])) ? un_htmlspecialchars(stripslashes(trim($_POST['back_url']))) : $site_sess->url(ROOT_PATH."index.php", "&");
 
   if ($sender_name == "" || $sender_email == "" || $recipient_name == "" || $recipient_email == "" || $headline == "" || $message == "") {
     $msg .= $lang['lostfield_error'];
@@ -253,18 +253,18 @@ if ($action == "createcard" || $action == "modifycard") {
   }
 
   if ($action == "modifycard") {
-    $bg_color = un_htmlspecialchars(trim($HTTP_POST_VARS['bg_color']));
-    $border_color = un_htmlspecialchars(trim($HTTP_POST_VARS['border_color']));
-    $font_color = un_htmlspecialchars(trim($HTTP_POST_VARS['font_color']));
-    $font_face = un_htmlspecialchars(trim($HTTP_POST_VARS['font_face']));
+    $bg_color = un_htmlspecialchars(trim($_POST['bg_color']));
+    $border_color = un_htmlspecialchars(trim($_POST['border_color']));
+    $font_color = un_htmlspecialchars(trim($_POST['font_color']));
+    $font_face = un_htmlspecialchars(trim($_POST['font_face']));
 
-    $sender_name = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_name']));
-    $sender_email = un_htmlspecialchars(trim($HTTP_POST_VARS['sender_email']));
-    $recipient_name = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_name']));
-    $recipient_email = un_htmlspecialchars(trim($HTTP_POST_VARS['recipient_email']));
+    $sender_name = un_htmlspecialchars(trim($_POST['sender_name']));
+    $sender_email = un_htmlspecialchars(trim($_POST['sender_email']));
+    $recipient_name = un_htmlspecialchars(trim($_POST['recipient_name']));
+    $recipient_email = un_htmlspecialchars(trim($_POST['recipient_email']));
 
-    $headline = un_htmlspecialchars(trim($HTTP_POST_VARS['headline']));
-    $message = un_htmlspecialchars(trim($HTTP_POST_VARS['message']));
+    $headline = un_htmlspecialchars(trim($_POST['headline']));
+    $message = un_htmlspecialchars(trim($_POST['message']));
     $message = strip_tags($message);
   }
 

@@ -41,14 +41,14 @@ if ($convert_options['convert_error']) {
 }
 
 if ($action == "resizeimages") {
-  $path = ($HTTP_POST_VARS['image_type'] == "media") ? MEDIA_PATH : THUMB_PATH;
-  $sql_image_type = ($HTTP_POST_VARS['image_type'] == "media") ? "image_media_file" : "image_thumb_file";
-  $dimension = (isset($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : $config['max_image_width']; 
-  $height = (isset($HTTP_POST_VARS['height'])) ? intval($HTTP_POST_VARS['height']) : $config['max_image_height']; 
-  $resize_type = (isset($HTTP_POST_VARS['resize_type'])) ? intval($HTTP_POST_VARS['resize_type']) : $config['auto_thumbnail_resize_type'];
-  $quality = (isset($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) <= 100) ? intval($HTTP_POST_VARS['quality']) : 100;
-  $image_list = (isset($HTTP_POST_VARS['image_list'])) ? $HTTP_POST_VARS['image_list'] : "";
-  $image_dimensions = (isset($HTTP_POST_VARS['image_dimensions'])) ? $HTTP_POST_VARS['image_dimensions'] : "";
+  $path = ($_POST['image_type'] == "media") ? MEDIA_PATH : THUMB_PATH;
+  $sql_image_type = ($_POST['image_type'] == "media") ? "image_media_file" : "image_thumb_file";
+  $dimension = (isset($_POST['dimension'])) ? intval($_POST['dimension']) : $config['max_image_width']; 
+  $height = (isset($_POST['height'])) ? intval($_POST['height']) : $config['max_image_height']; 
+  $resize_type = (isset($_POST['resize_type'])) ? intval($_POST['resize_type']) : $config['auto_thumbnail_resize_type'];
+  $quality = (isset($_POST['quality']) && intval($_POST['quality']) && intval($_POST['quality']) <= 100) ? intval($_POST['quality']) : 100;
+  $image_list = (isset($_POST['image_list'])) ? $_POST['image_list'] : "";
+  $image_dimensions = (isset($_POST['image_dimensions'])) ? $_POST['image_dimensions'] : "";
 
   if (!empty($image_list)) {
     $image_id_sql = "";
@@ -91,7 +91,7 @@ if ($action == "selectoptions") {
   show_form_header("resizer.php", "selectoptions");
   show_table_header($lang['resize_images'], 2);
 
-  $image_type = (isset($HTTP_POST_VARS['image_type'])) ? trim($HTTP_POST_VARS['image_type']) : "media";
+  $image_type = (isset($_POST['image_type'])) ? trim($_POST['image_type']) : "media";
 
   $select_image_type = "<select name=\"image_type\">";
   $select_image_type .= "<option value=\"media\"";
@@ -108,12 +108,12 @@ if ($action == "selectoptions") {
 
   show_custom_row($lang['resize_image_type_desc'], $select_image_type);
 
-  $dimension = (isset($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : $config['max_image_width']; 
-  $height = (isset($HTTP_POST_VARS['height'])) ? intval($HTTP_POST_VARS['height']) : $config['max_image_height']; 
-  $resize_type = (isset($HTTP_POST_VARS['resize_type'])) ? intval($HTTP_POST_VARS['resize_type']) : $config['auto_thumbnail_resize_type'];
-  $quality = (isset($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) && intval($HTTP_POST_VARS['quality']) <= 100) ? intval($HTTP_POST_VARS['quality']) : 100;
+  $dimension = (isset($_POST['dimension'])) ? intval($_POST['dimension']) : $config['max_image_width']; 
+  $height = (isset($_POST['height'])) ? intval($_POST['height']) : $config['max_image_height']; 
+  $resize_type = (isset($_POST['resize_type'])) ? intval($_POST['resize_type']) : $config['auto_thumbnail_resize_type'];
+  $quality = (isset($_POST['quality']) && intval($_POST['quality']) && intval($_POST['quality']) <= 100) ? intval($_POST['quality']) : 100;
 
-  $num_newimages = (isset($HTTP_POST_VARS['num_newimages']) && intval($HTTP_POST_VARS['num_newimages'])) ? intval($HTTP_POST_VARS['num_newimages']) : 10;
+  $num_newimages = (isset($_POST['num_newimages']) && intval($_POST['num_newimages'])) ? intval($_POST['num_newimages']) : 10;
 
   show_input_row($lang['max_imagewidth'], "dimension", $dimension); 
   show_input_row($lang['max_imageheight'], "height", $height);
@@ -133,13 +133,13 @@ if ($action == "selectoptions") {
   echo "</form>";
 }
 
-if (isset($HTTP_POST_VARS['action']) && $action == "selectoptions") {
+if (isset($_POST['action']) && $action == "selectoptions") {
 
-  $path = ($HTTP_POST_VARS['image_type'] == "media") ? MEDIA_PATH : THUMB_PATH;
-  $sql_image_type = ($HTTP_POST_VARS['image_type'] == "media") ? "image_media_file" : "image_thumb_file";
-  $dimension = (isset($HTTP_POST_VARS['dimension'])) ? intval($HTTP_POST_VARS['dimension']) : $config['max_image_height']; 
-  $height = (isset($HTTP_POST_VARS['height'])) ? intval($HTTP_POST_VARS['height']) : $config['max_image_height'];
-  $quality = (isset($HTTP_POST_VARS['quality'])) ? intval($HTTP_POST_VARS['quality']) : 75;
+  $path = ($_POST['image_type'] == "media") ? MEDIA_PATH : THUMB_PATH;
+  $sql_image_type = ($_POST['image_type'] == "media") ? "image_media_file" : "image_thumb_file";
+  $dimension = (isset($_POST['dimension'])) ? intval($_POST['dimension']) : $config['max_image_height']; 
+  $height = (isset($_POST['height'])) ? intval($_POST['height']) : $config['max_image_height'];
+  $quality = (isset($_POST['quality'])) ? intval($_POST['quality']) : 75;
 
   $sql = "SELECT image_id, image_name, cat_id, $sql_image_type
           FROM ".IMAGES_TABLE;

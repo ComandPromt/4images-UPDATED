@@ -48,8 +48,8 @@ if ($action == "") {
   $action = "modifybackups";
 }
 
-if (isset($HTTP_GET_VARS['file']) || isset($HTTP_POST_VARS['file'])) {
-  $file = (isset($HTTP_GET_VARS['file'])) ? get_basefile(trim($HTTP_GET_VARS['file'])) : get_basefile(trim($HTTP_POST_VARS['file']));
+if (isset($HTTP_GET_VARS['file']) || isset($_POST['file'])) {
+  $file = (isset($HTTP_GET_VARS['file'])) ? get_basefile(trim($HTTP_GET_VARS['file'])) : get_basefile(trim($_POST['file']));
   if (0 !== stripos(realpath(ROOT_PATH.DATABASE_DIR."/".$file), realpath(ROOT_PATH.DATABASE_DIR))) {
     $file = "";
   };
@@ -134,7 +134,7 @@ if ($action == "restorebackup") {
 }
 
 if ($action == "makebackup") {
-  $db_tables = $HTTP_POST_VARS['db_tables'];
+  $db_tables = $_POST['db_tables'];
   $crlf = (get_user_os() == "WIN") ? "\r\n" : ((get_user_os() == "MAC") ? "\r" : "\n");
 
   $tables_info = array();
