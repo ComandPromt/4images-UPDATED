@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 include_once('includes/funciones.php');
 crear_carpetas();
 
@@ -488,18 +488,17 @@ if (file_exists('config.php')) {
         chmod('config.php', 0777);
 
         $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
-        $dwes->set_charset('utf8');
-        $dwes->query('DROP DATABASE ' . $_POST['db_name']);
+		
+		if($dwes->set_charset('utf8')){
+	$dwes->query('DROP DATABASE ' . $_POST['db_name']);
         $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
 		$dwes->query('use ' . $_POST['db_name']);
-
-        $dwes->query('CREATE TABLE notas (
-	id int(11) AUTO_INCREMENT PRIMARY KEY,
-	Nombre varchar(50) NOT NULL UNIQUE,
-	tipo varchar(50) NOT NULL,
-	descripcion varchar(255) NOT NULL
-	)');
-
+ }
+        else{
+		  $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
+		
+		}
+		
         $nombre = 'data/database/default/idiomas.sql';
 
         if (file_exists($nombre)) {
@@ -593,14 +592,23 @@ if (file_exists('config.php')) {
                 $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
                 $dwes->set_charset('utf8');
                 $dwes->query(
-                    'UPDATE ' . $table_prefix . "users
+                    "UPDATE users
               SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
               WHERE user_name = 'admin'");
-                $dwes->query(
-                    'UPDATE ' . $table_prefix . "users
-              SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
-              WHERE user_name = 'admin'");
-                $dwes->close();
+			  
+			  if($table_prefix!='4images_'){
+				  $dwes->query('RENAME TABLE 4images_users TO '.$table_prefix . 'users');
+				  $dwes->query('RENAME TABLE 4images_sessions TO '.$table_prefix . 'sessions');
+				  $dwes->query('RENAME TABLE 4images_lightboxes TO '.$table_prefix . 'lightboxes');
+				  $dwes->query('RENAME TABLE 4images_categories TO '.$table_prefix . 'categories');
+				  $dwes->query('RENAME TABLE 4images_images TO '.$table_prefix . 'images');
+				  $dwes->query('RENAME TABLE 4images_comments TO '.$table_prefix . 'comments');
+				  $dwes->query('RENAME TABLE 4images_etiquetas TO '.$table_prefix . 'etiquetas');
+				  $dwes->query('RENAME TABLE 4images_tags TO '.$table_prefix . 'tags');
+				  $dwes->query('RENAME TABLE 4images_groups TO '.$table_prefix . 'groups');				  
+			}
+			  
+               $dwes->close();
                 echo '<script>location.href="index.php";</script>';
 
             } else {
