@@ -2,7 +2,7 @@
 
 session_start();
 
-include 'cabecera.php';
+include ('cabecera.php');
 
 $_SESSION['pagina'] = 'register.php';
 

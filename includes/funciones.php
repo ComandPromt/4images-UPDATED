@@ -407,10 +407,11 @@ function poner_menu(){
 	';
 	
 	$id_categorias=array();
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
 IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
-	  while ($recuento = mysqli_fetch_array($consulta)){
+	  while ($recuento = mysqli_fetch_row($consulta)){
 			$id_categorias[]=$recuento[0];
 		}
 
