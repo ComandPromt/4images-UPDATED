@@ -184,14 +184,14 @@ if($_COOKIE['4images_userid']>=0){
 
 	$administrators=array();
 
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_name FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
+	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 	  while ($administradores = mysqli_fetch_array($consulta)){
 		  $administrators[]=$administradores[0];
 		
 	  }
 	 mysqli_close($GLOBALS['conexion']);
 	 
-if(in_array($_POST['user_name'], $administrators)){
+if(in_array($_COOKIE['4images_userid'], $administrators)){
 	
 	print '<br/><a href="admin/index.php"><img class="icono" src="img/admin.png"  border="0"></a><br/>';
 	

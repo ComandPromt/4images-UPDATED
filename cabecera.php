@@ -1,8 +1,15 @@
 <?php
+
 date_default_timezone_set('Europe/Madrid');
-include_once('config.php');
+
+if(file_exists('config.php')){
+	include_once('config.php');
+}
+
 include_once('includes/funciones.php');
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,69 +26,65 @@ include_once('includes/funciones.php');
     <link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/estilos.css">
-	
-        <link rel="stylesheet" href="css/scroll.css" />
-        <link rel="stylesheet" href="css/prettify.css" />
-        <link rel="stylesheet" href="css/jquery.scrollbar.css" />
-
-		<link rel="stylesheet" type="text/css" href="css/default.css" />
-		<link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="stylesheet" href="css/scroll.css" />
+    <link rel="stylesheet" href="css/prettify.css" />
+    <link rel="stylesheet" href="css/jquery.scrollbar.css" />
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
+	<link rel="stylesheet" type="text/css" href="css/component.css" />
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
+	<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
-   <script type="text/javascript" src="lib/iscroll.js"></script>
-	<script type="text/javascript" src="tooltip/js/tooltip.js"></script>
+	<script  src="tooltip/js/tooltip.js"></script>
 
 	<title>Web</title>
-	          <style>
+	<style>
 			  *{
 				  background-color:#ffffff;
 			  }
-                            /******************* WINDOWS VISTA SCROLLBAR *******************/
-
-                            .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
-                            .scrollbar-vista > .scroll-content.scroll-scrollx_visible { top:  -17px; margin-top:  17px; }
-
-
-                            .scrollbar-vista > .scroll-element {
-                                background-color: #fcfdff;
-                            }
-
-                            .scrollbar-vista > .scroll-element,
-                            .scrollbar-vista > .scroll-element *
-                            {
-                                border: none;
-                                margin: 0;
-                                overflow: hidden;
-                                padding: 0;
-                                position: absolute;
-                                z-index: 10;
-                            }
-
-                            .scrollbar-vista > .scroll-element .scroll-element_outer,
-                            .scrollbar-vista > .scroll-element .scroll-element_size,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner,
-                            .scrollbar-vista > .scroll-element .scroll-bar,
-                            .scrollbar-vista > .scroll-element .scroll-bar div
-                            {
-                                height: 100%;
-                                left: 0;
-                                top: 0;
-                                width: 100%;
-                            }
-
-                            .scrollbar-vista > .scroll-element .scroll-element_outer,
-                            .scrollbar-vista > .scroll-element .scroll-element_size,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
-                            .scrollbar-vista > .scroll-element .scroll-bar_body
-                            {
-                                background: none !important;
-                            }
-
-
-                            .scrollbar-vista > .scroll-element.scroll-x {
+              /******************* WINDOWS VISTA SCROLLBAR *******************/
+              
+              .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
+              .scrollbar-vista > .scroll-content.scroll-scrollx_visible { top:  -17px; margin-top:  17px; }
+              
+              
+              .scrollbar-vista > .scroll-element {
+                  background-color: #fcfdff;
+              }
+              
+              .scrollbar-vista > .scroll-element,
+              .scrollbar-vista > .scroll-element *
+              {
+                  border: none;
+                  margin: 0;
+                  overflow: hidden;
+                  padding: 0;
+                  position: absolute;
+                  z-index: 10;
+              }
+              
+              .scrollbar-vista > .scroll-element .scroll-element_outer,
+              .scrollbar-vista > .scroll-element .scroll-element_size,
+              .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+              .scrollbar-vista > .scroll-element .scroll-element_inner,
+              .scrollbar-vista > .scroll-element .scroll-bar,
+              .scrollbar-vista > .scroll-element .scroll-bar div
+              {
+                  height: 100%;
+                  left: 0;
+                  top: 0;
+                  width: 100%;
+              }
+              
+              .scrollbar-vista > .scroll-element .scroll-element_outer,
+              .scrollbar-vista > .scroll-element .scroll-element_size,
+              .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+              .scrollbar-vista > .scroll-element .scroll-bar_body
+              {
+                  background: none !important;
+              }
+                            
+              .scrollbar-vista > .scroll-element.scroll-x {
                                 border-top: solid 1px #fcfdff;
                                 bottom: 0;
                                 height: 16px;
@@ -90,23 +93,21 @@ include_once('includes/funciones.php');
                                 width: 100%;
                             }
 
-                            .scrollbar-vista > .scroll-element.scroll-y {
+              .scrollbar-vista > .scroll-element.scroll-y {
                                 border-left: solid 1px #fcfdff;
                                 height: 100%;
                                 min-height: 100%;
                                 right: 0;
                                 top: 0;
                                 width: 16px;
-                            }
+               }
 
-                           
+               .scrollbar-vista > .scroll-element.scroll-y div {
+				background-image: url('skins/vista-y.png');
+				background-repeat: repeat-y;
+               }
 
-                            .scrollbar-vista > .scroll-element.scroll-y div {
-                                background-image: url('skins/vista-y.png');
-                                background-repeat: repeat-y;
-                            }
-
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-arrow {}
+               .scrollbar-vista > .scroll-element.scroll-x .scroll-arrow {}
 
                             .scrollbar-vista > .scroll-element.scroll-x .scroll-bar { min-width: 16px; background-position: 0px -34px; background-repeat: no-repeat; }
                             .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body { left: 2px; }
@@ -165,34 +166,34 @@ include_once('includes/funciones.php');
                             .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_inner { top: -51px;}
                             .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_size { top: -51px;}
 
-	@media only screen and (min-width: 900px) {
-	#menu_usuario {
-		opacity:0;
-	}
-}
+		@media only screen and (min-width: 900px) {
+			#menu_usuario {
+				opacity:0;
+			}
+		}
+	
+		.tooltip {
+	
+		display: inline-block;
+	
+		}
+	
+		.tooltip .tooltiptext {
+			visibility: hidden;
+	
+			background-color: black;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			
+			/* Position the tooltip */
+			position: absolute;
+			z-index: 1;
+		}
 
-.tooltip {
-
-  display: inline-block;
-
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
- 
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
+		.tooltip:hover .tooltiptext {
+			visibility: visible;
+		}
 
 	</style>
 	<script>
@@ -239,8 +240,7 @@ include_once('includes/funciones.php');
 			document.getElementById('captcha_input').focus();
 			captcha_reload_count++;
 		}
-		
-		
+				
 		if (document.layers){
 			document.captureEvents(Event.MOUSEDOWN);
 			document.onmousedown = right;
@@ -250,7 +250,6 @@ include_once('includes/funciones.php');
 		}
 		var txt = "<?php echo $GLOBALS['site_name'];?>";
 			document.oncontextmenu = new Function("alert('© Copyright by "+txt+"');return false");
-		
 			txt=txt.toUpperCase();
 			txt=" "+txt+"  ";
 			var espera=600;
@@ -269,46 +268,16 @@ include_once('includes/funciones.php');
 	</head>
 <body>
 
-<?php
+<?
+include_once('config.php');
 menu_categorias();
- menu_lateral();
+menu_lateral();
 
-print ' 
-  
-</div</div> ';
+print '</div</div>';
 
-
-/*
-$consulta = mysqli_query($conexion, 'SELECT cat_id,cat_name FROM '.$table_prefix.'categories WHERE cat_id NOT IN(
-SELECT DISTINCT(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id 
-IN(SELECT  distinct(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id>0)
-) AND cat_parent_id=0;');
-$id_categorias=array();
-$nombre_categoria=array();
-	  while ($recuento = mysqli_fetch_array($consulta)){
-			$id_categorias[]=$recuento[0];
-			$nombre_categoria[]=$recuento[1];
-		}
-
-		for($x=0;$x<count($id_categorias);$x++){
-			print '<a href="categories.php?cat_id='.$id_categorias[$x].'"><img alt="'.$nombre_categoria[$x].'"
-			src="img/Categories/'.$nombre_categoria[$x].'.png" class="icono"></a>';
-		}
-		
-		print '<a href="todos.php"><img alt="Buscar" src="img/search.png" class="icono"></a>
-        
-  <a href="./search.php?search_new_images=1" onclick="w3_close()" class="w3-bar-item w3-button w3-padding">
- <img alt="New" src="img/new.png" style="width:150px;height:150px">
- </a>';
-		*/
 ?>
-	
-
- 
+	 
 </div>
-
-
-
 
 <div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
 <div class="texto">
