@@ -4,7 +4,7 @@ CREATE TABLE 4images_users (
   user_level int(11) NOT NULL default '1',
   user_name varchar(255) NOT NULL default '' UNIQUE,
   user_password varchar(255) NOT NULL default '',
-  user_email varchar(255) NOT NULL default '' UNIQUE,
+  user_email varchar(255) NOT NULL default '' ,
   user_allowemails tinyint(1) NOT NULL default '1',
   user_invisible tinyint(1) NOT NULL default '0',
   user_joindate int(11)  NOT NULL ,
@@ -125,6 +125,38 @@ CREATE TABLE notas (
 	descripcion varchar(255) NOT NULL
 )DEFAULT CHARSET=utf8;
 
-INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, 0, '', '',1);
+CREATE TABLE antispam(
+id int(11) AUTO_INCREMENT PRIMARY KEY,
+Nombre varchar(25) NOT NULL UNIQUE
+);
+
+
+INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, 0, '', '',default);
 
 INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 0, 1016023608, 1016023608, '', 0, 0, '', '',default);
+
+INSERT INTO antispam VALUES(1,'fuck');
+INSERT INTO antispam VALUES(2,'puta');
+INSERT INTO antispam VALUES(3,'zorra');
+INSERT INTO antispam VALUES(4,'fulana');
+INSERT INTO antispam VALUES(5,'whore');
+INSERT INTO antispam VALUES(6,'viagra');
+INSERT INTO antispam VALUES(7,'dumbass');
+INSERT INTO antispam VALUES(8,'dickhead');
+INSERT INTO antispam VALUES(9,'jerk');
+INSERT INTO antispam VALUES(10,'asshole');
+INSERT INTO antispam VALUES(11,'pussy');
+INSERT INTO antispam VALUES(12,'cunt');
+INSERT INTO antispam VALUES(13,'bitch');
+INSERT INTO antispam VALUES(14,'débile');
+INSERT INTO antispam VALUES(15,'bête');
+INSERT INTO antispam VALUES(16,'idiot');
+INSERT INTO antispam VALUES(17,'stupid');
+INSERT INTO antispam VALUES(18,'conee');
+INSERT INTO antispam VALUES(19,'enculé');
+INSERT INTO antispam VALUES(20,'putain');
+INSERT INTO antispam VALUES(21,'va te faire foutre');
+INSERT INTO antispam VALUES(22,'salaud');
+INSERT INTO antispam VALUES(23,'cochon');
+INSERT INTO antispam VALUES(24,'nique ta mere');
+INSERT INTO antispam VALUES(25,'pendejo');

@@ -52,12 +52,6 @@ CREATE TABLE japones (
   texto text NOT NULL
 );
 
-CREATE TABLE panyabi (
-  id int(11) PRIMARY KEY AUTO_INCREMENT,
-  accion varchar(40) NOT NULL unique,
-  texto text NOT NULL
-);
-
 CREATE TABLE arabe (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   accion varchar(40) NOT NULL unique,

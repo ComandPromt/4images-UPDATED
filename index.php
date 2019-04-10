@@ -29,7 +29,10 @@ if (!in_array($db_name, $tablas)) {
         unlink('install.php');
     }
 
-    rmDir_rf('lang');
+    if (file_exists('lang')) {
+        rmDir_rf('lang');
+    }
+   
 
     if (file_exists('img/favicon_2.ico')) {
         unlink('img/favicon_2.ico');

@@ -7,7 +7,6 @@ include_once('includes/funciones.php');
 <html lang="es">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="description" content="<?php print $db_name;?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="keywords" content="">
 	<meta name="robots" content="index,follow">
@@ -31,10 +30,9 @@ include_once('includes/funciones.php');
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
-	      <link rel="stylesheet" type="text/css" href="css/lib/control/iconselect.css" >
-        <script type="text/javascript" src="lib/control/iconselect.js"></script>
    <script type="text/javascript" src="lib/iscroll.js"></script>
-	<script type="text/javascript" src="tooltip/js/tooltip.js"></script>		       
+	<script type="text/javascript" src="tooltip/js/tooltip.js"></script>
+
 	<title>Web</title>
 	          <style>
 			  *{
