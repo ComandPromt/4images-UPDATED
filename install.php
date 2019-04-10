@@ -463,6 +463,7 @@ if (file_exists('config.php')) {
 	session_start();
 	date_default_timezone_set("' . $selected_timezone . '");
 	$site_name = "' . $_POST['site'] . '";
+	$cms_host ="'. obtener_direccion() . '";
 	$db_servertype = "' . $_POST['db_servertype'] . '";
 	$db_host = "' . $_POST['db_host'] . '";
 	$db_name = "' . $_POST['db_name'] . '";

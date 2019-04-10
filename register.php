@@ -138,7 +138,7 @@ if (!$terminado && (isset($_POST['envio']))) {
 <input name="pais" value="bengali" type="radio"><img src="images/icons/12.png"/><br/><br/>
 <input name="pais" value="arabe" type="radio"><img src="images/icons/13.png"/>
 <input name="pais" value="euskera" type="radio"><img src="images/icons/14.png"/><br/>
-			 <hr/>
+			 <hr/><br/>
  			<img  alt="user_email" class="icono2" src="img/email.png"/>
 					<span id="palabra2" onmouseover="mostrarTooltip(this,\'' .
     ver_dato('nota_email', $GLOBALS['idioma']) . '\');"/>*</span>

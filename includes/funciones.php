@@ -93,12 +93,13 @@ print '<br/>';
 
 		<input style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
-	  <hr/>
+	  <hr style="padding-bottom:10px"/>
+	  
 	  <a style="font-size:15px;" href="./register.php"><img alt="registar" style="height:80px;width:80px;margin:auto;float:left;" src="img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
 	  <img alt="Recordar contraseña" style="height:80px;width:60px;margin:auto;float:left;" src="img/forgot_password.png"/>
 	 </a>
-	  <br/><br/><br/>';
+	  <br/><br/><br/><br/>';
 	}
 	else{
 
@@ -126,22 +127,26 @@ print '<br/>';
 print '<hr/>';
 
 $imagen_aleatoria=imagen_aleatoria();
-if($imagen_aleatoria!="vacio" && file_exists('./data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
+
+$image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
+$image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
+
+if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && file_exists('http://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	print '
 <img alt="aleatorio" class="icono" src="img/aleatorio.png"/>
 <br/><br/>';
-	$image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
-	$image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
+
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
 	$image_id=substr($image_id,0,strpos($image_id,"#"));
 
 	print '
 	<a href="./details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="./data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
+	<img style="height:120px;width:120px;"  src="http://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
 	<br/><br/>
 	<hr/>
 	';
 }
+$redes_sociales='';
   if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
 	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="img/Social/facebook.png"/></a>';  
   }
@@ -401,28 +406,23 @@ function poner_menu(){
 
 	';
 	
-	
-	
-	
-	
-
 	$id_categorias=array();
-	  $consulta = mysqli_query($conexion, 'SELECT DISTINCT(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id 
-IN(SELECT  distinct(cat_parent_id) FROM '.$table_prefix.'categories WHERE cat_parent_id>0)
+	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
+IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
 	  while ($recuento = mysqli_fetch_array($consulta)){
 			$id_categorias[]=$recuento[0];
 		}
 
 		for($x=0;$x<count($id_categorias);$x++){
-			$consulta = mysqli_query($conexion, 'SELECT cat_name FROM '.$table_prefix.'categories WHERE cat_id='.$id_categorias[$x]);
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
 			$nombre = mysqli_fetch_array($consulta);
 			print '<li style="color:#1842EC;padding-left:30px;margin-top:-20px;">
 			<a style="font-size:30px;" href="#resume"><img alt="'.$nombre[0].'" style="width:100px;height:100px;" src="img/Categories/'.$nombre[0].'.png"/>
 			</a>
 			<br/><br/>
 			<ul style="width:10em;" class="menu">';
-			$consulta = mysqli_query($conexion, 'SELECT cat_id,cat_name FROM '.$table_prefix.'categories WHERE cat_parent_id='.$id_categorias[$x]);
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			while ($subcategorias = mysqli_fetch_array($consulta)){
 				print '<li style="height:10em;" ><a href="categories.php?cat_id='.$subcategorias[0].'">
 				<img alt="'.$subcategorias[1].'" src="img/Categories/Subcategories/'.$subcategorias[1].'.png" style="width:100px;height:100px;"/></a></li>';
