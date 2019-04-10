@@ -269,7 +269,7 @@ include_once('includes/funciones.php');
 <body>
 
 <?
-include_once('config.php');
+
 menu_categorias();
 menu_lateral();
 
