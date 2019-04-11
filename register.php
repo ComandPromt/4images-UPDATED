@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
                 $mensaje = ver_dato('mensaje_activacion', $GLOBALS['idioma']);
                 $mensaje = str_replace('usuario', $_POST['user_name'], $mensaje);
                 $mensaje = str_replace('sitio', $_POST['site_name'], $mensaje);
-                $mensaje = str_replace('url', 'http://' . obtener_direccion() .
+                $mensaje = str_replace('url', $GLOBALS['protocolo'].'://' . obtener_direccion() .
                     'register.php?action=activate&activationkey=' . $activacion, $mensaje);
 
                 echo '<br/><h1 class="titulo">' . ver_dato('registro_exitoso',

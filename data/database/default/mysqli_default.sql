@@ -160,3 +160,4 @@ INSERT INTO antispam VALUES(22,'salaud');
 INSERT INTO antispam VALUES(23,'cochon');
 INSERT INTO antispam VALUES(24,'nique ta mere');
 INSERT INTO antispam VALUES(25,'pendejo');
+INSERT INTO antispam VALUES(26,'maric');

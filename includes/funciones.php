@@ -1,5 +1,19 @@
 <?php
 
+function url_exists($url){
+	
+$file_headers = @get_headers($url);
+
+if(strpos($file_headers[0],"200 OK")==false){
+	return false;
+}
+
+else{
+	return true;
+}
+
+}
+
 function rmDir_rf($carpeta){
       foreach(glob($carpeta . "/*") as $archivos_carpeta){             
         if (is_dir($archivos_carpeta)){
@@ -97,7 +111,7 @@ print '<br/>';
 	  
 	  <a style="font-size:15px;" href="./register.php"><img alt="registar" style="height:80px;width:80px;margin:auto;float:left;" src="img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
-	  <img alt="Recordar contraseña" style="height:80px;width:60px;margin:auto;float:left;" src="img/forgot_password.png"/>
+	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" style="height:80px;width:60px;margin:auto;float:left;" src="img/forgot_password.png"/>
 	 </a>
 	  <br/><br/><br/><br/>';
 	}
@@ -131,7 +145,7 @@ $imagen_aleatoria=imagen_aleatoria();
 $image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
 $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
-if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && file_exists('http://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
+if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && url_exists( $GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	print '
 <img alt="aleatorio" class="icono" src="img/aleatorio.png"/>
 <br/><br/>';
@@ -141,7 +155,7 @@ if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && file_exists('ht
 
 	print '
 	<a href="./details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="http://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
+	<img style="height:120px;width:120px;"  src="'.$GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
 	<br/><br/>
 	<hr/>
 	';

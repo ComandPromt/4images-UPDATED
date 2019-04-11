@@ -209,6 +209,9 @@ if (file_exists('config.php')) {
 			  }
 			  *{
 				  background-color:#ffffff;
+				  margin:auto;
+				  text-align:center;
+				  font-size:20px;
 			  }
                             /******************* WINDOWS VISTA SCROLLBAR *******************/
 
@@ -471,6 +474,7 @@ if (file_exists('config.php')) {
 	$db_password = "' . $_POST['db_password'] . '";
 	$table_prefix = "' . $_POST['table_prefix'] . '";
 	$admin_email = "' . $_POST['admin_email'] . '";
+	$protocolo = "' . $_POST['protocolo'] . '";
 	$facebook="' . $_POST['facebook'] . '";
 	$instagram="' . $_POST['instagram'] . '";
 	$twitter="' . $_POST['twitter'] . '";
@@ -655,6 +659,11 @@ if (file_exists('config.php')) {
         echo $lang_select . '<h2 id="home">' . $lang['db_servertype'] . '</h2>
 
               <p>' . $db_servertype_select . '</p>
+
+				<select name="protocolo">
+				<option>http</option>
+				<option>https</option>
+				</select>
 
               <h2>' . $lang['db_host'] . '</h2>
 
