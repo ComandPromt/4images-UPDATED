@@ -42,8 +42,21 @@ if (!in_array($db_name, $tablas)) {
     }
 } 
 
+poner_menu();
 
+print '<div style="padding-top:80px;font-size:30px;position:fixed;">
+<div style="height:40px;"><img class="icono" src="img/rss.png"/>&nbsp;<img class="icono" src="img/top.png"/>&nbsp;<img class="icono" src="img/new.png"/>&nbsp;&nbsp;<img class="icono" src="img/view.png"/>
+</div>
+<div><br/>
+TEXT HERE
+</div>
+<p id="reloj"></p>
+</div>
 
+<div style="float:left;">
+		
+		</div>
 
-  include('footer.php');
+';
+  include('footer.html');
 ?>

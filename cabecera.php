@@ -36,7 +36,7 @@ include_once('includes/funciones.php');
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
 	<script  src="tooltip/js/tooltip.js"></script>
-
+ 
 	<title>Web</title>
 	<style>
 			  *{

@@ -231,7 +231,7 @@ function menu_categorias(){
 print '
 <div id="navega"  > 
 <div id="menu"> 
-<div id="fijo"style="margin-top:-30px;">
+<div id="fijo">
 
     <a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
 <br/>
@@ -308,145 +308,62 @@ function random_string($length, $letters_only = false) {
 function poner_menu(){
 	
 	print '
-	<div style="padding-left:60%;float:right;" >	
-
-		
-		
-		
-				<div  class="column">
-					<div id="dl-menu" class="dl-menuwrapper">
-						<button class="dl-trigger"></button>
-						<ul style="font-size:40px;"  class="dl-menu">
-							<li>
-								<a href="#">Fashion</a>
-								<ul class="dl-submenu">
-									<li>
-										<a href="#">Men</a>
-										<ul class="dl-submenu">
-											<li><a href="#">Shirts</a></li>
-											<li><a href="#">Jackets</a></li>
-											<li><a href="#">Chinos &amp; Trousers</a></li>
-											<li><a href="#">Jeans</a></li>
-											<li><a href="#">T-Shirts</a></li>
-											<li><a href="#">Underwear</a></li>
-										</ul>
-									</li>
-									<li>
-										<a href="#">Women</a>
-										<ul class="dl-submenu">
-											<li><a href="#">Jackets</a></li>
-											<li><a href="#">Knits</a></li>
-											<li><a href="#">Jeans</a></li>
-											<li><a href="#">Dresses</a></li>
-											<li><a href="#">Blouses</a></li>
-											<li><a href="#">T-Shirts</a></li>
-											<li><a href="#">Underwear</a></li>
-										</ul>
-									</li>
-									<li>
-										<a href="#">Children</a>
-										<ul class="dl-submenu">
-											<li><a href="#">Boys</a></li>
-											<li><a href="#">Girls</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-							<li>
-								<a href="#">Electronics</a>
-								<ul class="dl-submenu">
-									<li><a href="#">Camera &amp; Photo</a></li>
-									<li><a href="#">TV &amp; Home Cinema</a></li>
-									<li><a href="#">Phones</a></li>
-									<li><a href="#">PC &amp; Video Games</a></li>
-								</ul>
-							</li>
-							<li>
-								<a href="#">Furniture</a>
-								<ul class="dl-submenu">
-									<li>
-										<a href="#">Living Room</a>
-										<ul class="dl-submenu">
-											<li><a href="#">Sofas &amp; Loveseats</a></li>
-											<li><a href="#">Coffee &amp; Accent Tables</a></li>
-											<li><a href="#">Chairs &amp; Recliners</a></li>
-											<li><a href="#">Bookshelves</a></li>
-										</ul>
-									</li>
-									<li>
-										<a href="#">Bedroom</a>
-										<ul class="dl-submenu">
-											<li>
-												<a href="#">Beds</a>
-												<ul class="dl-submenu">
-													<li><a href="#">Upholstered Beds</a></li>
-													<li><a href="#">Divans</a></li>
-													<li><a href="#">Metal Beds</a></li>
-													<li><a href="#">Storage Beds</a></li>
-													<li><a href="#">Wooden Beds</a></li>
-													<li><a href="#">Childrens Beds</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Bedroom Sets</a></li>
-											<li><a href="#">Chests &amp; Dressers</a></li>
-										</ul>
-									</li>
-									<li><a href="#">Home Office</a></li>
-									<li><a href="#">Dining &amp; Bar</a></li>
-									<li><a href="#">Patio</a></li>
-								</ul>
-							</li>
-							<li>
-								<a href="#">Jewelry &amp; Watches</a>
-								<ul class="dl-submenu">
-									<li><a href="#">Fine Jewelry</a></li>
-									<li><a href="#">Fashion Jewelry</a></li>
-									<li><a href="#">Watches</a></li>
-									<li>
-										<a href="#">Wedding Jewelry</a>
-										<ul class="dl-submenu">
-											<li><a href="#">Engagement Rings</a></li>
-											<li><a href="#">Bridal Sets</a></li>
-											<li><a href="#">Womens Wedding Bands</a></li>
-											<li><a href="#">Mens Wedding Bands</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-
-	';
+<aside style="float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
+	<div >
 	
-	$id_categorias=array();
+				<div>
+					<div style="" id="dl-menu" class="dl-menuwrapper">
+					<br/>	<button class="dl-trigger"></button>
+						<ul style="font-size:40px;"  class="dl-menu">
+						';		
+								$id_categorias=array();
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
 IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
+
+
+
 	  while ($recuento = mysqli_fetch_row($consulta)){
 			$id_categorias[]=$recuento[0];
 		}
 
 		for($x=0;$x<count($id_categorias);$x++){
 			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
-			$nombre = mysqli_fetch_array($consulta);
-			print '<li style="color:#1842EC;padding-left:30px;margin-top:-20px;">
-			<a style="font-size:30px;" href="#resume"><img alt="'.$nombre[0].'" style="width:100px;height:100px;" src="img/Categories/'.$nombre[0].'.png"/>
-			</a>
-			<br/><br/>
-			<ul style="width:10em;" class="menu">';
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
+			$nombre = mysqli_fetch_row($consulta);
+			
+			print '
+			<li  class="menu_categorias">
+			<a style="color:#0024EA;font-size:30px;" href="#">'.$nombre[0].'</a>';
+			
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
+			
+			$y=1;
 			while ($subcategorias = mysqli_fetch_array($consulta)){
-				print '<li style="height:10em;" ><a href="categories.php?cat_id='.$subcategorias[0].'">
-				<img alt="'.$subcategorias[1].'" src="img/Categories/Subcategories/'.$subcategorias[1].'.png" style="width:100px;height:100px;"/></a></li>';
-			}
+				if($y==1){
+					print '<ul class="dl-submenu">';
+				}
+				print '<li style="background-color:black;font-size:30px;">
+							<a href="#">'.$subcategorias[0].'</a>
+					   </li>';
+									
+		//	<img alt="'.$subcategorias[1].'" src="img/Categories/Subcategories/'.$subcategorias[1].'.png" style="width:100px;height:100px;"/></a></li>';
+$y++;		
+		}
 	
 			print '</ul>
-			</li>';	
+							</li>';	
 					
 		}
+
+print '		</ul>
+					</div>
+				</div>
+			</div></aside>
+
+	';
+	
+
 }
 
 function imagen_aleatoria(){

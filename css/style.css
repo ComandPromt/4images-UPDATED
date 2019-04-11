@@ -227,7 +227,7 @@ body {
 
 /*--Images----------------------------------------------------*/
 .imagerow1 {
-  background-color: #E5E5E5;
+  background-color: #ffffff;
   color: #004C75;
 }
 
@@ -278,7 +278,7 @@ body {
 ul, li, p, td {
   color: #004c75;
   font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 30px;
 }
 
 .tablehead {

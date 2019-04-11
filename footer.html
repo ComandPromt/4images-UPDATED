@@ -27,8 +27,6 @@ function ocultar() {
                         </script>
 						     
 				 <script src="js/prettify.js"></script>
-
-		
         <script src="js/jquery.scrollbar.js"></script>
 		<script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
@@ -43,6 +41,17 @@ function ocultar() {
 				});
 			});
 		</script>
+		
+		  <script>
+        var idIntervalo=setInterval(function(){
+            intervaloReloj()
+        },500);
+        function intervaloReloj(){
+            var d=new Date();
+            var t=d.toLocaleTimeString();
+            document.getElementById("reloj").innerHTML=t;
+        }
+    </script>
 
 	</body>
 </html>

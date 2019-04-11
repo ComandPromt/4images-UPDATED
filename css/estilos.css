@@ -1,4 +1,9 @@
-<<<<<<< HEAD
+
+.menu_categorias{
+	background-color:#ffffff;
+
+}
+
 #contenido {
     transition: margin-left .4s;
     padding: 1rem;
@@ -33,8 +38,8 @@
 }
 
 .texto{
-font-size:25px;
-padding-left:30px;
+font-size:35px;
+
 }
 
 .social{
@@ -66,13 +71,12 @@ padding-left:30px;
 	height:100px;
 	width:100px;
 }
+
 #navega #menu #fijo { 
     position:fixed; 
                 /* Distancia hasta el borde superior */ 
-    left: 0px;            /* Distancia hasta el borde izquierdo */
-        width:100%; 
-     
-        z-index: 1;               /* hace que la capa sea opaca  */ 
+            /* Distancia hasta el borde izquierdo */
+             /* hace que la capa sea opaca  */ 
 } 
 
 
@@ -117,11 +121,6 @@ hr:after {position: relative; top: -22px; content:"\25cf\25cf\25cf"; font-size: 
 	padding-left:30px;
 }
 
-.texto{
-font-size:25px;
-padding-left:30px;
-}
-
 .social{
 	height:1.7em;
 	width:1.7em;
@@ -151,14 +150,7 @@ padding-left:30px;
 	height:100px;
 	width:100px;
 }
-#navega #menu #fijo { 
-    position:fixed; 
-                /* Distancia hasta el borde superior */ 
-    left: 0px;            /* Distancia hasta el borde izquierdo */
-        width:100%; 
-     
-        z-index: 1;               /* hace que la capa sea opaca  */ 
-} 
+
 
 
  hr {border: 0; height: 0; border-top: 4px double black; text-align:center;}

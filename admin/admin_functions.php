@@ -630,7 +630,7 @@ function show_text_link($text, $url, $newwin = 0) {
 
 function get_navrow_bg() {
   global $navbgcounter;
-  return ($navbgcounter++ % 2 == 0) ? "#E5E5E5" : "#F5F5F5";
+  return ($navbgcounter++ % 2 == 0) ? "#ffffff" : "#F5F5F5";
 }
 
 function show_nav_option($title, $url, $extra = "")  {
