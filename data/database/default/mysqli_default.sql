@@ -50,14 +50,13 @@ CREATE TABLE 4images_categories (
   auth_sendpostcard tinyint(2) NOT NULL default '0',
   auth_readcomment tinyint(2) NOT NULL default '0',
   auth_postcomment tinyint(2) NOT NULL default '0',
-  PRIMARY KEY  (cat_id,cat_parent_id,cat_order)
+  PRIMARY KEY  (cat_id,cat_parent_id)
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_images (
   image_id int(11) PRIMARY KEY,
   cat_id int(11)  NOT NULL default '0',
   cat_parent_id int(11)  NOT NULL default '0',
-  cat_order int(11)  NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
   image_name varchar(255) NOT NULL default '',
   image_description text NOT NULL,
@@ -72,7 +71,7 @@ CREATE TABLE 4images_images (
   image_rating decimal(4,2) NOT NULL default '0.00',
   image_hits int(11)  NOT NULL default '0',
   sha256 varchar(64) NOT NULL,
-  FOREIGN KEY (cat_id,cat_parent_id,cat_order) REFERENCES 4images_categories(cat_id,cat_parent_id,cat_order),
+  FOREIGN KEY (cat_id,cat_parent_id) REFERENCES 4images_categories(cat_id,cat_parent_id),
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
 )DEFAULT CHARSET=utf8;
 
