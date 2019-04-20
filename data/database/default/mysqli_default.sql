@@ -62,12 +62,11 @@ CREATE TABLE 4images_images (
   cat_order int(11)  NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
   image_name varchar(255) NOT NULL default '',
-  image_description text NOT NULL,
-  image_keywords text NOT NULL,
+  image_description text NOT NULL default '',
+  image_keywords text NOT NULL default '',
   image_date date  NOT NULL,
   image_active tinyint(1) NOT NULL default '1',
   image_media_file varchar(255) NOT NULL default '',
-  image_thumb_file varchar(255) NOT NULL default '',
   image_allow_comments tinyint(1) NOT NULL default '1',
   image_comments int(11)  NOT NULL default '0',
   image_downloads int(11)  NOT NULL default '0',
@@ -128,7 +127,7 @@ CREATE TABLE notas (
 CREATE TABLE antispam(
 id int(11) AUTO_INCREMENT PRIMARY KEY,
 Nombre varchar(25) NOT NULL UNIQUE
-);
+)DEFAULT CHARSET=utf8;
 
 
 INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, 0, '', '',default);
