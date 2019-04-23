@@ -204,8 +204,8 @@ if (file_exists('config.php')) {
 	<title>Web</title>
 	          <style>
 			  .imagen{
-				  height:60px;
-				  width:60px;
+				  height:65px;
+				  width:65px;
 			  }
 			  *{
 				  background-color:#ffffff;
@@ -420,16 +420,18 @@ if (file_exists('config.php')) {
 	</head>
 <body>
 <div class="container">
-	<nav >
-		<ul>
-			<li style="font-size:30px;"><a style="color:blue;" href="#home">Home</a></li>
-			<li style="font-size:30px;"><a style="color:blue;" href="#site">Site</a></li>
-			<li style="font-size:30px;"><a style="color:blue;" href="#zonahoraria">Time zone</a></li>
-			<li style="font-size:30px;"><a style="color:blue;" href="#admin">Admin</a></li>
-			<li style="font-size:30px;"><a style="color:blue;" href="#email">Email</a></li>
-			<li style="font-size:30px;"><a style="color:blue;" href="#socials">Social</a></li>
-		</ul>
-	</nav>
+<br/>
+	<div style="height:65px;width:100%;float:left;">
+		
+			<a style="color:blue;padding:5px;" href="#home"><img class="imagen" src="img/home.png"/></a>
+			<a style="color:blue;padding:5px;" href="#site"><img class="imagen" src="img/director.png"/></a>
+			<a style="color:blue;padding:5px;" href="#zonahoraria"><img class="imagen" src="img/clock.png"/></a>
+			<a style="color:blue;padding:5px;" href="#admin"><img class="imagen" src="img/admin.png"/></a>
+			<a style="color:blue;padding:5px;" href="#email"><img class="imagen" src="img/email.png"/></a>
+			<a style="color:blue;padding:5px;" href="#socials"><img class="imagen" src="img/users.png"/></a>
+		
+	</div>
+<br/><br/><br/><br/>
 <div>
 	<form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
 	<br/>';
@@ -634,7 +636,7 @@ if (file_exists('config.php')) {
     }
 
     if ($action == 'intro') {
-        $db_servertype_select = '<select title="db_servertype" style="font-weight:bold;width:15%;margin:auto;" name="db_servertype">';
+        $db_servertype_select = '<select title="db_servertype" style="font-weight:bold;margin:auto;font-size:25px;" name="db_servertype">';
         $db_types = array();
         $handle = opendir(ROOT_PATH . 'includes');
 
@@ -656,11 +658,11 @@ if (file_exists('config.php')) {
             $lang['start_install_desc'] = $lang['start_install_desc'] . sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
         }
 
-        echo $lang_select . '<h2 id="home">' . $lang['db_servertype'] . '</h2>
+        echo $lang_select . '<br/><br/><h2 id="home">' . $lang['db_servertype'] . '</h2>
 
               <p>' . $db_servertype_select . '</p>
-
-				<select name="protocolo">
+              <h2>' . $lang['protocolo'] . '</h2>
+				<select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
 				<option>http</option>
 				<option>https</option>
 				</select>
@@ -777,7 +779,7 @@ if (file_exists('config.php')) {
               <h2 id="email">' . $lang['des_email'] . '
         </h2>
 
-					<img class="imagen" alt="email admin" class="install" src="img/emaill.png"/> <br/><br/><input title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
+					<img class="imagen" alt="email admin" class="install" src="img/emaill.png"/> <br/><br/><input  style="font-size:25px;margin:auto;"  title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
 				
 				<br/>
 				<hr/>

@@ -1,30 +1,4 @@
 <?php
-/**************************************************************************
- *                                                                        *
- *    4images - A Web Based Image Gallery Management System               *
- *    ----------------------------------------------------------------    *
- *                                                                        *
- *             File: install.php                                          *
- *        Copyright: (C) 2002-2016 4homepages.de                          *
- *            Email: 4images@4homepages.de                                * 
- *              Web: http://www.4homepages.de                             * 
- *    Scriptversion: 1.8                                                  *
- *                                                                        *
- **************************************************************************
- *                                                                        *
- *    Dieses Script ist KEINE Freeware. Bitte lesen Sie die Lizenz-       *
- *    bedingungen (Lizenz.txt) für weitere Informationen.                 *
- *    ---------------------------------------------------------------     *
- *    This script is NOT freeware! Please read the Copyright Notice       *
- *    (Licence.txt) for further information.                              *
- *                                                                        *
- *************************************************************************/
-
-/**************************************************************************
- *                                                                        *
- *    English translation by Thomas (http://www.japanreference.com)       *
- *                                                                        *
- *************************************************************************/
 
 $lang['start_install'] = 'Start Installation';
 $lang['start_install_desc'] = 'Please fill out the requested fields below.';
@@ -51,5 +25,5 @@ $lang['timezone_select'] = 'Please select your timezone';
 $lang['site'] = 'Name of the site';
 $lang['nota'] = '*You must enter only the username';
 $lang['des_email'] = 'Administrator email';
-
+$lang['protocolo'] = 'Protocol';
 ?>

@@ -24,4 +24,5 @@ $lang['config_download_desc'] = 'Su archivo de configuración \'config.php\' no 
 $lang['timezone_select'] = 'Por favor seleccione su zona horaria';
 $lang['site'] = 'Nombre del sitio';
 $lang['des_email'] = 'Email del administrador';
+$lang['protocolo'] = 'Protocolo';
 ?>

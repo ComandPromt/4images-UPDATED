@@ -45,4 +45,5 @@ $lang['timezone_select'] = 'Bitte wählen Sie Ihre Zeitzone';
 $lang['site'] = 'Name der Site';
 $lang['nota'] = '*Sie müssen nur den Benutzernamen eingeben';
 $lang['des_email'] = 'Administrator-E-Mail';
+$lang['protocolo'] = 'Protokoll';
 ?>
