@@ -43,7 +43,7 @@ function obtener_direccion(){
 		return $_SERVER['SERVER_NAME'].$adicional;
 	}
 	else{
-		return 'localhost/';
+		return 'localhost';
 	}
 }
 
@@ -312,7 +312,7 @@ function poner_menu(){
 	<div >
 	
 				<div>
-					<div style="" id="dl-menu" class="dl-menuwrapper">
+					<div style="padding-left:45%;width:140px;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger"></button>
 						<ul style="font-size:40px;"  class="dl-menu">
 						';		

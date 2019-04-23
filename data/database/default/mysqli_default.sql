@@ -42,14 +42,14 @@ CREATE TABLE 4images_categories (
   cat_description text NOT NULL,
   cat_parent_id int(11)  NOT NULL default '0',
   cat_hits int(11)  NOT NULL default '0',
-  auth_viewcat tinyint(2) NOT NULL default '0',
-  auth_viewimage tinyint(2) NOT NULL default '0',
-  auth_download tinyint(2) NOT NULL default '0',
-  auth_upload tinyint(2) NOT NULL default '0',
-  auth_vote tinyint(2) NOT NULL default '0',
-  auth_sendpostcard tinyint(2) NOT NULL default '0',
-  auth_readcomment tinyint(2) NOT NULL default '0',
-  auth_postcomment tinyint(2) NOT NULL default '0',
+  auth_viewcat tinyint(1) NOT NULL default '0',
+  auth_viewimage tinyint(1) NOT NULL default '0',
+  auth_download tinyint(1) NOT NULL default '0',
+  auth_upload tinyint(1) NOT NULL default '0',
+  auth_vote tinyint(1) NOT NULL default '0',
+  auth_sendpostcard tinyint(1) NOT NULL default '0',
+  auth_readcomment tinyint(1) NOT NULL default '0',
+  auth_postcomment tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (cat_id,cat_parent_id)
 )DEFAULT CHARSET=utf8;
 
