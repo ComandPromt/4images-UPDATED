@@ -248,7 +248,8 @@ include_once('includes/funciones.php');
 		else if (document.all && !document.getElementById){
 			document.onmousedown = right;
 		}
-		var txt = "<?php echo $GLOBALS['site_name'];?>";
+		
+		var txt = "<?php echo $site_name;?>";
 			document.oncontextmenu = new Function("alert('© Copyright by "+txt+"');return false");
 			txt=txt.toUpperCase();
 			txt=" "+txt+"  ";
@@ -268,7 +269,7 @@ include_once('includes/funciones.php');
 	</head>
 <body>
 
-<?
+<?php
 
 menu_categorias();
 menu_lateral();
