@@ -44,19 +44,42 @@ if (!in_array($db_name, $tablas)) {
 
 poner_menu();
 
-print '<div style="float:right;"><p style="background-color:#f3f9ff;margin-top:10px;margin-left:-70px;position:fixed" id="reloj"></p></div>
-<div style="padding-top:80px;font-size:30px;position:fixed;">
-<div style="height:40px;"><img style="margin-left:50px;" class="icono" src="img/rss.png"/>&nbsp;<img class="icono" src="img/top.png"/>&nbsp;<img class="icono" src="img/new.png"/>&nbsp;&nbsp;<img class="icono" src="img/view.png"/>
+print '<div style="padding-top:80px;font-size:30px;position:fixed;">
+<p style="margin-left:50%;background-color:#f3f9ff;">'.date('d').'/'.date('m').'/'.date('y').'</p>
+<p style="margin-top:-60px;margin-left:50%;background-color:#f3f9ff;" id="reloj"></p>
+
+<div style="height:40px;margin-top:-30px;">
+    <img alt="RSS" style="margin-left:50px;" class="icono" src="img/rss.png"/>&nbsp;
+    <img alt="top images" class="icono" src="img/top.png"/>&nbsp;
+    <img alt="new images" class="icono" src="img/new.png"/>&nbsp;&nbsp;
+    <img alt="all images" class="icono" src="img/view.png"/>
 </div>
 <div><br/>
-TEXT HERE
+
+<div style="margin-bottom:200%;"id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">	  
+		<ol class="carousel-indicators">'.
+		$button_html.'		
+		</ol>	  
+		<div class="carousel-inner">'.	  
+			$slider_html.'
+		</div>	 
+		<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+		</a>
+		<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right"></span>
+		</a>	 
+'.$thumb_html.'
+		</ul>
+	</div>	
+
 </div>
 
 </div>
 
 <div style="float:left;">
 		
-		</div>
+        </div>
 
 ';
   include('footer.html');

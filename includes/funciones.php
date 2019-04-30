@@ -306,10 +306,10 @@ function random_string($length, $letters_only = false) {
 function poner_menu(){
 	
 	print '
-<aside style="float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
+<aside style="margin:auto;float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
 	<div >
 				<div>
-					<div style="width:140px;float:right;" id="dl-menu" class="dl-menuwrapper">
+					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger"></button>
 						<ul style="font-size:40px;"  class="dl-menu">
 						';		
