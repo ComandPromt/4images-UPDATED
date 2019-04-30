@@ -3729,7 +3729,7 @@
 				}
 
 					#sidebar > .inner:after {
-						content: '';
+						
 						display: block;
 						height: 4em;
 						width: 100%;
@@ -3769,7 +3769,6 @@
 				#sidebar .toggle:after {
 					background: rgba(222, 225, 226, 0.75);
 					border-radius: 0.375em;
-					content: '';
 					height: 3.5em;
 					left: 1em;
 					position: absolute;

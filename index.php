@@ -7,7 +7,7 @@ $tablas = array();
 
 if (file_exists('config.php')) {
 
-    include 'config.php';
+    include ('config.php');
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");
     $consulta = mysqli_query($conexion, "SHOW DATABASES");
@@ -44,13 +44,14 @@ if (!in_array($db_name, $tablas)) {
 
 poner_menu();
 
-print '<div style="padding-top:80px;font-size:30px;position:fixed;">
+print '<div style="float:right;"><p style="background-color:#f3f9ff;margin-top:10px;margin-left:-70px;position:fixed" id="reloj"></p></div>
+<div style="padding-top:80px;font-size:30px;position:fixed;">
 <div style="height:40px;"><img style="margin-left:50px;" class="icono" src="img/rss.png"/>&nbsp;<img class="icono" src="img/top.png"/>&nbsp;<img class="icono" src="img/new.png"/>&nbsp;&nbsp;<img class="icono" src="img/view.png"/>
 </div>
 <div><br/>
 TEXT HERE
 </div>
-<p id="reloj"></p>
+
 </div>
 
 <div style="float:left;">

@@ -165,7 +165,6 @@ body {
 .nav ul li .menu li:nth-last-child(2) a:before,
 .nav ul li .menu li:nth-child(2) a:after,
 .nav ul li .menu li:nth-last-child(2) a:after {
-  content: '';
   display: none;
 }
 .nav ul li .menu li a {

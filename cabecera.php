@@ -20,21 +20,26 @@ include_once('includes/funciones.php');
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="revisit-after" content="10 days">
 	<script src="js/funciones.js"></script>
-	<link rel="stylesheet" href="css/main.css">
+
 	<link rel="stylesheet" href="css/w3.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/jquery.scrollbar.css" />
+	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
 	<link rel="stylesheet" href="css/css.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/scroll.css" />
     <link rel="stylesheet" href="css/prettify.css" />
-    <link rel="stylesheet" href="css/jquery.scrollbar.css" />
+
 	<link rel="stylesheet" type="text/css" href="css/default.css" />
 	<link rel="stylesheet" type="text/css" href="css/component.css" />
-	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<link rel="icon" type="image/ico" href="img/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estiloDelEjemplo.css">
 	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
+
+	<link rel="icon" type="image/ico" href="img/favicon.ico">
+
 	<script  src="tooltip/js/tooltip.js"></script>
  
 	<title>Web</title>

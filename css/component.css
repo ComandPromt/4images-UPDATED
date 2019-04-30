@@ -75,30 +75,10 @@
 
 .dl-menuwrapper li.dl-back > a {
 	padding-left: 30px;
-	background: rgba(0,0,0,0.1);
+
 }
 
-.dl-menuwrapper li.dl-back:after,
-.dl-menuwrapper li > a:not(:only-child):after {
-	position: absolute;
-	top: 0;
-	line-height: 60px;
-	speak: none;
-	-webkit-font-smoothing: antialiased;
-	content: "\e000";
-}
 
-.dl-menuwrapper li.dl-back:after {
-	left: 10px;
-	color: rgba(212,204,198,0.3);
-	-webkit-transform: rotate(180deg);
-	transform: rotate(180deg);
-}
-
-.dl-menuwrapper li > a:after {
-	right: 10px;
-	color: rgba(0,0,0,0.15);
-}
 
 .dl-menuwrapper .dl-menu {
 	margin: 5px 0 0 0;

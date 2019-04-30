@@ -88,10 +88,9 @@ print '
   <div style="margin-left:-50px;" class="w3-bar-block">';
   
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
-		print '<p><a href="index.php"><img alt="inicio" class="icono" src="img/home.png" ></a><br/><br/></p><hr/>';
+		print '<a href="index.php"><img alt="inicio" class="icono" src="img/home.png" ></a><hr/>';
 	}
 	
-print '<br/>';
 
 	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
 		
@@ -107,13 +106,13 @@ print '<br/>';
 
 		<input style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
-	  <hr style="padding-bottom:10px"/>
+	  <hr/>
 	  
-	  <a style="font-size:15px;" href="./register.php"><img alt="registar" style="height:80px;width:80px;margin:auto;float:left;" src="img/registrar.png"></a>
+	  <a style="font-size:15px;" href="./register.php"><img alt="registar" class="icono" src="img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
-	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" style="height:80px;width:60px;margin:auto;float:left;" src="img/forgot_password.png"/>
+	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="img/forgot_password.png"/>
 	 </a>
-	  <br/><br/><br/><br/>';
+	 ';
 	}
 	else{
 
@@ -219,7 +218,6 @@ if(in_array($_COOKIE['4images_userid'], $administrators)){
 }
 
 print '
-<br/>
   <a href="rss.php?action=images"><img class="icono" src="img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
@@ -310,9 +308,8 @@ function poner_menu(){
 	print '
 <aside style="float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
 	<div >
-	
 				<div>
-					<div style="padding-left:45%;width:140px;float:right;" id="dl-menu" class="dl-menuwrapper">
+					<div style="width:140px;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger"></button>
 						<ul style="font-size:40px;"  class="dl-menu">
 						';		
@@ -321,8 +318,6 @@ function poner_menu(){
 	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
 IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
-
-
 
 	  while ($recuento = mysqli_fetch_row($consulta)){
 			$id_categorias[]=$recuento[0];
@@ -346,14 +341,11 @@ IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories W
 				print '<li style="background-color:black;font-size:30px;">
 							<a href="#">'.$subcategorias[0].'</a>
 					   </li>';
-									
-		//	<img alt="'.$subcategorias[1].'" src="img/Categories/Subcategories/'.$subcategorias[1].'.png" style="width:100px;height:100px;"/></a></li>';
+		
 $y++;		
 		}
-	
-			print '</ul>
+				print '</ul>
 							</li>';	
-					
 		}
 
 print '		</ul>
@@ -362,7 +354,6 @@ print '		</ul>
 			</div></aside>
 
 	';
-	
 
 }
 
