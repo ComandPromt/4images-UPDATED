@@ -6,7 +6,11 @@ include_once ('includes/funciones.php');
 $tablas = array();
 
 if (file_exists('config.php')) {
-
+    
+    if (file_exists('install.php')) {
+        unlink('install.php');
+    }
+    
     include ('config.php');
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");

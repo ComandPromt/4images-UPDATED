@@ -304,9 +304,13 @@ function random_string($length, $letters_only = false) {
 }
 
 function poner_menu(){
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix'].'categories');
+	$recuento = mysqli_fetch_row($consulta);
 	
-	print '
-<aside style="margin:auto;float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
+	if($recuento[0]>0){
+		print '<aside style="margin:auto;float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
 	<div >
 				<div>
 					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
@@ -314,7 +318,7 @@ function poner_menu(){
 						<ul style="font-size:40px;"  class="dl-menu">
 						';		
 								$id_categorias=array();
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
 	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
 IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
 ;');
@@ -354,6 +358,8 @@ print '		</ul>
 			</div></aside>
 
 	';
+	}
+
 
 }
 

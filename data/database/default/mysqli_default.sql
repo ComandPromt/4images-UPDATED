@@ -1,88 +1,86 @@
 
 CREATE TABLE 4images_users (
   user_id int(11) PRIMARY KEY auto_increment,
-  user_level int(11) NOT NULL default '1',
-  user_name varchar(255) NOT NULL default '' UNIQUE,
-  user_password varchar(255) NOT NULL default '',
-  user_email varchar(255) NOT NULL default '' ,
-  user_allowemails tinyint(1) NOT NULL default '1',
-  user_invisible tinyint(1) NOT NULL default '0',
+  user_level int(11) NOT NULL DEFAULT '1',
+  user_name varchar(255) NOT NULL DEFAULT '' UNIQUE,
+  user_password varchar(255) NOT NULL DEFAULT '',
+  user_email varchar(255) NOT NULL DEFAULT '' ,
+  user_allowemails tinyint(1) NOT NULL DEFAULT '1',
+  user_invisible tinyint(1) NOT NULL DEFAULT '0',
   user_joindate int(11)  NOT NULL ,
-  user_lastaction int(11)  NOT NULL default '0',
-  user_location varchar(255) NOT NULL default '',
-  user_lastvisit int(11)  NOT NULL default '0',
-  user_comments int(11)  NOT NULL default '0',
-  user_homepage varchar(255) NOT NULL default '',
-  user_icq varchar(20) NOT NULL default '',
-  nacionalidad varchar(15) default 'spanish' not null
+  user_lastaction int(11)  NOT NULL DEFAULT '0',
+  user_location varchar(255) NOT NULL DEFAULT '',
+  user_lastvisit int(11)  NOT NULL DEFAULT '0',
+  user_comments int(11)  NOT NULL DEFAULT '0',
+  user_homepage varchar(255) NOT NULL DEFAULT '',
+  user_icq varchar(20) NOT NULL DEFAULT '',
+  nacionalidad varchar(15) DEFAULT 'spanish' not null
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_sessions (
   session_id varchar(32),
-  session_user_id int(11) NOT NULL default '0',
-  session_lastaction int(11)  NOT NULL default '0',
-  session_location varchar(255) NOT NULL default '',
-  session_ip varchar(15) NOT NULL default '',
+  session_user_id int(11) NOT NULL DEFAULT '0',
+  session_lastaction int(11)  NOT NULL DEFAULT '0',
+  session_location varchar(255) NOT NULL DEFAULT '',
+  session_ip varchar(15) NOT NULL DEFAULT '',
   session_date date,
   FOREIGN KEY (session_user_id) REFERENCES 4images_users(user_id),
   PRIMARY KEY (session_id,session_user_id)
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_lightboxes (
-  lightbox_id varchar(32) PRIMARY KEY default '',
-  user_id int(11) NOT NULL default '0',
-  lightbox_lastaction int(11)  NOT NULL default '0',
+  lightbox_id varchar(32) PRIMARY KEY DEFAULT '',
+  user_id int(11) NOT NULL DEFAULT '0',
+  lightbox_lastaction int(11)  NOT NULL DEFAULT '0',
   lightbox_image_ids text,
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_categories (
-  cat_id int(11) auto_increment,
+  cat_id int(11)PRIMARY KEY auto_increment ,
   cat_name varchar(255) NOT NULL UNIQUE,
   cat_description text NOT NULL,
-  cat_parent_id int(11)  NOT NULL default '0',
-  cat_hits int(11)  NOT NULL default '0',
-  auth_viewcat tinyint(1) NOT NULL default '0',
-  auth_viewimage tinyint(1) NOT NULL default '0',
-  auth_download tinyint(1) NOT NULL default '0',
-  auth_upload tinyint(1) NOT NULL default '0',
-  auth_vote tinyint(1) NOT NULL default '0',
-  auth_sendpostcard tinyint(1) NOT NULL default '0',
-  auth_readcomment tinyint(1) NOT NULL default '0',
-  auth_postcomment tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (cat_id,cat_parent_id)
+  cat_parent_id int(11)  NOT NULL DEFAULT '0',
+  cat_hits int(11)  NOT NULL DEFAULT '0',
+  auth_viewcat tinyint(1) NOT NULL DEFAULT '0',
+  auth_viewimage tinyint(1) NOT NULL DEFAULT '0',
+  auth_download tinyint(1) NOT NULL DEFAULT '0',
+  auth_upload tinyint(1) NOT NULL DEFAULT '0',
+  auth_vote tinyint(1) NOT NULL DEFAULT '0',
+  auth_sendpostcard tinyint(1) NOT NULL DEFAULT '0',
+  auth_readcomment tinyint(1) NOT NULL DEFAULT '0',
+  auth_postcomment tinyint(1) NOT NULL DEFAULT '0'
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_images (
   image_id int(11) PRIMARY KEY,
-  cat_id int(11)  NOT NULL default '0',
-  cat_parent_id int(11)  NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  image_name varchar(255) NOT NULL default '',
-  image_description text NOT NULL,
-  image_keywords text NOT NULL,
+  cat_id int(11)  NOT NULL DEFAULT '0',
+  user_id int(11) NOT NULL DEFAULT '0',
+  image_name varchar(255) NOT NULL,
+  image_description text,
+  image_keywords text,
   image_date date  NOT NULL,
-  image_active tinyint(1) NOT NULL default '1',
-  image_media_file varchar(255) NOT NULL default '',
-  image_allow_comments tinyint(1) NOT NULL default '1',
-  image_comments int(11)  NOT NULL default '0',
-  image_downloads int(11)  NOT NULL default '0',
-  image_votes int(11)  NOT NULL default '0',
-  image_rating decimal(4,2) NOT NULL default '0.00',
-  image_hits int(11)  NOT NULL default '0',
+  image_active tinyint(1) NOT NULL DEFAULT '1',
+  image_media_file varchar(255) NOT NULL,
+  image_allow_comments tinyint(1) NOT NULL DEFAULT '1',
+  image_comments int(11)  NOT NULL DEFAULT '0',
+  image_downloads int(11)  NOT NULL DEFAULT '0',
+  image_votes int(11)  NOT NULL DEFAULT '0',
+  image_rating decimal(4,2) NOT NULL DEFAULT '0.00',
+  image_hits int(11)  NOT NULL DEFAULT '0',
   sha256 varchar(64) NOT NULL,
-  FOREIGN KEY (cat_id,cat_parent_id) REFERENCES 4images_categories(cat_id,cat_parent_id),
+  FOREIGN KEY (cat_id) REFERENCES 4images_categories(cat_id),
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_comments (
   comment_id int(11) PRIMARY KEY auto_increment,
-  image_id int(11)  NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  user_name varchar(100) NOT NULL default '',
-  comment_headline varchar(255) NOT NULL default '',
+  image_id int(11)  NOT NULL DEFAULT '0',
+  user_id int(11) NOT NULL DEFAULT '0',
+  user_name varchar(100) NOT NULL DEFAULT '',
+  comment_headline varchar(255) NOT NULL DEFAULT '',
   comment_text text NOT NULL,
-  comment_ip varchar(20) NOT NULL default '',
+  comment_ip varchar(20) NOT NULL DEFAULT '',
   comment_date date NOT NULL,
  FOREIGN KEY (image_id) REFERENCES 4images_images(image_id),
  FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
@@ -102,8 +100,8 @@ CREATE TABLE 4images_tags(
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_groups (
-  group_id int(11) PRIMARY KEY AUTO_INCREMENT,
-  group_name varchar(25) NOT NULL UNIQUE
+group_id int(11) PRIMARY KEY AUTO_INCREMENT,
+group_name varchar(25) NOT NULL UNIQUE
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE grupos(
@@ -127,9 +125,9 @@ Nombre varchar(25) NOT NULL UNIQUE
 )DEFAULT CHARSET=utf8;
 
 
-INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, 0, '', '',default);
+INSERT INTO 4images_users VALUES (-1, -1, 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', 0, 0, 0, 0, '', 0, 0, '', '',DEFAULT);
 
-INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 0, 1016023608, 1016023608, '', 0, 0, '', '',default);
+INSERT INTO 4images_users VALUES (1, 9, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 1, 0, 1016023608, 1016023608, '', 0, 0, '', '',DEFAULT);
 
 INSERT INTO antispam VALUES(1,'fuck');
 INSERT INTO antispam VALUES(2,'puta');
