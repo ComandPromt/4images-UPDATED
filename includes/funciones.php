@@ -47,6 +47,66 @@ function obtener_direccion(){
 	}
 }
 
+function restablecer_pass(){
+	if (isset($_POST['restablecer_pass']) && !empty($_POST['correo_restablecimiento'])
+
+    && !empty($_POST['nombre_usuario'])) {
+
+    $numero_restablecimiento = mt_rand(0, 16585);
+
+    $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+
+    $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
+        $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['nombre_usuario'] . "'
+	AND  user_email='" . $_POST['correo_restablecimiento'] . "'");
+    $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
+
+    if ($comprobacion == 1) {
+
+        $fila = mysqli_fetch_row($consulta);
+        $_SESSION['correo_restablecimiento'] = $_POST['correo_restablecimiento'];
+        $_SESSION['id_usuario'] = $fila[0];
+        echo '<script>location.href="restablecer_pass.php";</script>';
+    }
+
+    mysqli_close($GLOBALS['conexion']);
+
+}
+	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h3 class="modal-title titulo" id="exampleModalLabel">' . ver_dato('cambiar_pass', $GLOBALS['idioma']) . '</h3>
+<button style="margin-left:40px;float:right;" type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+          <form method="post" action="' . $_SERVER['PHP_SELF'] . '">
+        <div class="form-group">
+		<img alt="usuario para registrar" class="icono2" src="img/user.png"/>
+		<input  name="nombre_usuario" placeholder="' . ver_dato('user_name',
+    $GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
+<br/>
+<img alt="usuario para registrar" class="icono2" src="img/email.png"/>
+        <input  name="correo_restablecimiento" placeholder="' .
+ver_dato('email', $GLOBALS['idioma']) . '"
+		type="text" class="form-control" />
+      <br/>
+	  </div>
+		<br/><br/>
+           <input name="restablecer_pass" type="submit" value="' .
+ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
+		 </form>
+</div>
+</div>
+</div>';
+}
+
 function crear_carpetas(){
 	if(!file_exists('data/media')){
 			mkdir('data/media', 0777, true);
@@ -278,6 +338,34 @@ function compare_passwords($plain, $hashed) {
   return secure_compare(salted_hash($plain, $hashed), $hashed);
 }
 
+function menu_3d(){
+	print'
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="data/media/".018/11/21/ciencia/nutricion/Nutricion-Frutas-Higiene-Alimentacion-Nutricion_354976032_106782953_1024x576.jpg"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/21261/pexels-photo.jpg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/567973/pexels-photo-567973.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/776653/pexels-photo-776653.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/54630/japanese-cherry-trees-flowers-spring-japanese-flowering-cherry-54630.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/131046/pexels-photo-131046.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/302515/pexels-photo-302515.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/301682/pexels-photo-301682.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/933054/pexels-photo-933054.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
+';
+/*	
+	$consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT cat_id,image_media_file FROM '.$GLOBALS['table_prefix'].'images
+	ORDER BY image_iD DESC LIMIT 9');
+	
+	while ($fila = mysqli_fetch_array($consulta)){
+
+		print '<figure style="width:120px;height:120px;"
+		class="shadow"><img style="width:120px;height:120px;" 
+		src="data/media/'.$fila[0].'/'.$fila[1].'"/></figure>';
+	}
+
+ mysqli_close($GLOBALS['conexion']);
+*/
+}
+
 function random_string($length, $letters_only = false) {
   $str = '';
 
@@ -310,7 +398,7 @@ function poner_menu(){
 	$recuento = mysqli_fetch_row($consulta);
 	
 	if($recuento[0]>0){
-		print '<aside style="margin:auto;float:right;margin-left:20%;margin-top:-50px;position:fixed;z-index: 1;">
+		print '<aside style="float:right;margin-left:30%;margin-top:-70px;position:fixed;z-index: 1;">
 	<div >
 				<div>
 					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
@@ -319,9 +407,8 @@ function poner_menu(){
 						';		
 								$id_categorias=array();
 
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id 
-IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0)
-;');
+	  $consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0');
 
 	  while ($recuento = mysqli_fetch_row($consulta)){
 			$id_categorias[]=$recuento[0];
@@ -332,16 +419,18 @@ IN(SELECT  distinct(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories W
 			$nombre = mysqli_fetch_row($consulta);
 			
 			print '
-			<li  class="menu_categorias">
-			<a style="color:#0024EA;font-size:30px;" href="#">'.$nombre[0].'</a>';
+			<li style="background-color:#F4FDFF;" class="menu_categorias">
+			<a style="color:#0024EA;font-size:30px;font-weight:bold;" href="#">'.$nombre[0].'</a>';
 			
 			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
 			$y=1;
+
 			while ($subcategorias = mysqli_fetch_array($consulta)){
 				if($y==1){
 					print '<ul class="dl-submenu">';
 				}
+
 				print '<li style="background-color:black;font-size:30px;">
 							<a href="#">'.$subcategorias[0].'</a>
 					   </li>';
@@ -352,6 +441,23 @@ $y++;
 							</li>';	
 		}
 
+/*
+	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0;');
+
+$x=0;		
+
+	  while ($recuento = mysqli_fetch_row($consulta)){
+			$id_categorias[$x]=$recuento[0];
+		$x++;
+		}
+
+		for($x=0;$x<count($id_categorias);$x++){
+			print '
+			<li style="background-color:#FAFEFF;" class="menu_categorias">
+			<a style="color:#0024EA;font-size:30px;font-weight:bold;" href="#">'.$id_categorias[0].'</a></li>';
+		
+		}
+		*/
 print '		</ul>
 					</div>
 				</div>

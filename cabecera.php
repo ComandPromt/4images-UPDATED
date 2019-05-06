@@ -20,7 +20,7 @@ include_once('includes/funciones.php');
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="revisit-after" content="10 days">
 	<script src="js/funciones.js"></script>
-
+	<link rel="stylesheet" href="css/styles.css">
 	<link rel="stylesheet" href="css/w3.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/jquery.scrollbar.css" />
@@ -43,6 +43,7 @@ include_once('includes/funciones.php');
 	<script  src="tooltip/js/tooltip.js"></script>
  
 	<title>Web</title>
+	
 	<style>
 			  *{
 				  background-color:#ffffff;

@@ -21,5 +21,7 @@ if(compare_passwords($_POST['user_password'], $fila[0])){
 }
 
 mysqli_close($GLOBALS['conexion']);	
+
 echo '<script>location.href="'.$_SESSION['pagina'].'";</script>';
+
 ?>

@@ -1,7 +1,9 @@
 <?php
-
+session_start();
+$_SESSION['pagina']="index.php";
 include ('cabecera.php');
 include_once ('includes/funciones.php');
+
 
 $tablas = array();
 
@@ -49,42 +51,47 @@ if (!in_array($db_name, $tablas)) {
 poner_menu();
 
 print '<div style="padding-top:80px;font-size:30px;position:fixed;">
-<p style="margin-left:50%;background-color:#f3f9ff;">'.date('d').'/'.date('m').'/'.date('y').'</p>
-<p style="margin-top:-60px;margin-left:50%;background-color:#f3f9ff;" id="reloj"></p>
+<p style="padding-left:40px">'.date('d').'/'.date('m').'/'.date('y').'</p>
+<p style="padding-left:40px;margin-top:-60px;" id="reloj"></p>
 
-<div style="height:40px;margin-top:-30px;">
-    <img alt="RSS" style="margin-left:50px;" class="icono" src="img/rss.png"/>&nbsp;
-    <img alt="top images" class="icono" src="img/top.png"/>&nbsp;
-    <img alt="new images" class="icono" src="img/new.png"/>&nbsp;&nbsp;
+<div style="margin:auto;height:100px;margin-top:-20px;padding-left:40px;">
+    <img alt="new images" class="icono" src="img/new.png"/>
+    <img alt="top images" class="icono" src="img/top.png"/>
     <img alt="all images" class="icono" src="img/view.png"/>
 </div>
 <div><br/>
-
-<div style="margin-bottom:200%;"id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">	  
-		<ol class="carousel-indicators">'.
-		$button_html.'		
-		</ol>	  
-		<div class="carousel-inner">'.	  
-			$slider_html.'
-		</div>	 
-		<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-			<span class="glyphicon glyphicon-chevron-left"></span>
-		</a>
-		<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-			<span class="glyphicon glyphicon-chevron-right"></span>
-		</a>	 
-'.$thumb_html.'
-		</ul>
-	</div>	
-
-</div>
-
-</div>
-
-<div style="float:left;">
-		
-        </div>
-
 ';
-  include('footer.html');
+
+$consulta = mysqli_query($GLOBALS['conexion'],
+'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images
+  ORDER BY image_id DESC LIMIT 9');
+  $fila = mysqli_fetch_array($consulta);
+
+  if($fila[0]>1){
+
+    print '
+    <div style="float:right;padding-left:350px;" class="entire-content">
+      <div style="margin-top:-40px;width:10px;"class="content-carrousel">';
+      $consulta = mysqli_query($GLOBALS['conexion'],
+      'SELECT cat_id,image_media_file,image_id FROM '.$GLOBALS['table_prefix'].'images
+      ORDER BY image_iD DESC LIMIT 9');
+      
+      while ($fila = mysqli_fetch_array($consulta)){
+    
+          print '<figure style="width:120px;height:120px;"
+          class="shadow"><a href="details.php?image_id='.$fila[2].'"> <img style="width:120px;height:120px;" 
+          src="data/media/'.$fila[0].'/'.$fila[1].'"/></a></figure>';
+      }
+    
+    mysqli_close($GLOBALS['conexion']);
+      print '  </div>
+    </div>';
+  }
+  print'
+</div>
+
+</div>';
+restablecer_pass();
+
+include('footer.html');
 ?>
