@@ -1,9 +1,11 @@
 <?php
+
 session_start();
+
 $_SESSION['pagina']="index.php";
+
 include ('cabecera.php');
 include_once ('includes/funciones.php');
-
 
 $tablas = array();
 
@@ -71,7 +73,7 @@ $consulta = mysqli_query($GLOBALS['conexion'],
 
     print '
     <div style="float:right;padding-left:350px;" class="entire-content">
-      <div style="margin-top:-40px;width:10px;"class="content-carrousel">';
+      <div style="margin-top:-30px;width:10px;"class="content-carrousel">';
       $consulta = mysqli_query($GLOBALS['conexion'],
       'SELECT cat_id,image_media_file,image_id FROM '.$GLOBALS['table_prefix'].'images
       ORDER BY image_iD DESC LIMIT 9');
@@ -87,11 +89,14 @@ $consulta = mysqli_query($GLOBALS['conexion'],
       print '  </div>
     </div>';
   }
+  
   print'
 </div>
 
 </div>';
+
 restablecer_pass();
 
 include('footer.html');
+
 ?>

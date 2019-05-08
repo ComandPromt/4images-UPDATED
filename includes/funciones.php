@@ -204,7 +204,7 @@ $imagen_aleatoria=imagen_aleatoria();
 $image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
 $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
-if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && url_exists( $GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
+if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && url_exists( $GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	print '
 <img alt="aleatorio" class="icono" src="img/aleatorio.png"/>
 <br/><br/>';
@@ -214,7 +214,7 @@ if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && url_exists( $GL
 
 	print '
 	<a href="./details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="'.$GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/thumbnails/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
+	<img style="height:120px;width:120px;"  src="'.$GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
 	<br/><br/>
 	<hr/>
 	';
@@ -419,8 +419,8 @@ function poner_menu(){
 			$nombre = mysqli_fetch_row($consulta);
 			
 			print '
-			<li style="background-color:#F4FDFF;" class="menu_categorias">
-			<a style="color:#0024EA;font-size:30px;font-weight:bold;" href="#">'.$nombre[0].'</a>';
+			<li  class="menu_categorias">
+			<a style="color:#0024EA;font-size:20px;font-weight:bold;" href="#">'.$nombre[0].'</a>';
 			
 			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
@@ -431,7 +431,7 @@ function poner_menu(){
 					print '<ul class="dl-submenu">';
 				}
 
-				print '<li style="background-color:black;font-size:30px;">
+				print '<li style="background-color:black;font-size:20px;">
 							<a href="#">'.$subcategorias[0].'</a>
 					   </li>';
 		
@@ -441,23 +441,20 @@ $y++;
 							</li>';	
 		}
 
-/*
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0;');
+	  $consulta = mysqli_query($GLOBALS['conexion'], 
+	  'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0)');
 
-$x=0;		
-
-	  while ($recuento = mysqli_fetch_row($consulta)){
-			$id_categorias[$x]=$recuento[0];
-		$x++;
-		}
-
-		for($x=0;$x<count($id_categorias);$x++){
-			print '
-			<li style="background-color:#FAFEFF;" class="menu_categorias">
-			<a style="color:#0024EA;font-size:30px;font-weight:bold;" href="#">'.$id_categorias[0].'</a></li>';
 		
-		}
-		*/
+
+	while ($fila = mysqli_fetch_row($consulta)){
+
+		print '
+			<li class="menu_categorias">
+			<a style="color:#0024EA;font-size:20px;font-weight:bold;" href="categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+	}
+
+	
+		
 print '		</ul>
 					</div>
 				</div>
