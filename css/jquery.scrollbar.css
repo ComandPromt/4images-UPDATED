@@ -44,7 +44,6 @@
 }
 
 .scroll-textarea {
-    border: 1px solid #cccccc;
     border-top-color: #999999;
 }
 .scroll-textarea > .scroll-content {
@@ -576,7 +575,7 @@
     border-radius: 12px;
 }
 .scrollbar-dynamic > .scroll-element .scroll-element_size {
-    background-color: #cccccc;
+
     opacity: 0;
 
     -webkit-border-radius: 12px;

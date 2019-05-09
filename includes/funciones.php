@@ -1,5 +1,9 @@
 <?php
 
+function redireccionar($ruta){
+	 echo '<script>location.href="'.$ruta.'";</script>';
+}
+
 function vercampo($nombre,$categoria,$imagen){
 	
 	print '<td>'.$nombre.'<img style="height:200px;width:200px;" src="data/'.$categoria.'/'.$imagen.'"/>
@@ -14,6 +18,14 @@ function vercampo($nombre,$categoria,$imagen){
 }
 
 function ver_categoria($cat_id){
+
+if($cat_id==='*'){
+	$final_sentencia='';
+}
+
+else{
+	$final_sentencia='WHERE cat_id='.$cat_id;
+}
 
 	include('config.php');
 	
@@ -32,7 +44,7 @@ function ver_categoria($cat_id){
 							image_name,
 							image_media_file
 							FROM
-							4images_images WHERE cat_id=12");
+							4images_images ".$final_sentencia);
 
 		$TotalRegistro  =ceil($TotalReg->num_rows/$CantidadMostrar);
 		
@@ -52,7 +64,7 @@ function ver_categoria($cat_id){
 								image_name,
 								image_media_file
 								FROM
-								4images_images WHERE cat_id=".$cat_id."
+								4images_images ".$final_sentencia."
 								ORDER BY
 								image_id DESC
 								LIMIT ".(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
@@ -123,7 +135,9 @@ function ver_categoria($cat_id){
 				
 			}
 		
-			echo "<div style=\"float:right;padding-right:400px;\"><ul><li class=\"btn\"><a href=\"?pag=".$DecrementNum."\"><</a></li>";
+			echo "<div style=\"float:right;\"><ul>
+			<li style=\"padding-left:50px;\" class=\"btn\"><a href=\"?pag=1\"><<</a></li>
+			<li class=\"btn\"><a href=\"?pag=".$DecrementNum."\"><img style=\"width:45px;height:45px;\" src=\"img/back.png\"/></a></li>";
 	
 			$Desde=$compag-(ceil($CantidadMostrar/2)-1);
 			$Hasta=$compag+(ceil($CantidadMostrar/2)-1);
@@ -143,7 +157,17 @@ function ver_categoria($cat_id){
 				}     		
 				}
 			}
-			echo "<li class=\"btn\"><a href=\"index.php?pag=".$IncrimentNum."\">></a></li></ul></div>";
+			
+			$_GET['pag']=(int)$_GET['pag'];
+			
+			if($_GET['pag']>0 && $_GET['pag']<$TotalRegistro){
+				
+				echo "<li class=\"btn\"><a href=\"?pag=".$IncrimentNum."\"><img style=\"width:45px;height:45px;\" src=\"img/next.png\"/></a></li>";
+				
+				if($IncrimentNum<$TotalRegistro){
+					echo "<li class=\"btn\"><a href=\"?pag=".$TotalRegistro."\">>></a></li></ul></div>";
+				}
+			}
 		}
 	}
 }
@@ -203,12 +227,13 @@ function restablecer_pass($ruta = ""){
         $fila = mysqli_fetch_row($consulta);
         $_SESSION['correo_restablecimiento'] = $_POST['correo_restablecimiento'];
         $_SESSION['id_usuario'] = $fila[0];
-        echo '<script>location.href="'.$ruta.'restablecer_pass.php";</script>';
+       redireccionar($ruta.'restablecer_pass.php');
     }
 
     mysqli_close($GLOBALS['conexion']);
 
 }
+
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
 aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -243,6 +268,7 @@ ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
 }
 
 function crear_carpetas(){
+	
 	if(!file_exists('data/media')){
 			mkdir('data/media', 0777, true);
 		}
@@ -250,9 +276,11 @@ function crear_carpetas(){
 	if(!file_exists('data/thumbnails')){
 		mkdir('data/thumbnails', 0777, true);
 	}
+	
 	if(!file_exists('data/tmp_media')){
 		mkdir('data/tmp_media', 0777, true);
 	}
+	
 	if(!file_exists('data/tmp_thumbnails')){
 		mkdir('data/tmp_thumbnails', 0777, true);
 	}
@@ -271,9 +299,11 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 }
 
 function menu_lateral($ruta = ""){
+	
 	if($ruta=='todos'){
 		$ruta='';
 	}
+	
 print '
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:220px;overflow-x: hidden;" id="mySidebar"><br>
@@ -289,7 +319,6 @@ print '
 		print '<a href="'.$ruta.'index.php"><img alt="inicio" class="icono" src="'.$ruta.'img/home.png" ></a><hr/>';
 	}
 	
-
 	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
 		
 		print '<form method="post" action="'.$ruta.'login.php" >
@@ -312,18 +341,17 @@ print '
 	 </a>
 	 ';
 	}
+	
 	else{
 
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+		$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
+		$fila = mysqli_fetch_row($consulta);
 
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-	$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
-	$fila = mysqli_fetch_row($consulta);
-
-	mysqli_close($GLOBALS['conexion']);
+		mysqli_close($GLOBALS['conexion']);
 
 		print '
-		
-<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+		<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
 	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$fila[0].'</span>
       <a href="'.$ruta.'lightbox.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
@@ -331,10 +359,8 @@ print '
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
-
-
-
 	}
+	
 print '<hr/>';
 
 $imagen_aleatoria=imagen_aleatoria();
@@ -345,8 +371,8 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 if($imagen_aleatoria!="vacio"){
 	
 	print '
-<img alt="aleatorio" class="icono" src="'.$ruta.'img/aleatorio.png"/>
-<br/><br/>';
+	<img alt="aleatorio" class="icono" src="'.$ruta.'img/aleatorio.png"/>
+	<br/><br/>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
 	$image_id=substr($image_id,0,strpos($image_id,"#"));
@@ -360,31 +386,42 @@ if($imagen_aleatoria!="vacio"){
 }
 
 $redes_sociales='';
+
   if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
 	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a>';  
   }
+  
   if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
 	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a>';  
   }
+  
     if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
 	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a>';  
   }
+  
     if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
 	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a>';   
   }
+  
     if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
 	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a>';   
   }
+  
     if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
+		
 		if(empty($GLOBALS['deviantart'])){
 			$redes_sociales.='<br/>';
 		}
+		
 	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a>';  
-    }
+   }
+   
     if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
+		
 		if(empty($GLOBALS['debianart']) && empty($GLOBALS['instagram'])){
 			$redes_sociales.='<br/>';
 		}
+		
 	$redes_sociales.='<a target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a>';    
   }
       
@@ -397,24 +434,22 @@ $redes_sociales='';
 
 if($_COOKIE['4images_userid']>=0){
 	
-	  $vars = get_defined_vars();  
+	$vars = get_defined_vars();  
 
 
 	$administrators=array();
 
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
-	  while ($administradores = mysqli_fetch_array($consulta)){
-		  $administrators[]=$administradores[0];
-		
-	  }
-	 mysqli_close($GLOBALS['conexion']);
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 	 
-if(in_array($_COOKIE['4images_userid'], $administrators)){
+	while ($administradores = mysqli_fetch_array($consulta)){
+		$administrators[]=$administradores[0];
+	}
 	
-	print '<br/><a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
-	
-}
-
+	mysqli_close($GLOBALS['conexion']);
+	 
+	if(in_array($_COOKIE['4images_userid'], $administrators)){
+		print '<br/><a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
+	}	
 }
 
 print '
@@ -423,23 +458,6 @@ print '
 </div>
 </nav>';
 
-}
-
-function menu_categorias(){
-print '
-<div id="navega"  > 
-<div id="menu"> 
-<div id="fijo">
-
-    <a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
-<br/>
-	
-
-	</div>
-</div>
-</div>
-
- ';
 }
 
 function salted_hash($value, $salt = null, $length = 9, $hash_algo = 'md5') {
@@ -476,34 +494,6 @@ function compare_passwords($plain, $hashed) {
   }
 
   return secure_compare(salted_hash($plain, $hashed), $hashed);
-}
-
-function menu_3d(){
-	print'
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="data/media/".018/11/21/ciencia/nutricion/Nutricion-Frutas-Higiene-Alimentacion-Nutricion_354976032_106782953_1024x576.jpg"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/21261/pexels-photo.jpg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/567973/pexels-photo-567973.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/776653/pexels-photo-776653.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/54630/japanese-cherry-trees-flowers-spring-japanese-flowering-cherry-54630.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/131046/pexels-photo-131046.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/302515/pexels-photo-302515.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/301682/pexels-photo-301682.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-	<figure style="margin:auto;width:120px;height:120px;" class="shadow"><img style="width:120px;height:120px;" src="https://images.pexels.com/photos/933054/pexels-photo-933054.jpeg?w=940&h=650&auto=compress&cs=tinysrgb"/></figure>
-';
-/*	
-	$consulta = mysqli_query($GLOBALS['conexion'],
-	'SELECT cat_id,image_media_file FROM '.$GLOBALS['table_prefix'].'images
-	ORDER BY image_iD DESC LIMIT 9');
-	
-	while ($fila = mysqli_fetch_array($consulta)){
-
-		print '<figure style="width:120px;height:120px;"
-		class="shadow"><img style="width:120px;height:120px;" 
-		src="data/media/'.$fila[0].'/'.$fila[1].'"/></figure>';
-	}
-
- mysqli_close($GLOBALS['conexion']);
-*/
 }
 
 function random_string($length, $letters_only = false) {
@@ -555,12 +545,12 @@ function poner_menu(){
 		}
 
 		for($x=0;$x<count($id_categorias);$x++){
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
-			$nombre = mysqli_fetch_row($consulta);
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
+			$fila = mysqli_fetch_row($consulta);
 			
 			print '
 			<li  class="menu_categorias">
-			<a style="color:#0024EA;font-size:20px;font-weight:bold;" href="#">'.$nombre[0].'</a>';
+			<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="categories.php?cat_id="'.$fila[1].'>'.$fila[0].'</a>';
 			
 			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
@@ -569,14 +559,17 @@ function poner_menu(){
 			while ($subcategorias = mysqli_fetch_array($consulta)){
 				if($y==1){
 					print '<ul class="dl-submenu">';
-				}
-
-				print '<li style="background-color:black;font-size:20px;">
-							<a href="#">'.$subcategorias[0].'</a>
+					print '<li style="margin-top:15px;">
+							<a style="font-size:20px;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
 					   </li>';
-		
-$y++;		
-		}
+				}
+else{
+				print '<li>
+							<a style="font-size:20px;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
+					   </li>';
+}
+				$y++;		
+			}
 				print '</ul>
 							</li>';	
 		}
@@ -584,16 +577,12 @@ $y++;
 	  $consulta = mysqli_query($GLOBALS['conexion'], 
 	  'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0)');
 
-		
-
 	while ($fila = mysqli_fetch_row($consulta)){
 
 		print '
-			<li class="menu_categorias">
-			<a style="color:#0024EA;font-size:20px;font-weight:bold;" href="categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+			<li class="menu_categorias menu">
+			<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 	}
-
-	
 		
 print '		</ul>
 					</div>
@@ -602,7 +591,6 @@ print '		</ul>
 
 	';
 	}
-
 
 }
 

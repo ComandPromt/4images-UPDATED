@@ -33,11 +33,11 @@ height: 30px;
 
       }
       .btn > a{
-      	padding: 2px;
-		background: #1e5799; /* Old browsers */
-		 border-radius: 2px;
+      	padding: 0px;
+
+		 border: none;
 		 text-align: center;
-		 width:30px;
+
       }
       table{
       	border: solid 1px #7E7C7C;

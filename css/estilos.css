@@ -1,3 +1,10 @@
+.menu:last-child {
+	padding-top:10px;
+}
+
+.submenu:first-child{
+	margin-top:40px;	
+}
 
 .menu_categorias{
 	background-color:#ffffff;

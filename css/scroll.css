@@ -479,12 +479,9 @@ h6 {
     max-width: 1200px;
 }
 
-.content .demo {
-    border: 1px solid #CCC;
-}
+
 
 .content .demo .inner-content {
-    border: 1px solid #CCC;
     max-height: 170px;
     width: 600px;
 }

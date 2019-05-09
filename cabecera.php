@@ -114,13 +114,31 @@ include_once('includes/funciones.php');
 	</head>
 <body>
 
+<div id="navega"> 
+
+<div id="menu"> 
+
+<div id="fijo">
+
+    <a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
+
+<br/>
+	
+	</div>
+	
+</div>
+
+</div>
+
 <?php
-menu_categorias();
+
 menu_lateral();
 print '</div</div>';
+
 ?>
 	 
 </div>
 
 <div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
+
 <div class="texto">
