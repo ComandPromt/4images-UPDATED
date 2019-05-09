@@ -1,0 +1,155 @@
+			  *{
+				  background-color:#ffffff;
+			  }
+              /******************* WINDOWS VISTA SCROLLBAR *******************/
+              
+              .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
+              .scrollbar-vista > .scroll-content.scroll-scrollx_visible { top:  -17px; margin-top:  17px; }
+              
+              
+              .scrollbar-vista > .scroll-element {
+                  background-color: #fcfdff;
+              }
+              
+              .scrollbar-vista > .scroll-element,
+              .scrollbar-vista > .scroll-element *
+              {
+                  border: none;
+                  margin: 0;
+                  overflow: hidden;
+                  padding: 0;
+                  position: absolute;
+                  z-index: 10;
+              }
+              
+              .scrollbar-vista > .scroll-element .scroll-element_outer,
+              .scrollbar-vista > .scroll-element .scroll-element_size,
+              .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+              .scrollbar-vista > .scroll-element .scroll-element_inner,
+              .scrollbar-vista > .scroll-element .scroll-bar,
+              .scrollbar-vista > .scroll-element .scroll-bar div
+              {
+                  height: 100%;
+                  left: 0;
+                  top: 0;
+                  width: 100%;
+              }
+              
+              .scrollbar-vista > .scroll-element .scroll-element_outer,
+              .scrollbar-vista > .scroll-element .scroll-element_size,
+              .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+              .scrollbar-vista > .scroll-element .scroll-bar_body
+              {
+                  background: none !important;
+              }
+                            
+              .scrollbar-vista > .scroll-element.scroll-x {
+                                border-top: solid 1px #fcfdff;
+                                bottom: 0;
+                                height: 16px;
+                                left: 0;
+                                min-width: 100%;
+                                width: 100%;
+                            }
+
+              .scrollbar-vista > .scroll-element.scroll-y {
+                                border-left: solid 1px #fcfdff;
+                                height: 100%;
+                                min-height: 100%;
+                                right: 0;
+                                top: 0;
+                                width: 16px;
+               }
+
+               .scrollbar-vista > .scroll-element.scroll-y div {
+				background-image: url('skins/vista-y.png');
+				background-repeat: repeat-y;
+               }
+
+               .scrollbar-vista > .scroll-element.scroll-x .scroll-arrow {}
+
+                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar { min-width: 16px; background-position: 0px -34px; background-repeat: no-repeat; }
+                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body { left: 2px; }
+                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body-inner { left: -4px; background-position: 0px -17px; }
+                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_center { left: 50%; margin-left: -6px; width: 12px; background-position: 24px -34px; }
+                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_bottom { left: auto; right: 0; width: 2px; background-position: 37px -34px; }
+
+
+                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar { min-height: 16px; background-position: -34px 0px; background-repeat: no-repeat; }
+                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body { top: 2px; }
+                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body-inner { top: -4px; background-position: -17px 0px; }
+                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_center { top: 50%; margin-top: -6px; height: 12px; background-position: -34px 24px; }
+                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_bottom { top: auto; bottom: 0; height: 2px; background-position: -34px 37px; }
+
+
+
+                            /* SCROLL ARROWS */
+
+                            .scrollbar-vista > .scroll-element .scroll-arrow { display: none; }
+                            .scrollbar-vista > .scroll-element.scroll-element_arrows_visible .scroll-arrow { display: block; z-index: 12; }
+
+
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_less { height: 100%; width: 17px; background-position: 0px -51px;}
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_more { height: 100%; left: auto; right: 0; width: 17px; background-position: 17px -51px;}
+
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_outer { left: 17px; }
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_inner { left: -34px; }
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_size { left: -34px; }
+
+
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_less { width: 100%; height: 17px; background-position: -51px 0px;}
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_more { width: 100%; top: auto; bottom: 0; height: 17px; background-position: -51px 17px;}
+
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_outer { top: 17px; }
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_inner { top: -34px; }
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_size { top: -34px; }
+
+
+                            /* PROCEED OFFSET IF ANOTHER SCROLL VISIBLE */
+
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -17px; }
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -17px; }
+
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_inner { left: -17px; }
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_inner { top: -17px; }
+
+
+                            /* PROCEED OFFSET IF ARROWS & ANOTHER SCROLL */
+
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-arrow_more { right: 17px;}
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_inner { left: -51px;}
+                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_size { left: -51px;}
+
+
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-arrow_more { bottom: 17px;}
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_inner { top: -51px;}
+                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_size { top: -51px;}
+
+		@media only screen and (min-width: 900px) {
+			#menu_usuario {
+				opacity:0;
+			}
+		}
+	
+		.tooltip {
+	
+		display: inline-block;
+	
+		}
+	
+		.tooltip .tooltiptext {
+			visibility: hidden;
+	
+			background-color: black;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			
+			/* Position the tooltip */
+			position: absolute;
+			z-index: 1;
+		}
+
+		.tooltip:hover .tooltiptext {
+			visibility: visible;
+		}

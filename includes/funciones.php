@@ -1,17 +1,151 @@
 <?php
 
-function url_exists($url){
+function vercampo($nombre,$categoria,$imagen){
 	
-$file_headers = @get_headers($url);
-
-if(strpos($file_headers[0],"200 OK")==false){
-	return false;
+	print '<td>'.$nombre.'<img style="height:200px;width:200px;" src="data/'.$categoria.'/'.$imagen.'"/>
+			<p>
+				<img style="height:48px;width:48px;" src="img/fav.ico"/>
+			
+				<a href="data/'.$categoria.'/'.$imagen.'" download="data/'.$categoria.'/'.$imagen.'">
+					<img style="padding-left:20px;height:50px;width:70px;" src="img/download.png"/>
+				</a>
+			</p>
+	</td>';
 }
 
-else{
-	return true;
-}
+function ver_categoria($cat_id){
 
+	include('config.php');
+	
+	if ($conexion->connect_errno) {
+		echo "Fallo al conectar a MySQL: (" . $conexion->connect_errno . ") " . $conexion->connect_error;
+	}
+	
+	else{
+		
+		$CantidadMostrar=9;
+
+		$compag         =(int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
+		$TotalReg       =$conexion->query("SELECT
+							image_id,
+							cat_id,
+							image_name,
+							image_media_file
+							FROM
+							4images_images WHERE cat_id=12");
+
+		$TotalRegistro  =ceil($TotalReg->num_rows/$CantidadMostrar);
+		
+		if(isset($_GET['pag'])){
+			$_GET['pag']=(int) trim($_GET['pag']);	
+		}
+		
+		else{
+			$_GET['pag']=1;
+		}
+		
+		if(is_int($_GET['pag']) && $_GET['pag']<=$TotalRegistro && $_GET['pag']>0){
+	
+			$consultavistas ="SELECT
+								image_id,
+								cat_id,
+								image_name,
+								image_media_file
+								FROM
+								4images_images WHERE cat_id=".$cat_id."
+								ORDER BY
+								image_id DESC
+								LIMIT ".(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
+		
+			$consulta=$conexion->query($consultavistas);
+			
+			echo "<div style=\"margin-left:40px;\"><table>";
+			
+			$ids=array();
+			
+			$nombres=array();
+			
+			$categorias=array();
+			
+			$imagenes=array();
+			
+			while ($lista=$consulta->fetch_row()) {
+				
+				$ids[]=$lista[0];
+				$categorias[]=$lista[1];
+				$nombres[]=$lista[2];
+				$imagenes[]=$lista[3];	 
+			}
+			
+			for($x=0;$x<count($nombres)-1;$x++){
+				
+				print '<tr>';
+				
+				vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+					
+					++$x;
+					
+					if(!empty($imagenes[$x])){
+						
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+					}
+					
+					++$x;
+					
+					if(!empty($imagenes[$x])){
+						
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+					}
+					
+					print '</tr>';
+			}
+		
+			echo "</table></div>";
+			
+			if(!isset($_GET['pag'])){
+				$IncrimentNum =2;
+				$DecrementNum =1;
+			}
+			
+			else{
+				
+				if($_GET['pag']>=$TotalRegistro){
+					$IncrimentNum=$TotalRegistro;
+				}
+				else{
+					$IncrimentNum=$_GET['pag']+1;
+						$DecrementNum=$_GET['pag']-1;
+				}
+		
+				if($DecrementNum<=0){
+					$DecrementNum=1;
+				}
+				
+			}
+		
+			echo "<div style=\"float:right;padding-right:400px;\"><ul><li class=\"btn\"><a href=\"?pag=".$DecrementNum."\"><</a></li>";
+	
+			$Desde=$compag-(ceil($CantidadMostrar/2)-1);
+			$Hasta=$compag+(ceil($CantidadMostrar/2)-1);
+
+			$Desde=($Desde<1)?1: $Desde;
+			$Hasta=($Hasta<$CantidadMostrar)?$CantidadMostrar:$Hasta;
+			
+			for($i=$Desde; $i<=$Hasta;$i++){
+				
+				if($i<=$TotalRegistro){
+			
+				if($i==$compag){
+					echo "<li class=\"active\"><a href=\"?pag=".$i."\">".$i."</a></li>";
+				}
+				else {
+					echo "<li><a href=\"?pag=".$i."\">".$i."</a></li>";
+				}     		
+				}
+			}
+			echo "<li class=\"btn\"><a href=\"index.php?pag=".$IncrimentNum."\">></a></li></ul></div>";
+		}
+	}
 }
 
 function rmDir_rf($carpeta){
@@ -47,7 +181,8 @@ function obtener_direccion(){
 	}
 }
 
-function restablecer_pass(){
+function restablecer_pass($ruta = ""){
+	
 	if (isset($_POST['restablecer_pass']) && !empty($_POST['correo_restablecimiento'])
 
     && !empty($_POST['nombre_usuario'])) {
@@ -68,7 +203,7 @@ function restablecer_pass(){
         $fila = mysqli_fetch_row($consulta);
         $_SESSION['correo_restablecimiento'] = $_POST['correo_restablecimiento'];
         $_SESSION['id_usuario'] = $fila[0];
-        echo '<script>location.href="restablecer_pass.php";</script>';
+        echo '<script>location.href="'.$ruta.'restablecer_pass.php";</script>';
     }
 
     mysqli_close($GLOBALS['conexion']);
@@ -88,11 +223,11 @@ data-dismiss="modal" aria-label="Close">
 <div class="modal-body">
           <form method="post" action="' . $_SERVER['PHP_SELF'] . '">
         <div class="form-group">
-		<img alt="usuario para registrar" class="icono2" src="img/user.png"/>
+		<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/user.png"/>
 		<input  name="nombre_usuario" placeholder="' . ver_dato('user_name',
     $GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
 <br/>
-<img alt="usuario para registrar" class="icono2" src="img/email.png"/>
+<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/email.png"/>
         <input  name="correo_restablecimiento" placeholder="' .
 ver_dato('email', $GLOBALS['idioma']) . '"
 		type="text" class="form-control" />
@@ -124,8 +259,9 @@ function crear_carpetas(){
 }
 
 function ver_dato($accion,$idioma){
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-
+mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
 
 	$fila = mysqli_fetch_row($consulta);
@@ -134,8 +270,10 @@ function ver_dato($accion,$idioma){
 	mysqli_close($GLOBALS['conexion']);
 }
 
-function menu_lateral(){
-	
+function menu_lateral($ruta = ""){
+	if($ruta=='todos'){
+		$ruta='';
+	}
 print '
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:220px;overflow-x: hidden;" id="mySidebar"><br>
@@ -148,19 +286,19 @@ print '
   <div style="margin-left:-50px;" class="w3-bar-block">';
   
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
-		print '<a href="index.php"><img alt="inicio" class="icono" src="img/home.png" ></a><hr/>';
+		print '<a href="'.$ruta.'index.php"><img alt="inicio" class="icono" src="'.$ruta.'img/home.png" ></a><hr/>';
 	}
 	
 
 	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
 		
-		print '<form method="post" action="login.php" >
+		print '<form method="post" action="'.$ruta.'login.php" >
 
-       <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="img/user.png">
+       <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
 		<br/><br/><input title="user name" style="text-align:center;height:40px;font-size:30px;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
         
 		<br/>
-		<img alt="contraseña" class="icono" style="margin:auto;" src="img/user_pass.png"><br/><br/>
+		<img alt="contraseña" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
         <input title="user password" style="text-align:center;height:40px;font-size:30px;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
 
@@ -168,9 +306,9 @@ print '
       </form>
 	  <hr/>
 	  
-	  <a style="font-size:15px;" href="./register.php"><img alt="registar" class="icono" src="img/registrar.png"></a>
+	  <a style="font-size:15px;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
-	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="img/forgot_password.png"/>
+	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/forgot_password.png"/>
 	 </a>
 	 ';
 	}
@@ -185,13 +323,13 @@ print '
 
 		print '
 		
-<a href="messages/index.php"><img style="height:55px;width:55px;" src="img/email.png"></a>
-	  <img class="icono" src="img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$fila[0].'</span>
-      <a href="lightbox.php"><br/><br/><img class="icono" src="img/fav.png"></a><br>
-	  <br><a href="member.php?action=editprofile"><img class="icono" src="img/settings.png"></a><br/>
+<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$fila[0].'</span>
+      <a href="'.$ruta.'lightbox.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
+	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
-	   <a href="logout.php" ><img style="padding-bottom:10px;" class="icono" src="img/logout.png"></a>
+	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
 
 
@@ -204,55 +342,57 @@ $imagen_aleatoria=imagen_aleatoria();
 $image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
 $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
-if($imagen_aleatoria!="vacio" && !empty($GLOBALS['cms_host']) && url_exists( $GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
+if($imagen_aleatoria!="vacio"){
+	
 	print '
-<img alt="aleatorio" class="icono" src="img/aleatorio.png"/>
+<img alt="aleatorio" class="icono" src="'.$ruta.'img/aleatorio.png"/>
 <br/><br/>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
 	$image_id=substr($image_id,0,strpos($image_id,"#"));
 
 	print '
-	<a href="./details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="'.$GLOBALS['protocolo'].'://'.$GLOBALS['cms_host'].'/data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
+	<a href="'.$ruta.'details.php?image_id='.$image_id.'">
+	<img style="height:120px;width:120px;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
 	<br/><br/>
 	<hr/>
 	';
 }
+
 $redes_sociales='';
   if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="img/Social/facebook.png"/></a>';  
+	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a>';  
   }
   if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
-	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="img/Social/instagram.png"/></a>';  
+	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a>';  
   }
     if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
-	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="img/Social/twitter.png"/></a>';  
+	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a>';  
   }
     if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="img/Social/youtube.png"/></a>';   
+	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a>';   
   }
     if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
-	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="img/Social/debianart.png"/></a>';   
+	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a>';   
   }
     if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
 		if(empty($GLOBALS['deviantart'])){
 			$redes_sociales.='<br/>';
 		}
-	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="img/Social/slideshare.png"/></a>';  
+	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a>';  
     }
     if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
 		if(empty($GLOBALS['debianart']) && empty($GLOBALS['instagram'])){
 			$redes_sociales.='<br/>';
 		}
-	$redes_sociales.='<a target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="img/Social/github.png"/></a>';    
+	$redes_sociales.='<a target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a>';    
   }
       
 
      if(!empty($redes_sociales)){
 		print '<div style="-moz-transform: scale(1.5,1.5);zoom:150%;" class="w3-panel w3-large">';
 		print $redes_sociales.'</div>
-<hr/>';
+		<hr/>';
 	 }        	     
 
 if($_COOKIE['4images_userid']>=0){
@@ -271,14 +411,14 @@ if($_COOKIE['4images_userid']>=0){
 	 
 if(in_array($_COOKIE['4images_userid'], $administrators)){
 	
-	print '<br/><a href="admin/index.php"><img class="icono" src="img/admin.png"  border="0"></a><br/>';
+	print '<br/><a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
 	
 }
 
 }
 
 print '
-  <a href="rss.php?action=images"><img class="icono" src="img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
+  <a href="'.$ruta.'rss.php?action=images"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
 </nav>';
@@ -475,7 +615,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], 
 	  if($num_imagenes[0]!=""){
 	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT FLOOR(RAND()*'.$num_imagenes[0].')+1');
 	  $id_imagen_aleatoria = mysqli_fetch_array($consulta);
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_thumb_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$id_imagen_aleatoria[0]);
+	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$id_imagen_aleatoria[0]);
 	  $imagen_aleatoria = mysqli_fetch_array($consulta);
 	  
 return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#".$imagen_aleatoria[3];
@@ -489,7 +629,6 @@ return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#
  }
 
 }
-
 
 function consecutivos(array $array){
 	if(count($array)>0 && $array[0]!=null && $array[0]==1){

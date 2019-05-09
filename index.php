@@ -59,7 +59,7 @@ print '<div style="padding-top:80px;font-size:30px;position:fixed;">
 <div style="margin:auto;height:100px;margin-top:-20px;padding-left:40px;">
     <img alt="new images" class="icono" src="img/new.png"/>
     <img alt="top images" class="icono" src="img/top.png"/>
-    <img alt="all images" class="icono" src="img/view.png"/>
+    <a href="todos/index.php"><img alt="all images" class="icono" src="img/view.png"/></a>
 </div>
 <div><br/>
 ';
@@ -73,7 +73,7 @@ $consulta = mysqli_query($GLOBALS['conexion'],
 
     print '
     <div style="float:right;padding-left:350px;" class="entire-content">
-      <div style="margin-top:-30px;width:10px;"class="content-carrousel">';
+      <div style="margin-top:-40px;width:10px;"class="content-carrousel">';
       $consulta = mysqli_query($GLOBALS['conexion'],
       'SELECT cat_id,image_media_file,image_id FROM '.$GLOBALS['table_prefix'].'images
       ORDER BY image_iD DESC LIMIT 9');
