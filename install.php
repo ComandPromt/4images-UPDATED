@@ -1,27 +1,38 @@
 <?php
 error_reporting(0);
+
 include_once('includes/funciones.php');
+
 crear_carpetas();
+
 if ($_GET['install_lang'] == '' && !isset($_POST['submit'])) {
     header('Location:install.php?install_lang=spanish');
 }
+
 if (function_exists('set_magic_quotes_runtime')) {
     @set_magic_quotes_runtime(0);
 }
+
 if (!function_exists('date_default_timezone_set')) {
     function date_default_timezone_set($timezone)
     {
         return true;
     }
 }
+
 define('ROOT_PATH', './');
+
 function addslashes_array($array){
-    foreach ($array as $key => $val) {
+	
+    foreach ($array as $key => $val){
         $array[$key] = (is_array($val)) ? addslashes_array($val) : addslashes($val);
     }
+	
     return $array;
 }
+
 function get_timezone_by_offset($offset){
+	
     $timezones = array(
         '-12' => 'Pacific/Kwajalein',
         '-11' => 'Pacific/Samoa',
@@ -64,11 +75,14 @@ function get_timezone_by_offset($offset){
         '13' => 'Pacific/Enderbury',
         '14' => 'Pacific/Kiritimati',
     );
+	
     if (isset($timezones[$offset])) {
         return $timezones[$offset];
     }
+	
     return $timezones['1'];
 }
+
 if (file_exists('config.php')) {
     unlink('config.php');
     header('Location:install.php');
@@ -81,47 +95,60 @@ if (file_exists('config.php')) {
         $HTTP_SERVER_VARS = $_SERVER;
         $HTTP_ENV_VARS = $_ENV;
     }
+	
     if (get_magic_quotes_gpc() == 0) {
         $HTTP_GET_VARS = addslashes_array($HTTP_GET_VARS);
         $_POST = addslashes_array($_POST);
         $HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
     }
+	
     if (@file_exists(ROOT_PATH . 'config.php')) {
         include ROOT_PATH . 'config.php';
     } else {
         date_default_timezone_set('CET');
     }
+	
     if (defined('4IMAGES_ACTIVE')) {
         header('Location: index.php');
         exit;
     }
+	
     if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
         $action = (isset($HTTP_GET_VARS['action'])) ? stripslashes(trim($HTTP_GET_VARS['action'])) : stripslashes(trim($_POST['action']));
     } else {
         $action = '';
     }
+	
     if ($action == '') {
         $action = 'intro';
     }
+	
     $lang_select = '';
     $folderlist = array();
     $handle = opendir(ROOT_PATH . 'lang');
+	
     while ($folder = @readdir($handle)) {
         if (@is_dir(ROOT_PATH . "lang/$folder") && $folder != '.' && $folder != '..') {
             $folderlist[] = $folder;
         }
     }
+	
     sort($folderlist);
+	
     for ($i = 0; $i < sizeof($folderlist); ++$i) {
         $lang_select .= '<a href="install.php?install_lang=' . $folderlist[$i] . '"><img alt="' . $folderlist[$i] . '" style="height:100px;width:100px;" src="img/Install/' . $folderlist[$i] . '.png"/></a>';
     }
+	
     closedir($handle);
+	
     if (isset($HTTP_GET_VARS['install_lang']) || isset($_POST['install_lang'])) {
         $install_lang = (isset($HTTP_GET_VARS['install_lang'])) ? trim($HTTP_GET_VARS['install_lang']) : trim($_POST['install_lang']);
     }
+	
     if (isset($_POST['submit'])) {
         $install_lang = $_POST['idioma'];
     }
+	
     $lang = array();
     include ROOT_PATH . 'lang/' . $install_lang . '/install.php';
     $db_servertype = (isset($_POST['db_servertype'])) ? trim($_POST['db_servertype']) : 'mysqli';
@@ -135,7 +162,9 @@ if (file_exists('config.php')) {
     $admin_password2 = (isset($_POST['admin_password2'])) ? trim($_POST['admin_password2']) : '';
     $selected_timezone = (isset($_POST['timezone_select'])) ? trim($_POST['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
-    include ROOT_PATH . 'includes/constants.php';
+   
+   include ROOT_PATH . 'includes/constants.php';
+   
     if ($action == 'downloadconfig') {
         header('Content-Type: text/x-delimtext; name="config.php"');
         header('Content-disposition: attachment; filename=config.php');
@@ -143,6 +172,7 @@ if (file_exists('config.php')) {
         echo $config_file;
         exit;
     }
+	
     echo '
 <!DOCTYPE html>
 <html lang="es">
@@ -417,22 +447,21 @@ if (file_exists('config.php')) {
 	$conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
 	$idioma="' . $_POST['idioma'] . '";
 	?>';
+	
         fwrite($miArchivo, $php);
         fclose($miArchivo);
         chmod('config.php', 0777);
+		
         $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
 		
 		if($dwes->set_charset('utf8')){
-	$dwes->query('DROP DATABASE ' . $_POST['db_name']);
-        $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
-		$dwes->query('use ' . $_POST['db_name']);
- }
-        else{
-		  $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
-		
+			$dwes->query('DROP DATABASE ' . $_POST['db_name']);
+			$dwes->query('CREATE DATABASE ' . $_POST['db_name']);
+			$dwes->query('use ' . $_POST['db_name']);
 		}
 		
         $nombre = 'data/database/default/idiomas.sql';
+		
         if (file_exists($nombre)) {
             $texto = file_get_contents($nombre);
             $sentencia = explode(";", $texto);

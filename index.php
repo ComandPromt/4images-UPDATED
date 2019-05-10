@@ -35,7 +35,7 @@ if (!in_array($db_name, $tablas)) {
     unset($tablas);
 	
     if (file_exists('install.php')) {
-        header('Location:install.php');
+       redireccionar('install');
     } else {
         'Debes tener el archivo install.php';
     }
@@ -64,6 +64,11 @@ print '<div style="padding-top:80px;font-size:30px;position:fixed;">
 <div><br/>
 ';
 
+if(file_exists('config.php')){
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
 $consulta = mysqli_query($GLOBALS['conexion'],
 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images
   ORDER BY image_id DESC LIMIT 9');
@@ -89,7 +94,8 @@ $consulta = mysqli_query($GLOBALS['conexion'],
       print '  </div>
     </div>';
   }
-  
+  mysqli_close($GLOBALS['conexion']);
+} 
   print'
 </div>
 
