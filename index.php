@@ -90,8 +90,7 @@ $consulta = mysqli_query($GLOBALS['conexion'],
           src="data/media/'.$fila[0].'/'.$fila[1].'"/></a></figure>';
       }
     
-    mysqli_close($GLOBALS['conexion']);
-      print '  </div>
+       print '  </div>
     </div>';
   }
   mysqli_close($GLOBALS['conexion']);

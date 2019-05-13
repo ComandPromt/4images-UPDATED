@@ -4,6 +4,13 @@ function redireccionar($ruta){
 	 echo '<script>location.href="'.$ruta.'";</script>';
 }
 
+function deliver_response($status){
+    header("HTTP/1.1 $status $status_message");
+    $response['respuesta'] = $status;
+    $json_response = json_encode($response);
+    echo $json_response;
+}
+
 function vercampo($nombre,$categoria,$imagen){
 	
 	print '<td>'.$nombre.'<img style="height:200px;width:200px;" src="data/'.$categoria.'/'.$imagen.'"/>
