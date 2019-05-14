@@ -15,7 +15,7 @@ function vercampo($nombre,$categoria,$imagen){
 	
 	print '<td>'.$nombre.'<img style="height:200px;width:200px;" src="data/'.$categoria.'/'.$imagen.'"/>
 			<p>
-				<img style="height:48px;width:48px;" src="img/fav.ico"/>
+				<a href="lightbox.php?image_id="><img style="height:48px;width:48px;" src="img/fav.ico"/>
 			
 				<a href="data/'.$categoria.'/'.$imagen.'" download="data/'.$categoria.'/'.$imagen.'">
 					<img style="padding-left:20px;height:50px;width:70px;" src="img/download.png"/>

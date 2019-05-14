@@ -112,7 +112,7 @@ include_once('includes/funciones.php');
 	<link rel="alternate" type="application/rss+xml" title="<?php print 'RSS Feed: '.$GLOBALS['site_name']." (Nuevas imágenes)";?>" href="rss.php?action=images">
 	
 	</head>
-<body>
+<body style="zoom:90%;">
 
 <div id="navega"> 
 

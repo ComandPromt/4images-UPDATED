@@ -29,10 +29,11 @@ CREATE TABLE 4images_sessions (
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_lightboxes (
-  lightbox_id varchar(32) PRIMARY KEY DEFAULT '',
+  lightbox_id int(11),
   user_id int(11) NOT NULL DEFAULT '0',
-  lightbox_lastaction int(11)  NOT NULL DEFAULT '0',
-  lightbox_image_ids text,
+  lightbox_image_id int(11),
+  PRIMARY KEY(lightbox_id,user_id,lightbox_image_id),
+  FOREIGN KEY (user_id) REFERENCES 4images_users(user_id),
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
 )DEFAULT CHARSET=utf8;
 
