@@ -11,17 +11,47 @@ function deliver_response($status){
     echo $json_response;
 }
 
-function vercampo($nombre,$categoria,$imagen){
+function vercampo($nombre,$categoria,$imagen,$image_id){
 	
-	print '<td>'.$nombre.'<img style="height:200px;width:200px;" src="data/'.$categoria.'/'.$imagen.'"/>
-			<p>
-				<a href="lightbox.php?image_id="><img style="height:48px;width:48px;" src="img/fav.ico"/>
-			
-				<a href="data/'.$categoria.'/'.$imagen.'" download="data/'.$categoria.'/'.$imagen.'">
+	$icono="fav.ico";
+	$like="";
+	
+	if(isset($_COOKIE['4images_userid'])){
+		
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+
+    $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) FROM ' .
+        $GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id=".$image_id." AND user_id=" . $_COOKIE['4images_userid'] );
+
+    $fila = mysqli_fetch_row($consulta);
+	
+	if($fila[0]==1){
+		$icono="fav_2.ico";
+	}
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	$like='<div style="float:left;">
+		<form id="frmajax" method="post">
+			<a onclick="favorito('.$image_id.')"><img style="height:40px;width:40px;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
+		</form>
+		</div>';
+	}
+	
+	print 'data/media/'.$categoria.'/'.$imagen;
+	print '<td>'.$nombre.'<img id="'.$image_id.'" style="height:200px;width:200px;" alt="Imagen '.
+	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/>'.$like.'
+		
+		<div style="float:right;">
+				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
 					<img style="padding-left:20px;height:50px;width:70px;" src="img/download.png"/>
 				</a>
-			</p>
+		</div>	
 	</td>';
+	
+	
 }
 
 function ver_categoria($cat_id){
@@ -100,20 +130,20 @@ else{
 				
 				print '<tr>';
 				
-				vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 					
 					++$x;
 					
 					if(!empty($imagenes[$x])){
 						
-						vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 					}
 					
 					++$x;
 					
 					if(!empty($imagenes[$x])){
 						
-						vercampo($nombres[$x],$categorias[$x],$imagenes[$x]);
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 					}
 					
 					print '</tr>';
@@ -286,17 +316,10 @@ function crear_carpetas(){
 			mkdir('data/media', 0777, true);
 		}
 	
-	if(!file_exists('data/thumbnails')){
-		mkdir('data/thumbnails', 0777, true);
-	}
-	
 	if(!file_exists('data/tmp_media')){
 		mkdir('data/tmp_media', 0777, true);
 	}
 	
-	if(!file_exists('data/tmp_thumbnails')){
-		mkdir('data/tmp_thumbnails', 0777, true);
-	}
 }
 
 function ver_dato($accion,$idioma){

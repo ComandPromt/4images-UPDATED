@@ -1,7 +1,49 @@
 </div>
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
-        
+	<script src="js/jquery.min.js"></script>
+   	<script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	function favorito(id){
+
+var icono=document.getElementById("Imagen "+id).src.substr(document.getElementById("Imagen "+id).src.lastIndexOf("/")+1,document.getElementById("Imagen "+id).src.lenght);
+
+var accion="lightbox.php?action=guardar";
+
+	if(icono=='fav_2.ico'){
+		var accion="lightbox.php?action=eliminar";
+	}
+
+	$(document).ready(function(){
+
+	accion+="&image_id="+document.getElementById(id).alt.substr(7,document.getElementById(id).alt.lenght);
+	alert(accion);
+	var datos=$('#frmajax').serialize();
+			$.ajax({
+				type:"POST",
+				url:accion,
+				data:datos,
+				success:function(r){
+					icono=icono=document.getElementById("Imagen "+id).src.substr(document.getElementById("Imagen "+id).src.lastIndexOf("/")+1,document.getElementById("Imagen "+id).src.lenght);
+					
+					if(r==1){
+						
+						if(icono=='fav_2.ico'){
+						document.getElementById("Imagen "+id).src='img/fav.ico';
+									}
+						
+						else{
+						document.getElementById("Imagen "+id).src= 'img/fav_2.ico';
+						}
+					
+				}
+			
+				}
+			});
+
+			return false;
+		
+	});
+	}
+</script>    
 		<script>
 function mostrar() {
     document.getElementById("sidebar").style.width = "300px";
@@ -16,7 +58,7 @@ function ocultar() {
     document.getElementById("cerrar").style.display = "none";
 }
 </script>
-   <script src="js/jquery.min.js"></script>
+
 						  <script>
                             jQuery(document).ready(function(){
                                 jQuery('.scrollbar-vista').scrollbar({
@@ -29,7 +71,6 @@ function ocultar() {
 				     
 				 <script src="js/prettify.js"></script>
         <script src="js/jquery.scrollbar.js"></script>
-		<script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
 				<script src="js/modernizr.custom.js"></script>
 				<script src="js/jquery.dlmenu.js"></script>
@@ -56,13 +97,6 @@ function ocultar() {
 
         }
     </script>
- <script>
-$('a[download]').each(function() {
-  var $a = $(this),
-      fileUrl = $a.attr('href');
 
-  $a.attr('href', 'data:application/octet-stream,' + encodeURIComponent(fileUrl));
-});
-</script>
 	</body>
 </html>

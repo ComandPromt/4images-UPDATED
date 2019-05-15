@@ -18,8 +18,8 @@ CREATE TABLE 4images_users (
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_sessions (
-  session_id varchar(32),
-  session_user_id int(11) NOT NULL DEFAULT '0',
+  session_id int(11),
+  session_user_id int(11),
   session_lastaction int(11)  NOT NULL DEFAULT '0',
   session_location varchar(255) NOT NULL DEFAULT '',
   session_ip varchar(15) NOT NULL DEFAULT '',
@@ -29,10 +29,9 @@ CREATE TABLE 4images_sessions (
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_lightboxes (
-  lightbox_id int(11),
-  user_id int(11) NOT NULL DEFAULT '0',
+  user_id int(11),
   lightbox_image_id int(11),
-  PRIMARY KEY(lightbox_id,user_id,lightbox_image_id),
+  PRIMARY KEY(user_id,lightbox_image_id),
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id),
   FOREIGN KEY (user_id) REFERENCES 4images_users(user_id)
 )DEFAULT CHARSET=utf8;
