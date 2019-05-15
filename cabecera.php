@@ -141,4 +141,3 @@ print '</div</div>';
 
 <div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
 
-<div class="texto">

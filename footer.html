@@ -15,7 +15,7 @@ var accion="lightbox.php?action=guardar";
 	$(document).ready(function(){
 
 	accion+="&image_id="+document.getElementById(id).alt.substr(7,document.getElementById(id).alt.lenght);
-	alert(accion);
+
 	var datos=$('#frmajax').serialize();
 			$.ajax({
 				type:"POST",

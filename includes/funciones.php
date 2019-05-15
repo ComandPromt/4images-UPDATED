@@ -40,9 +40,8 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		</div>';
 	}
 	
-	print 'data/media/'.$categoria.'/'.$imagen;
-	print '<td>'.$nombre.'<img id="'.$image_id.'" style="height:200px;width:200px;" alt="Imagen '.
-	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/>'.$like.'
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:20px;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:80px;width:80px;" alt="Imagen '.
+	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
 		
 		<div style="float:right;">
 				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
@@ -108,7 +107,8 @@ else{
 		
 			$consulta=$conexion->query($consultavistas);
 			
-			echo "<div style=\"margin-left:40px;\"><table>";
+			echo '<div class="table-responsive-xs">
+  <table style="border:none;margin:auto;" class="table">';
 			
 			$ids=array();
 			
@@ -126,9 +126,11 @@ else{
 				$imagenes[]=$lista[3];	 
 			}
 			
+				$y=0;		
 			for($x=0;$x<count($nombres)-1;$x++){
-				
-				print '<tr>';
+				print '<tr style="border:none;"><td style="border:none;font-size:20px;">'.$nombres[$y].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+1].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+2].'</td></tr>';
+						
+				print '<tr style="border:none;">';
 				
 				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 					
@@ -174,7 +176,7 @@ else{
 			
 			$_GET['pag']=(int)$_GET['pag'];
 		
-			echo '<div style="float:right;margin-top:-20px;"><ul>';
+			echo '<div style="padding-top:30px;float:right;"><ul>';
 			
 			if($_GET['pag']>0 && $_GET['pag']>1){
 				
@@ -389,7 +391,7 @@ print '
 
 		print '
 		<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
-	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span   class="redondo" style="font-size:28px;">'.$fila[0].'</span>
+	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
       <a href="'.$ruta.'lightbox.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
@@ -485,7 +487,7 @@ if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
 	mysqli_close($GLOBALS['conexion']);
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
-		print '<br/><a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
+		print '<a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
 	}
 		
 }
@@ -567,7 +569,7 @@ if(file_exists('config.php')){
 	$recuento = mysqli_fetch_row($consulta);
 	
 	if($recuento[0]>0){
-		print '<aside style="float:right;margin-left:30%;margin-top:-80px;position:fixed;z-index: 1;">
+		print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;">
 	<div >
 				<div>
 					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
