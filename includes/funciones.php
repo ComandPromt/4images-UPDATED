@@ -1,5 +1,13 @@
 <?php
 
+function mostrarfecha_y_hora(){
+		print '<br/><br/><br/><hr style="width:115%;"/>
+				<div style="float:left;margin-top:-30px;font-size:15px;color: #075a33;margin-left:140px;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
+		<div id="reloj" style="float:right;margin-top:-30px;font-size:15px;color: #075a33 ;font-weight:bold;"></div>
+		
+';
+}
+
 function redireccionar($ruta){
 	 echo '<script>location.href="'.$ruta.'";</script>';
 }
@@ -214,6 +222,7 @@ else{
 				}
 			}
 		}
+		print '</ul>';
 	}
 }
 
@@ -569,7 +578,7 @@ if(file_exists('config.php')){
 	$recuento = mysqli_fetch_row($consulta);
 	
 	if($recuento[0]>0){
-		print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;">
+		print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
 	<div >
 				<div>
 					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">

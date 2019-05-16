@@ -7,7 +7,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-content">
 <div class="modal-header">
 <h3 class="modal-title titulo" id="exampleModalLabel">' . ver_dato('cambiar_pass', $GLOBALS['idioma']) . '</h3>
-<button style="margin-left:20px;float:right;" type="button" class="close"
+<button style="margin-left:20px;float:right;z-index:2;" type="button" class="close"
 data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>

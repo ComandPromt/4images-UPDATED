@@ -1,7 +1,35 @@
 </div>
+ <script>
+function startTime(){
+
+today=new Date();
+
+h=today.getHours();
+
+m=today.getMinutes();
+
+s=today.getSeconds();
+
+m=checkTime(m);
+
+s=checkTime(s);
+
+document.getElementById('reloj').innerHTML=h+":"+m+":"+s;
+
+t=setTimeout('startTime()',500);}
+
+function checkTime(i)
+
+{if (i<10) {i="0" + i;}return i;}
+
+window.onload=function(){startTime();}
+
+</script>
+
 	<script src="js/jquery.min.js"></script>
    	<script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript">
+
+    <script>
 	function favorito(id){
 
 var icono=document.getElementById("Imagen "+id).src.substr(document.getElementById("Imagen "+id).src.lastIndexOf("/")+1,document.getElementById("Imagen "+id).src.lenght);
@@ -13,7 +41,7 @@ var accion="lightbox.php?action=guardar";
 	}
 
 	$(document).ready(function(){
-
+alert(document.getElementById(id).alt);
 	accion+="&image_id="+document.getElementById(id).alt.substr(7,document.getElementById(id).alt.lenght);
 
 	var datos=$('#frmajax').serialize();

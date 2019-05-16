@@ -442,9 +442,9 @@ if (file_exists('config.php')) {
 	$github="' . $_POST['github'] . '";
 	$debianart="' . $_POST['debianart'] . '";
 	$slideshare="' . $_POST['slideshare'] . '";
-	define("4IMAGES_ACTIVE", 1);
+    $idioma="' . $_POST['idioma'] . '";
 	$conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
-	$idioma="' . $_POST['idioma'] . '";
+    mysqli_set_charset($conexion,"utf8");
 	?>';
 	
         fwrite($miArchivo, $php);

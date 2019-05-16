@@ -1,9 +1,11 @@
 <?php
+
 date_default_timezone_set('Europe/Madrid');
 if(file_exists('config.php')){
 	include_once('config.php');
 }
 include_once('includes/funciones.php');
+
 ?>
 
 <!DOCTYPE html>
