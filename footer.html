@@ -41,7 +41,7 @@ var accion="lightbox.php?action=guardar";
 	}
 
 	$(document).ready(function(){
-alert(document.getElementById(id).alt);
+
 	accion+="&image_id="+document.getElementById(id).alt.substr(7,document.getElementById(id).alt.lenght);
 
 	var datos=$('#frmajax').serialize();
@@ -71,6 +71,36 @@ alert(document.getElementById(id).alt);
 		
 	});
 	}
+	
+		function descarga(id){
+
+var numero_descargas=parseInt(document.getElementById('descargas').innerHTML);
+
+var accion="download.php?image_id="+id;
+
+
+	$(document).ready(function(){
+
+	var datos=$('#frmdownload').serialize();
+			$.ajax({
+				type:"POST",
+				url:accion,
+				data:datos,
+				success:function(r){
+						
+					if(r==1){
+						document.getElementById('descargas').innerHTML=++numero_descargas;
+					
+				}
+			
+				}
+			});
+
+			return false;
+		
+	});
+	}
+	
 </script>    
 		<script>
 function mostrar() {

@@ -425,6 +425,7 @@ if (file_exists('config.php')) {
         }
         $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
         $php = '<?php
+    error_reporting(0);
 	date_default_timezone_set("' . $selected_timezone . '");
 	$site_name = "' . $_POST['site'] . '";
 	$db_servertype = "' . $_POST['db_servertype'] . '";

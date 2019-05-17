@@ -1,9 +1,9 @@
 <?php
 
 function mostrarfecha_y_hora(){
-		print '<br/><br/><br/><hr style="width:115%;"/>
-				<div style="float:left;margin-top:-30px;font-size:15px;color: #075a33;margin-left:140px;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
-		<div id="reloj" style="float:right;margin-top:-30px;font-size:15px;color: #075a33 ;font-weight:bold;"></div>
+		print '<div style="margin-top:90%;background-color:#ffffff;"><hr style="width:115%;"/>
+				<div style="float:left;margin-top:-30px;font-size:15px;color: #075a33;margin-left:22%;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
+		<div id="reloj" style="float:right;margin-top:-30px;font-size:15px;color: #075a33 ;font-weight:bold;padding-right:40px;"></div></div>
 		
 ';
 }
@@ -326,10 +326,6 @@ function crear_carpetas(){
 	if(!file_exists('data/media')){
 			mkdir('data/media', 0777, true);
 		}
-	
-	if(!file_exists('data/tmp_media')){
-		mkdir('data/tmp_media', 0777, true);
-	}
 	
 }
 

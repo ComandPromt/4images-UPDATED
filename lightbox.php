@@ -1,10 +1,13 @@
 <?php
 
+include('config.php');
+
 $_GET['image_id']=(int)$_GET['image_id'];
 
 if(isset($_GET['action']) && $_GET['image_id']>0 && ($_GET['action']=='guardar' || $_GET['action']=='eliminar') ){
 	
-	$conexion= mysqli_connect('192.168.1.100','ComandPromt','ratonatqm71114','cms');
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
 	if($_GET['action']=='eliminar'){
 		$sql="DELETE FROM 4images_lightboxes WHERE lightbox_image_id=".$_GET['image_id']." and user_id=".$_COOKIE['4images_userid'];
@@ -15,7 +18,8 @@ if(isset($_GET['action']) && $_GET['image_id']>0 && ($_GET['action']=='guardar' 
 
 	}
 			
-	echo mysqli_query($conexion,$sql);
+	echo mysqli_query($GLOBALS['conexion'],$sql);
+	mysqli_close($GLOBALS['conexion']);
 }
 
  ?>
