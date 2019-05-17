@@ -14,44 +14,66 @@ if (isset($_FILES['archivo'])) {
 	$_GET['username']=trim($_GET['username']);
 	$_GET['pass']=trim($_GET['pass']);
 		
-		print 'SELECT user_password,user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name=".$_GET['username'];
-		
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_password,user_id FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_GET['username']."'");
 	
 	if(mysqli_affected_rows($GLOBALS['conexion'])==1){
-	print "entro aqui";
+
 		$fila = mysqli_fetch_row($consulta);
-		print $_GET['pass'].$fila[0];
+
 		if(compare_passwords($_GET['pass'], $fila[0])){
-				print "vamos bien";
-			    $file = $_FILES["archivo"];
-    $tipo = $file['type'];
-    $path = $file['tmp_name'];
-    $size = $file['size'];
-    $nombre = $file['name'];
-    $dimensiones = getimagesize($path);
-    $width = $dimensiones[0];
-    $height = $dimensiones[1];
-    $imagen = NULL;
-    $urlImagen = NULL;
-    if ($tipo == "image/jpg" || $tipo == "image/jpeg" || $tipo == "image/JPG" || $tipo == "image/JPEG") {
-        $imagen = imagecreatefromjpeg($path);
-    } else if ($tipo == "image/png" || $tipo == "image/PNG") {
-        $imagen = imagecreatefrompng($path);
-    } else {
-        deliver_response(300);
-    }
+
+			$file = $_FILES["archivo"];
+			$tipo = $file['type'];
+			$path = $file['tmp_name'];
+			$size = $file['size'];
+			$nombre = $file['name'];
+			$dimensiones = getimagesize($path);
+			$width = $dimensiones[0];
+			$height = $dimensiones[1];
+			$imagen = NULL;
+			$urlImagen = NULL;
+		
+			switch($tipo){
+				
+				case "image/jpg":
+				case "image/jpeg":
+				case "image/JPG":
+				case "image/JPEG":
+					$imagen = imagecreatefromjpeg($path);
+				break;
+				
+				case "image/png":
+				case "image/PNG":
+					$imagen = imagecreatefrompng($path);
+				break;
+				
+				case "image/gif":
+					if(is_ani($path)){
+						$imagen = imagecreatefromgif($path);
+					}
+					else{
+						$imagen = imagecreatefromjpeg($path);
+					}
+				break;
+				
+				default:
+					deliver_response(300);
+				break;
+			}
+		}
+    } 
 	
     if (is_uploaded_file($path) && $imagen != NULL) {
 		
         $tipo = str_replace("../data/media/".$_GET['cat_id']."/", "", $tipo);
 		
-		
         $urlImagen = "../data/media/".$_GET['cat_id'] . "/".$_GET['nombre_imagen'];
-		print $urlImagen;
+
         $image_p = imagecreatetruecolor($width, $height);
+		
         imagecopyresampled($image_p, $imagen, 0, 0, 0, 0, $width, $height, $width, $height);
-        $uploaded = imagejpeg($image_p, $urlImagen);
+        
+		$uploaded = imagejpeg($image_p, $urlImagen);
 		
         if ($uploaded) {
             deliver_response(200);
@@ -59,15 +81,8 @@ if (isset($_FILES['archivo'])) {
            deliver_response(401);
         }
     }
+		mysqli_close($GLOBALS['conexion']);
 		}
-	
-	}
-	
-	mysqli_close($GLOBALS['conexion']);
-		
-}
-else{
-		print "no entres";
-}	
-}       
+	}		
+     
 ?>

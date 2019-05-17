@@ -1,5 +1,20 @@
 <?php
 
+function is_ani($filename) {
+	
+    if(!($fh = @fopen($filename, 'rb')))
+        return false;
+    $count = 0;
+
+    while(!feof($fh) && $count < 2) {
+        $chunk = fread($fh, 1024 * 100); //read 100kb at a time
+        $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', $chunk, $matches);
+   }
+    
+    fclose($fh);
+    return $count > 1;
+}
+
 function mostrarfecha_y_hora(){
 		print '<div style="margin-top:90%;background-color:#ffffff;"><hr style="width:115%;"/>
 				<div style="float:left;margin-top:-30px;font-size:15px;color: #075a33;margin-left:22%;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
