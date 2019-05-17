@@ -436,7 +436,6 @@ if(mysqli_affected_rows($GLOBALS['conexion'])==1){
 $fila = mysqli_fetch_row($consulta);
 
 if(compare_passwords($_POST['password'], $fila[0])){
-	print "entro";
 	$_SESSION['logueado']=true;
 }
 }

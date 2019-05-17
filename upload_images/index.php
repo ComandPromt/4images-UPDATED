@@ -7,11 +7,11 @@ session_start();
 <div style="margin:auto;text-align:center;">
 	<form action="input.php" method="post">
 		<p><label><img style="height:40px;width:40px;" src="../img/user.png"/></label>
-		<input style="font-size:20px;text-align:center;" name="usuario"  type="text" />
+		<input id="usuario" style="font-size:20px;text-align:center;" name="usuario"  type="text" />
 		</p>
 		<p><label><img style="height:40px;width:40px;" src="../img/user_pass.png"/></label>
 		
-		<input style="font-size:20px;text-align:center;" name="password" type="password"/> 
+		<input id="pass" style="font-size:20px;text-align:center;" name="password" type="password"/> 
 		</p>
 		<p>
 		<label><img style="height:40px;width:40px;" src="../img/tag.png"/>
@@ -34,7 +34,7 @@ mysqli_close($GLOBALS['conexion']);
 ?>			
 		</select>
 		</p>
-		<input type="submit"/>
+		<input id="enviar" type="submit"/>
 	</form>
 	</div>
 </body>

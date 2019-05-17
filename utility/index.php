@@ -46,16 +46,7 @@ if (isset($_FILES['archivo'])) {
 				case "image/PNG":
 					$imagen = imagecreatefrompng($path);
 				break;
-				
-				case "image/gif":
-					if(is_ani($path)){
-						$imagen = imagecreatefromgif($path);
-					}
-					else{
-						$imagen = imagecreatefromjpeg($path);
-					}
-				break;
-				
+		
 				default:
 					deliver_response(300);
 				break;
