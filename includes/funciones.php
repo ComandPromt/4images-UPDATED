@@ -1,5 +1,25 @@
 <?php
 
+function obtener_lista_negra(){
+	include_once('../config.php');
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT Nombre FROM antispam');
+		
+		$lista_negra=array();
+		
+		while($fila = mysqli_fetch_row($consulta)){
+			$lista_negra[]=$fila[0];
+		}
+		
+		return $lista_negra;
+}
+
 function is_ani($filename) {
 	
     if(!($fh = @fopen($filename, 'rb')))
@@ -86,7 +106,7 @@ else{
 	$final_sentencia='WHERE cat_id='.$cat_id;
 }
 
-	include('config.php');
+	include_once('../config.php');
 	
 	if ($conexion->connect_errno) {
 		echo "Fallo al conectar a MySQL: (" . $conexion->connect_errno . ") " . $conexion->connect_error;
@@ -415,6 +435,8 @@ print '
       <a href="'.$ruta.'lightbox.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
+	   <a href="'.$ruta.'upload_images/index.php"><img class="icono" src="'.$ruta.'img/upload.png"></a><br/>
+       <br>
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
@@ -723,11 +745,6 @@ function comprobar_si_es_valido($cadena,array $lista_negra){
 	}
 	
 	return $valido;
-}
-
-function conectarBd(){
-  include_once('../config.php');
- return mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
 }
 
 function eliminar_espacios($cadena){

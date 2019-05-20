@@ -57,9 +57,9 @@ print '<div style="padding-top:80px;font-size:30px;position:fixed;">
 <p style="padding-left:40px;margin-top:-60px;" id="reloj"></p>
 
 <div style="margin:auto;height:100px;margin-top:-20px;padding-left:40px;">
-    <img alt="new images" class="icono" src="img/new.png"/>
     <img alt="top images" class="icono" src="img/top.png"/>
     <a href="todos.php"><img alt="all images" class="icono" src="img/view.png"/></a>
+	<a href="todos.php"><img alt="all images" class="icono" src="img/search.png"/></a>
 </div>
 <div><br/>
 ';
