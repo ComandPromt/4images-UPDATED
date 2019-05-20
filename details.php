@@ -19,12 +19,42 @@ $_SESSION['insert_pag']='details.php';
 $ultima_imagen=0;
 
 if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
+	
+	if (isset($_POST['comentario'])&&!empty($_REQUEST['captcha'])) {
+	
+    if (trim(strtolower($_REQUEST['captcha'])) == $_SESSION['captcha']) {
+		
+		include('config.php');
+		include('includes/funciones.php');
+		
+		$lista_negra=obtener_lista_negra();
+
+	if(comprobar_si_es_valido($_POST['mensaje'],$lista_negra)){
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			$GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+		mysqli_set_charset($GLOBALS['conexion'],"utf8");
+		
+		mysqli_query($GLOBALS['conexion'],
+		'INSERT INTO '.$GLOBALS['table_prefix'] .
+		"comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date) VALUES('".$_GET['image_id']."','".$_COOKIE['4images_userid']."','".$_POST['asunto']."','".$_POST['mensaje']."','".$_SERVER['REMOTE_ADDR']."','".date('Y').'/'.date('m').'/'.date('d')."')" );
+		
+		mysqli_close($GLOBALS['conexion']);
+	}		
+	
+    }
+ 
+	}
+    unset($_SESSION['captcha']);
+
 	$_SESSION['pagina']="details.php?image_id=".$_GET['image_id'];
+	
 	include('cabecera.php');
 	include('config.php');
 	
-	 $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
-        $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
+    $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
 
     $fila = mysqli_fetch_row($consulta);
 	
@@ -38,17 +68,23 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	mysqli_set_charset($GLOBALS['conexion'],"utf8");
-	$consulta = mysqli_query($GLOBALS['conexion'], '
+	mysqli_query($GLOBALS['conexion'], '
 		UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id='.$_GET['image_id']);
 	
-	print '<br/><br/>
-
-	<div style="margin-left:10%;">';
+	$consulta =mysqli_query($GLOBALS['conexion'], '
 	
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
-	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+	SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix'].'categories where cat_id=(
+	
+	SELECT cat_id FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$_GET['image_id'].')');
+	
+	$categoria = mysqli_fetch_row($consulta);
+	
+	print '<br/><br/>
+<div style="float:left;padding-left:20px;">
+<a style="color:#562676;font-size:25px;font-weight:bold;" href="categories.php?cat_id='.$categoria[0].'">'.$categoria[1].'</a>
+</div>
+	<div style="float:left;margin-left:10%;">';
+	
 	$consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT image_name,cat_id,image_media_file,image_description,image_id FROM '.$GLOBALS['table_prefix'].'images
 		WHERE image_id='.$_GET['image_id']);
@@ -59,7 +95,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		$imagen=$recuento[2];
 		$image_id=$recuento[4];
 		
-		print '<h1>'.$recuento[0].'</h1>
+		print '<h1 style="color:#116C5D;">'.$recuento[0].'</h1>
 	
 		<div class="container">
 		<img id='.$image_id.' alt="Imagen '.$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'" class="image">
@@ -186,11 +222,50 @@ if($_GET['image_id']<$ultima_imagen){
 
 
 
-print'</div>';
+print'</div>
+<div style="float:left;width:100%;margin:auto;padding-left:60px;">
+';
+?>
+<hr/>
+<div style="float:left;margin:auto;width:100%;">
 
+<table class="table" style="margin:auto;text-align:center;">
+<tr style="font-size:20px;">
+<th>Author
+</th>
+<th>Comment
+</th>
+</tr>
+<tr>
+<td>fgh</td>
+<td>asdas</td>
+</tr>
+</table>
+<hr/>
+</div>
 
+	<form method="post" action="<?php echo $_SERVER['PHP_SELF'].'?image_id='.$_GET['image_id']; ?>" >
+		<p><img style="height:100px;width:100px;" src="img/comment.png"/></p>
+		<p><input type="text" name="asunto"/></p>
+		<p><img style="height:100px;width:100px;" src="img/coment.png"/></p>
+		<p><textarea name="mensaje"></textarea></p>
+		<p><img src="captcha/captcha.php" id="captcha" />
+		<a  class="texto nota" href="#" onclick="
+			            document.getElementById('captcha').src='captcha/captcha.php?'+
+						Math.random();
+			            document.getElementById('captcha-form').focus();"
+			            id="change-image"><img alt="reload captcha" class="icono2"
+						src="img/reload.png"/></a></p>
+		<p>
+		<?php
+		print '
+		<input type="text" title="captcha" required  id="validcaptcha"
+			name="captcha" size="30" value="" class="input" id="captcha_input"
+			placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/></p>
+		<div style="margin-top:-20px;padding-bottom:20px;"><input name="comentario" type="submit" /></div>
+	</form>
 
-print '	
+</div>
 
 	</div>
 	';
@@ -205,6 +280,6 @@ else{
 	$_SESSION['pagina']="details.php?image_id=".$ultima_imagen;
 	redireccionar('details.php?image_id='.$ultima_imagen);
 }
-}
 
+}
 ?>

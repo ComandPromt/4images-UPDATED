@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 
-include_once('includes/funciones.php');
+include_once 'includes/funciones.php';
 
 crear_carpetas();
 
@@ -22,17 +22,19 @@ if (!function_exists('date_default_timezone_set')) {
 
 define('ROOT_PATH', './');
 
-function addslashes_array($array){
-	
-    foreach ($array as $key => $val){
+function addslashes_array($array)
+{
+
+    foreach ($array as $key => $val) {
         $array[$key] = (is_array($val)) ? addslashes_array($val) : addslashes($val);
     }
-	
+
     return $array;
 }
 
-function get_timezone_by_offset($offset){
-	
+function get_timezone_by_offset($offset)
+{
+
     $timezones = array(
         '-12' => 'Pacific/Kwajalein',
         '-11' => 'Pacific/Samoa',
@@ -75,11 +77,11 @@ function get_timezone_by_offset($offset){
         '13' => 'Pacific/Enderbury',
         '14' => 'Pacific/Kiritimati',
     );
-	
+
     if (isset($timezones[$offset])) {
         return $timezones[$offset];
     }
-	
+
     return $timezones['1'];
 }
 
@@ -95,60 +97,60 @@ if (file_exists('config.php')) {
         $HTTP_SERVER_VARS = $_SERVER;
         $HTTP_ENV_VARS = $_ENV;
     }
-	
+
     if (get_magic_quotes_gpc() == 0) {
         $HTTP_GET_VARS = addslashes_array($HTTP_GET_VARS);
         $_POST = addslashes_array($_POST);
         $HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
     }
-	
+
     if (@file_exists(ROOT_PATH . 'config.php')) {
         include ROOT_PATH . 'config.php';
     } else {
         date_default_timezone_set('CET');
     }
-	
+
     if (defined('4IMAGES_ACTIVE')) {
         header('Location: index.php');
         exit;
     }
-	
+
     if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
         $action = (isset($HTTP_GET_VARS['action'])) ? stripslashes(trim($HTTP_GET_VARS['action'])) : stripslashes(trim($_POST['action']));
     } else {
         $action = '';
     }
-	
+
     if ($action == '') {
         $action = 'intro';
     }
-	
+
     $lang_select = '';
     $folderlist = array();
     $handle = opendir(ROOT_PATH . 'lang');
-	
+
     while ($folder = @readdir($handle)) {
         if (@is_dir(ROOT_PATH . "lang/$folder") && $folder != '.' && $folder != '..') {
             $folderlist[] = $folder;
         }
     }
-	
+
     sort($folderlist);
-	
+
     for ($i = 0; $i < sizeof($folderlist); ++$i) {
         $lang_select .= '<a href="install.php?install_lang=' . $folderlist[$i] . '"><img alt="' . $folderlist[$i] . '" style="height:100px;width:100px;" src="img/Install/' . $folderlist[$i] . '.png"/></a>';
     }
-	
+
     closedir($handle);
-	
+
     if (isset($HTTP_GET_VARS['install_lang']) || isset($_POST['install_lang'])) {
         $install_lang = (isset($HTTP_GET_VARS['install_lang'])) ? trim($HTTP_GET_VARS['install_lang']) : trim($_POST['install_lang']);
     }
-	
+
     if (isset($_POST['submit'])) {
         $install_lang = $_POST['idioma'];
     }
-	
+
     $lang = array();
     include ROOT_PATH . 'lang/' . $install_lang . '/install.php';
     $db_servertype = (isset($_POST['db_servertype'])) ? trim($_POST['db_servertype']) : 'mysqli';
@@ -162,9 +164,9 @@ if (file_exists('config.php')) {
     $admin_password2 = (isset($_POST['admin_password2'])) ? trim($_POST['admin_password2']) : '';
     $selected_timezone = (isset($_POST['timezone_select'])) ? trim($_POST['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
-   
-   include ROOT_PATH . 'includes/constants.php';
-   
+
+    include ROOT_PATH . 'includes/constants.php';
+
     if ($action == 'downloadconfig') {
         header('Content-Type: text/x-delimtext; name="config.php"');
         header('Content-disposition: attachment; filename=config.php');
@@ -172,7 +174,7 @@ if (file_exists('config.php')) {
         echo $config_file;
         exit;
     }
-	
+
     echo '
 <!DOCTYPE html>
 <html lang="es">
@@ -191,7 +193,7 @@ if (file_exists('config.php')) {
     <link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/estilos.css">
-	
+
         <link rel="stylesheet" href="css/scroll.css" />
         <link rel="stylesheet" href="css/prettify.css" />
         <link rel="stylesheet" href="css/jquery.scrollbar.css" />
@@ -200,7 +202,7 @@ if (file_exists('config.php')) {
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
 				<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
-			       
+
 	<title>Web</title>
 	          <style>
 			  .imagen{
@@ -264,7 +266,7 @@ if (file_exists('config.php')) {
                                 top: 0;
                                 width: 16px;
                             }
-                           
+
                             .scrollbar-vista > .scroll-element.scroll-y div {
                                 background-image: url("skins/vista-y.png");
                                 background-repeat: repeat-y;
@@ -316,49 +318,49 @@ if (file_exists('config.php')) {
 	<script>
 		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
 		var tgs = new Array( "div","td","tr");
-		
+
 		//Indicar el nombre de los diferentes tamaños de fuente:
 		var szs = new Array( "xx-small","x-small","small","medium","large","x-large","xx-large" );
 		var startSz = 2;
-		
+
 		function ts( trgt,inc ) {
 			if (!document.getElementById) return
-			
+
 			var d = document,cEl = null,sz = startSz,i,j,cTags;
-			
+
 			sz += inc;
-			
+
 			if ( sz < 0 ) sz = 0;
 			if ( sz > 6 ) sz = 6;
-			
+
 			startSz = sz;
-			
+
 			if ( !( cEl = d.getElementById( trgt ) ) ) cEl = d.getElementsByTagName( trgt )[ 0 ];
-			
+
 			cEl.style.fontSize = szs[ sz ];
-			
+
 			for ( i = 0 ; i < tgs.length ; i++ ) {
 				cTags = cEl.getElementsByTagName( tgs[ i ] );
 				for ( j = 0 ; j < cTags.length ; j++ ) cTags[ j ].style.fontSize = szs[ sz ];
 			}
 		}
-		
+
 		var captcha_reload_count = 0;
 		var captcha_image_url = "./captcha.php";
-		
+
 		function new_captcha_image() {
 			if (captcha_image_url.indexOf("?") == -1) {
 				document.getElementById("captcha_image").src= captcha_image_url+"?c="+captcha_reload_count;
 				} else {
 				document.getElementById("captcha_image").src= captcha_image_url+"&c="+captcha_reload_count;
 				}
-		
+
 			document.getElementById("captcha_input").value="";
 			document.getElementById("captcha_input").focus();
 			captcha_reload_count++;
 		}
-		
-		
+
+
 		if (document.layers){
 			document.captureEvents(Event.MOUSEDOWN);
 			document.onmousedown = right;
@@ -366,36 +368,36 @@ if (file_exists('config.php')) {
 		else if (document.all && !document.getElementById){
 			document.onmousedown = right;
 		}
-		var txt = "'.$GLOBALS['site_name'].'"
+		var txt = "' . $GLOBALS['site_name'] . '"
 			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
-		
+
 			txt=txt.toUpperCase();
 			txt=" "+txt+"  ";
 			var espera=600;
 			var refresco=null;
-		
+
 			function rotulo_title() {
 				document.title=txt;
 				txt=txt.substring(1,txt.length)+txt.charAt(0);
 				refresco=setTimeout("rotulo_title()",espera);
 			}
-			
+
 			rotulo_title();
-	
+
 	</script>
 	</head>
 <body>
 <div class="container">
 <br/>
 	<div style="height:65px;width:100%;float:left;">
-		
+
 			<a style="color:blue;padding:5px;" href="#home"><img class="imagen" src="img/home.png"/></a>
 			<a style="color:blue;padding:5px;" href="#site"><img class="imagen" src="img/director.png"/></a>
 			<a style="color:blue;padding:5px;" href="#zonahoraria"><img class="imagen" src="img/clock.png"/></a>
 			<a style="color:blue;padding:5px;" href="#admin"><img class="imagen" src="img/admin.png"/></a>
 			<a style="color:blue;padding:5px;" href="#email"><img class="imagen" src="img/email.png"/></a>
 			<a style="color:blue;padding:5px;" href="#socials"><img class="imagen" src="img/users.png"/></a>
-		
+
 	</div>
 <br/><br/><br/><br/>
 <div>
@@ -447,21 +449,21 @@ if (file_exists('config.php')) {
 	$conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
     mysqli_set_charset($conexion,"utf8");
 	?>';
-	
+
         fwrite($miArchivo, $php);
         fclose($miArchivo);
         chmod('config.php', 0777);
-		
+
         $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
-		
-		if($dwes->set_charset('utf8')){
-			$dwes->query('DROP DATABASE ' . $_POST['db_name']);
-			$dwes->query('CREATE DATABASE ' . $_POST['db_name']);
-			$dwes->query('use ' . $_POST['db_name']);
-		}
-		
+
+        if ($dwes->set_charset('utf8')) {
+            $dwes->query('DROP DATABASE ' . $_POST['db_name']);
+            $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
+            $dwes->query('use ' . $_POST['db_name']);
+        }
+
         $nombre = 'data/database/default/idiomas.sql';
-		
+
         if (file_exists($nombre)) {
             $texto = file_get_contents($nombre);
             $sentencia = explode(";", $texto);
@@ -471,7 +473,7 @@ if (file_exists('config.php')) {
             }
         }
         $dwes->close();
-    
+
         $current_time = time();
         $admin_pass_hashed = salted_hash($admin_password);
     }
@@ -534,20 +536,20 @@ if (file_exists('config.php')) {
                     "UPDATE users
               SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
               WHERE user_name = 'admin'");
-			  
-			  if($table_prefix!='4images_'){
-				  $dwes->query('RENAME TABLE 4images_users TO '.$table_prefix . 'users');
-				  $dwes->query('RENAME TABLE 4images_sessions TO '.$table_prefix . 'sessions');
-				  $dwes->query('RENAME TABLE 4images_lightboxes TO '.$table_prefix . 'lightboxes');
-				  $dwes->query('RENAME TABLE 4images_categories TO '.$table_prefix . 'categories');
-				  $dwes->query('RENAME TABLE 4images_images TO '.$table_prefix . 'images');
-				  $dwes->query('RENAME TABLE 4images_comments TO '.$table_prefix . 'comments');
-				  $dwes->query('RENAME TABLE 4images_etiquetas TO '.$table_prefix . 'etiquetas');
-				  $dwes->query('RENAME TABLE 4images_tags TO '.$table_prefix . 'tags');
-				  $dwes->query('RENAME TABLE 4images_groups TO '.$table_prefix . 'groups');				  
-			}
-			  
-               $dwes->close();
+
+                if ($table_prefix != '4images_') {
+                    $dwes->query('RENAME TABLE 4images_users TO ' . $table_prefix . 'users');
+                    $dwes->query('RENAME TABLE 4images_sessions TO ' . $table_prefix . 'sessions');
+                    $dwes->query('RENAME TABLE 4images_lightboxes TO ' . $table_prefix . 'lightboxes');
+                    $dwes->query('RENAME TABLE 4images_categories TO ' . $table_prefix . 'categories');
+                    $dwes->query('RENAME TABLE 4images_images TO ' . $table_prefix . 'images');
+                    $dwes->query('RENAME TABLE 4images_comments TO ' . $table_prefix . 'comments');
+                    $dwes->query('RENAME TABLE 4images_etiquetas TO ' . $table_prefix . 'etiquetas');
+                    $dwes->query('RENAME TABLE 4images_tags TO ' . $table_prefix . 'tags');
+                    $dwes->query('RENAME TABLE 4images_groups TO ' . $table_prefix . 'groups');
+                }
+
+                $dwes->close();
                 echo '<script>location.href="index.php";</script>';
             } else {
                 $msg = $lang['database_error'];
@@ -684,7 +686,7 @@ if (file_exists('config.php')) {
               <h2 id="email">' . $lang['des_email'] . '
         </h2>
 					<img class="imagen" alt="email admin" class="install" src="img/emaill.png"/> <br/><br/><input  style="font-size:25px;margin:auto;"  title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
-				
+
 				<br/>
 				<hr/>
 			  <h2 id="socials" stlye="font-size:20px;">' . $lang['nota'] . '</h2>
