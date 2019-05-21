@@ -35,7 +35,10 @@ if (isset($_POST['submit'])) {
                 && !empty($_POST['email']) && !empty($_POST['user_password'])
                 && !$SESSION['error']) {
                 $user_password_hashed = salted_hash($_POST['user_password']);
-      
+				
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 
                 mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
                     $GLOBALS['table_prefix'] . 'users (user_level,user_name,user_password,
@@ -167,5 +170,5 @@ if (!$terminado && $SESSION['licencia']) {
 restablecer_pass();
 print '</div></div>';
 
-include 'footer.html';
+include ('footer.html');
 ?>

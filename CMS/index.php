@@ -13,8 +13,24 @@ if (file_exists('config.php')) {
     
     if (file_exists('install.php')) {
         unlink('install.php');
+		
     }
-    
+	
+    if (file_exists('includes/constants.php')) {
+        unlink('includes/constants.php');
+		
+    }
+	
+	if (file_exists('includes/db_mysqli.php')) {
+        unlink('includes/db_mysqli.php');
+		
+    }
+	
+	if (file_exists('includes/db_utils.php')) {
+        unlink('includes/db_utils.php');
+		
+    }
+	
     include ('config.php');
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");
@@ -35,7 +51,7 @@ if (!in_array($db_name, $tablas)) {
     unset($tablas);
 	
     if (file_exists('install.php')) {
-       redireccionar('install');
+       redireccionar('install.php');
     } else {
         'Debes tener el archivo install.php';
     }
@@ -65,7 +81,10 @@ print '<div style="padding-top:80px;font-size:30px;position:fixed;">
 ';
 
 if(file_exists('config.php')){
-
+	
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	
 $consulta = mysqli_query($GLOBALS['conexion'],
 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images

@@ -34,7 +34,7 @@ function is_ani($filename) {
 }
 
 function mostrarfecha_y_hora(){
-		print '<div style="margin-top:90%;background-color:#ffffff;"><hr style="width:115%;"/>
+		print '<div style="width:100%;margin-top:90%;background-color:#ffffff;"><hr style="width:115%;"/>
 				<div style="float:left;margin-top:-25px;font-size:15px;color: #075a33;margin-left:22%;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
 		<div id="reloj" style="float:right;margin-top:-25px;font-size:15px;color: #075a33 ;font-weight:bold;padding-right:40px;"></div></div>';
 }
@@ -211,9 +211,9 @@ function ver_categoria($cat_id){
 			
 			if($_GET['pag']>0 && $_GET['pag']>1){
 				
-				echo '<li style="padding-left:45px;"class="btn"><a href="?pag=1"><<</a></li>
+				echo '<li style="padding-left:45px;"class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag=1"><<</a></li>
 
-				<li class="btn"><a href="?pag='.$DecrementNum.'"><img style="width:45px;height:45px;" src="img/back.png"/></a></li>';
+				<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$DecrementNum.'"><img style="width:45px;height:45px;" src="img/back.png"/></a></li>';
 
 			}
 				
@@ -238,10 +238,10 @@ function ver_categoria($cat_id){
 					
 			if($_GET['pag']>0 && $_GET['pag']<$TotalRegistro){
 				
-				echo "<li class=\"btn\"><a href=\"?pag=".$IncrimentNum."\"><img style=\"width:45px;height:45px;\" src=\"img/next.png\"/></a></li>";
+				echo '<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$IncrimentNum.'"><img style="width:45px;height:45px;" src="img/next.png"/></a></li>';
 				
 				if($IncrimentNum<$TotalRegistro){
-					echo "<li class=\"btn\"><a href=\"?pag=".$TotalRegistro."\">>></a></li></ul></div>";
+					echo '<li class="btn"><a href=?cat_id='.$_GET['cat_id'].'&pag'.$TotalRegistro.'">>></a></li></ul></div>';
 				}
 			}
 		}
@@ -354,6 +354,9 @@ function crear_carpetas(){
 
 function ver_dato($accion,$idioma){
 	if(file_exists('config.php')){
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 
 		$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
 
@@ -390,14 +393,14 @@ print '
 		print '<form method="post" action="'.$ruta.'login.php" >
 
        <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
-		<br/><br/><input title="user name" style="text-align:center;height:40px;font-size:30px;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
+		<br/><br/><input id="user_name" title="user name" style="text-align:center;height:40px;font-size:30px;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
         
 		<br/>
 		<img alt="contraseña" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
-        <input title="user password" style="text-align:center;height:40px;font-size:30px;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
+        <input id="user_password" title="user password" style="text-align:center;height:40px;font-size:30px;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
 
-		<input style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
+		<input id="login" style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
 	  <hr/>
 	  
@@ -409,7 +412,9 @@ print '
 	}
 	
 	else{
-
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 			$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 		$fila = mysqli_fetch_row($consulta);
 
@@ -426,6 +431,7 @@ print '
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
+	   mysqli_close($GLOBALS['conexion']);
 	}
 	
 print '<hr/>';
@@ -505,7 +511,9 @@ if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
 
 
 	$administrators=array();
-
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 	 
 	while ($administradores = mysqli_fetch_array($consulta)){
@@ -590,79 +598,89 @@ function random_string($length, $letters_only = false) {
 }
 
 function poner_menu($ruta = ""){
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	
-if(file_exists($ruta.'config.php')){
+	if(file_exists($ruta.'config.php')){
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix'].'categories');
-	$recuento = mysqli_fetch_row($consulta);
+		$recuento = mysqli_fetch_row($consulta);
 	
-	if($recuento[0]>0){
-		print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
-	<div >
+		if($recuento[0]>0){
+			print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
+			<div>
 				<div>
 					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger"></button>
 						<ul style="margin-top:-15px;font-size:40px;"  class="dl-menu">
 						';		
-								$id_categorias=array();
+			$id_categorias=array();
 
-	  $consulta = mysqli_query($GLOBALS['conexion'], '
-		SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0');
+			$consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0');
 
-	  while ($recuento = mysqli_fetch_row($consulta)){
-			$id_categorias[]=$recuento[0];
-		}
-
-		for($x=0;$x<count($id_categorias);$x++){
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
-			$fila = mysqli_fetch_row($consulta);
-			
-			print '
-			<li  class="menu_categorias">
-			<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="#">'.$fila[0].'</a>';
-			
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
-			
-			$y=1;
-
-			while ($subcategorias = mysqli_fetch_array($consulta)){
-				if($y==1){
-					print '<ul style="margin-top:10px;" class="dl-submenu">';
-					print '<li style="first-child:margin-top:15px;">
-							<a style="margin-top:20px;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
-					   </li>';
-				}
-else{
-				print '<li>
-							<a style="font-size:20px;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
-					   </li>';
-}
-				$y++;		
+			while ($recuento = mysqli_fetch_row($consulta)){
+				$id_categorias[]=$recuento[0];
 			}
-				print '</ul>
-							</li>';	
-		}
 
-	  $consulta = mysqli_query($GLOBALS['conexion'], 
-	  'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0)');
+			for($x=0;$x<count($id_categorias);$x++){
+				
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
+				$fila = mysqli_fetch_row($consulta);
+			
+				print '
+				<li  class="menu_categorias">
+				<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="#">'.$fila[0].'</a>';
+			
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
+			
+				$y=1;
 
-	while ($fila = mysqli_fetch_row($consulta)){
+				while ($subcategorias = mysqli_fetch_array($consulta)){
+					if($y==1){
+						print '<ul style="margin-top:10px;" class="dl-submenu">';
+						print '<li style="first-child:margin-top:15px;">
+						<a style="margin-top:20px;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
+						</li>';
+					}
+				
+					else{
+						print '<li>
+						<a style="font-size:20px;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
+						</li>';
+					}
+				
+					$y++;		
+				}
+				
+				print '</ul></li>';	
+			}
 
-		print '
-			<li class="menu_categorias menu">
-			<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
-	}
+			$consulta = mysqli_query($GLOBALS['conexion'], 
+			'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0)');
+
+			while ($fila = mysqli_fetch_row($consulta)){
+
+				print '
+				<li class="menu_categorias menu">
+				<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+			}
 		
-print '		</ul>
+			print '		</ul>
 					</div>
 				</div>
 			</div></aside>
 
-	';
+			';
+		}
 	}
-}
 }
 
 function imagen_aleatoria(){
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT MAX(image_id) FROM '.$GLOBALS['table_prefix'].'images WHERE image_active=1');
 
  if(mysqli_affected_rows($GLOBALS['conexion'])>0){
@@ -682,30 +700,7 @@ return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#
  else{
 	 return 'vacio';
  }
-
-}
-
-function consecutivos(array $array){
-	if(count($array)>0 && $array[0]!=null && $array[0]==1){
-        asort($array);
-        for($x=0;$x<count($array);$x++){
-            if($x+1<count($array)){
-            if($array[$x]+1!=$array[$x+1]){
-                $numero=$array[$x]+1;
-                $x=count($array);
-                $noc=true;
-            }
-            }
-        }
-        if(!isset($noc)){
-            $numero=count($array)+1;
-        }
-  
-    }
-    else{
-        $numero=1;
-    }
-	return $numero;
+mysqli_close($GLOBALS['conexion']);
 }
 
 function comprobar_si_es_valido($cadena,array $lista_negra){

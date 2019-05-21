@@ -253,7 +253,9 @@ session_start();
 	
 	<?php
 	
-
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id
 	FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$_POST['categoria']."'");
@@ -461,10 +463,6 @@ session_start();
 
 		}
 
-
-
-
-
 $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
 FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
 
@@ -474,13 +472,22 @@ $fila = mysqli_fetch_row($consulta);
 $_SESSION['user_id']=$fila[0];
 
 }
+
+
 							if(isset($_FILES['upload']['name'])){
 				$fecha=date('Y').'-'.date('m').'-'.date('d');
 				$y=0;
+				
+$consulta=mysqli_query($GLOBALS['conexion'],"SELECT MAX(image_id)+1 FROM ".$GLOBALS['table_prefix']."images");
+	$fila = mysqli_fetch_row($consulta);
+	$numero=$fila[0];
+	
 				for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
+					
+					
 					mysqli_query($GLOBALS['conexion'], '
 			
-			INSERT INTO '.$GLOBALS['table_prefix']."images (cat_id,user_id,image_name,image_description,image_keywords,image_date,image_active,image_media_file,image_allow_comments,image_comments,image_downloads,image_votes,image_rating,image_hits,sha256) VALUES('".$_SESSION['categoria']."','".$user_id."','prueba',NULL,NULL,'".$fecha."','1','".$_FILES['upload']['name'][$y]."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".hash('sha256', $_FILES['upload']['name'][$y])."')");
+			INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','prueba',NULL,NULL,'".$fecha."','1','".$_FILES['upload']['name'][$y]."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".hash('sha256', $_FILES['upload']['name'][$y])."')");
 			
 			
 					$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
@@ -496,10 +503,15 @@ $_SESSION['user_id']=$fila[0];
 						move_uploaded_file($fichTemporal, $destino);
 					}   
 					$y++;
+					$numero++;
 				}
-				mysqli_close($GLOBALS['conexion']);
-							}
 			
+			mysqli_close($GLOBALS['conexion']);
+			print ver_dato('upload_success', $GLOBALS['idioma']);
+			redireccionar('index.php');
+							}
+							
+			mysqli_close($GLOBALS['conexion']);
 		?>
 		
 	</body>

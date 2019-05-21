@@ -145,7 +145,7 @@ print '';
 	}
 	
 	print '<div style="float:left;padding-bottom:40px;padding-left:10px;"><img style="width:40px;height:40px;" src="img/size.png"/><span style="font-size:15px;"> '.truncateFloat(truncateFloat(filesize ( 'data/media/'.$categoria.'/'.$imagen)/1024,2)/1024,2).'</span></div>';
-print '';
+
 	if($_GET['image_id']>1){
 
 $consulta = mysqli_query($GLOBALS['conexion'], '
@@ -188,11 +188,11 @@ if($like!=""){
 	print $like;
 }
 
-print '<div style="float:left;padding-left:40px;">';
+print '<div style="float:left;padding-left:40px;">
 
-print "<a onclick=\"PopupCenter('showphoto.php?photo_id=".$image_id."','xtf','900','500');\"><img style=\"height:40px;width:40px;\" src=\"img/full_screen.png\"></a>";
+<a onclick="fullwin('.$image_id.');"><img style="height:40px;width:40px;" src="img/full_screen.png"></a>
 
-print '<form id="frmdownload" method="post">
+<form id="frmdownload" method="post">
 		<a onclick="descarga('.$image_id.')" href="data/media/'.$categoria.'/'.$imagen.'" download><img style="height:40px;width:40px;" src="img/download.png"/></a>
 	</form>
 </div>

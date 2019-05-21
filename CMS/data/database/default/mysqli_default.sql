@@ -60,7 +60,7 @@ CREATE TABLE 4images_images (
   image_keywords text,
   image_date date  NOT NULL,
   image_active tinyint(1) NOT NULL DEFAULT '1',
-  image_media_file varchar(255) NOT NULL,
+  image_media_file varchar(255) NOT NULL UNIQUE,
   image_allow_comments tinyint(1) NOT NULL DEFAULT '1',
   image_comments int(11)  NOT NULL DEFAULT '0',
   image_downloads int(11)  NOT NULL DEFAULT '0',
