@@ -525,6 +525,7 @@ session_start();
 			mysqli_close($GLOBALS['conexion']);
 			
 			if($_SESSION['subida']){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));
 			}
 			

@@ -7,7 +7,10 @@ if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
 }
 
 poner_menu('../');
+
 session_start();
+
+$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 
 print '
 
@@ -48,17 +51,19 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
 mysqli_close($GLOBALS['conexion']);
 
+$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
+
 if($numero_categorias==0){
 	redireccionar('../index.php');
 }
 
-?>			
+print '			
 		</select>
 		</p>
-		<input id="enviar" name="admin_upload" type="submit"/>
+		<input value="'.ver_dato('submit', $GLOBALS['idioma']).'"  id="enviar" name="admin_upload" type="submit"/>
 	</form>
 
-	</div>
-<?php
+	</div>';
+
 footer('../');
 ?>

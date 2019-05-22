@@ -1,5 +1,49 @@
 <?php
 
+function saber_idioma($id){
+
+	include('../config.php');
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT nacionalidad FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$id."'");
+			
+	$fila = mysqli_fetch_row($consulta);
+	
+	$idioma=$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $idioma;
+}
+
+function url_exists($url){
+	
+	$file_headers = @get_headers($url);
+	
+	if(strpos($file_headers[0],"200 OK")==false){
+		$exists = false;
+	}
+	
+	else{
+		$exists = true;
+	}
+	
+	return $exists;
+}
+
+function truncateFloat($number, $digitos){
+    $raiz = 10;
+	
+    $multiplicador = pow ($raiz,$digitos);
+	
+    $resultado = ((int)($number * $multiplicador)) / $multiplicador;
+	
+    return number_format($resultado, $digitos);
+}
+
 function footer($ruta=""){
 	print '
 	</div>

@@ -4,14 +4,6 @@ session_start();
 
 $_SESSION['insert_pag']='details.php';
 
-function truncateFloat($number, $digitos){
-    $raiz = 10;
-    $multiplicador = pow ($raiz,$digitos);
-    $resultado = ((int)($number * $multiplicador)) / $multiplicador;
-    return number_format($resultado, $digitos);
- 
-}
-
 $_SESSION['insert_pag']='details.php';
 
 $ultima_imagen=0;
@@ -27,14 +19,14 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		$lista_negra=obtener_lista_negra();
 
-	if(comprobar_si_es_valido($_POST['mensaje'],$lista_negra)){
+		if(comprobar_si_es_valido($_POST['mensaje'],$lista_negra)){
 		
-		mysqli_query($GLOBALS['conexion'],
-		'INSERT INTO '.$GLOBALS['table_prefix'] .
-		"comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date) VALUES('".$_GET['image_id']."','".$_COOKIE['4images_userid']."','".$_POST['asunto']."','".$_POST['mensaje']."','".$_SERVER['REMOTE_ADDR']."','".date('Y').'/'.date('m').'/'.date('d')."')" );
+			mysqli_query($GLOBALS['conexion'],
+			'INSERT INTO '.$GLOBALS['table_prefix'] .
+			"comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date) VALUES('".$_GET['image_id']."','".$_COOKIE['4images_userid']."','".$_POST['asunto']."','".$_POST['mensaje']."','".$_SERVER['REMOTE_ADDR']."','".date('Y').'/'.date('m').'/'.date('d')."')" );
 		
-		mysqli_close($GLOBALS['conexion']);
-	}		
+			mysqli_close($GLOBALS['conexion']);
+		}		
 	
     }
  
@@ -57,8 +49,6 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 	poner_menu();
 	
-
-
 	mysqli_query($GLOBALS['conexion'], '
 		UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id='.$_GET['image_id']);
 	
@@ -89,7 +79,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		print '<h1 style="color:#116C5D;">'.$recuento[0].'</h1>
 	
 		<div class="container">
-		<img id='.$image_id.' alt="Imagen '.$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'" class="image">
+		<img id='.$image_id.' alt="'.$recuento[0].'" src="data/media/'.$categoria.'/'.$imagen.'" class="image">
   <div class="overlay">';
    	
 	if(!empty($recuento[3])){
@@ -225,59 +215,91 @@ if($_GET['image_id']<$ultima_imagen){
 print'</div>
 <div style="float:left;width:100%;margin:auto;padding-left:60px;">
 ';
-?>
+print '
 <hr/>
-<div style="float:left;margin:auto;width:100%;">
+<div style="float:left;margin:auto;width:100%;">';
 
-<table class="table" style="margin:auto;text-align:center;">
-<tr style="font-size:20px;">
-<th>Author
-</th>
-<th>Comment
-</th>
-</tr>
-<tr>
-<td>fgh</td>
-<td>asdas</td>
-</tr>
-</table>
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT image_allow_comments FROM '.$GLOBALS['table_prefix']."images
+		WHERE image_id='".--$_GET['image_id']."'");
+		
+		$comentario = mysqli_fetch_row($consulta);
+		
+		if($comentario[0]==1){
+				$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT COUNT(comment_id) FROM '.$GLOBALS['table_prefix']."comments
+		WHERE image_id='".$_GET['image_id']."'");
+		
+		$recuento = mysqli_fetch_row($consulta);
+		
+		if($recuento[0]>0){
+						
+			print '
+			<table style="margin:auto;text-align:center;" class="table" >
+				<tr style="font-size:20px;">
+					<th>
+					</th>
+					<th>
+					</th>
+				</tr>';
+				
+				$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT comment_headline,comment_text FROM '.$GLOBALS['table_prefix']."comments
+		WHERE image_id='".$_GET['image_id']."'");
+		
+		while($fila = mysqli_fetch_row($consulta)){
+			print '
+			<tr>
+					<td style="font-size:23px;">'.$fila[0].'</td>
+					<td style="font-size:23px;">'.$fila[1].'</td>
+				</tr>
+			';
+		}
+			print '</table>';
+		}
+		
+if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
+print '
 <hr/>
 </div>
 
-	<form method="post" action="<?php echo $_SERVER['PHP_SELF'].'?image_id='.$_GET['image_id']; ?>" >
+	<form method="post" action="'.$_SERVER['PHP_SELF'].'?image_id='.$_GET['image_id'].'">
 		<p><img style="height:100px;width:100px;" src="img/comment.png"/></p>
 		<p><input type="text" name="asunto"/></p>
 		<p><img style="height:100px;width:100px;" src="img/coment.png"/></p>
 		<p><textarea name="mensaje"></textarea></p>
 		<p><img src="captcha/captcha.php" id="captcha" />
-		<a  class="texto nota" href="#" onclick="
+		<a  class="texto nota" href="#" onclick="'."
 			            document.getElementById('captcha').src='captcha/captcha.php?'+
 						Math.random();
-			            document.getElementById('captcha-form').focus();"
-			            id="change-image"><img alt="reload captcha" class="icono2"
-						src="img/reload.png"/></a></p>
+			            document.getElementById('captcha-form').focus();\"
+			            id=\"change-image\"><img alt=\"reload\" class=\"icono2\"
+						src=\"img/reload.png\"/></a></p>".'
 		<p>
-		<?php
-		print '
+	
 		<input type="text" title="captcha" required  id="validcaptcha"
 			name="captcha" size="30" value="" class="input" id="captcha_input"
 			placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/></p>
-		<div style="margin-top:-20px;padding-bottom:20px;"><input name="comentario" type="submit" /></div>
+		<div style="margin-top:-20px;padding-bottom:20px;"><input name="comentario" value="'.ver_dato('submit', $GLOBALS['idioma']).'" type="submit" /></div>
 	</form>
 
 </div>
 
 	</div>
 	';
+}
+		}
 	
 mysqli_close($GLOBALS['conexion']);
 
 	footer();
 }
+
 else{
 	$_SESSION['pagina']="details.php?image_id=".$ultima_imagen;
 	redireccionar('details.php?image_id='.$ultima_imagen);
 }
 
 }
+
 ?>

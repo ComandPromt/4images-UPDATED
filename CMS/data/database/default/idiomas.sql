@@ -241,7 +241,15 @@ INSERT INTO `ingles` (`id`, `accion`, `texto`) VALUES
 ('47', 'font_color', 'Font Color'),
 ('48', 'font_face', 'Font Face'),
 ('49', 'recipient', 'Recipient'),
-('50', 'sender', 'Sender');
+('50', 'sender', 'Sender'),
+('51', 'send_postcard_success', 'Thank you! Your email has been sent!'),
+('52', 'top_image_hits', 'Top 5 images by visits'),
+('53', 'top_image_downloads', 'Top 5 images by downloads'),
+('54', 'top_image_rating', 'Top 5 images by score'),
+('55', 'top_image_votes', 'Top 5 imágenes by votes'),
+('56', 'upload_success', 'The files have been uploaded correctly'),
+('57', 'nombre_subida_multiple', 'Name of the image or images'),
+('58', 'insertar_categoria', 'Select the category');
 
 INSERT INTO `italiano` (`id`, `accion`, `texto`) VALUES
 ('1', 'submit', 'inviare'),
@@ -332,5 +340,5 @@ INSERT INTO `spanish` (`id`, `accion`, `texto`) VALUES
 ('54', 'top_image_rating', 'Top 5 imágenes por puntuación'),
 ('55', 'top_image_votes', 'Top 5 imágenes por votos'),
 ('56', 'upload_success', 'Los archivos se han subido correctamente'),
-('57', 'nombre_subida_multiple', 'Nombre de la imagen o imágenes '),
+('57', 'nombre_subida_multiple', 'Nombre de la imagen o imágenes'),
 ('58', 'insertar_categoria', 'Seleccione la categoría');
