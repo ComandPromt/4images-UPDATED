@@ -10,7 +10,9 @@ if(!isset($_SESSION['id_usuario']) || empty($_SESSION['pagina'])){
 else{
 
 	if(isset($_POST['cambiar_pass']) && !empty($_POST['nueva_pass'])){
-
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	
 		$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE '.$GLOBALS['table_prefix']."users SET user_password='".salted_hash($_POST['nueva_pass'])."' WHERE user_id=".$_SESSION['id_usuario']);
 		mensaje(ver_dato('cambio_pass_exitoso', $GLOBALS['idioma']));
@@ -25,7 +27,7 @@ else{
 			<div class="form-group">
 			<label for="recipient-name" class="col-form-label"><h3>'.
 			ver_dato('nueva_pass', $GLOBALS['idioma']).'</h3></label>
-			<input  name="nueva_pass" type="text" class="form-control" id="recipient-name"/>
+			<input  name="nueva_pass" type="password" class="form-control" id="recipient-name"/>
 			</div>
 			<br/><br/>
 			<input name="cambiar_pass" type="submit" value="'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'" />
@@ -34,6 +36,6 @@ else{
 	
 }
 
-include('footer.html');
+footer();
 
 ?>

@@ -77,16 +77,18 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 			print '<div style="margin:auto;padding-left:40px;"><h1>'.$fila[0].'</h1></div>';
 			
 			ver_categoria($categoria);
-			
+		
 			restablecer_pass();
 		}
 		mysqli_close($conexion);
+
 	}
 	
 	else{
 		redireccionar('index.php');
 	}
+	
 
-include('footer.html');
+footer();
  
 ?>

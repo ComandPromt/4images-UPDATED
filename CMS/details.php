@@ -110,6 +110,7 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 
 	print '
 <div style="margin-left:-20px;" class="table-responsive-xs">
+ 
   <table style="border:none;margin:auto;" class="table">
 <tr style="border:none;">
 <td style="border:none;">
@@ -118,21 +119,22 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 			<span style="font-size:14px;color:blue;">'.$fila[0].'</span>
 		
 </td>
-<!--
+
 <td style="border:none;">
 
 <img style="height:30px;width:30px;"  src="img/top.png"/>
-				<span style="font-size:14px;color:blue;">16000</span>
+				<span style="font-size:14px;color:blue;">8.5</span>
 		
 </td>
--->
+
 <td style="border:none;">
 <img style="height:30px;width:30px;"  src="img/download.png"/>
 			<span id="descargas" style="font-size:14px;color:blue;">'.$fila[1].'</span>
 </td>
 
 </tr>
-</table>';
+</table>
+';
 print '';
 	$consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT user_invisible,user_name FROM '.$GLOBALS['table_prefix'].'users 
@@ -155,8 +157,8 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 		$recuento = mysqli_fetch_row($consulta);
 		
 	print '<div style="float:left;padding-left:30px;">
-			<a href="details.php?image_id='.(--$image_id).'" ><img style="height:40px;width:40px;" src="img/back.png"/></a>
-			<img style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/>
+			<a style="text-decoration:none;" href="details.php?image_id='.(--$image_id).'" ><img style="height:40px;width:40px;" src="img/back.png"/>
+			<img style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/></a>
 	</div>';
 }	
 
@@ -190,14 +192,18 @@ if($like!=""){
 
 print '<div style="float:left;padding-left:40px;">
 
-<a onclick="fullwin('.$image_id.');"><img style="height:40px;width:40px;" src="img/full_screen.png"></a>
-
+<div style="float:left;padding-right:40px;">
+	<a onclick="fullwin('.$_GET['image_id'].');">
+		<img style="height:40px;width:40px;" src="img/full_screen.png">
+	</a>
+</div>
+<div style="float:left;">
 <form id="frmdownload" method="post">
-		<a onclick="descarga('.$image_id.')" href="data/media/'.$categoria.'/'.$imagen.'" download><img style="height:40px;width:40px;" src="img/download.png"/></a>
+		<a onclick="descarga('.$_GET['image_id'].')" href="data/media/'.$categoria.'/'.$imagen.'" download><img style="height:40px;width:40px;" src="img/download.png"/></a>
 	</form>
 </div>
 
-</div>
+
 ';
 
 if($_GET['image_id']<$ultima_imagen){
@@ -210,8 +216,8 @@ if($_GET['image_id']<$ultima_imagen){
 	
 	print '
 	<div style="float:left;padding-left:40px;">
-		<img style="height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/>
-	<a href="details.php?image_id='.(++$image_id).'" ><img style="margin-left:10px;height:40px;width:40px;" src="img/next.png"/></a></div>';
+		<a style="text-decoration:none;" href="details.php?image_id='.(++$_GET['image_id']).'" ><img style="height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/>
+	<img style="margin-left:10px;height:40px;width:40px;" src="img/next.png"/></a></div>';
 }
 
 
@@ -266,9 +272,7 @@ print'</div>
 	
 mysqli_close($GLOBALS['conexion']);
 
-mostrarfecha_y_hora();
-
-	include('footer.html');
+	footer();
 }
 else{
 	$_SESSION['pagina']="details.php?image_id=".$ultima_imagen;

@@ -4,7 +4,6 @@ session_start();
 
 include('config.php');
 
-
 $_GET['image_id']=(int)$_GET['image_id'];
 
 if(isset($_SESSION['insert_pag']) && $_SESSION['insert_pag']=='details.php' && $_GET['image_id']>0){
@@ -15,7 +14,5 @@ if(isset($_SESSION['insert_pag']) && $_SESSION['insert_pag']=='details.php' && $
 	mysqli_close($GLOBALS['conexion']);
 
 }
-
-
 
 ?>

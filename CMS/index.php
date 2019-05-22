@@ -119,6 +119,6 @@ $consulta = mysqli_query($GLOBALS['conexion'],
 
 restablecer_pass();
 
-include('footer.html');
+footer();
 
 ?>

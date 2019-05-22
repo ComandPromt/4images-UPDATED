@@ -330,4 +330,7 @@ INSERT INTO `spanish` (`id`, `accion`, `texto`) VALUES
 ('52', 'top_image_hits', 'Top 5 imágenes por visitas'),
 ('53', 'top_image_downloads', 'Top 5 imágenes por descargas'),
 ('54', 'top_image_rating', 'Top 5 imágenes por puntuación'),
-('55', 'top_image_votes', 'Top 5 imágenes por votos');
+('55', 'top_image_votes', 'Top 5 imágenes por votos'),
+('56', 'upload_success', 'Los archivos se han subido correctamente'),
+('57', 'nombre_subida_multiple', 'Nombre de la imagen o imágenes '),
+('58', 'insertar_categoria', 'Seleccione la categoría');

@@ -32,5 +32,5 @@ ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
 </div>
 </div>
 </div>';
-include('footer.html');
+footer();
 ?>

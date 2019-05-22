@@ -1,11 +1,30 @@
 <?php
 
+function footer($ruta=""){
+	print '
+	</div>
+		<script src="'.$ruta.'js/jquery.min.js"></script>
+		<script src="'.$ruta.'js/bootstrap.min.js"></script>
+		<script src="'.$ruta.'js/prettify.js"></script>
+		<script src="'.$ruta.'js/jquery.scrollbar.js"></script>
+		<script src="'.$ruta.'js/index.js"></script>
+		<script src="'.$ruta.'js/modernizr.custom.js"></script>
+		<script src="'.$ruta.'js/jquery.dlmenu.js"></script>
+		<script src="'.$ruta.'js/bootstrap-select.js"></script>
+		<script src="'.$ruta.'js/funciones_2.js"></script>
+	</body>
+</html>';
+}
+
 function obtener_lista_negra(){
 	
 	include_once('../config.php');
 	
+				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
 	
-	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT Nombre FROM antispam');
 		
@@ -31,12 +50,6 @@ function is_ani($filename) {
     
     fclose($fh);
     return $count > 1;
-}
-
-function mostrarfecha_y_hora(){
-		print '<div style="width:100%;margin-top:90%;background-color:#ffffff;"><hr style="width:115%;"/>
-				<div style="float:left;margin-top:-25px;font-size:15px;color: #075a33;margin-left:22%;font-weight:bold; ">'.date('d').'/'.date('m').'/'.date('Y').'</div>	
-		<div id="reloj" style="float:right;margin-top:-25px;font-size:15px;color: #075a33 ;font-weight:bold;padding-right:40px;"></div></div>';
 }
 
 function redireccionar($ruta){
@@ -247,6 +260,7 @@ function ver_categoria($cat_id){
 		}
 		print '</ul>';
 	}
+	
 }
 
 function rmDir_rf($carpeta){
@@ -293,7 +307,11 @@ function restablecer_pass($ruta = ""){
 
     $numero_restablecimiento = mt_rand(0, 16585);
 
-
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+mysqli_set_charset($GLOBALS['conexion'],"utf8");
 
     $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
         $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['nombre_usuario'] . "'
@@ -353,18 +371,24 @@ function crear_carpetas(){
 }
 
 function ver_dato($accion,$idioma){
-	if(file_exists('config.php')){
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
-
-		$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
-
-		$fila = mysqli_fetch_row($consulta);
 	
-		return $fila[0];
-		mysqli_close($GLOBALS['conexion']);
-	}
+	$dato="";
+		
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+	
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+
+	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
+    
+	$fila = mysqli_fetch_row($consulta);
+	
+	$dato=$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $dato;
 }
 
 function menu_lateral($ruta = ""){
@@ -523,7 +547,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	mysqli_close($GLOBALS['conexion']);
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
-		print '<a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  border="0"></a><br/>';
+		print '<a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  ></a><br/>';
 	}
 		
 }

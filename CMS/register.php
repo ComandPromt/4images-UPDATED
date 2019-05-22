@@ -25,7 +25,9 @@ if (isset($_POST['submit'])) {
             mensaje(ver_dato('error_captcha', $GLOBALS['idioma']));
             $SESSION['error'] = true;
         } else {
-
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
             $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
                 $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['user_name'] .
                 "'");
@@ -36,9 +38,7 @@ if (isset($_POST['submit'])) {
                 && !$SESSION['error']) {
                 $user_password_hashed = salted_hash($_POST['user_password']);
 				
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+
 
                 mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
                     $GLOBALS['table_prefix'] . 'users (user_level,user_name,user_password,
@@ -153,6 +153,7 @@ if (!$terminado && $SESSION['licencia']) {
     echo '<div  class="demo ">
 	<div class="titulo scrollbar-vista">
 	<br/><h3 class="cabecera" style="margin:auto;height:50px;padding-left:30px;" >' .
+
     ver_dato('agreement', $GLOBALS['idioma']) . '</h3>
 	<div style="height:350px;width:70%;"><hr/>	<h2  style="text-align:center;
 	padding-bottom:10px;" class="texto">' . ver_dato('agreement_terms',
@@ -168,7 +169,9 @@ if (!$terminado && $SESSION['licencia']) {
 }
 
 restablecer_pass();
+
 print '</div></div>';
 
-include ('footer.html');
+footer();
+
 ?>

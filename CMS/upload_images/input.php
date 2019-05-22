@@ -253,7 +253,7 @@ session_start();
 	
 	<?php
 	
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
@@ -264,15 +264,16 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		
 		$fila = mysqli_fetch_row($consulta);
 		
-			if(!file_exists('../data/media/'.$fila[0])){
-	mkdir('../data/media/'.$fila[1], 0777, true);
-}	
-		
-	print '<div style="height:40px;margin:auto;text-align:center;">Todas las imágenes se subirán a la categor&iacute;a '.$fila[0].'</div>';
-	mysqli_close($GLOBALS['conexion']);
+		if(!file_exists('../data/media/'.$fila[0])){
+			mkdir('../data/media/'.$fila[1], 0777, true);
+		}	
+
+		mysqli_close($GLOBALS['conexion']);
 	}
-	?>
-		<div class="container">
+	
+?>
+		<div style="margin-top:-60px;" class="container">
+		<p style="padding-bottom:20px;"><a href="../index.php"><img style="height:40px;width:40px;margin-right:20px;" src="../img/home.png"/></a><a href="index.php"><img style="height:40px;width:40px;" src="../img/back.png"/></a></p>
 			<form method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
 					<div class="box__input">
 						<svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
@@ -407,9 +408,6 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 							ajax.send( ajaxData );
 							
 							if(document.getElementById("mensaje").innerHTML!="Select"){
-							//	location.href='upload.php';
-								// Aquí el código para controlar si el archivo existe en la carpeta uploads
-								// Here the code to control if the file exists in the uploads folder
 								document.getElementById("mensaje").innerHTML='Select';
 							}
 					
@@ -460,58 +458,79 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		if(isset($_POST['admin_upload'])){
 			$_SESSION['categoria']=$_POST['categoria'];
 			$_SESSION['nombre']=trim($_POST['nombre']);
+			$_SESSION['subida']=false;
+		}
+
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
+		FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
+
+		if(mysqli_affected_rows($GLOBALS['conexion'])==1){
+	
+			$fila = mysqli_fetch_row($consulta);
+			$_SESSION['user_id']=$fila[0];
 
 		}
 
-$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
-FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
+		if(isset($_FILES['upload']['name'])){
 
-if(mysqli_affected_rows($GLOBALS['conexion'])==1){
-	
-$fila = mysqli_fetch_row($consulta);
-$_SESSION['user_id']=$fila[0];
-
-}
-
-
-							if(isset($_FILES['upload']['name'])){
-				$fecha=date('Y').'-'.date('m').'-'.date('d');
-				$y=0;
+			$fecha=date('Y').'-'.date('m').'-'.date('d');
+			
+			$y=0;
 				
-$consulta=mysqli_query($GLOBALS['conexion'],"SELECT MAX(image_id)+1 FROM ".$GLOBALS['table_prefix']."images");
-	$fila = mysqli_fetch_row($consulta);
-	$numero=$fila[0];
-	
-				for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
+			$consulta=mysqli_query($GLOBALS['conexion'],"SELECT COUNT(image_id)+1 FROM ".$GLOBALS['table_prefix']."images");
+			$fila = mysqli_fetch_row($consulta);
+			$numero=$fila[0];
+						
+			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
 					
+				$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
+				
+				if($extension=='peg'){
+					$extension='jpg';
+					$_FILES['upload']['name'][$y]=substr($_FILES['upload']['name'][$y],0,-4).'jpg';
+				}
+				
+				if($extension=='jpg' || $extension=='png'|| $extension=='gif'){
 					
-					mysqli_query($GLOBALS['conexion'], '
-			
-			INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','prueba',NULL,NULL,'".$fecha."','1','".$_FILES['upload']['name'][$y]."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".hash('sha256', $_FILES['upload']['name'][$y])."')");
-			
-			
-					$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
-					
-					if($extension=='peg'){
-						$_FILES['upload']['name'][$y]=substr($_FILES['upload']['name'][$y],0,-4).'jpg';
+					if(!$_SESSION['subida']){
+						$_SESSION['subida']=true;
 					}
 					
-					$fichTemporal = $_FILES['upload']['tmp_name'][$y];
-				
-					if ($fichTemporal != ""){
-						$destino = '../data/media/'.$_SESSION['categoria'].'/'.$_FILES['upload']['name'][$y];
-						move_uploaded_file($fichTemporal, $destino);
-					}   
-					$y++;
-					$numero++;
+					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
+					
+					$shaimage=hash('sha256', $_FILES['upload']['name'][$y]);
+					
+					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'"); 	
+					$fila = mysqli_fetch_row($consulta);
+					
+					if($fila[0]==0){
+						
+						mysqli_query($GLOBALS['conexion'], '
+					
+						INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
+					
+						$fichTemporal = $_FILES['upload']['tmp_name'][$y];
+						
+						if ($fichTemporal != ""){
+							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
+							move_uploaded_file($fichTemporal, $destino);
+						} 
+					}				
 				}
+				
+				$y++;
+				$numero++;
+			}
+				
+			mysqli_close($GLOBALS['conexion']);
 			
-			mysqli_close($GLOBALS['conexion']);
-			print ver_dato('upload_success', $GLOBALS['idioma']);
+			if($_SESSION['subida']){
+				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));
+			}
+			
 			redireccionar('index.php');
-							}
-							
-			mysqli_close($GLOBALS['conexion']);
+		}
+					
 		?>
 		
 	</body>

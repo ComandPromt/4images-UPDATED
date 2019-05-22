@@ -10,6 +10,6 @@ include('cabecera.php');
 		
 		restablecer_pass();
 	
-include('footer.html');
+footer();
  
 ?>
