@@ -17,11 +17,12 @@
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE mensajes(
-id int(11) PRIMARY KEY,
+id int(11) PRIMARY KEY auto_increment,
 remitente int(11),
 destinatario int(11),
 asunto varchar(30),
 mensaje text,
+leido tinyint(1) DEFAULT 0;
 FOREIGN KEY (remitente) REFERENCES 4images_users(user_id),
 FOREIGN KEY (destinatario) REFERENCES 4images_users(user_id)
 );

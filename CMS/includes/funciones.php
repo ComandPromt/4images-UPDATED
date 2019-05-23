@@ -1,5 +1,17 @@
 <?php
 
+function menu_mensajes(){
+	print '<nav>
+    <ul>
+        <li><a href="index.php"><img class="icono" src="../img/write.png"/></a></li>
+        <li style="padding-top:20px;"><a href="inbox.php"><img class="icono" src="../img/inbox1.png"/></a></li>
+        <li style="padding-top:20px;"><a href="outbox.php"><img class="icono" src="../img/box.png"/></a></li>
+		<br clear="all" />
+    </ul>
+
+</nav>';
+}
+
 function ver_tabla($sql,$icono){
 	include('../config.php');
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -509,11 +521,17 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     or die("No se pudo conectar a la base de datos");
 			$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 		$fila = mysqli_fetch_row($consulta);
-
+		
+	$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
+		$recuento = mysqli_fetch_row($consulta);
+		
 		mysqli_close($GLOBALS['conexion']);
 
-		print '
-		<a href="'.$ruta.'messages.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+		if($recuento[0]>0){
+			print '
+		<a href="messages/inbox.php"><span style="font-size:20px;">'.$recuento[0].'</span></a>';
+		}
+		print '<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
 	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
       <a href="'.$ruta.'favoritos.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
@@ -536,7 +554,7 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 if($imagen_aleatoria!="vacio"){
 	
 	print '
-	<img alt="aleatorio" class="icono" src="'.$ruta.'img/aleatorio.png"/>
+	<img alt="aleatorio" style="height:80px;width:80px;" src="'.$ruta.'img/aleatorio.png"/>
 	<br/><br/>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
