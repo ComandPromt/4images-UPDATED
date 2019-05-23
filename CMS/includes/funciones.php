@@ -1,5 +1,25 @@
 <?php
 
+function ver_tabla($sql,$icono){
+	include('../config.php');
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+	print '<table style="border:none;margin:auto;" class="table">
+		<tr ><td colspan="3"><img class="icono" src="img/'.$icono.'.png"/></td></tr>';
+
+	$consulta = mysqli_query($GLOBALS['conexion'], $sql);
+	
+		while($fila = mysqli_fetch_row($consulta)){
+			print '<tr><td><img style="width:100px;height:100px;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
+		}
+		
+	print '</table>';
+	
+mysqli_close($GLOBALS['conexion']);
+}
+
 function saber_idioma($id){
 
 	include('../config.php');
@@ -114,16 +134,19 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 	
 	if(isset($_COOKIE['4images_userid'])){
 		
-		
-		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) FROM ' .
-			$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id=".$image_id." AND user_id=" . $_COOKIE['4images_userid'] );
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+			
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) as recuento FROM ' .
+			$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
 	
 		$fila = mysqli_fetch_row($consulta);
-		
-		if($fila[0]==1){
+
+		if($fila[0]!=0 ){
 			$icono="fav_2.ico";
 		}
-		
+
 		mysqli_close($GLOBALS['conexion']);
 		
 		if($_COOKIE['4images_userid']>0){
@@ -146,13 +169,14 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 	</td>';
 }
 
-function ver_categoria($cat_id){
+function ver_categoria($cat_id,$final_sentencia=""){
 
-	if($cat_id==='*'){
+	if($cat_id=='*' && $final_sentencia==""){
 		$final_sentencia='';
 	}
 
-	else{
+	if($cat_id!='*' && $final_sentencia==""){
+		
 		$final_sentencia='WHERE cat_id='.$cat_id;
 	}
 
@@ -163,7 +187,7 @@ function ver_categoria($cat_id){
 	}
 	
 	else{
-		
+
 		$CantidadMostrar=9;
 		$consulta='SELECT
 				image_id,
@@ -193,9 +217,9 @@ function ver_categoria($cat_id){
 								LIMIT ".(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
 		
 			$consulta=$conexion->query($consultavistas);
-			
-			echo '<div class="table-responsive-xs">
-					<table style="border:none;margin:auto;" class="table">';
+	
+			echo '<div style="margin-left:10px;" class="table-responsive-xs">
+					<table style="border:none;" class="table">';
 			
 			$ids=array();
 			
@@ -214,7 +238,7 @@ function ver_categoria($cat_id){
 			}
 			
 			$y=0;
-				
+
 			for($x=0;$x<count($nombres)-1;$x++){
 				print '<tr style="border:none;"><td style="border:none;font-size:20px;">'.$nombres[$y].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+1].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+2].'</td></tr>';
 						
@@ -489,9 +513,9 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		mysqli_close($GLOBALS['conexion']);
 
 		print '
-		<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+		<a href="'.$ruta.'messages.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
 	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
-      <a href="'.$ruta.'lightbox.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
+      <a href="'.$ruta.'favoritos.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
 	   <a href="'.$ruta.'upload_images/index.php"><img class="icono" src="'.$ruta.'img/upload.png"></a><br/>
@@ -746,29 +770,35 @@ function poner_menu($ruta = ""){
 }
 
 function imagen_aleatoria(){
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT MAX(image_id) FROM '.$GLOBALS['table_prefix'].'images WHERE image_active=1');
 
- if(mysqli_affected_rows($GLOBALS['conexion'])>0){
-		  $num_imagenes = mysqli_fetch_array($consulta);
-	  if($num_imagenes[0]!=""){
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT FLOOR(RAND()*'.$num_imagenes[0].')+1');
-	  $id_imagen_aleatoria = mysqli_fetch_array($consulta);
-	  $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$id_imagen_aleatoria[0]);
-	  $imagen_aleatoria = mysqli_fetch_array($consulta);
+	if(mysqli_affected_rows($GLOBALS['conexion'])>0){
+	 
+		$num_imagenes = mysqli_fetch_array($consulta);
+		
+		if($num_imagenes[0]!=""){
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT FLOOR(RAND()*'.$num_imagenes[0].')+1');
+			$id_imagen_aleatoria = mysqli_fetch_array($consulta);
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$id_imagen_aleatoria[0]);
+			$imagen_aleatoria = mysqli_fetch_array($consulta);
 	  
-return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#".$imagen_aleatoria[3];
-	  }
+			return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#".$imagen_aleatoria[3];
+		}
+		
 	   else{
-	 return 'vacio';
- }
- }
- else{
-	 return 'vacio';
- }
-mysqli_close($GLOBALS['conexion']);
+			return 'vacio';
+		}
+	}
+ 
+	else{
+		return 'vacio';
+	}
+	
+	mysqli_close($GLOBALS['conexion']);
 }
 
 function comprobar_si_es_valido($cadena,array $lista_negra){
@@ -776,11 +806,13 @@ function comprobar_si_es_valido($cadena,array $lista_negra){
 	$valido=true;	
 	
 	for($x=0;$x<count($lista_negra);$x++){
+		
 		$numero=strpos($cadena,$lista_negra[$x]);
 
 		if(gettype($numero)=="boolean"){
 			$valido=true;	
 		}
+		
 		else{
 			if($numero>=0){
 				
@@ -788,7 +820,6 @@ function comprobar_si_es_valido($cadena,array $lista_negra){
 				$x=count($lista_negra);
 			}
 		}
-
 	}
 	
 	return $valido;

@@ -1,9 +1,9 @@
-CREATE TABLE 4images_users (
+﻿CREATE TABLE 4images_users (
   user_id int(11) PRIMARY KEY auto_increment,
   user_level int(11) NOT NULL DEFAULT '1',
   user_name varchar(255) NOT NULL DEFAULT '' UNIQUE,
   user_password varchar(255) NOT NULL DEFAULT '',
-  user_email varchar(255) NOT NULL DEFAULT '' ,
+  user_email varchar(255) NOT NULL,
   user_allowemails tinyint(1) NOT NULL DEFAULT '1',
   user_invisible tinyint(1) NOT NULL DEFAULT '0',
   user_joindate int(11)  NOT NULL ,
@@ -15,6 +15,16 @@ CREATE TABLE 4images_users (
   user_icq varchar(20) NOT NULL DEFAULT '',
   nacionalidad varchar(15) DEFAULT 'spanish' not null
 )DEFAULT CHARSET=utf8;
+
+CREATE TABLE mensajes(
+id int(11) PRIMARY KEY,
+remitente int(11),
+destinatario int(11),
+asunto varchar(30),
+mensaje text,
+FOREIGN KEY (remitente) REFERENCES 4images_users(user_id),
+FOREIGN KEY (destinatario) REFERENCES 4images_users(user_id)
+);
 
 CREATE TABLE 4images_sessions (
   session_id int(11),
@@ -154,3 +164,7 @@ INSERT INTO antispam VALUES('24','nique ta mere');
 INSERT INTO antispam VALUES('25','pendejo');
 INSERT INTO antispam VALUES('26','maric');
 INSERT INTO antispam VALUES('27','slut');
+INSERT INTO antispam VALUES('28','marihuana');
+INSERT INTO antispam VALUES('29','marijuana');
+INSERT INTO antispam VALUES('30','putita');
+INSERT INTO antispam VALUES('31','porro');

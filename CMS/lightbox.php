@@ -11,7 +11,7 @@ if(isset($_GET['action']) && $_GET['image_id']>0 && ($_GET['action']=='guardar' 
 
 	}
 	else{
-		$sql="INSERT into 4images_lightboxes values (1,".$_GET['image_id'].")";
+		$sql='INSERT into 4images_lightboxes values ('.$_COOKIE['4images_userid'].','.$_GET['image_id'].')';
 
 	}
 			
