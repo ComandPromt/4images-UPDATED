@@ -21,6 +21,7 @@ $fila = mysqli_fetch_row($consulta);
 
 if(compare_passwords($_POST['user_password'], $fila[0])){
 	setcookie('4images_userid',$fila[1],time()+3600);
+	setcookie('pass',$fila[0],time()+3600);
 }
 }
 

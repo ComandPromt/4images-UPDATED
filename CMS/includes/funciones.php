@@ -1,5 +1,32 @@
 <?php
 
+function saber_pass($id){
+		include('../config.php');
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_password FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
+	
+	$fila = mysqli_fetch_row($consulta);
+	
+	return $fila[0];
+}
+
+function safe_htmlspecialchars($chars) {
+  // Translate all non-unicode entities
+  $chars = preg_replace(
+    '/&(?!(#[0-9]+|[a-z]+);)/si',
+    '&amp;',
+    $chars
+  );
+
+  $chars = str_replace(">", "&gt;",   $chars);
+  $chars = str_replace("<", "&lt;",   $chars);
+  $chars = str_replace('"', "&quot;", $chars);
+  return $chars;
+}
+
 function menu_mensajes(){
 	print '<nav>
     <ul>

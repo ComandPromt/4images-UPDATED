@@ -3,9 +3,34 @@
 include('../includes/funciones.php');
 include('../config.php');
 
-if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
+$pass="";
+
+if(isset($_COOKIE['pass'])){
+	$pass=saber_pass($_COOKIE['4images_userid']);
+}
+
+if(!isset($_COOKIE['4images_userid']) || !isset($_COOKIE['pass']) ||$_COOKIE['4images_userid']<=0 || $pass!=$_COOKIE['pass']){
 	redireccionar('../index.php');
 }
+
+$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id
+	FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$_POST['categoria']."'");
+	
+	if(mysqli_affected_rows($GLOBALS['conexion'])==1){
+		
+		$fila = mysqli_fetch_row($consulta);
+		
+		if(!file_exists('../data/media/'.$fila[0])){
+			mkdir('../data/media/'.$fila[1], 0777, true);
+		}	
+
+		mysqli_close($GLOBALS['conexion']);
+
+	}
 
 session_start();
 
@@ -251,7 +276,7 @@ session_start();
 	
 	<body>
 	
-	<?php
+<?php
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -455,12 +480,22 @@ session_start();
 			$_SESSION['user_id']=0;
 		}
 		
-		if(isset($_POST['admin_upload'])){
-			$_SESSION['categoria']=$_POST['categoria'];
-			$_SESSION['nombre']=trim($_POST['nombre']);
-			$_SESSION['subida']=false;
+		if(isset($_GET['cat_id']) && isset($_GET['nombre'])){
+				
+					$_SESSION['categoria']=$_GET['cat_id'];
+			
+					$_SESSION['nombre']=$_GET['nombre'];
+				
 		}
-
+		
+		else{
+			if(isset($_POST['admin_upload'])){
+				$_SESSION['categoria']=$_POST['categoria'];
+				$_SESSION['nombre']=trim($_POST['nombre']);
+				$_SESSION['subida']=false;
+			}
+		}
+		
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
 		FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
 
@@ -480,7 +515,7 @@ session_start();
 			$consulta=mysqli_query($GLOBALS['conexion'],"SELECT COUNT(image_id)+1 FROM ".$GLOBALS['table_prefix']."images");
 			$fila = mysqli_fetch_row($consulta);
 			$numero=$fila[0];
-						
+							
 			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
 					
 				$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
@@ -492,29 +527,30 @@ session_start();
 				
 				if($extension=='jpg' || $extension=='png'|| $extension=='gif'){
 					
+					$fichTemporal = $_FILES['upload']['tmp_name'][$y];
+					
+					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
+					
+					
+					if ($fichTemporal != ""){
+							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
+							move_uploaded_file($fichTemporal, $destino);
+					}
+					
 					if(!$_SESSION['subida']){
 						$_SESSION['subida']=true;
 					}
 					
-					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
-					
-					$shaimage=hash('sha256', $_FILES['upload']['name'][$y]);
-					
+					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
+										
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'"); 	
 					$fila = mysqli_fetch_row($consulta);
 					
 					if($fila[0]==0){
-						
-						mysqli_query($GLOBALS['conexion'], '
+					
+								mysqli_query($GLOBALS['conexion'], '
 					
 						INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
-					
-						$fichTemporal = $_FILES['upload']['tmp_name'][$y];
-						
-						if ($fichTemporal != ""){
-							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
-							move_uploaded_file($fichTemporal, $destino);
-						} 
 					}				
 				}
 				
