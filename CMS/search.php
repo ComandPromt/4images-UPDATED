@@ -1,4 +1,5 @@
 <?php
+
 include('cabecera.php');
 
 poner_menu();
@@ -10,15 +11,25 @@ print '<div style="margin-top:40px;text-align:center;float:right;">
 	<input name="busqueda" type="submit"/>
 </form></div>';
 
-if(isset($_POST['busqueda'])){
+if(isset($_POST['busqueda']) ||isset($_GET['filtro']) && $_GET['filtro']!=""){
+	
+	if($_GET['filtro']!=""){
+		$filtro=$_POST['filtro'];
+	}
+	
+	else{
+		$filtro=$_POST['filtro'];
+	}
+		
 	print '<div style="float:left;width:115%;">
 					<hr/>
 					</div>';
-	ver_categoria('*',"WHERE image_name LIKE '%".$_POST['filtro']."%'");
+					
+	ver_categoria('*',"WHERE image_name LIKE '%".$filtro."%'");
 }
-
 
 restablecer_pass();
 
 footer();
+
 ?>

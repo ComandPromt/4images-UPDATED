@@ -15,7 +15,17 @@ if (file_exists('config.php')) {
         unlink('install.php');
 		
     }
-	
+    
+    if (file_exists('data/database/idiomas.sql')) {
+        unlink('data/database/idiomas.sql');
+		
+    }
+
+    if (file_exists('mysqli_default.sql')) {
+        unlink('mysqli_default.sql');
+		
+    }
+
     if (file_exists('includes/constants.php')) {
         unlink('includes/constants.php');
 		

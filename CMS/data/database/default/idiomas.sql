@@ -1,4 +1,4 @@
-INSERT INTO `aleman` (`id`, `accion`, `texto`) VALUES
+INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
 ('2', 'registro_exitoso', 'Danke für die Registrierung'),
 ('3', 'error', 'Falsche Daten'),
@@ -50,7 +50,7 @@ INSERT INTO `aleman` (`id`, `accion`, `texto`) VALUES
 ('49', 'recipient', 'Empfänger'),
 ('50', 'sender', 'Absender');
 
-INSERT INTO `arabe` (`id`, `accion`, `texto`) VALUES
+INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'submit', 'إرسال'),
 ('2', 'reset', 'نظيف'),
 ('3', 'login', 'دخول'),
@@ -58,7 +58,7 @@ INSERT INTO `arabe` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'كلمة التحقق'),
 ('6', 'password', 'كلمة المرور');
 
-INSERT INTO `bengali` (`id`, `accion`, `texto`) VALUES
+INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'submit', 'পাঠান'),
 ('2', 'reset', 'পরিষ্কার'),
 ('3', 'login', 'লগইন'),
@@ -66,7 +66,7 @@ INSERT INTO `bengali` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'ক্যাপচা'),
 ('6', 'password', 'পাসওয়ার্ড');
 
-INSERT INTO `catalan` (`id`, `accion`, `texto`) VALUES
+INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'submit', 'enviar'),
 ('2', 'reset', 'netejar'),
 ('3', 'login', 'entrar'),
@@ -74,7 +74,7 @@ INSERT INTO `catalan` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Captcha'),
 ('6', 'password', 'Contrasenya');
 
-INSERT INTO `chino` (`id`, `accion`, `texto`) VALUES
+INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'submit', '發送'),
 ('2', 'reset', '清潔'),
 ('3', 'login', '註冊'),
@@ -82,7 +82,7 @@ INSERT INTO `chino` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', '驗證碼'),
 ('6', 'password', '密碼');
 
-INSERT INTO `euskera` (`id`, `accion`, `texto`) VALUES
+INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'submit', 'bidali'),
 ('2', 'reset', 'garbi'),
 ('3', 'login', 'login'),
@@ -90,7 +90,7 @@ INSERT INTO `euskera` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Captcha'),
 ('6', 'password', 'Pasahitza');
 
-INSERT INTO `frances` (`id`, `accion`, `texto`) VALUES
+INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'submit', 'envoyer'),
 ('2', 'reset', 'clair'),
 ('3', 'login', 'entrer'),
@@ -98,7 +98,7 @@ INSERT INTO `frances` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Captcha'),
 ('6', 'password', 'Mot de passe');
 
-INSERT INTO `hindu` (`id`, `accion`, `texto`) VALUES
+INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'submit', 'भेजना'),
 ('2', 'reset', 'स्वच्छ'),
 ('3', 'login', 'लॉग इन'),
@@ -106,7 +106,7 @@ INSERT INTO `hindu` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'कैप्चा'),
 ('6', 'password', 'पासवर्ड');
 
-INSERT INTO `ingles` (`id`, `accion`, `texto`) VALUES
+INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
 ('2', 'registro_exitoso', 'Thank you for registering'),
 ('3', 'error', 'Incorrect data'),
@@ -166,7 +166,7 @@ INSERT INTO `ingles` (`id`, `accion`, `texto`) VALUES
 ('57', 'nombre_subida_multiple', 'Name of the image or images'),
 ('58', 'insertar_categoria', 'Select the category');
 
-INSERT INTO `italiano` (`id`, `accion`, `texto`) VALUES
+INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'submit', 'inviare'),
 ('2', 'reset', 'pulito'),
 ('3', 'login', 'accesso'),
@@ -174,7 +174,7 @@ INSERT INTO `italiano` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Captcha'),
 ('6', 'password', 'Password');
 
-INSERT INTO `japones` (`id`, `accion`, `texto`) VALUES
+INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'submit', '送る'),
 ('2', 'reset', 'クリア'),
 ('3', 'login', 'ログイン'),
@@ -182,7 +182,7 @@ INSERT INTO `japones` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'キャプチャ'),
 ('6', 'password', 'パスワード');
 
-INSERT INTO `portuges` (`id`, `accion`, `texto`) VALUES
+INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'submit', 'enviar'),
 ('2', 'reset', 'claro'),
 ('3', 'login', 'entrar'),
@@ -190,7 +190,7 @@ INSERT INTO `portuges` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Captcha'),
 ('6', 'password', 'Password');
 
-INSERT INTO `ruso` (`id`, `accion`, `texto`) VALUES
+INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'submit', 'послать'),
 ('2', 'reset', 'чистый'),
 ('3', 'login', 'Войти'),
@@ -198,7 +198,7 @@ INSERT INTO `ruso` (`id`, `accion`, `texto`) VALUES
 ('5', 'captcha', 'Защитный код'),
 ('6', 'password', 'пароль');
 
-INSERT INTO `spanish` (`id`, `accion`, `texto`) VALUES
+INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
 ('2', 'registro_exitoso', 'Gracias por registrarse'),
 ('3', 'error', 'Datos incorrectos'),
