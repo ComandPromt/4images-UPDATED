@@ -3,35 +3,14 @@
 include('../includes/funciones.php');
 include('../config.php');
 
-$pass="";
+comprobar_cookie('../');
 
-if(isset($_COOKIE['pass'])){
-	$pass=saber_pass($_COOKIE['4images_userid']);
+if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
+	if(!file_exists('../data/media/'.$_POST['categoria'])){
+			mkdir('../data/media/'.$_POST['categoria'], 0777, true);
+		}
 }
-
-if(!isset($_COOKIE['4images_userid']) || !isset($_COOKIE['pass']) ||$_COOKIE['4images_userid']<=0 || $pass!=$_COOKIE['pass']){
-	redireccionar('../index.php');
-}
-
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
 	
-	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id
-	FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$_POST['categoria']."'");
-	
-	if(mysqli_affected_rows($GLOBALS['conexion'])==1){
-		
-		$fila = mysqli_fetch_row($consulta);
-		
-		if(!file_exists('../data/media/'.$fila[0])){
-			mkdir('../data/media/'.$fila[1], 0777, true);
-		}	
-
-		mysqli_close($GLOBALS['conexion']);
-
-	}
-
 session_start();
 
 ?>
@@ -276,27 +255,6 @@ session_start();
 	
 	<body>
 	
-<?php
-	
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
-	
-	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id
-	FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$_POST['categoria']."'");
-	
-	if(mysqli_affected_rows($GLOBALS['conexion'])==1){
-		
-		$fila = mysqli_fetch_row($consulta);
-		
-		if(!file_exists('../data/media/'.$fila[0])){
-			mkdir('../data/media/'.$fila[1], 0777, true);
-		}	
-
-		mysqli_close($GLOBALS['conexion']);
-	}
-	
-?>
 		<div style="margin-top:-60px;" class="container">
 		<p style="padding-bottom:20px;"><a href="../index.php"><img style="height:40px;width:40px;margin-right:20px;" src="../img/home.png"/></a><a href="index.php"><img style="height:40px;width:40px;" src="../img/back.png"/></a></p>
 			<form method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
@@ -489,7 +447,8 @@ session_start();
 		}
 		
 		else{
-			if(isset($_POST['admin_upload'])){
+			if(isset($_POST['admin_upload']) && !empty($_POST['categoria'])
+			 && !empty($_POST['nombre'])){
 				$_SESSION['categoria']=$_POST['categoria'];
 				$_SESSION['nombre']=trim($_POST['nombre']);
 				$_SESSION['subida']=false;
@@ -511,13 +470,19 @@ session_start();
 			$fecha=date('Y').'-'.date('m').'-'.date('d');
 			
 			$y=0;
-				
-			$consulta=mysqli_query($GLOBALS['conexion'],"SELECT COUNT(image_id)+1 FROM ".$GLOBALS['table_prefix']."images");
-			$fila = mysqli_fetch_row($consulta);
-			$numero=$fila[0];
-							
+			
+			$image_id=array();
+			
+			$consulta=mysqli_query($GLOBALS['conexion'],"SELECT image_id FROM ".$GLOBALS['table_prefix']."images");
+		
+			while($fila = mysqli_fetch_row($consulta)){
+				$image_id[]=$fila[0];
+			}
+			
 			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
-					
+				
+				$numero=consecutivos($image_id);
+							
 				$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
 				
 				if($extension=='peg'){
@@ -555,7 +520,7 @@ session_start();
 				}
 				
 				$y++;
-				$numero++;
+				
 			}
 				
 			mysqli_close($GLOBALS['conexion']);
@@ -564,8 +529,7 @@ session_start();
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));
 			}
-			
-			redireccionar('index.php');
+
 		}
 					
 		?>

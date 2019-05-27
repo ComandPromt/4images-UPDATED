@@ -2,9 +2,7 @@
 
 include('../upload_images/cabecera.php');
 
-if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
-	redireccionar('../index.php');
-}
+comprobar_cookie('../');
 
 poner_menu('../');
 

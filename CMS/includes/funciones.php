@@ -1,7 +1,49 @@
-<?php
+<?php 
+
+date_default_timezone_set('Europe/Madrid');
+
+function consecutivos(array $array){
+	if(count($array)>0 && $array[0]!=null && $array[0]==1){
+        asort($array);
+        for($x=0;$x<count($array);$x++){
+            if($x+1<count($array)){
+            if($array[$x]+1!=$array[$x+1]){
+                $numero=$array[$x]+1;
+                $x=count($array);
+                $noc=true;
+            }
+            }
+        }
+        if(!isset($noc)){
+            $numero=count($array)+1;
+        }
+  
+    }
+    else{
+        $numero=1;
+    }
+	return $numero;
+}
+
+function comprobar_cookie($ruta=""){
+	
+	$pass="";
+
+	if(isset($_COOKIE['pass'])){
+		
+		$pass=saber_pass($_COOKIE['4images_userid']);
+
+	}
+	
+	if(!isset($_COOKIE['4images_userid']) || !isset($_COOKIE['pass']) ||$_COOKIE['4images_userid']<=0 || $pass!=$_COOKIE['pass']){
+		redireccionar($ruta.'index.php');
+	}
+}
 
 function saber_pass($id){
-		include('../config.php');
+	
+	include("../config.php");
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
@@ -121,7 +163,7 @@ function footer($ruta=""){
 
 function obtener_lista_negra(){
 	
-	include_once('../config.php');
+	include('../config.php');
 	
 				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -136,7 +178,7 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 		while($fila = mysqli_fetch_row($consulta)){
 			$lista_negra[]=$fila[0];
 		}
-		
+	mysqli_close($GLOBALS['conexion']);	
 		return $lista_negra;
 }
 
@@ -568,7 +610,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
 	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
-	   mysqli_close($GLOBALS['conexion']);
+
 	}
 	
 print '<hr/>';

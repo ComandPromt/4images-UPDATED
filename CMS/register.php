@@ -2,6 +2,8 @@
 
 session_start();
 
+$_SESSION['pagina']="register.php";
+
 include ('cabecera.php');
 
 $_SESSION['pagina'] = 'register.php';
@@ -15,55 +17,54 @@ if (!isset($SESSION['licencia'])) {
 }
 
 if (isset($_POST['submit'])) {
+	
     $_POST['user_name'] = eliminar_espacios($_POST['user_name']);
     $_POST['email'] = eliminar_espacios($_POST['email']);
     $_POST['user_password'] = eliminar_espacios($_POST['user_password']);
-
-
+	
+	$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
+	
     if (isset($_SESSION['captcha'])) {
         if ($_SESSION['captcha'] && $_REQUEST['captcha'] != $_SESSION['captcha']) {
             mensaje(ver_dato('error_captcha', $GLOBALS['idioma']));
             $SESSION['error'] = true;
         } else {
+			
+			include('config.php');
+			
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+        $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+		
             $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
                 $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['user_name'] .
                 "'");
+				
             $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
 
             if ($comprobacion == 0 && !empty($_POST['user_name'])
                 && !empty($_POST['email']) && !empty($_POST['user_password'])
                 && !$SESSION['error']) {
+					
                 $user_password_hashed = salted_hash($_POST['user_password']);
-				
-
-
+			
                 mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
                     $GLOBALS['table_prefix'] . 'users (user_level,user_name,user_password,
 				user_email,user_allowemails,user_invisible,user_joindate,user_lastaction,user_location,user_lastvisit,
 				user_comments,user_homepage,user_icq,nacionalidad)
 				VALUES(2,' . "'" . $_POST['user_name'] . "'" . ',' . "'" . $user_password_hashed .
                     "'" . ",'" . $_POST['email'] . "'" . ',1,0,' . time() . ',0,' . "''" . ',0,0,default,default,' . "'" . $_POST['pais'] . "')");
-
-                $mensaje = ver_dato('mensaje_activacion', $GLOBALS['idioma']);
-                $mensaje = str_replace('usuario', $_POST['user_name'], $mensaje);
-                $mensaje = str_replace('sitio', $_POST['site_name'], $mensaje);
-                $mensaje = str_replace('url', $GLOBALS['protocolo'].'://' . obtener_direccion() .
-                    'register.php?action=activate&activationkey=' . $activacion, $mensaje);
-
-                echo '<br/><h1 class="titulo">' . ver_dato('registro_exitoso',
-                    $GLOBALS['idioma']) . '</h1>';
-
+			  
+				mysqli_close($GLOBALS['conexion']); 
+			
                 $terminado = true;
-            } else {
+				redireccionar('login.php?user_name='.$_POST['user_name'].'&user_password='.$user_password_hashed);
+           
+		   } else {
                 echo mensaje(ver_dato('error', $GLOBALS['idioma']));
             }
         }
     }
-    mysqli_close($GLOBALS['conexion']);
-    session_unset();
+    
 }
 
 if (!$terminado && (isset($_POST['envio']))) {

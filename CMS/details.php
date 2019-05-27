@@ -8,21 +8,23 @@ $_SESSION['insert_pag']='details.php';
 
 $ultima_imagen=0;
 
+if(!isset($_SESSION['insert'])){
+	$_SESSION['insert']=false;
+}
+	
 if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
-	
-	if (isset($_POST['comentario'])&&!empty($_REQUEST['captcha'])) {
-	
-    if (trim(strtolower($_REQUEST['captcha'])) == $_SESSION['captcha']) {
+	include('config.php');
+		include('includes/funciones.php');	
+	if (isset($_POST['comentario'])&&!empty($_POST['captcha']) && (trim(strtolower($_POST['captcha'])) == $_SESSION['captcha'])) {
+
 		
-		include('config.php');
-		include('includes/funciones.php');
 		
 		$lista_negra=obtener_lista_negra();
 
 		if(comprobar_si_es_valido($_POST['mensaje'],$lista_negra)
 		&& comprobar_si_es_valido($_POST['asunto'],$lista_negra)	
 		){
-			
+	
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
@@ -33,17 +35,15 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 			mysqli_close($GLOBALS['conexion']);
 		}		
-	
-    }
- 
+	 
 	}
+	
     unset($_SESSION['captcha']);
 
 	$_SESSION['pagina']="details.php?image_id=".$_GET['image_id'];
 	
 	include('cabecera.php');
-	
-	include('config.php');
+
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -164,8 +164,6 @@ $image_id++;
 $icono="fav.ico";
 
 $like="";
-	
-if(isset($_COOKIE['4images_userid'])){
 
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) FROM ' .
 			$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id=".$_GET['image_id']." AND user_id=" . $_COOKIE['4images_userid'] );
@@ -182,7 +180,6 @@ if(isset($_COOKIE['4images_userid'])){
 			<a onclick="favorito('.$_GET['image_id'].')"><img style="height:40px;width:40px;" src="img/'.$icono.'" id="Imagen '.$_GET['image_id'].'"/></a>
 		</form></div>';
 	}
-}
 
 if($like!=""){
 	print $like;
@@ -257,13 +254,13 @@ print '
 					<td style="font-size:23px;">'.$fila[1].'</td>
 				</tr>';
 			}
-			
-			print '</table>';
+			mysqli_close($GLOBALS['conexion']);
+			print '</table><hr/>';
 		}
 		
 		if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
 			print '
-			<hr/>
+			
 			</div>
 		
 			<form method="post" action="'.$_SERVER['PHP_SELF'].'?image_id='.$_GET['image_id'].'">
@@ -292,7 +289,6 @@ print '
 		}
 	}
 	
-	mysqli_close($GLOBALS['conexion']);
 
 	footer();
 	}
@@ -301,7 +297,7 @@ print '
 		$_SESSION['pagina']="details.php?image_id=".$ultima_imagen;
 		redireccionar('details.php?image_id='.$ultima_imagen);
 	}
-
+	
 }
 
 ?>
