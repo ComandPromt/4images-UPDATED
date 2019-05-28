@@ -16,9 +16,8 @@ if (file_exists('config.php')) {
 		
     }
     
-    if (file_exists('data/database/sentencias.sql')) {
-        unlink('data/database/sentencias.sql');
-		
+    if (file_exists('data/database/default/sentencias.sql')) {
+        unlink('data/database/default/sentencias.sql');
     }
 
     include ('config.php');

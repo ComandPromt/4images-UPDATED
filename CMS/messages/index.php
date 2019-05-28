@@ -15,10 +15,10 @@ if(isset($_POST['enviar_correo']) && trim($_POST['asunto'])!="" && trim($_POST['
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$GLOBALS['db_password'], $GLOBALS['db_name'])
 	or die("No se pudo conectar a la base de datos");
-	
+			
 	$consulta = mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes
 	
-	(remitente,destinatario,asunto,mensaje)
+	(remitente,destinatario,asunto,mensaje,leido)
 	
 	VALUES( '".$_COOKIE['4images_userid']."','".$_POST['destinatario']."','".$_POST['asunto']."','".$_POST['mensaje']."','0')");
 		
@@ -56,7 +56,6 @@ print '</option>
 <textarea name="mensaje" style="height:200px;font-size:25px;color:#8105F1;"></textarea></p>
 <input name="enviar_correo" type="submit"/>
 </form></div>';
-
 
 restablecer_pass('../');
 

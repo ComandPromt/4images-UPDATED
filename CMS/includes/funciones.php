@@ -72,9 +72,9 @@ function safe_htmlspecialchars($chars) {
 function menu_mensajes(){
 	print '<nav>
     <ul>
-        <li><a href="index.php"><img class="icono" src="../img/write.png"/></a></li>
-        <li style="padding-top:20px;"><a href="inbox.php"><img class="icono" src="../img/inbox1.png"/></a></li>
-        <li style="padding-top:20px;"><a href="outbox.php"><img class="icono" src="../img/box.png"/></a></li>
+        <li><a title="'.ver_dato('msg_write',$GLOBALS['idioma']).'" href="index.php"><img alt="'.ver_dato('msg_write',$GLOBALS['idioma']).'" class="icono" src="../img/write.png"/></a></li>
+        <li style="padding-top:20px;"><a title="'.ver_dato('inbox',$GLOBALS['idioma']).'" href="inbox.php"><img title="'.ver_dato('inbox',$GLOBALS['idioma']).'" class="icono" src="../img/inbox1.png"/></a></li>
+        <li style="padding-top:20px;"><a title="'.ver_dato('outbox',$GLOBALS['idioma']).'" href="outbox.php"><img title="'.ver_dato('outbox',$GLOBALS['idioma']).'" class="icono" src="../img/box.png"/></a></li>
 		<br clear="all" />
     </ul>
 
@@ -82,9 +82,11 @@ function menu_mensajes(){
 }
 
 function ver_tabla($sql,$icono){
+	
 	include('../config.php');
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
+    $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
 	print '<table style="border:none;margin:auto;" class="table">
@@ -92,13 +94,13 @@ function ver_tabla($sql,$icono){
 
 	$consulta = mysqli_query($GLOBALS['conexion'], $sql);
 	
-		while($fila = mysqli_fetch_row($consulta)){
-			print '<tr><td><img style="width:100px;height:100px;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
-		}
+	while($fila = mysqli_fetch_row($consulta)){
+		print '<tr><td><img style="width:100px;height:100px;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
+	}
 		
 	print '</table>';
 	
-mysqli_close($GLOBALS['conexion']);
+	mysqli_close($GLOBALS['conexion']);
 }
 
 function saber_idioma($id){
@@ -169,17 +171,19 @@ function obtener_lista_negra(){
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
-mysqli_set_charset($GLOBALS['conexion'],"utf8");
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT Nombre FROM antispam');
 		
 		$lista_negra=array();
 		
-		while($fila = mysqli_fetch_row($consulta)){
-			$lista_negra[]=$fila[0];
-		}
+	while($fila = mysqli_fetch_row($consulta)){
+		$lista_negra[]=$fila[0];
+	}
+		
 	mysqli_close($GLOBALS['conexion']);	
-		return $lista_negra;
+	
+	return $lista_negra;
 }
 
 function is_ani($filename) {
@@ -577,7 +581,7 @@ print '
       </form>
 	  <hr/>
 	  
-	  <a style="font-size:15px;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
+	  <a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:15px;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
 	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/forgot_password.png"/>
 	 </a>
@@ -585,30 +589,31 @@ print '
 	}
 	
 	else{
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+		or die("No se pudo conectar a la base de datos");
 			$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 		$fila = mysqli_fetch_row($consulta);
 		
-	$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
+		$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
 		$recuento = mysqli_fetch_row($consulta);
 		
 		mysqli_close($GLOBALS['conexion']);
 
 		if($recuento[0]>0){
 			print '
-		<a href="messages/inbox.php"><span style="font-size:20px;">'.$recuento[0].'</span></a>';
+			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="messages/inbox.php"><span style="font-size:20px;">'.$recuento[0].'</span></a>';
 		}
-		print '<a href="'.$ruta.'messages/index.php"><img style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
-	  <img class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
-      <a href="'.$ruta.'favoritos.php"><br/><br/><img class="icono" src="'.$ruta.'img/fav.png"></a><br>
-	  <br><a href="'.$ruta.'member.php?action=editprofile"><img class="icono" src="'.$ruta.'img/settings.png"></a><br/>
+		
+		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
+       <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
+	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php?action=editprofile"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
-	   <a href="'.$ruta.'upload_images/index.php"><img class="icono" src="'.$ruta.'img/upload.png"></a><br/>
+	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
        <br>
 	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
-	   <a href="'.$ruta.'logout.php" ><img style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
+	   <a title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   </form>';
 
 	}
@@ -630,33 +635,32 @@ if($imagen_aleatoria!="vacio"){
 	$image_id=substr($image_id,0,strpos($image_id,"#"));
 
 	print '
-	<a href="'.$ruta.'details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'"/></a>
+	<a title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" href="'.$ruta.'details.php?image_id='.$image_id.'">
+	<img style="height:120px;width:120px;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" /></a>
 	<br/><br/>
-	<hr/>
-	';
+	<hr/>';
 }
 
 $redes_sociales='';
 
   if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a>';  
+	$redes_sociales.='<a title="facebook" target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a>';  
   }
   
   if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
-	$redes_sociales.=' <a target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a>';  
+	$redes_sociales.=' <a title="instagram" target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a>';  
   }
   
     if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
-	$redes_sociales.='<a target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a>';  
+	$redes_sociales.='<a title="twitter" target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a>';  
   }
   
     if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
-	$redes_sociales.='<a target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a>';   
+	$redes_sociales.='<a title="youtube" target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a>';   
   }
   
     if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
-	$redes_sociales.='<br/><a target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a>';   
+	$redes_sociales.='<br/><a title="debianart" target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a>';   
   }
   
     if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
@@ -665,7 +669,7 @@ $redes_sociales='';
 			$redes_sociales.='<br/>';
 		}
 		
-	$redes_sociales.='<a target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a>';  
+	$redes_sociales.='<a title="slideshare" target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a>';  
    }
    
     if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
@@ -674,7 +678,7 @@ $redes_sociales='';
 			$redes_sociales.='<br/>';
 		}
 		
-	$redes_sociales.='<a target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a>';    
+	$redes_sociales.='<a title="debianart" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a>';    
   }
       
 
@@ -688,11 +692,13 @@ if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
 	
 	$vars = get_defined_vars();  
 
-
 	$administrators=array();
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    
+	$GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
+	
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 	 
 	while ($administradores = mysqli_fetch_array($consulta)){
@@ -708,7 +714,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 }
 
 print '
- <br/> <a href="'.$ruta.'rss.php?action=images"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
+ <br/> <a title="rss" href="'.$ruta.'rss.php?action=images"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
 </nav>';
