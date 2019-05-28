@@ -1,7 +1,6 @@
 <?php
 
-
-include_once 'includes/funciones.php';
+include_once ('includes/funciones.php');
 
 crear_carpetas();
 
@@ -14,16 +13,14 @@ if (function_exists('set_magic_quotes_runtime')) {
 }
 
 if (!function_exists('date_default_timezone_set')) {
-    function date_default_timezone_set($timezone)
-    {
+    function date_default_timezone_set($timezone)    {
         return true;
     }
 }
 
 define('ROOT_PATH', './');
 
-function addslashes_array($array)
-{
+function addslashes_array($array){
 
     foreach ($array as $key => $val) {
         $array[$key] = (is_array($val)) ? addslashes_array($val) : addslashes($val);
@@ -32,8 +29,7 @@ function addslashes_array($array)
     return $array;
 }
 
-function get_timezone_by_offset($offset)
-{
+function get_timezone_by_offset($offset){
 
     $timezones = array(
         '-12' => 'Pacific/Kwajalein',
@@ -107,12 +103,7 @@ if (file_exists('config.php')) {
     if (@file_exists(ROOT_PATH . 'config.php')) {
         include ROOT_PATH . 'config.php';
     } else {
-        date_default_timezone_set('CET');
-    }
-
-    if (defined('4IMAGES_ACTIVE')) {
-        header('Location: index.php');
-        exit;
+        date_default_timezone_set('Europe/Madrid');
     }
 
     if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
@@ -430,7 +421,6 @@ if (file_exists('config.php')) {
     error_reporting(0);
 	date_default_timezone_set("' . $selected_timezone . '");
 	$site_name = "' . $_POST['site'] . '";
-	$db_servertype = "' . $_POST['db_servertype'] . '";
 	$db_host = "' . $_POST['db_host'] . '";
 	$db_name = "' . $_POST['db_name'] . '";
 	$db_user = "' . $_POST['db_user'] . '";
@@ -462,7 +452,7 @@ if (file_exists('config.php')) {
             $dwes->query('use ' . $_POST['db_name']);
         }
 
-        $nombre = 'data/database/default/idiomas.sql';
+        $nombre = 'data/database/default/sentencias.sql';
 
         if (file_exists($nombre)) {
             $texto = file_get_contents($nombre);
@@ -504,31 +494,7 @@ if (file_exists('config.php')) {
             }
             $action = 'intro';
         } else {
-            $error_log = array();
-            $error_msg = '';
-            include ROOT_PATH . 'includes/db_' . strtolower($db_servertype) . '.php';
-            $site_db = new Db($db_host, $db_user, $db_password, $db_name);
-            if (!$site_db->connection) {
-                $error_log[] = 'No connection to database!';
-            }
-            include ROOT_PATH . 'includes/db_utils.php';
-            $db_file = ROOT_PATH . DATABASE_DIR . '/default/' . strtolower($db_servertype) . '_default.sql';
-            $cont = @fread(@fopen($db_file, 'r'), @filesize($db_file));
-            if (empty($cont)) {
-                $error_log[] = 'Could not load: ' . $db_file;
-            }
-            if (empty($error_log)) {
-                $cont = preg_replace('/4images_/', $table_prefix, $cont);
-                $pieces = split_sql_dump($cont);
-                for ($i = 0; $i < sizeof($pieces); ++$i) {
-                    $sql = trim($pieces[$i]);
-                    if (!empty($sql) and $sql[0] != '#') {
-                        if (!$site_db->query($sql)) {
-                            $error_log[] = $sql;
-                        }
-                    }
-                }
-            }
+         
             if (empty($error_log)) {
                 $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
                 $dwes->set_charset('utf8');
@@ -566,26 +532,14 @@ if (file_exists('config.php')) {
             }
         }
     }
+	
     if ($action == 'intro') {
-        $db_servertype_select = '<select title="db_servertype" style="font-weight:bold;margin:auto;font-size:25px;" name="db_servertype">';
-        $db_types = array();
-        $handle = opendir(ROOT_PATH . 'includes');
-        while ($file = @readdir($handle)) {
-            if (preg_match("/db_(.*)\.php/", $file, $regs)) {
-                if (file_exists(ROOT_PATH . 'data/database/default/' . $regs[1] . '_default.sql') && function_exists($regs[1] . '_connect')) {
-                    $db_types[] = $regs[1];
-                }
-            }
-        }
-        foreach ($db_types as $db_type) {
-            $db_servertype_select .= '<option value="' . $db_type . '"' . (($db_servertype == $db_type) ? ' selected="selected"' : '') . '>' . $db_type . '</option>';
-        }
-        $db_servertype_select .= '</select>';
+		
         if (!empty($error)) {
             $lang['start_install_desc'] = $lang['start_install_desc'] . sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
         }
-        echo $lang_select . '<br/><br/><h2 id="home">' . $lang['db_servertype'] . '</h2>
-              <p>' . $db_servertype_select . '</p>
+		
+        echo $lang_select . '
               <h2>' . $lang['protocolo'] . '</h2>
 				<select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
 				<option>http</option>
@@ -720,7 +674,9 @@ if (file_exists('config.php')) {
 		</div>';
     }
 }
+
 ?>
+
 </div>
 	</body>
 </html>

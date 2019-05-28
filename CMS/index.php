@@ -16,31 +16,11 @@ if (file_exists('config.php')) {
 		
     }
     
-    if (file_exists('data/database/idiomas.sql')) {
-        unlink('data/database/idiomas.sql');
+    if (file_exists('data/database/sentencias.sql')) {
+        unlink('data/database/sentencias.sql');
 		
     }
 
-    if (file_exists('mysqli_default.sql')) {
-        unlink('mysqli_default.sql');
-		
-    }
-
-    if (file_exists('includes/constants.php')) {
-        unlink('includes/constants.php');
-		
-    }
-	
-	if (file_exists('includes/db_mysqli.php')) {
-        unlink('includes/db_mysqli.php');
-		
-    }
-	
-	if (file_exists('includes/db_utils.php')) {
-        unlink('includes/db_utils.php');
-		
-    }
-	
     include ('config.php');
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");
