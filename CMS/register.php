@@ -2,11 +2,9 @@
 
 session_start();
 
-$_SESSION['pagina']="register.php";
+$_SESSION['pagina']="index.php";
 
 include ('cabecera.php');
-
-$_SESSION['pagina'] = 'register.php';
 
 $SESSION['error'] = false;
 
@@ -57,8 +55,9 @@ if (isset($_POST['submit'])) {
 				mysqli_close($GLOBALS['conexion']); 
 			
                 $terminado = true;
+				
 				redireccionar('login.php?user_name='.$_POST['user_name'].'&user_password='.$user_password_hashed);
-           
+			
 		   } else {
                 echo mensaje(ver_dato('error', $GLOBALS['idioma']));
             }

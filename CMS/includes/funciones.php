@@ -442,7 +442,7 @@ function obtener_direccion(){
 
 		if(!empty($_SERVER["REQUEST_URI"])){
 			$adicional=$_SERVER["REQUEST_URI"];
-			$adicional=substr($adicional,0,strripos($adicional,'/')+1);
+			$adicional=substr($adicional,0,strripos($adicional,'/'));
 		}
 		
 		return $_SERVER['SERVER_NAME'].$adicional;

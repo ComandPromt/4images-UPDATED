@@ -471,15 +471,15 @@ session_start();
 			
 			$y=0;
 			
-			$image_id=array();
-			
-			$consulta=mysqli_query($GLOBALS['conexion'],"SELECT image_id FROM ".$GLOBALS['table_prefix']."images");
-		
-			while($fila = mysqli_fetch_row($consulta)){
-				$image_id[]=$fila[0];
-			}
-			
 			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
+				
+				$image_id=array();
+				
+				$consulta=mysqli_query($GLOBALS['conexion'],"SELECT image_id FROM ".$GLOBALS['table_prefix']."images");
+		
+				while($fila = mysqli_fetch_row($consulta)){
+					$image_id[]=$fila[0];
+				}
 				
 				$numero=consecutivos($image_id);
 							
@@ -520,7 +520,7 @@ session_start();
 				}
 				
 				$y++;
-				
+				unset($image_id);
 			}
 				
 			mysqli_close($GLOBALS['conexion']);
