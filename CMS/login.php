@@ -32,8 +32,7 @@ if(mysqli_affected_rows($GLOBALS['conexion'])==1){
 	$fila = mysqli_fetch_row($consulta);
 
 	if(compare_passwords($pass, $fila[0]) || $pass==$fila[0]){
-		
-		
+				
 			setcookie('4images_userid',$fila[1],time()+3600);
 		
 			setcookie('pass',$fila[0],time()+3600);

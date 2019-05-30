@@ -3,23 +3,35 @@
 session_start();
 include('cabecera.php');
 
+if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+}
+		
 if(!isset($_SESSION['id_usuario']) || empty($_SESSION['pagina'])){
-	echo '<script>location.href="index.php";</script>';
+	redireccionar('index.php');
 }
 
 else{
 
 	if(isset($_POST['cambiar_pass']) && !empty($_POST['nueva_pass'])){
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+		or die("No se pudo conectar a la base de datos");
 	
 		$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE '.$GLOBALS['table_prefix']."users SET user_password='".salted_hash($_POST['nueva_pass'])."' WHERE user_id=".$_SESSION['id_usuario']);
 		mensaje(ver_dato('cambio_pass_exitoso', $GLOBALS['idioma']));
 		mysqli_close($GLOBALS['conexion']);
 		unset($_SESSION['pagina']);
+		
 		session_destroy();
-		echo '<script>location.href="'.$_SESSION['pagina'].'";</script>';
+		
+		redireccionar($_SESSION['pagina']);
 	}
 
 	print '<div class="modal-body">

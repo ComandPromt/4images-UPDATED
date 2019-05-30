@@ -6,6 +6,15 @@ $_SESSION['pagina']="index.php";
 
 include ('cabecera.php');
 
+if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+}
+
 $SESSION['error'] = false;
 
 $terminado = false;
@@ -19,8 +28,6 @@ if (isset($_POST['submit'])) {
     $_POST['user_name'] = eliminar_espacios($_POST['user_name']);
     $_POST['email'] = eliminar_espacios($_POST['email']);
     $_POST['user_password'] = eliminar_espacios($_POST['user_password']);
-	
-	$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 	
     if (isset($_SESSION['captcha'])) {
         if ($_SESSION['captcha'] && $_REQUEST['captcha'] != $_SESSION['captcha']) {

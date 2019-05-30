@@ -1,9 +1,11 @@
 <?php
 
 date_default_timezone_set('Europe/Madrid');
+
 if(file_exists('../config.php')){
 	include_once('../config.php');
 }
+
 include_once('../includes/funciones.php');
 
 ?>
@@ -135,6 +137,7 @@ include_once('../includes/funciones.php');
 <?php
 
 menu_lateral('../');
+
 print '</div</div>';
 
 ?>
@@ -142,4 +145,3 @@ print '</div</div>';
 </div>
 
 <div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
-

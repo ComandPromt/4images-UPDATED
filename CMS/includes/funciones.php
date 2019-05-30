@@ -2,6 +2,35 @@
 
 date_default_timezone_set('Europe/Madrid');
 
+function poner_menu_conf(){
+	
+	include("../config.php");
+	
+	if(isset($_COOKIE['4images_userid'])){
+	
+		$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+		if($_COOKIE['4images_userid']>0){
+			$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+		}
+	}
+	
+	print '<div class="container" style="width:113%;margin-auto;padding-top:100px;">';
+
+print '<nav>
+    <ul>
+        <li style="padding-top:20px;"><a href="cambiar_pass.php">
+		'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'</a></li>
+			
+        <li style="padding-top:20px;"><a href="cambiar_idioma.php">
+		'.ver_dato('cambiar_idioma', $GLOBALS['idioma']).'</a></li>
+
+		<br clear="all" />
+    </ul>
+
+</nav>';
+}
+
 function consecutivos(array $array){
 	if(count($array)>0 && $array[0]!=null && $array[0]==1){
         asort($array);
@@ -70,6 +99,14 @@ function safe_htmlspecialchars($chars) {
 }
 
 function menu_mensajes(){
+		if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+		}
 	print '<nav>
     <ul>
         <li><a title="'.ver_dato('msg_write',$GLOBALS['idioma']).'" href="index.php"><img alt="'.ver_dato('msg_write',$GLOBALS['idioma']).'" class="icono" src="../img/write.png"/></a></li>
@@ -105,8 +142,12 @@ function ver_tabla($sql,$icono){
 
 function saber_idioma($id){
 
+if(file_exists('../config.php')){
 	include('../config.php');
-	
+}
+else{
+	include('config.php');
+}
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
@@ -454,6 +495,14 @@ function obtener_direccion(){
 
 function restablecer_pass($ruta = ""){
 	
+		if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+		}
 	if (isset($_POST['restablecer_pass']) && !empty($_POST['correo_restablecimiento'])
 
     && !empty($_POST['nombre_usuario'])) {
@@ -526,7 +575,9 @@ function crear_carpetas(){
 function ver_dato($accion,$idioma){
 	
 	$dato="";
-		
+	
+	include('../config.php');
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
@@ -546,6 +597,15 @@ function ver_dato($accion,$idioma){
 
 function menu_lateral($ruta = ""){
 	
+	if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+		}
+		
 	if($ruta=='todos'){
 		$ruta='';
 	}
@@ -608,7 +668,7 @@ print '
 		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
 	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
        <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
-	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php?action=editprofile"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
+	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
 	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
        <br>
@@ -683,7 +743,7 @@ $redes_sociales='';
       
 
      if(!empty($redes_sociales)){
-		print '<div style="-moz-transform: scale(1.5,1.5);zoom:150%;" class="w3-panel w3-large">';
+		print '<div style="-moz-transform: scale(1.2,1.2);zoom:150%;" class="w3-panel w3-large">';
 		print $redes_sociales.'</div>
 		<hr/>';
 	 }        	     

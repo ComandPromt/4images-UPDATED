@@ -1,9 +1,11 @@
 <?php
 
 date_default_timezone_set('Europe/Madrid');
+
 if(file_exists('config.php')){
 	include_once('config.php');
 }
+
 include_once('includes/funciones.php');
 
 ?>
@@ -114,32 +116,38 @@ include_once('includes/funciones.php');
 	<link rel="alternate" type="application/rss+xml" title="<?php print 'RSS Feed: '.$GLOBALS['site_name']." (Nuevas imágenes)";?>" href="rss.php?action=images">
 	
 	</head>
-<body style="zoom:90%;">
+	
+<body style="zoom:80%;">
 
-<div id="navega"> 
-
-<div id="menu"> 
-
-<div id="fijo">
-
-    <a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
-
-<br/>
+	<div id="navega"> 
+	
+	<div id="menu"> 
+	
+	<div id="fijo">
+	
+		<a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
+	
+	<br/>
+		
+		</div>
+		
+	</div>
 	
 	</div>
 	
-</div>
-
-</div>
-
-<?php
-
-menu_lateral();
-print '</div</div>';
-
-?>
-	 
-</div>
-
-<div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
+	<?php
+	
+	if(isset($_COOKIE['4images_userid']) && is_int($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
+		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+	}
+	
+	menu_lateral();
+	
+	print '</div</div>';
+	
+	?>
+		
+	</div>
+	
+	<div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;"> 
 

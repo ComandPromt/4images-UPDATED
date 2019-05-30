@@ -1,6 +1,15 @@
 <?php
 include('cabecera.php');
 
+if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+		}
+		
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
 aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">

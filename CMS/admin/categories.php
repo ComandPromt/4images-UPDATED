@@ -2,6 +2,15 @@
 
 include('../upload_images/cabecera.php');
 
+if(isset($_COOKIE['4images_userid'])){
+	
+	$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+	if($_COOKIE['4images_userid']>0){
+		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+	}
+}
+
 comprobar_cookie('../');
 
 if(isset($_POST['enviar'])){
@@ -27,6 +36,8 @@ if(isset($_POST['enviar'])){
 	}
 	
 	mysqli_close($GLOBALS['conexion']);
+	
+	mensaje(ver_dato('cat_success', $GLOBALS['idioma']));
 }
 
 poner_menu('../');

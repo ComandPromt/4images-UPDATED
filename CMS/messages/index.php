@@ -1,4 +1,5 @@
 <?php
+
 include('../upload_images/cabecera.php');
 
 if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
@@ -34,7 +35,7 @@ menu_mensajes();
 
 print '
 <form method="post" action="' . $_SERVER['PHP_SELF'] . '">
-<p><label><img class="icono" src="../img/emaill.png"/></label><select name="destinatario">';
+<p><label><span>'.ver_dato('recipient', $GLOBALS['idioma']).'</span> <img class="icono" src="../img/emaill.png"/></label><select name="destinatario">';
 	
 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -49,10 +50,12 @@ mysqli_close($GLOBALS['conexion']);
 
 print '</option>
 </select></p>
-<p>
-<p>Asunto:
+
+<p><span>'.ver_dato('asunto', $GLOBALS['idioma']).'</span>
 <input name="asunto" type="text" />
 </p>
+
+<p><span>'.ver_dato('msg', $GLOBALS['idioma']).'</span>
 <textarea name="mensaje" style="height:200px;font-size:25px;color:#8105F1;"></textarea></p>
 <input name="enviar_correo" type="submit"/>
 </form></div>';

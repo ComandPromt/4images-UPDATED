@@ -1,18 +1,27 @@
 <?php
 
+session_start();
+
 include('../includes/funciones.php');
 include('../config.php');
 
 comprobar_cookie('../');
 
+if(isset($_COOKIE['4images_userid'])){
+	
+			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+			if($_COOKIE['4images_userid']>0){
+				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+			}
+		}
+		
 if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 	if(!file_exists('../data/media/'.$_POST['categoria'])){
 			mkdir('../data/media/'.$_POST['categoria'], 0777, true);
 		}
 }
 	
-session_start();
-
 ?>
 
 <!DOCTYPE html>
@@ -372,14 +381,7 @@ session_start();
 							ajax.onload = function()
 							{
 								form.classList.remove( 'is-uploading' );
-								if( ajax.status >= 200 && ajax.status < 400 )
-								{
-									var data = JSON.parse( ajax.responseText );
-									form.classList.add( data.success == true ? 'is-success' : 'is-error' );
-									if( !data.success ) errorMsg.textContent = data.error;
-									
-								}
-								else alert( 'Error. Please, contact the webmaster!' );
+						
 							};
 		
 							ajax.onerror = function()
@@ -432,7 +434,7 @@ session_start();
 			}( document, window, 0 ));
 		</script>
 		
-		<?php
+	<?php
 		
 		if(!isset($_SESSION['user_id'])){
 			$_SESSION['user_id']=0;
@@ -451,7 +453,6 @@ session_start();
 			 && !empty($_POST['nombre'])){
 				$_SESSION['categoria']=$_POST['categoria'];
 				$_SESSION['nombre']=trim($_POST['nombre']);
-				$_SESSION['subida']=false;
 			}
 		}
 		
@@ -501,11 +502,7 @@ session_start();
 							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
 							move_uploaded_file($fichTemporal, $destino);
 					}
-					
-					if(!$_SESSION['subida']){
-						$_SESSION['subida']=true;
-					}
-					
+										
 					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
 										
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'"); 	
@@ -513,9 +510,7 @@ session_start();
 					
 					if($fila[0]==0){
 					
-								mysqli_query($GLOBALS['conexion'], '
-					
-						INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
+								mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
 					}				
 				}
 				
@@ -524,15 +519,15 @@ session_start();
 			}
 				
 			mysqli_close($GLOBALS['conexion']);
-			
-			if($_SESSION['subida']){
+
+			if($y>0){
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));
 			}
-
+				
 		}
 					
-		?>
+	?>
 		
 	</body>
 </html>
