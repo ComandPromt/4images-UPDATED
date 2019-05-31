@@ -57,11 +57,11 @@ if (!in_array($db_name, $tablas)) {
 
 poner_menu();
 
-print '<div style="padding-top:80px;font-size:30px;position:fixed;">
+print '<div style="padding-top:80px;font-size:2em;position:fixed;">
 <p style="padding-left:40px">'.date('d').'/'.date('m').'/'.date('y').'</p>
 <p style="padding-left:40px;margin-top:-60px;" id="reloj"></p>
 
-<div style="margin:auto;height:100px;margin-top:-20px;padding-left:40px;">
+<div style="margin:auto;margin-top:-20px;padding-left:40px;">
     <a href="top.php"><img alt="top images" class="icono" src="img/top.png"/></a>
     <a href="todos.php"><img alt="all images" class="icono" src="img/view.png"/></a>
 	<a href="search.php"><img alt="all images" class="icono" src="img/search.png"/></a>
@@ -84,20 +84,24 @@ $consulta = mysqli_query($GLOBALS['conexion'],
 
     print '
     <div style="float:right;padding-left:350px;" class="entire-content">
-      <div style="margin-top:-40px;width:10px;"class="content-carrousel">';
+
+      <div style="margin-top:-40px;"class="content-carrousel">
+
+	  ';
+	  
       $consulta = mysqli_query($GLOBALS['conexion'],
-      'SELECT cat_id,image_media_file,image_id FROM '.$GLOBALS['table_prefix'].'images
+      'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images
       ORDER BY image_iD DESC LIMIT 9');
       
       while ($fila = mysqli_fetch_array($consulta)){
     
-          print '<figure style="width:120px;height:120px;"
-          class="shadow"><a href="details.php?image_id='.$fila[2].'"> <img style="width:120px;height:120px;" 
+          print '<figure style="width:4em;height:4em;"
+          class="shadow"><a title="'.$fila[3].'" href="details.php?image_id='.$fila[2].'"> <img alt="'.$fila[3].'" style="width:4em;height:4em;" 
           src="data/media/'.$fila[0].'/'.$fila[1].'"/></a></figure>';
       }
     
-       print '  </div>
-    </div>';
+       print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  </div>
+    </div>	<h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2>  ';
   }
   mysqli_close($GLOBALS['conexion']);
 } 

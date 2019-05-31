@@ -1,27 +1,18 @@
 <?php
 
-session_start();
-
 include('../includes/funciones.php');
 include('../config.php');
 
 comprobar_cookie('../');
 
-if(isset($_COOKIE['4images_userid'])){
-	
-			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
-	
-			if($_COOKIE['4images_userid']>0){
-				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
-			}
-		}
-		
 if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 	if(!file_exists('../data/media/'.$_POST['categoria'])){
 			mkdir('../data/media/'.$_POST['categoria'], 0777, true);
 		}
 }
 	
+session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -381,7 +372,14 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 							ajax.onload = function()
 							{
 								form.classList.remove( 'is-uploading' );
-						
+								if( ajax.status >= 200 && ajax.status < 400 )
+								{
+									var data = JSON.parse( ajax.responseText );
+									form.classList.add( data.success == true ? 'is-success' : 'is-error' );
+									if( !data.success ) errorMsg.textContent = data.error;
+									
+								}
+								else alert( 'Error. Please, contact the webmaster!' );
 							};
 		
 							ajax.onerror = function()
@@ -434,7 +432,7 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 			}( document, window, 0 ));
 		</script>
 		
-	<?php
+		<?php
 		
 		if(!isset($_SESSION['user_id'])){
 			$_SESSION['user_id']=0;
@@ -453,6 +451,7 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 			 && !empty($_POST['nombre'])){
 				$_SESSION['categoria']=$_POST['categoria'];
 				$_SESSION['nombre']=trim($_POST['nombre']);
+				$_SESSION['subida']=false;
 			}
 		}
 		
@@ -502,7 +501,11 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
 							move_uploaded_file($fichTemporal, $destino);
 					}
-										
+					
+					if(!$_SESSION['subida']){
+						$_SESSION['subida']=true;
+					}
+					
 					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
 										
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'"); 	
@@ -510,7 +513,9 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 					
 					if($fila[0]==0){
 					
-								mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
+								mysqli_query($GLOBALS['conexion'], '
+					
+						INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
 					}				
 				}
 				
@@ -519,15 +524,15 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 			}
 				
 			mysqli_close($GLOBALS['conexion']);
-
-			if($y>0){
+			
+			if($_SESSION['subida']){
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));
 			}
-				
+
 		}
 					
-	?>
+		?>
 		
 	</body>
 </html>

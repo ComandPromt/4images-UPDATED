@@ -132,7 +132,7 @@ function ver_tabla($sql,$icono){
 	$consulta = mysqli_query($GLOBALS['conexion'], $sql);
 	
 	while($fila = mysqli_fetch_row($consulta)){
-		print '<tr><td><img style="width:100px;height:100px;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
+		print '<tr><td><img style="width:6em;height:6em;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
 	}
 		
 	print '</table>';
@@ -278,18 +278,18 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;">
 			<form id="frmajax" method="post">
-				<a onclick="favorito('.$image_id.')"><img style="height:40px;width:40px;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
+				<a onclick="favorito('.$image_id.')"><img style="height:2.5em;width:2.5em;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
 			</form>
 			</div>';
 		}
 	}
 	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:20px;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:80px;width:80px;" alt="Imagen '.
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:80px;width:80px;" alt="Imagen '.
 	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
 		
 		<div style="float:right;">
 				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
-					<img style="padding-left:20px;height:50px;width:70px;" src="img/download.png"/>
+					<img style="padding-left:20px;height:3em;width:4em;" src="img/download.png"/>
 				</a>
 		</div>	
 	</td>';
@@ -366,7 +366,7 @@ function ver_categoria($cat_id,$final_sentencia=""){
 			$y=0;
 
 			for($x=0;$x<count($nombres)-1;$x++){
-				print '<tr style="border:none;"><td style="border:none;font-size:20px;">'.$nombres[$y].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+1].'</td><td style="font-size:20px;border:none;">'.$nombres[$y+2].'</td></tr>';
+				print '<tr style="border:none;"><td style="border:none;font-size:2em;">'.$nombres[$y].'</td><td style="font-size:2em;border:none;">'.$nombres[$y+1].'</td><td style="font-size:2em;border:none;">'.$nombres[$y+2].'</td></tr>';
 						
 				print '<tr style="border:none;">';
 				
@@ -420,7 +420,7 @@ function ver_categoria($cat_id,$final_sentencia=""){
 				
 				echo '<li style="padding-left:45px;"class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag=1"><<</a></li>
 
-				<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$DecrementNum.'"><img style="width:45px;height:45px;" src="img/back.png"/></a></li>';
+				<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$DecrementNum.'"><img style="width:3em;height:3em;" src="img/back.png"/></a></li>';
 
 			}
 				
@@ -445,7 +445,7 @@ function ver_categoria($cat_id,$final_sentencia=""){
 					
 			if($_GET['pag']>0 && $_GET['pag']<$TotalRegistro){
 				
-				echo '<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$IncrimentNum.'"><img style="width:45px;height:45px;" src="img/next.png"/></a></li>';
+				echo '<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$IncrimentNum.'"><img style="width:3em;height:3em;" src="img/next.png"/></a></li>';
 				
 				if($IncrimentNum<$TotalRegistro){
 					echo '<li class="btn"><a href=?cat_id='.$_GET['cat_id'].'&pag'.$TotalRegistro.'">>></a></li></ul></div>';
@@ -544,13 +544,20 @@ data-dismiss="modal" aria-label="Close">
 </div>
 <div class="modal-body">
           <form method="post" action="' . $_SERVER['PHP_SELF'] . '">
+
         <div class="form-group">
 		<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/user.png"/>
-		<input  name="nombre_usuario" placeholder="' . ver_dato('user_name',
+		<label for="' . ver_dato('user_name',
+    $GLOBALS['idioma']) . '">' . ver_dato('user_name',
+    $GLOBALS['idioma']) . '</label><input  title="' . ver_dato('user_name',
+    $GLOBALS['idioma']) . '" name="nombre_usuario" placeholder="' . ver_dato('user_name',
     $GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
 <br/>
 <img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/email.png"/>
-        <input  name="correo_restablecimiento" placeholder="' .
+        <label for="' .
+ver_dato('email', $GLOBALS['idioma']) . '">' .
+ver_dato('email', $GLOBALS['idioma']) . '</label><input title="' .
+ver_dato('email', $GLOBALS['idioma']) . '" name="correo_restablecimiento" placeholder="' .
 ver_dato('email', $GLOBALS['idioma']) . '"
 		type="text" class="form-control" />
       <br/>
@@ -612,9 +619,9 @@ function menu_lateral($ruta = ""){
 	
 print '
 
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:220px;overflow-x: hidden;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;" id="mySidebar"><br>
   <div  class="w3-container">
-    <a  href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
+    <a  href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">Menu
       <i class="fa fa-remove"></i>
     </a>
    
@@ -622,7 +629,7 @@ print '
   <div style="margin-left:-50px;" class="w3-bar-block">';
   
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
-		print '<a href="'.$ruta.'index.php"><img alt="inicio" class="icono" src="'.$ruta.'img/home.png" ></a><hr/>';
+		print '<a title="'.ver_dato('home', $GLOBALS['idioma']).'" href="'.$ruta.'index.php"><img alt="inicio" class="icono" src="'.$ruta.'img/home.png" ></a><hr/>';
 	}
 	
 	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
@@ -630,18 +637,18 @@ print '
 		print '<form method="post" action="'.$ruta.'login.php" >
 
        <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
-		<br/><br/><input id="user_name" title="user name" style="text-align:center;height:40px;font-size:30px;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
+		<br/><br/><input id="user_name" title="user name" style="height:40px;font-size:2em;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
         
 		<br/>
 		<img alt="contraseña" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
-        <input id="user_password" title="user password" style="text-align:center;height:40px;font-size:30px;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
+        <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
 
 		<input id="login" style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
 	  <hr/>
 	  
-	  <a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:15px;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
+	  <a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:1em;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
 	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/forgot_password.png"/>
 	 </a>
@@ -662,19 +669,19 @@ print '
 
 		if($recuento[0]>0){
 			print '
-			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="messages/inbox.php"><span style="font-size:20px;">'.$recuento[0].'</span></a>';
+			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="messages/inbox.php"><span style="font-size:2em;">'.$recuento[0].'</span></a>';
 		}
 		
-		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:55px;width:55px;" src="'.$ruta.'img/email.png"></a>
+		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
 	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
        <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
 	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
        <br>
-	   <form action="'.$_SERVER['PHP_SELF'].'" method="post">
+	   
 	   <a title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
-	   </form>';
+	   ';
 
 	}
 	
@@ -688,7 +695,7 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 if($imagen_aleatoria!="vacio"){
 	
 	print '
-	<img alt="aleatorio" style="height:80px;width:80px;" src="'.$ruta.'img/aleatorio.png"/>
+	<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
 	<br/><br/>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
@@ -696,7 +703,7 @@ if($imagen_aleatoria!="vacio"){
 
 	print '
 	<a title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" href="'.$ruta.'details.php?image_id='.$image_id.'">
-	<img style="height:120px;width:120px;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" /></a>
+	<img style="height:7.5em;width:7.5em;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" /></a>
 	<br/><br/>
 	<hr/>';
 }
@@ -768,7 +775,7 @@ if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
 	mysqli_close($GLOBALS['conexion']);
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
-		print '<a href="'.$ruta.'admin/index.php"><img class="icono" src="'.$ruta.'img/admin.png"  ></a><br/>';
+		print '<a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php"><img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png"  ></a><br/>';
 	}
 		
 }
@@ -856,9 +863,9 @@ function poner_menu($ruta = ""){
 			print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
 			<div>
 				<div>
-					<div style="width:160px;float:right;" id="dl-menu" class="dl-menuwrapper">
-					<br/>	<button class="dl-trigger"></button>
-						<ul style="margin-top:-15px;font-size:40px;"  class="dl-menu">
+					<div style="width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">
+					<br/>	<button class="dl-trigger">a</button>
+						<ul style="margin-top:-15px;font-size:3em;"  class="dl-menu">
 						';		
 			$id_categorias=array();
 
@@ -876,7 +883,7 @@ function poner_menu($ruta = ""){
 			
 				print '
 				<li  class="menu_categorias">
-				<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="#">'.$fila[0].'</a>';
+				<a style="color:#ffffff;background-color:green;font-size:1em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
 				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
@@ -886,13 +893,13 @@ function poner_menu($ruta = ""){
 					if($y==1){
 						print '<ul style="margin-top:10px;" class="dl-submenu">';
 						print '<li style="first-child:margin-top:15px;">
-						<a style="margin-top:20px;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
+						<a style="margin-top:20px;font-size:2em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
 					else{
 						print '<li>
-						<a style="font-size:20px;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
+						<a style="font-size:2em;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
@@ -909,7 +916,7 @@ function poner_menu($ruta = ""){
 
 				print '
 				<li class="menu_categorias menu">
-				<a style="color:#ffffff;font-size:20px;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+				<a style="color:#ffffff;background-color:blue;font-size:1em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		
 			print '		</ul>

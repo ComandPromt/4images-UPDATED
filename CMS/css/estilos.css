@@ -115,15 +115,6 @@ hr:after {position: relative; top: -22px; content:"\25cf\25cf\25cf"; font-size: 
 	font-size:30px;
 }
 
-.titulo{
-	color:blue;
-	font-weight:bold;
-	font-size:25px;
-
-}
-.nota{
-	padding-left:30px;
-}
 
 .social{
 	height:1.7em;

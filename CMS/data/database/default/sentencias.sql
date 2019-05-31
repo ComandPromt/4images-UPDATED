@@ -1559,7 +1559,11 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocalización'),
 ('74',  'cat_success',  'Categoría insertada correctamente'),
 ('75',  'cambiar_idioma',  'Cambiar idioma'),
-('76',  'asunto',  'Asunto');
+('76',  'asunto',  'Asunto'),
+('77',  'adm',  'Administrador'),
+('78',  'new_img',  'Nuevas imágenes'),
+('79',  'home',  'Inicio'),
+('80',  'welcome',  'Bienvenido');
 
 INSERT INTO 4images_users VALUES ('-1', '-1', 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', '0', '0', '0', '0', '','0', '0', '', '',DEFAULT);
 
