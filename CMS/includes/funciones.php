@@ -119,8 +119,12 @@ function menu_mensajes(){
 }
 
 function ver_tabla($sql,$icono){
-	
+if(file_exists('../config.php')){
 	include('../config.php');
+}
+else{
+	include('config.php');
+}
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -277,19 +281,19 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		
 		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;">
-			<form id="frmajax" method="post">
-				<a onclick="favorito('.$image_id.')"><img style="height:2.5em;width:2.5em;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
-			</form>
+
+				<a id="frmajax" onclick="favorito('.$image_id.')"><img alt="fav" style="height:1.5em;width:1.5em;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
+		
 			</div>';
 		}
 	}
 	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:80px;width:80px;" alt="Imagen '.
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:4em;width:4em;" alt="Imagen '.
 	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
 		
 		<div style="float:right;">
 				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
-					<img style="padding-left:20px;height:3em;width:4em;" src="img/download.png"/>
+					<img alt="download" style="padding-left:20px;height:2em;width:3em;" src="img/download.png"/>
 				</a>
 		</div>	
 	</td>';
@@ -532,33 +536,30 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 
 }
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLabel" aria-hidden="true">
+>
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
 <div class="modal-header">
-<h3 class="modal-title titulo" id="exampleModalLabel">' . ver_dato('cambiar_pass', $GLOBALS['idioma']) . '</h3>
+
 <button style="margin-left:40px;float:right;" type="button" class="close"
-data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
+data-dismiss="modal">
+<span >&times;</span>
 </button>
 </div>
 <div class="modal-body">
           <form method="post" action="' . $_SERVER['PHP_SELF'] . '">
 
         <div class="form-group">
-		<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/user.png"/>
-		<label for="' . ver_dato('user_name',
-    $GLOBALS['idioma']) . '">' . ver_dato('user_name',
-    $GLOBALS['idioma']) . '</label><input  title="' . ver_dato('user_name',
-    $GLOBALS['idioma']) . '" name="nombre_usuario" placeholder="' . ver_dato('user_name',
+		<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/user.png" />
+		<label style="font-size:2em;" for="nombre_usuario">' . ver_dato('user_name',
+    $GLOBALS['idioma']) . '</label>
+<input id="nombre_usuario" name="nombre_usuario" placeholder="' . ver_dato('user_name',
     $GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
 <br/>
-<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/email.png"/>
-        <label for="' .
-ver_dato('email', $GLOBALS['idioma']) . '">' .
-ver_dato('email', $GLOBALS['idioma']) . '</label><input title="' .
-ver_dato('email', $GLOBALS['idioma']) . '" name="correo_restablecimiento" placeholder="' .
-ver_dato('email', $GLOBALS['idioma']) . '"
+<img alt="correo de restablecimiento" class="icono2" src="'.$ruta.'img/email.png"/>
+<label style="font-size:2em;" for="correo_restablecimiento">' . ver_dato('email',
+    $GLOBALS['idioma']) . '</label>
+        <input id="correo_restablecimiento" name="correo_restablecimiento" placeholder="' .ver_dato('email', $GLOBALS['idioma']) . '"
 		type="text" class="form-control" />
       <br/>
 	  </div>
@@ -583,8 +584,13 @@ function ver_dato($accion,$idioma){
 	
 	$dato="";
 	
-	include('../config.php');
-	
+	if(file_exists('../config.php')){
+		include('../config.php');
+	}
+	else{
+		include('config.php');
+	}
+
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
@@ -621,8 +627,8 @@ print '
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;" id="mySidebar"><br>
   <div  class="w3-container">
-    <a  href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">Menu
-      <i class="fa fa-remove"></i>
+    <a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"> 
+
     </a>
    
   </div>
@@ -636,14 +642,18 @@ print '
 		
 		print '<form method="post" action="'.$ruta.'login.php" >
 
-       <img alt="usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
-		<br/><br/><input id="user_name" title="user name" style="height:40px;font-size:2em;background-color:#f6fcff;" type="text" name="user_name" class="logininput">
+       <img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
+		<br/><br/>
+		<label for="user_name"  style="font-size:2em;">'.ver_dato('user_name',$GLOBALS['idioma']).'</label>
+		<input id="user_name" style="height:40px;font-size:2em;" type="text" name="user_name" class="logininput">
         
 		<br/>
-		<img alt="contraseña" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
-        <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;background-color:#f6fcff;" type="password" size="10" name="user_password" class="logininput">
+		<img alt="clave de acceso" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
+			<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
+        <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
 
+   
 		<input id="login" style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
 	  <hr/>
@@ -692,7 +702,7 @@ $imagen_aleatoria=imagen_aleatoria();
 $image_thumb=substr($imagen_aleatoria,strpos($imagen_aleatoria,"-")+1,strpos($imagen_aleatoria,"*"));
 $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
-if($imagen_aleatoria!="vacio"){
+if($imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	
 	print '
 	<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>

@@ -1403,7 +1403,14 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocalização'),
 ('74',  'cat_success',  'Categoria inserida corretamente'),
 ('75',  'cambiar_idioma',  'Alterar idioma'),
-('76',  'asunto',  'Assunto');
+('76',  'asunto',  'Assunto'),
+('77',  'adm',  'Administrador'),
+('78',  'new_img',  'Nuevas imágenes'),
+('79',  'home',  'Inicio'),
+('80',  'welcome',  'Bienvenido'),
+('81',  'search',  'Buscar imágenes'),
+('82',  'all',  'Ver todas las imágenes'),
+('83',  'top',  'Imágenes top');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1481,7 +1488,14 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('73',  'geo',  'геолокации'),
 ('74',  'cat_success',  'Категория вставлена правильно'),
 ('75',  'cambiar_idioma',  'Сменить язык'),
-('76',  'asunto',  'бизнес');
+('76',  'asunto',  'бизнес'),
+('77',  'adm',  'администратор'),
+('78',  'new_img',  'Новые изображения'),
+('79',  'home',  'инициирование'),
+('80',  'welcome',  'добро пожаловать'),
+('81',  'search',  'Поиск изображений'),
+('82',  'all',  'Посмотреть все изображения'),
+('83',  'top',  'Изображения сверху');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -1563,7 +1577,10 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('77',  'adm',  'Administrador'),
 ('78',  'new_img',  'Nuevas imágenes'),
 ('79',  'home',  'Inicio'),
-('80',  'welcome',  'Bienvenido');
+('80',  'welcome',  'Bienvenido'),
+('81',  'search',  'Buscar imágenes'),
+('82',  'all',  'Ver todas las imágenes'),
+('83',  'top',  'Imágenes top');
 
 INSERT INTO 4images_users VALUES ('-1', '-1', 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', '0', '0', '0', '0', '','0', '0', '', '',DEFAULT);
 

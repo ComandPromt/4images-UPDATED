@@ -21,6 +21,10 @@ if(isset($_POST['enviar'])){
 	$consulta = mysqli_query($GLOBALS['conexion'], '
 	SELECT COUNT(cat_id),cat_id FROM '.$GLOBALS['table_prefix']."categories
 	WHERE cat_name='".$_POST['nombre']."' GROUP BY cat_id");
+		
+	if(!file_exists('../data/media/'.$recuento[1])){
+		mkdir('../data/media/'.$recuento[1], 0777, true);
+	}
 	
 	$recuento = mysqli_fetch_row($consulta);
 	
@@ -31,9 +35,7 @@ if(isset($_POST['enviar'])){
 	
 	}
 	
-	if(!file_exists('../data/media/'.$recuento[1])){
-		mkdir('../data/media/'.$recuento[1], 0777, true);
-	}
+
 	
 	mysqli_close($GLOBALS['conexion']);
 	

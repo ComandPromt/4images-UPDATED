@@ -153,12 +153,15 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 			print '<div style="float:left;padding-left:55px;"><img style="width:40px;height:40px;" src="img/user.png"/><span style="font-size:15px"> '.$fila[1].'</span></div>';
 		}
 		
-		$pesoimagen=truncateFloat(truncateFloat(filesize ( 'data/media/'.$categoria.'/'.$imagen)/1024,2)/1024,2);
+		if(file_exists('data/media/'.$categoria.'/'.$imagen)){
+			
+			$pesoimagen=truncateFloat(truncateFloat(filesize ( 'data/media/'.$categoria.'/'.$imagen)/1024,2)/1024,2);
 		
-		if($pesoimagen!=0){
-			print '<div style="float:left;padding-bottom:40px;padding-left:10px;"><img style="width:40px;height:40px;" src="img/size.png"/><span style="font-size:15px;"> '.$pesoimagen.'</span></div>';
+			if($pesoimagen!=0){
+				print '<div style="float:left;padding-bottom:40px;padding-left:10px;"><img style="width:40px;height:40px;" src="img/size.png"/><span style="font-size:15px;"> '.$pesoimagen.'</span></div>';
+			}
 		}
-		
+				
 		if($_GET['image_id']>1){
 	
 			$consulta = mysqli_query($GLOBALS['conexion'], '

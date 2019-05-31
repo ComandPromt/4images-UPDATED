@@ -100,8 +100,8 @@ if (file_exists('config.php')) {
         $HTTP_COOKIE_VARS = addslashes_array($HTTP_COOKIE_VARS);
     }
 
-    if (@file_exists(ROOT_PATH . 'config.php')) {
-        include ROOT_PATH . 'config.php';
+    if (file_exists('config.php')) {
+        include ('config.php');
     } else {
         date_default_timezone_set('Europe/Madrid');
     }
@@ -143,7 +143,9 @@ if (file_exists('config.php')) {
     }
 
     $lang = array();
-    include ROOT_PATH . 'lang/' . $install_lang . '/install.php';
+	
+    include ('lang/' . $install_lang . '/install.php');
+	
     $db_servertype = (isset($_POST['db_servertype'])) ? trim($_POST['db_servertype']) : 'mysqli';
     $db_host = (isset($_POST['db_host'])) ? trim($_POST['db_host']) : '';
     $db_name = (isset($_POST['db_name'])) ? trim($_POST['db_name']) : '';
@@ -155,8 +157,6 @@ if (file_exists('config.php')) {
     $admin_password2 = (isset($_POST['admin_password2'])) ? trim($_POST['admin_password2']) : '';
     $selected_timezone = (isset($_POST['timezone_select'])) ? trim($_POST['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
-
-    include ROOT_PATH . 'includes/constants.php';
 
     if ($action == 'downloadconfig') {
         header('Content-Type: text/x-delimtext; name="config.php"');

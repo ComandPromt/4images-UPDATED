@@ -58,54 +58,56 @@ if (!in_array($db_name, $tablas)) {
 poner_menu();
 
 print '<div style="padding-top:80px;font-size:2em;position:fixed;">
-<p style="padding-left:40px">'.date('d').'/'.date('m').'/'.date('y').'</p>
-<p style="padding-left:40px;margin-top:-60px;" id="reloj"></p>
+<h2 style="font-size:1em;padding-left:40px">'.date('d').'/'.date('m').'/'.date('y').'</h2>
+<h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
 
 <div style="margin:auto;margin-top:-20px;padding-left:40px;">
-    <a href="top.php"><img alt="top images" class="icono" src="img/top.png"/></a>
-    <a href="todos.php"><img alt="all images" class="icono" src="img/view.png"/></a>
-	<a href="search.php"><img alt="all images" class="icono" src="img/search.png"/></a>
+    <a title="'.ver_dato('top', $GLOBALS['idioma']).'" href="top.php"><img alt="'.ver_dato('top', $GLOBALS['idioma']).'" class="icono" src="img/top.png"/></a>
+    <a title="'.ver_dato('all', $GLOBALS['idioma']).'" href="todos.php"><img alt="'.ver_dato('all', $GLOBALS['idioma']).'" class="icono" src="img/view.png"/></a>
+	<a title="'.ver_dato('search', $GLOBALS['idioma']).'" href="search.php"><img alt="'.ver_dato('search', $GLOBALS['idioma']).'" class="icono" src="img/search.png"/></a>
 </div>
+
 <div><br/>
 ';
 
 if(file_exists('config.php')){
-	
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
+	include('config.php');
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
-$consulta = mysqli_query($GLOBALS['conexion'],
-'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images
-  ORDER BY image_id DESC LIMIT 9');
-  $fila = mysqli_fetch_array($consulta);
+	$consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images
+	ORDER BY image_id DESC LIMIT 9');
+	$fila = mysqli_fetch_array($consulta);
 
-  if($fila[0]>1){
+	if($fila[0]>1){
 
-    print '
-    <div style="float:right;padding-left:350px;" class="entire-content">
+		print '
+		<div style="float:right;padding-left:350px;" class="entire-content">
 
-      <div style="margin-top:-40px;"class="content-carrousel">
-
-	  ';
+		<div style="margin-top:-40px;"class="content-carrousel">';
 	  
-      $consulta = mysqli_query($GLOBALS['conexion'],
-      'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images
-      ORDER BY image_iD DESC LIMIT 9');
+		$consulta = mysqli_query($GLOBALS['conexion'],
+		'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images
+		ORDER BY image_iD DESC LIMIT 9');
       
-      while ($fila = mysqli_fetch_array($consulta)){
+		while ($fila = mysqli_fetch_array($consulta)){
     
           print '<figure style="width:4em;height:4em;"
-          class="shadow"><a title="'.$fila[3].'" href="details.php?image_id='.$fila[2].'"> <img alt="'.$fila[3].'" style="width:4em;height:4em;" 
+          class="shadow"><a title="'.$fila[3].'" href="details.php?image_id='.$fila[2].'"> <img alt="'.$fila[2].'" style="width:4em;height:4em;" 
           src="data/media/'.$fila[0].'/'.$fila[1].'"/></a></figure>';
-      }
+		}
     
-       print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  </div>
-    </div>	<h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2>  ';
-  }
-  mysqli_close($GLOBALS['conexion']);
+		
+	}
+	
+	mysqli_close($GLOBALS['conexion']);
+	print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  </div>
+		</div>	<h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2>  ';
 } 
-  print'
+
+print'
 </div>
 
 </div>';

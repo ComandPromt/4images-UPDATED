@@ -14,11 +14,7 @@ include_once('includes/funciones.php');
 <html lang="es">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="keywords" content="">
-	<meta name="robots" content="index,follow">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="revisit-after" content="10 days">
+	
 	<script src="js/funciones.js"></script>
 	<link rel="stylesheet" href="css/styles.css">
 	<link rel="stylesheet" href="css/w3.css">
