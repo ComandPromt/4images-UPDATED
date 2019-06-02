@@ -2,7 +2,11 @@
 
 session_start();
 
-include('cabecera.php');
+include_once('../config.php');
+
+include('../includes/funciones.php');
+
+cabecera('../');
 
 comprobar_cookie('../');
 

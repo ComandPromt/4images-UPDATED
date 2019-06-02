@@ -2,9 +2,15 @@
 
 session_start();
 
+$_SESSION['track']=false;
+
 $_SESSION['pagina']="member.php";
 
-include('cabecera.php');
+include_once('config.php');
+
+include('includes/funciones.php');
+
+cabecera();
 
 comprobar_cookie();
 

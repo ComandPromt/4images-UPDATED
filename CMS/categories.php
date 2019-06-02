@@ -4,7 +4,11 @@ session_start();
 
 $_SESSION['pagina']="categories.php";
 
-include('cabecera.php');
+include_once('config.php');
+
+include('includes/funciones.php');
+
+cabecera();
 
 $_GET['cat_id']=trim($_GET['cat_id']);
 	
@@ -80,7 +84,7 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 		
 			restablecer_pass();
 		}
-		mysqli_close($conexion);
+		mysqli_close($GLOBALS['conexion']);
 
 	}
 	

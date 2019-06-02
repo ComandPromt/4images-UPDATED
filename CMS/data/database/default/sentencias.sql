@@ -1,3 +1,13 @@
+
+CREATE TABLE `tbl_tracking` (
+  `id_tracking` int(11) NOT NULL,
+  `tx_pagina` varchar(70) NOT NULL DEFAULT '',
+  `tx_paginaOrigen` varchar(200) NOT NULL DEFAULT '',
+  `tx_ipRemota` varchar(15) NOT NULL DEFAULT '',
+  `tx_navegador` varchar(255) NOT NULL DEFAULT '',
+  `dt_fechaVisita` date NOT NULL 
+) DEFAULT CHARSET=utf8;
+
 CREATE TABLE `polaco` (
   `id` int(11) PRIMARY KEY AUTO_INCREMENT,
   `accion` varchar(40) NOT NULL unique,
@@ -1580,7 +1590,8 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('80',  'welcome',  'Bienvenido'),
 ('81',  'search',  'Buscar imágenes'),
 ('82',  'all',  'Ver todas las imágenes'),
-('83',  'top',  'Imágenes top');
+('83',  'top',  'Imágenes top'),
+('84',  'local',  'Red local');
 
 INSERT INTO 4images_users VALUES ('-1', '-1', 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', '0', '0', '0', '0', '','0', '0', '', '',DEFAULT);
 

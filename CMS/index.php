@@ -4,8 +4,6 @@ session_start();
 
 $_SESSION['pagina']="index.php";
 
-include ('cabecera.php');
-include_once ('includes/funciones.php');
 
 $tablas = array();
 
@@ -20,7 +18,12 @@ if (file_exists('config.php')) {
         unlink('data/database/default/sentencias.sql');
     }
 
-    include ('config.php');
+	include_once('config.php');
+
+	include_once('includes/funciones.php');
+
+cabecera('');
+
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");
     $consulta = mysqli_query($conexion, "SHOW DATABASES");

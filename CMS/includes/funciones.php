@@ -1,10 +1,199 @@
-<?php 
+<?php
+ 
+session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function is_private_ip($ip){
+
+	if($ip=='127.0.0.1'){
+		$resultado=true;
+	}
+	
+	else{
+		$resultado=!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
+	}
+     return $resultado;
+}
+
+function cabecera($ruta=""){
+
+date_default_timezone_set('Europe/Madrid');
+
+print '
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="">
+	<meta name="robots" content="index,follow">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="revisit-after" content="10 days">
+	
+	<script src="'.$ruta.'js/funciones.js"></script>
+	<link rel="stylesheet" href="'.$ruta.'css/styles.css">
+	<link rel="stylesheet" href="'.$ruta.'css/w3.css">
+	<link rel="stylesheet" href="'.$ruta.'css/bootstrap.min.css">
+    <link rel="stylesheet" href="'.$ruta.'css/jquery.scrollbar.css" />
+	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="'.$ruta.'css/css.css">
+	<link rel="stylesheet" href="'.$ruta.'css/main.css">
+	<link rel="stylesheet" href="'.$ruta.'css/style.css">
+	<link rel="stylesheet" href="'.$ruta.'css/estilos.css">
+    <link rel="stylesheet" href="'.$ruta.'css/scroll.css" />
+    <link rel="stylesheet" href="'.$ruta.'css/prettify.css" />
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/default.css" />
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/component.css" />
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estiloDelEjemplo.css">
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estilo.css">
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/scrollbar.css" />
+	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/tablas.css" />
+	<link rel="icon" type="image/ico" href="'.$ruta.'/img/favicon.ico">
+
+	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
+ 
+	<title>Web</title>
+	
+	<script>
+		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
+		var tgs = new Array( \'div\',\'td\',\'tr\');
+		
+		//Indicar el nombre de los diferentes tamaños de fuente:
+		var szs = new Array( \'xx-small\',\'x-small\',\'small\',\'medium\',\'large\',\'x-large\',\'xx-large\' );
+		var startSz = 2;
+		
+		function ts( trgt,inc ) {
+			if (!document.getElementById) return
+			
+			var d = document,cEl = null,sz = startSz,i,j,cTags;
+			
+			sz += inc;
+			
+			if ( sz < 0 ) sz = 0;
+			if ( sz > 6 ) sz = 6;
+			
+			startSz = sz;
+			
+			if ( !( cEl = d.getElementById( trgt ) ) ) cEl = d.getElementsByTagName( trgt )[ 0 ];
+			
+			cEl.style.fontSize = szs[ sz ];
+			
+			for ( i = 0 ; i < tgs.length ; i++ ) {
+				cTags = cEl.getElementsByTagName( tgs[ i ] );
+				for ( j = 0 ; j < cTags.length ; j++ ) cTags[ j ].style.fontSize = szs[ sz ];
+			}
+		}
+		
+		var captcha_reload_count = 0;
+		var captcha_image_url = "./captcha.php";
+		
+		function new_captcha_image() {
+			if (captcha_image_url.indexOf(\'?\') == -1) {
+				document.getElementById(\'captcha_image\').src= captcha_image_url+\'?c=\'+captcha_reload_count;
+				} else {
+				document.getElementById(\'captcha_image\').src= captcha_image_url+\'&c=\'+captcha_reload_count;
+				}
+		
+			document.getElementById(\'captcha_input\').value="";
+			document.getElementById(\'captcha_input\').focus();
+			captcha_reload_count++;
+		}
+				
+		if (document.layers){
+			document.captureEvents(Event.MOUSEDOWN);
+			document.onmousedown = right;
+		}
+		else if (document.all && !document.getElementById){
+			document.onmousedown = right;
+		}
+		
+		var txt = "'.$GLOBALS['site_name'].'";
+			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
+			txt=txt.toUpperCase();
+			txt=" "+txt+"  ";
+			var espera=600;
+			var refresco=null;
+		
+			function rotulo_title() {
+				document.title=txt;
+				txt=txt.substring(1,txt.length)+txt.charAt(0);
+				refresco=setTimeout("rotulo_title()",espera);
+			}
+			
+			rotulo_title();
+	
+	</script>
+	
+	<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
+
+	</head>
+<body style="zoom:90%;">
+
+<div id="navega"> 
+
+<div id="menu"> 
+
+<div id="fijo">
+
+    <a style="zoom:300%;float:left;margin-left:7px;margin-top:2px;" id="menu_usuario" onclick="w3_open();"><i style="float:left" class="fa fa-bars"></i></a>
+
+<br/>
+	
+	</div>
+	
+</div>
+
+</div>';
+
+menu_lateral($ruta);
+
+print '</div</div>
+
+</div>
+
+<div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;">';
+
+}
+
+function poner_menu_geo($ruta=""){
+	
+	$ruta2="";
+	$ruta3="";
+	
+	if($ruta=='../../'){
+		$ruta2='';
+		$ruta3='../';
+		
+	}
+	else{
+		$ruta2='geo/';
+		
+	}
+	
+	print '<div class="container" style="width:113%;margin-auto;padding-top:100px;">';
+
+print '<nav>
+    <ul>
+            <li style="padding-top:20px;"><a href="'.$ruta3.'categories.php"><img class="icono" src="'.$ruta.'img/tag.png"/></a></li>
+        <li style="padding-top:20px;"><a href="'.$ruta2.'index.php"><img class="icono" src="'.$ruta.'img/geo.png"/></a></li>
+
+		<br clear="all" />
+    </ul>
+
+</nav>';
+}
+
 function poner_menu_conf(){
 	
-	include("../config.php");
+if(file_exists('../config.php')){
+	include('../config.php');
+}
+
+if(file_exists('config.php')){
+	include('config.php');
+}	
 	
 	if(isset($_COOKIE['4images_userid'])){
 	
@@ -71,7 +260,7 @@ function comprobar_cookie($ruta=""){
 
 function saber_pass($id){
 	
-	include("../config.php");
+	comprobar_config();
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -144,18 +333,31 @@ else{
 	mysqli_close($GLOBALS['conexion']);
 }
 
-function saber_idioma($id){
+function comprobar_config(){
+	if(file_exists('../../config.php')){
+	include('../../config.php');
+	
+}
+	
+	if(file_exists('../config.php')){
+		include('../config.php');
 
-if(file_exists('../config.php')){
-	include('../config.php');
-}
-else{
+	}
+	
+	if(file_exists('config.php')){
 	include('config.php');
+	
+	}
 }
+
+function saber_idioma($id){
+	
+	comprobar_config();
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
-	
+
 	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT nacionalidad FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$id."'");
 			
 	$fila = mysqli_fetch_row($consulta);
@@ -584,12 +786,7 @@ function ver_dato($accion,$idioma){
 	
 	$dato="";
 	
-	if(file_exists('../config.php')){
-		include('../config.php');
-	}
-	else{
-		include('config.php');
-	}
+	comprobar_config();
 
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -609,6 +806,30 @@ function ver_dato($accion,$idioma){
 }
 
 function menu_lateral($ruta = ""){
+	
+	if(!isset($_SESSION['track']) || $_SESSION['track']){
+	
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+	
+		$tx_pagina              = $_SERVER['REQUEST_URI']; 
+		$tx_paginaOrigen        = $_SERVER['HTTP_REFERER'];
+		$tx_paginaActual        =   $_SERVER['PHP_SELF']; 
+		$i_direccionIp      = $_SERVER['REMOTE_ADDR'];   
+		$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
+		
+		if(strlen($i_direccionIp)<12){
+			$i_direccionIp='127.0.0.1';
+		}
+		
+		mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
+		tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita) 
+		VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now()) ;");
+		
+		mysqli_close($GLOBALS['conexion']);
+	
+	}
 	
 	if(isset($_COOKIE['4images_userid'])){
 	
@@ -669,6 +890,7 @@ print '
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
+		
 			$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 		$fila = mysqli_fetch_row($consulta);
 		
@@ -765,7 +987,7 @@ $redes_sociales='';
 		<hr/>';
 	 }        	     
 
-if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
+if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
 	
 	$vars = get_defined_vars();  
 
@@ -791,7 +1013,7 @@ if($_COOKIE['4images_userid']>=0 && file_exists('config.php')){
 }
 
 print '
- <br/> <a title="rss" href="'.$ruta.'rss.php?action=images"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
+ <br/> <a title="rss" href="'.$ruta.'rss.php"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 <br/><br/><br/><br/><br/><br/><br/>
 </div>
 </nav>';

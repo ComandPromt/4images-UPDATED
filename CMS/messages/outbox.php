@@ -1,5 +1,14 @@
 <?php
-include('../upload_images/cabecera.php');
+
+session_start();
+
+$_SESSION['track']=true;
+
+include_once('../config.php');
+
+include('../includes/funciones.php');
+
+cabecera('../');
 
 if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
 	redireccionar('../index.php');

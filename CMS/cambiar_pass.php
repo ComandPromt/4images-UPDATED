@@ -4,7 +4,11 @@ session_start();
 
 $_SESSION['pagina']="member.php";
 
-include('cabecera.php');
+include_once('config.php');
+
+include('includes/funciones.php');
+
+cabecera();
 
 if(isset($_COOKIE['4images_userid'])){
 	

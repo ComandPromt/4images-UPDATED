@@ -1,7 +1,8 @@
 <?php
 
 include('config.php');
-
+include('includes/funciones.php');
+comprobar_cookie();
 $_GET['image_id']=(int)$_GET['image_id'];
 
 if(isset($_GET['action']) && $_GET['image_id']>0 && ($_GET['action']=='guardar' || $_GET['action']=='eliminar') ){

@@ -1,6 +1,16 @@
 <?php
 
-include('../upload_images/cabecera.php');
+session_start();
+
+$_SESSION['track']=true;
+
+include_once('../config.php');
+
+include('../includes/funciones.php');
+
+cabecera('../');
+
+comprobar_cookie('../');
 
 if(isset($_COOKIE['4images_userid'])){
 	
@@ -10,8 +20,6 @@ if(isset($_COOKIE['4images_userid'])){
 		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 	}
 }
-
-comprobar_cookie('../');
 
 if(isset($_POST['enviar'])){
 		
@@ -34,9 +42,7 @@ if(isset($_POST['enviar'])){
 		VALUES ('".$_POST['nombre']."','".$_POST['descripcion']."','".$_POST['categoria']."','0','0','0','0','0','0','0','0','0')");
 	
 	}
-	
-
-	
+		
 	mysqli_close($GLOBALS['conexion']);
 	
 	mensaje(ver_dato('cat_success', $GLOBALS['idioma']));
@@ -44,17 +50,7 @@ if(isset($_POST['enviar'])){
 
 poner_menu('../');
 
-print '<div class="container" style="width:113%;margin-auto;padding-top:100px;">';
-
-print '<nav>
-    <ul>
-            <li style="padding-top:20px;"><a href="categories.php"><img class="icono" src="../img/tag.png"/></a></li>
-        <li style="padding-top:20px;"><a href="geo.php"><img class="icono" src="../img/geo.png"/></a></li>
-
-		<br clear="all" />
-    </ul>
-
-</nav>';
+poner_menu_geo('../');
 
 print '
 <form method="post" action="'.$_SERVER['PHP_SELF'].'">
