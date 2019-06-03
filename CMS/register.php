@@ -8,11 +8,11 @@ include ('cabecera.php');
 
 if(isset($_COOKIE['4images_userid'])){
 	
-			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
 	
-			if($_COOKIE['4images_userid']>0){
-				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
-			}
+	if($_COOKIE['4images_userid']>0){
+		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+	}
 }
 
 $SESSION['error'] = false;
@@ -37,8 +37,8 @@ if (isset($_POST['submit'])) {
 			
 			include('config.php');
 			
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 		
             $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
                 $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['user_name'] .
@@ -70,7 +70,6 @@ if (isset($_POST['submit'])) {
             }
         }
     }
-    
 }
 
 if (!$terminado && (isset($_POST['envio']))) {
@@ -78,78 +77,103 @@ if (!$terminado && (isset($_POST['envio']))) {
     $SESSION['licencia'] = false;
 
     echo '<h1 style="padding-left:60px;" class="titulo"><br/>' . ver_dato('register_msg',
-        $GLOBALS['idioma']) . '</h1><br/>
+        $GLOBALS['idioma']) . '</h1>
+		
+		<br/>
+		
 	<form  style="padding-left:60px;" method="post" action="' . $_SERVER['PHP_SELF'] . '">
 
 					<div class="row1 texto"><img alt="usuario para registrar"
 					class="icono2" src="img/user.png"/>
 
 					    <input required title="user name" type="text" id="user_name"
-						name="user_name" size="30" placeholder="' . ver_dato('user_name',
-        $GLOBALS['idioma']) . '" class="input" />
+						name="user_name" size="30" 
+						placeholder="' . ver_dato('user_name',$GLOBALS['idioma']) . '" class="input" />
+						
                         <br/>
+						
 					</div>
 
-					<div class="row2 texto"><img alt="user password" class="icono2"
-					src="img/key.png"/>
+					<div class="row2 texto">
+					
+						<img alt="user password" class="icono2"	src="img/key.png"/>
 
 					    <input required  title="user password" type="password"
 						class="input" id="user_password"  name="user_password" size="30"
 						placeholder="' . ver_dato('password', $GLOBALS['idioma']) . '"  />
+						
                         <br/>
+						
 				    </div>
 
 					<div class="row1 texto">
 
-<hr/>
-
-<input name="pais" value="spanish" type="radio" checked="checked" ><img src="images/icons/1.png"/>
-<input name="pais" value="aleman" type="radio"><img src="images/icons/2.png"/>
-<input name="pais" value="ingles" type="radio"><img src="images/icons/3.png"/>
-<input name="pais" value="frances" type="radio"><img src="images/icons/4.png"/>
-<input name="pais" value="ruso" type="radio"><img src="images/icons/5.png"/>
-<input name="pais" value="italiano" type="radio"><img src="images/icons/6.png"/><br/><br/>
-<input name="pais" value="portuges" type="radio"><img src="images/icons/7.png"/>
-<input name="pais" value="chino" type="radio"><img src="images/icons/8.png"/>
-<input name="pais" value="hindu" type="radio"><img src="images/icons/9.png"/>
-<input name="pais" value="japones" type="radio"><img src="images/icons/10.png"/>
-<input name="pais" value="catalan" type="radio"><img src="images/icons/11.png"/>
-<input name="pais" value="bengali" type="radio"><img src="images/icons/12.png"/><br/><br/>
-<input name="pais" value="arabe" type="radio"><img src="images/icons/13.png"/>
-<input name="pais" value="euskera" type="radio"><img src="images/icons/14.png"/><br/>
-			 <hr/><br/>
- 			<img  alt="user_email" class="icono2" src="img/email.png"/>
-					<span id="palabra2" onmouseover="mostrarTooltip(this,\'' .
-    ver_dato('nota_email', $GLOBALS['idioma']) . '\');"/>*</span>
-					    <input type="email" title="user email" id="email" name="email"
+						<hr/>
+						
+						<input name="pais" value="spanish" type="radio" checked="checked"/><img src="images/icons/1.png"/>
+						<input name="pais" value="aleman" type="radio"/><img src="images/icons/2.png"/>
+						<input name="pais" value="ingles" type="radio"/><img src="images/icons/3.png"/>
+						<input name="pais" value="frances" type="radio"/><img src="images/icons/4.png"/>
+						<input name="pais" value="ruso" type="radio"/><img src="images/icons/5.png"/>
+						<input name="pais" value="italiano" type="radio"/><img src="images/icons/6.png"/><br/><br/>
+						<input name="pais" value="portuges" type="radio"/><img src="images/icons/7.png"/>
+						<input name="pais" value="chino" type="radio"/><img src="images/icons/8.png"/>
+						<input name="pais" value="hindu" type="radio"/><img src="images/icons/9.png"/>
+						<input name="pais" value="japones" type="radio"/><img src="images/icons/10.png"/>
+						<input name="pais" value="catalan" type="radio"/><img src="images/icons/11.png"/>
+						<input name="pais" value="bengali" type="radio"/><img src="images/icons/12.png"/><br/><br/>
+						<input name="pais" value="arabe" type="radio"/><img src="images/icons/13.png"/>
+						<input name="pais" value="euskera" type="radio"/><img src="images/icons/14.png"/>
+						<input name="pais" value="coreano" type="radio"/><img src="images/icons/15.png"/>
+						<input name="pais" value="vietnamita" type="radio"/><img src="images/icons/16.png"/><br/>
+						
+						<hr/><br/>
+			 
+						<img  alt="user_email" class="icono2" src="img/email.png"/>
+			
+						<span id="palabra2" onmouseover="mostrarTooltip(this,\'' .
+						ver_dato('nota_email', $GLOBALS['idioma']) . '\');"/>*</span>
+					
+						<input type="email" title="user email" id="email" name="email"
 						value="' . $SESSION['email'] . '
 	                    " required pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" name="user_email" size="30" class="input"
 						placeholder="' . ver_dato('email', $GLOBALS['idioma']) . '" />
-                        <br/>
+						
+						<br/>
+						
 				    </div>
 
 					<div class="row1 texto">
+					
 						<img alt="captcha" id="captcha" src="captcha/captcha.php"/>';?>
+						
 						<a  class="texto nota" href="#" onclick="
 			            document.getElementById('captcha').src='captcha/captcha.php?'+
 						Math.random();
 			            document.getElementById('captcha-form').focus();"
-			            id="change-image"><img alt="reload captcha" class="icono2"
-						src="img/reload.png"/></a><br/><br/>
+			            id="change-image">
+							<img alt="reload captcha" class="icono2" src="img/reload.png"/>
+						</a>
+						
+						<br/>
+						<br/>
 <?php
+
 echo '<input type="text" title="captcha" required  id="validcaptcha"
 			name="captcha" size="30" value="" class="input" id="captcha_input"
 			placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/>
+			
 						<br/>
 						</div>
 
 				<input title="register" type="hidden" name="action" value="register" />
 
 				<input title="submit" name="submit" type="submit" value="' .
-    ver_dato('submit', $GLOBALS['idioma']) . '"/>
+				ver_dato('submit', $GLOBALS['idioma']) . '"/>
+				
 				<br/><br/>
-				<input title="reset" type="reset" value="' . ver_dato('reset',
-        $GLOBALS['idioma']) . '"/>
+				
+				<input title="reset" type="reset" value="' . ver_dato('reset',$GLOBALS['idioma']) . '"/> 
 	        </form>';
 }
 
@@ -157,19 +181,23 @@ if (!$terminado && $SESSION['licencia']) {
 
     $SESSION['licencia'] = false;
 
-    echo '<div  class="demo ">
+    echo '<div  class="demo">
+	
 	<div class="titulo scrollbar-vista">
-	<br/><h3 class="cabecera" style="margin:auto;height:50px;padding-left:30px;" >' .
-
-    ver_dato('agreement', $GLOBALS['idioma']) . '</h3>
-	<div style="height:350px;width:70%;"><hr/>	<h2  style="text-align:center;
-	padding-bottom:10px;" class="texto">' . ver_dato('agreement_terms',
-        $GLOBALS['idioma']) . '</h2></div>
+	
+		<br/><h3 class="cabecera" style="margin:auto;height:50px;padding-left:30px;" >' .
+	
+		ver_dato('agreement', $GLOBALS['idioma']) . '</h3>
+		
+		<div style="height:350px;width:70%;">
+			<hr/> <h2  style="text-align:center;padding-bottom:10px;" class="texto">'
+			. ver_dato('agreement_terms',$GLOBALS['idioma']) . '</h2>
+		</div>
     </div>';
 
     echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
 
-    echo '<input style="margin-top:25px;" title="submit" name="envio" value="' .
+    echo '<input style="margin-top:25px;" title="submit" name="envio" value="'.
     ver_dato('ok', $GLOBALS['idioma']) . '" type="submit"/>';
 
     echo '</form></div></div>';

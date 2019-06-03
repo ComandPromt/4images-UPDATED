@@ -106,8 +106,8 @@ if(file_exists('config.php')){
 	}
 	
 	mysqli_close($GLOBALS['conexion']);
-    print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  </div>
-    <h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2>
+    print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  <h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2> </div>
+   
 		</div>	  ';
 } 
 
