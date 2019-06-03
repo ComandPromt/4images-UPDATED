@@ -2,6 +2,8 @@
 
 session_start();
 
+include_once('includes/funciones.php');
+	
 $_SESSION['pagina']="index.php";
 
 $_SESSION['track']=true;
@@ -21,7 +23,7 @@ if (file_exists('config.php')) {
 
 	include_once('config.php');
 
-	include_once('includes/funciones.php');
+
 	
 
 cabecera('');
