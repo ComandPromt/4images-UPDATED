@@ -105,16 +105,17 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		<div class="container">
 		
-		<img id='.$image_id.' alt="'.$recuento[0].'" src="data/media/'.$categoria.'/'.$imagen.'" class="image">
+			<img  style="height: 100%;
+			width: auto;" id='.$image_id.' alt="'.$recuento[0].'" src="data/media/'.$categoria.'/'.$imagen.'" />
+			
+			<div class="overlay">';
+			
+			if(!empty($recuento[3])){
+				print '<h3 style="font-size:20px;margin-top:10px;text-align:center;background-color:#008CBA;color:#ffffff;font-weight:bold;">'.$recuento[3].'</h3>';
+			}
 		
-		<div class="overlay">';
-		
-		if(!empty($recuento[3])){
-			print '<h3 style="font-size:20px;margin-top:10px;text-align:center;background-color:#008CBA;color:#ffffff;font-weight:bold;">'.$recuento[3].'</h3>';
-		}
-	
-		print '
-		</div>
+			print '
+			</div>
 	
 		</div>';
 	

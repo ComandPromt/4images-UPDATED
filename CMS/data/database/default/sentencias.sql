@@ -321,7 +321,14 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('73',  'geo',  'Geolokalizacja'),
 ('74',  'cat_success',  'Kategoria została poprawnie wstawiona'),
 ('75',  'cambiar_idioma',  'Zmień język'),
-('76',  'asunto',  'Temat');
+('76',  'asunto',  'Temat'),
+('77',  'adm',  'Administrator'),
+('78',  'new_img',  'Nowe zdjęcia'),
+('79',  'home',  'Dom'),
+('80',  'welcome',  'Witamy'),
+('81',  'search',  'Szukaj zdjęć'),
+('82',  'all',  'Zobacz wszystkie obrazy'),
+('83',  'top',  'Obrazy na górze');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -399,7 +406,14 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('73',  'geo',  '지리적 위치'),
 ('74',  'cat_success',  '카테고리가 올바르게 삽입되었습니다.'),
 ('75',  'cambiar_idioma',  '언어 변경'),
-('76',  'asunto',  '제목');
+('76',  'asunto',  '제목'),
+('77',  'adm',  '관리자'),
+('78',  'new_img',  '새 이미지'),
+('79',  'home',  '홈'),
+('80',  'welcome',  '환영합니다.'),
+('81',  'search',  '이미지 검색'),
+('82',  'all',  '모든 이미지보기'),
+('83',  'top',  '이미지 상단');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -477,7 +491,14 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('73',  'geo',  'Định vị địa lý'),
 ('74',  'cat_success',  'Thể loại được chèn chính xác'),
 ('75',  'cambiar_idioma',  'Thay đổi ngôn ngữ'),
-('76',  'asunto',  'Môn học');
+('76',  'asunto',  'Môn học'),
+('77',  'adm',  'Quản trị viên'),
+('78',  'new_img',  'Hình ảnh mới'),
+('79',  'home',  'Trang chủ'),
+('80',  'welcome',  'Chào mừng bạn'),
+('81',  'search',  'Tìm kiếm hình ảnh'),
+('82',  'all',  'Xem tất cả hình ảnh'),
+('83',  'top',  'Hình ảnh hàng đầu');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -555,7 +576,14 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocation'),
 ('74',  'cat_success',  'Kategorie richtig eingefügt'),
 ('75',  'cambiar_idioma',  'Sprache wechseln'),
-('76',  'asunto',  'Betreff');
+('76',  'asunto',  'Betreff'),
+('77',  'adm',  'Administrator'),
+('78',  'new_img',  'Neue Bilder'),
+('79',  'home',  'Zuhause'),
+('80',  'welcome',  'Herzlich willkommen'),
+('81',  'search',  'Bilder suchen'),
+('82',  'all',  'Alle Bilder anzeigen'),
+('83',  'top',  'Bilder oben');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -633,7 +661,14 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('73',  'geo',  'تحديد الموقع الجغرافي'),
 ('74',  'cat_success',  'تم إدراج الفئة بشكل صحيح'),
 ('75',  'cambiar_idioma',  'تغيير اللغة'),
-('76',  'asunto',  'عمل');
+('76',  'asunto',  'عمل'),
+('77',  'adm',  'مدير'),
+('78',  'new_img',  'صور جديدة'),
+('79',  'home',  'البدء'),
+('80',  'welcome',  'ترحيب'),
+('81',  'search',  'بحث الصور'),
+('82',  'all',  'شاهد كل الصور'),
+('83',  'top',  'صور أعلى');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -711,7 +746,14 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('73',  'geo',  'ভূ'),
 ('74',  'cat_success',  'বিভাগ সঠিকভাবে সন্নিবেশ করা হয়েছে'),
 ('75',  'cambiar_idioma',  'ভাষা পরিবর্তন করুন'),
-('76',  'asunto',  'ব্যবসায়');
+('76',  'asunto',  'ব্যবসায়'),
+('77',  'adm',  'প্রশাসক'),
+('78',  'new_img',  'নতুন ছবি'),
+('79',  'home',  'দীক্ষা'),
+('80',  'welcome',  'স্বাগত'),
+('81',  'search',  'ছবি অনুসন্ধান করুন'),
+('82',  'all',  'সব ছবি দেখুন'),
+('83',  'top',  'ছবি শীর্ষ');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -789,7 +831,14 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocalització'),
 ('74',  'cat_success',  'Categoria inserida correctament'),
 ('75',  'cambiar_idioma',  'Canviar idioma'),
-('76',  'asunto',  'Assumpte');
+('76',  'asunto',  'Assumpte'),
+('77',  'adm',  'Administrador'),
+('78',  'new_img',  'Noves imatges'),
+('79',  'home',  'Inici'),
+('80',  'welcome',  'Benvingut'),
+('81',  'search',  'Buscar imatges'),
+('82',  'all',  'Veure totes les imatges'),
+('83',  'top',  'Imatges top');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -867,7 +916,14 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('73',  'geo',  '地理位置'),
 ('74',  'cat_success',  '類別正確插入'),
 ('75',  'cambiar_idioma',  '改變語言'),
-('76',  'asunto',  '業務');
+('76',  'asunto',  '業務'),
+('77',  'adm',  '管理員'),
+('78',  'new_img',  '新圖片'),
+('79',  'home',  '引發'),
+('80',  'welcome',  '歡迎'),
+('81',  'search',  '搜索圖片'),
+('82',  'all',  '查看所有圖片'),
+('83',  'top',  '圖片頂部');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -945,7 +1001,14 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('73',  'geo',  'Geokokapena'),
 ('74',  'cat_success',  'Kategoria behar bezala sartu da'),
 ('75',  'cambiar_idioma',  'Aldatu hizkuntza'),
-('76',  'asunto',  'Negozio');
+('76',  'asunto',  'Negozio'),
+('77',  'adm',  'Administrator'),
+('78',  'new_img',  'Irudi berriak'),
+('79',  'home',  'hastapen'),
+('80',  'welcome',  'Ongietorri'),
+('81',  'search',  'Bilatu irudiak'),
+('82',  'all',  'Ver todas las imágenes'),
+('83',  'top',  'Irudi goian');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1023,7 +1086,14 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('73',  'geo',  'Géolocalisation'),
 ('74',  'cat_success',  'Catégorie insérée correctement'),
 ('75',  'cambiar_idioma',  'Changer la langue'),
-('76',  'asunto',  'Sujet');
+('76',  'asunto',  'Sujet'),
+('77',  'adm',  'Administrateur'),
+('78',  'new_img',  'Nouvelles images'),
+('79',  'home',  'Accueil'),
+('80',  'welcome',  'Bienvenue'),
+('81',  'search',  'Rechercher des images'),
+('82',  'all',  'Voir toutes les images'),
+('83',  'top',  'Images haut');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1101,7 +1171,14 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('73',  'geo',  'जियोलोकेशन'),
 ('74',  'cat_success',  'श्रेणी सही ढंग से सम्मिलित की गई'),
 ('75',  'cambiar_idioma',  'भाषा बदलें'),
-('76',  'asunto',  'व्यापार');
+('76',  'asunto',  'व्यापार'),
+('77',  'adm',  'प्रशासक'),
+('78',  'new_img',  'नई छवियों'),
+('79',  'home',  'दीक्षा'),
+('80',  'welcome',  'स्वागत'),
+('81',  'search',  'छवियों को खोजें'),
+('82',  'all',  'सभी चित्र देखें'),
+('83',  'top',  'छवियाँ शीर्ष');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1179,7 +1256,14 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocation'),
 ('74',  'cat_success',  'Category inserted correctly'),
 ('75',  'cambiar_idioma',  'Change language'),
-('76',  'asunto',  'Affair');
+('76',  'asunto',  'Affair'),
+('77',  'adm',  'Administrator'),
+('78',  'new_img',  'New images'),
+('79',  'home',  'Home'),
+('80',  'welcome',  'Welcome'),
+('81',  'search',  'Search images'),
+('82',  'all',  'See all images'),
+('83',  'top',  'Top images');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1194,7 +1278,7 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('10', 'email', 'posta'),
 ('11', 'submit', 'inviare'),
 ('12', 'reset', 'pulito'),
-('13', 'agreement_terms', 'Accetti che gli amministratori di questo sito web abbiano il potere di tentare di rimuovere o modificare qualsiasi materiale che possa essere contestabile nel più breve tempo possibile. Accetti che tutti i messaggi pubblicati su questo sito esprimano opinioni e opinioni dei loro autori, non siano opinioni o opinioni di amministratori, moderatori o webmaster (ad eccezione di quelli creati espressamente da queste ultime persone) e quindi, Non possono essere responsabili per le opinioni pubblicate dai visitatori. <br/> <br/> Accetti di non pubblicare alcun contenuto abusivo, osceno, volgare, scandaloso, offensivo, minaccioso, diffamatorio, sessuale o pornografico o qualsiasi altro materiale che possa violare le leggi in vigore. Accetti che il webmaster e l'amministratore di questo sito abbiano il diritto di eliminare o modificare qualsiasi argomento nel momento in cui lo ritieni opportuno. Come utente, accetti che tutti i dati che fornisci vengano archiviati in un database. Queste informazioni non saranno divulgate a terze parti senza il tuo consenso. Il webmaster e l'amministratore non possono essere responsabili per tentativi di accesso o attacchi che potrebbero compromettere i loro dati. <br /> <br /> Questo sistema utilizza i cookie per memorizzare le informazioni sul tuo computer. Questi cookie non contengono informazioni personali, servono solo a rendere più piacevole la tua esperienza di navigazione su questo sito. <br/> <br/> Cliccando su Accetto accetti tutte queste condizioni.'),
+('13', 'agreement_terms', 'Accetti che gli amministratori di questo sito web abbiano il potere di tentare di rimuovere o modificare qualsiasi materiale che possa essere contestabile nel più breve tempo possibile. Accetti che tutti i messaggi pubblicati su questo sito esprimano opinioni e opinioni dei loro autori, non siano opinioni o opinioni di amministratori, moderatori o webmaster (ad eccezione di quelli creati espressamente da queste ultime persone) e quindi, Non possono essere responsabili per le opinioni pubblicate dai visitatori. <br/> <br/> Accetti di non pubblicare alcun contenuto abusivo, osceno, volgare, scandaloso, offensivo, minaccioso, diffamatorio, sessuale o pornografico o qualsiasi altro materiale che possa violare le leggi in vigore. Accetti che il webmaster e le amministratore di questo sito abbiano il diritto di eliminare o modificare qualsiasi argomento nel momento in cui lo ritieni opportuno. Come utente, accetti che tutti i dati che fornisci vengano archiviati in un database. Queste informazioni non saranno divulgate a terze parti senza il tuo consenso. Il webmaster e le amministratore non possono essere responsabili per tentativi di accesso o attacchi che potrebbero compromettere i loro dati. <br /> <br /> Questo sistema utilizza i cookie per memorizzare le informazioni sul tuo computer. Questi cookie non contengono informazioni personali, servono solo a rendere più piacevole la tua esperienza di navigazione su questo sito. <br/> <br/> Cliccando su Accetto accetti tutte queste condizioni.'),
 ('14', 'captcha', 'Captcha'),
 ('15', 'ok', 'bene'),
 ('16', 'recordar', 'Ricorda la password'),
@@ -1257,7 +1341,14 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('73',  'geo',  'Geolocalizzazione'),
 ('74',  'cat_success',  'Categoria inserita correttamente'),
 ('75',  'cambiar_idioma',  'Cambia lingua'),
-('76',  'asunto',  'Affari');
+('76',  'asunto',  'Affari'),
+('77',  'adm',  'Amministratore'),
+('78',  'new_img',  'Nuove immagini'),
+('79',  'home',  'Iniziazione'),
+('80',  'welcome',  'benvenuto'),
+('81',  'search',  'Cerca immagini'),
+('82',  'all',  'Vedi tutte le immagini'),
+('83',  'top',  'Le immagini in alto');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1335,7 +1426,14 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('73',  'geo',  '地理位置情報'),
 ('74',  'cat_success',  'カテゴリが正しく挿入されました'),
 ('75',  'cambiar_idioma',  '言語を変更する'),
-('76',  'asunto',  '件名');
+('76',  'asunto',  '件名'),
+('77',  'adm',  '管理者'),
+('78',  'new_img',  '新しい画像'),
+('79',  'home',  'ホーム'),
+('80',  'welcome',  'ようこそ'),
+('81',  'search',  '画像を検索する'),
+('82',  'all',  'すべての画像を見る'),
+('83',  'top',  '画像トップ');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1415,12 +1513,12 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('75',  'cambiar_idioma',  'Alterar idioma'),
 ('76',  'asunto',  'Assunto'),
 ('77',  'adm',  'Administrador'),
-('78',  'new_img',  'Nuevas imágenes'),
-('79',  'home',  'Inicio'),
-('80',  'welcome',  'Bienvenido'),
-('81',  'search',  'Buscar imágenes'),
-('82',  'all',  'Ver todas las imágenes'),
-('83',  'top',  'Imágenes top');
+('78',  'new_img',  'Novas imagens'),
+('79',  'home',  'Home'),
+('80',  'welcome',  'Bem vindo'),
+('81',  'search',  'Pesquisar imagens'),
+('82',  'all',  'Ver todas as imagens'),
+('83',  'top',  'Imagens top');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1590,8 +1688,7 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('80',  'welcome',  'Bienvenido'),
 ('81',  'search',  'Buscar imágenes'),
 ('82',  'all',  'Ver todas las imágenes'),
-('83',  'top',  'Imágenes top'),
-('84',  'local',  'Red local');
+('83',  'top',  'Imágenes top');
 
 INSERT INTO 4images_users VALUES ('-1', '-1', 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', '0', '0', '0', '0', '','0', '0', '', '',DEFAULT);
 

@@ -905,7 +905,7 @@ print '
 		}
 		
 		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
-	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="font-size:24px;">'.$fila[0].'</span>
+	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="margin-left:-10px;font-size:1.5em;">'.$fila[0].'</span>
        <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
@@ -927,7 +927,7 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 if($imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	
 	print '
-	<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
+	<img alt="aleatorio" style="margin-left:10px;height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
 	<br/><br/>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
@@ -1115,7 +1115,7 @@ function poner_menu($ruta = ""){
 			
 				print '
 				<li  class="menu_categorias">
-				<a style="color:#ffffff;background-color:green;font-size:1em;font-weight:bold;" href="#">'.$fila[0].'</a>';
+				<a style="color:#ffffff;background-color:green;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
 				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
@@ -1125,13 +1125,13 @@ function poner_menu($ruta = ""){
 					if($y==1){
 						print '<ul style="margin-top:10px;" class="dl-submenu">';
 						print '<li style="first-child:margin-top:15px;">
-						<a style="margin-top:20px;font-size:2em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
+						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
 					else{
 						print '<li>
-						<a style="font-size:2em;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
+						<a style="font-size:0.7;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
@@ -1148,7 +1148,7 @@ function poner_menu($ruta = ""){
 
 				print '
 				<li class="menu_categorias menu">
-				<a style="color:#ffffff;background-color:blue;font-size:1em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+				<a style="color:#ffffff;background-color:blue;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		
 			print '		</ul>

@@ -26,10 +26,11 @@ poner_menu('../../');
 poner_menu_geo('../../');
 
 print '<table style="margin:auto;text-align:center;">
+
 		<tr>
-			<th>Pagina</th>
-			<th>Localizaci&oacute;n</th>
-			<th>Ciudad</th>
+			<th style="font-size:25px;">Pagina</th>
+			<th style="font-size:25px;">Localizaci&oacute;n</th>
+			<th style="font-size:25px;">Ciudad</th>
 		</tr>';
 		
 	$country="";
@@ -49,53 +50,50 @@ print '<table style="margin:auto;text-align:center;">
 	$i_direccionIp      = $_SERVER['REMOTE_ADDR'];   
 	$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
 	
-	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT tx_pagina,tx_ipRemota FROM tbl_tracking WHERE dt_fechaVisita=DATE(NOW())");
+	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT distinct(tx_ipRemota),tx_pagina FROM tbl_tracking WHERE dt_fechaVisita=DATE(NOW()) LIMIT 100");
 	
 	$x=1;
 	
 	while($fila = mysqli_fetch_row($consulta)){
 
-		if($fila[1]!='127.0.0.1' || !is_private_ip($fila[1])){
+		if( !is_private_ip($fila[0])){
 
-			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$fila[1]));
+			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$fila[0]));
 			
 			$region=$geo->region;
 			
 			switch($geo->country){
 			
-			case 'Spain':
-			$country ="es";
-			break;
-		
-			case 'France':
-			$country ="fr";
-			break;
+				case 'Spain':
+				$country ="es";
+				break;
 			
-			case 'Germany':
-			$country ="de";
-			break;
-			
-			case 'United States':
-			$country ="us";
-			break;
-			
-			case 'Norway':
-			$country ="no";
-			break;
-			
-			case 'Belgium':
-			$country ="be";
-			break;
-			
+				case 'France':
+				$country ="fr";
+				break;
+				
+				case 'Germany':
+				$country ="de";
+				break;
+				
+				case 'United States':
+				$country ="us";
+				break;
+				
+				case 'Norway':
+				$country ="no";
+				break;
+				
+				case 'Belgium':
+				$country ="be";
+				break;
+				
+				case 'Ukraine':
+				$country ="uk";
+				break;
 			}
-		}
-		
-		else{
-			$country=$local;
-			$region=$local;
-		}
-
-		switch(substr($fila[0],strrpos($fila[0], "/")+1,strlen($fila[0]))){
+			
+		switch(substr($fila[1],strrpos($fila[1], "/")+1,strlen($fila[1]))){
 			
 			case 'index.php':
 			$procedencia='home';
@@ -121,17 +119,8 @@ print '<table style="margin:auto;text-align:center;">
 
 		print '<tr><td style="font-size:20px;">';
 		
-		if($procedencia=='view'){
-			print '<a target="_blank" href="'.$fila[0].'">
-			<img class="icono" src="../../img/'.$procedencia.'.png"/></a></td>
-			<td><span>'.$country.'</span></td>
-			<td style="font-size:20px;"><span>'.$region.'</span></td></tr>';
-
-		}
-		
-		else{
-			
-			print '<a target="_blank" href="'.$fila[0].'"/>
+	
+			print '<a target="_blank" href="'.$fila[1].'"/>
 			<img class="icono" src="../../img/'.$procedencia.'.png"/></td>';
 			
 			if($country!='local'){
@@ -142,10 +131,15 @@ print '<table style="margin:auto;text-align:center;">
 				print '<td><span>'.$country.'</span></td>';
 			}
 			
+			if($region==""){
+				$region=$fila[0];
+			}
+			
 			print '<td style="font-size:20px;">'.$region.'</td></tr>';
+				
+			$x++;	
 		}
 		
-		$x++;
 	}
 	
 	print '</table>';
