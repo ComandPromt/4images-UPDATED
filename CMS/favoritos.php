@@ -12,7 +12,7 @@ cabecera();
 
 		poner_menu();
 			
-			print '<div style="padding-top:100px;margin:auto;padding-left:40px;"><h1>Imágenes favoritas</h1></div>';
+			print '<div style="padding-top:100px;margin:auto;padding-left:40px;"><h1>'.ver_dato('img_fav', $GLOBALS['idioma']).'</h1></div>';
 			
 		ver_categoria('*','WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix'].'lightboxes WHERE user_id='.$_COOKIE['4images_userid'].')');
 

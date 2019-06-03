@@ -328,7 +328,10 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('80',  'welcome',  'Witamy'),
 ('81',  'search',  'Szukaj zdjęć'),
 ('82',  'all',  'Zobacz wszystkie obrazy'),
-('83',  'top',  'Obrazy na górze');
+('83',  'top',  'Obrazy na górze'),
+('84',  'page',  'Strona'),
+('85',  'pais',  'Kraj'),
+('86',  'city',  'Miasto');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -413,7 +416,10 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('80',  'welcome',  '환영합니다.'),
 ('81',  'search',  '이미지 검색'),
 ('82',  'all',  '모든 이미지보기'),
-('83',  'top',  '이미지 상단');
+('83',  'top',  '이미지 상단'),
+('84',  'page',  '페이지'),
+('85',  'pais',  '국가'),
+('86',  'city',  '도시');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -498,7 +504,10 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('80',  'welcome',  'Chào mừng bạn'),
 ('81',  'search',  'Tìm kiếm hình ảnh'),
 ('82',  'all',  'Xem tất cả hình ảnh'),
-('83',  'top',  'Hình ảnh hàng đầu');
+('83',  'top',  'Hình ảnh hàng đầu'),
+('84',  'page',  'Trang'),
+('85',  'pais',  'Đất nước'),
+('86',  'city',  'Thành phố');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -583,7 +592,10 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('80',  'welcome',  'Herzlich willkommen'),
 ('81',  'search',  'Bilder suchen'),
 ('82',  'all',  'Alle Bilder anzeigen'),
-('83',  'top',  'Bilder oben');
+('83',  'top',  'Bilder oben'),
+('84',  'page',  'Seite'),
+('85',  'pais',  'Land'),
+('86',  'city',  'Stadt');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -668,7 +680,10 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('80',  'welcome',  'ترحيب'),
 ('81',  'search',  'بحث الصور'),
 ('82',  'all',  'شاهد كل الصور'),
-('83',  'top',  'صور أعلى');
+('83',  'top',  'صور أعلى'),
+('84',  'page',  'صفحة'),
+('85',  'pais',  'بلد'),
+('86',  'city',  'مدينة');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -753,7 +768,10 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('80',  'welcome',  'স্বাগত'),
 ('81',  'search',  'ছবি অনুসন্ধান করুন'),
 ('82',  'all',  'সব ছবি দেখুন'),
-('83',  'top',  'ছবি শীর্ষ');
+('83',  'top',  'ছবি শীর্ষ'),
+('84',  'page',  'পৃষ্ঠা'),
+('85',  'pais',  'দেশ'),
+('86',  'city',  'শহর');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -838,7 +856,10 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('80',  'welcome',  'Benvingut'),
 ('81',  'search',  'Buscar imatges'),
 ('82',  'all',  'Veure totes les imatges'),
-('83',  'top',  'Imatges top');
+('83',  'top',  'Imatges top'),
+('84',  'page',  'Pàgina'),
+('85',  'pais',  'País'),
+('86',  'city',  'Ciutat');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -923,7 +944,10 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('80',  'welcome',  '歡迎'),
 ('81',  'search',  '搜索圖片'),
 ('82',  'all',  '查看所有圖片'),
-('83',  'top',  '圖片頂部');
+('83',  'top',  '圖片頂部'),
+('84',  'page',  '頁'),
+('85',  'pais',  '國家'),
+('86',  'city',  '城市');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1008,7 +1032,10 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('80',  'welcome',  'Ongietorri'),
 ('81',  'search',  'Bilatu irudiak'),
 ('82',  'all',  'Ver todas las imágenes'),
-('83',  'top',  'Irudi goian');
+('83',  'top',  'Irudi goian'),
+('84',  'page',  'orri'),
+('85',  'pais',  'country'),
+('86',  'city',  'city');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1093,7 +1120,10 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('80',  'welcome',  'Bienvenue'),
 ('81',  'search',  'Rechercher des images'),
 ('82',  'all',  'Voir toutes les images'),
-('83',  'top',  'Images haut');
+('83',  'top',  'Images haut'),
+('84',  'page',  'Page'),
+('85',  'pais',  'Pays'),
+('86',  'city',  'Ville');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1178,7 +1208,10 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('80',  'welcome',  'स्वागत'),
 ('81',  'search',  'छवियों को खोजें'),
 ('82',  'all',  'सभी चित्र देखें'),
-('83',  'top',  'छवियाँ शीर्ष');
+('83',  'top',  'छवियाँ शीर्ष'),
+('84',  'page',  'पेज'),
+('85',  'pais',  'देश'),
+('86',  'city',  'शहर');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1263,7 +1296,10 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('80',  'welcome',  'Welcome'),
 ('81',  'search',  'Search images'),
 ('82',  'all',  'See all images'),
-('83',  'top',  'Top images');
+('83',  'top',  'Top images'),
+('84',  'page',  'Page'),
+('85',  'pais',  'Country'),
+('86',  'city',  'City');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1348,7 +1384,10 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('80',  'welcome',  'benvenuto'),
 ('81',  'search',  'Cerca immagini'),
 ('82',  'all',  'Vedi tutte le immagini'),
-('83',  'top',  'Le immagini in alto');
+('83',  'top',  'Le immagini in alto'),
+('84',  'page',  'Pagina'),
+('85',  'pais',  'Paese'),
+('86',  'city',  'Città');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1433,7 +1472,10 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('80',  'welcome',  'ようこそ'),
 ('81',  'search',  '画像を検索する'),
 ('82',  'all',  'すべての画像を見る'),
-('83',  'top',  '画像トップ');
+('83',  'top',  '画像トップ'),
+('84',  'page',  'ページ'),
+('85',  'pais',  '国'),
+('86',  'city',  '市');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1518,7 +1560,10 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('80',  'welcome',  'Bem vindo'),
 ('81',  'search',  'Pesquisar imagens'),
 ('82',  'all',  'Ver todas as imagens'),
-('83',  'top',  'Imagens top');
+('83',  'top',  'Imagens top'),
+('84',  'page',  'Página'),
+('85',  'pais',  'Country'),
+('86',  'city',  'Cidade');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1603,7 +1648,10 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('80',  'welcome',  'добро пожаловать'),
 ('81',  'search',  'Поиск изображений'),
 ('82',  'all',  'Посмотреть все изображения'),
-('83',  'top',  'Изображения сверху');
+('83',  'top',  'Изображения сверху'),
+('84',  'page',  'страница'),
+('85',  'pais',  'страна'),
+('86',  'city',  'город');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -1688,7 +1736,10 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('80',  'welcome',  'Bienvenido'),
 ('81',  'search',  'Buscar imágenes'),
 ('82',  'all',  'Ver todas las imágenes'),
-('83',  'top',  'Imágenes top');
+('83',  'top',  'Imágenes top'),
+('84',  'page',  'Página'),
+('85',  'pais',  'País'),
+('86',  'city',  'Ciudad');
 
 INSERT INTO 4images_users VALUES ('-1', '-1', 'Guest', '0493984f537120be0b8d96bc9b69cdd2', '', '0', '0', '0', '0', '','0', '0', '', '',DEFAULT);
 

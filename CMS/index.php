@@ -2,10 +2,9 @@
 
 session_start();
 
-include_once('includes/funciones.php');
-
 $_SESSION['pagina']="index.php";
 
+$_SESSION['track']=true;
 
 $tablas = array();
 
@@ -22,6 +21,7 @@ if (file_exists('config.php')) {
 
 	include_once('config.php');
 
+	include_once('includes/funciones.php');
 	
 
 cabecera('');
@@ -62,6 +62,15 @@ if (!in_array($db_name, $tablas)) {
 
 poner_menu();
 
+	if(isset($_COOKIE['4images_userid'])){
+	
+		$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+	
+
+			$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+		
+	}
+
 print '<div style="padding-top:80px;font-size:2em;position:fixed;">
 <h2 style="font-size:1em;padding-left:40px">'.date('d').'/'.date('m').'/'.date('y').'</h2>
 <h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
@@ -76,6 +85,7 @@ print '<div style="padding-top:80px;font-size:2em;position:fixed;">
 ';
 
 if(file_exists('config.php')){
+	
 	include('config.php');
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -108,13 +118,15 @@ if(file_exists('config.php')){
 	}
 	
 	mysqli_close($GLOBALS['conexion']);
+	
+	$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
+	
     print '	<h1>'.ver_dato('new_img', $GLOBALS['idioma']).'</h1>  <h2>'.ver_dato('welcome', $GLOBALS['idioma']).'</h2> </div>
    
 		</div>	  ';
 } 
 
-print'
-</div>
+print'</div>
 
 </div>';
 

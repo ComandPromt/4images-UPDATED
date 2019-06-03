@@ -125,7 +125,9 @@ if (!$terminado && (isset($_POST['envio']))) {
 						<input name="pais" value="arabe" type="radio"/><img src="images/icons/13.png"/>
 						<input name="pais" value="euskera" type="radio"/><img src="images/icons/14.png"/>
 						<input name="pais" value="coreano" type="radio"/><img src="images/icons/15.png"/>
-						<input name="pais" value="vietnamita" type="radio"/><img src="images/icons/16.png"/><br/>
+						<input name="pais" value="vietnamita" type="radio"/><img src="images/icons/16.png"/>
+						<input name="pais" value="polaco" type="radio"><img src="images/icons/17.png"/>
+						<br/>
 						
 						<hr/><br/>
 			 

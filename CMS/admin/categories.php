@@ -86,7 +86,7 @@ print '
 mysqli_close($GLOBALS['conexion']);
  
 print '</select></p>
-	<p style="padding-top:20px;"><input name="enviar" style="font-size:20px;" type="submit"/></p>
+	<p style="padding-top:20px;"><input value="'.ver_dato('submit', $GLOBALS['idioma']).'" name="enviar" style="font-size:20px;" type="submit"/></p>
 </form>';
 
 print '</div>';

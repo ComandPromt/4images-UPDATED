@@ -65,7 +65,7 @@ print '</option>
 
 <p><span>'.ver_dato('msg', $GLOBALS['idioma']).'</span>
 <textarea name="mensaje" style="height:200px;font-size:25px;color:#8105F1;"></textarea></p>
-<input name="enviar_correo" type="submit"/>
+<input name="enviar_correo" value="'.ver_dato('submit', $GLOBALS['idioma']).'" type="submit"/>
 </form></div>';
 
 restablecer_pass('../');

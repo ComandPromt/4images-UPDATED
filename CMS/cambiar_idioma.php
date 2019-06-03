@@ -55,10 +55,12 @@ print '
 <input name="pais" value="catalan" type="radio"><img src="images/icons/11.png"/>
 <input name="pais" value="bengali" type="radio"><img src="images/icons/12.png"/><br/><br/>
 <input name="pais" value="arabe" type="radio"><img src="images/icons/13.png"/>
-<input name="pais" value="euskera" type="radio"><img src="images/icons/14.png"/><br/>
+<input name="pais" value="euskera" type="radio"><img src="images/icons/14.png"/>
+<input name="pais" value="coreano" type="radio"><img src="images/icons/15.png"/>
+<input name="pais" value="vietnamita" type="radio"><img src="images/icons/16.png"/>
+<input name="pais" value="polaco" type="radio"><img src="images/icons/17.png"/>
+<br/>
 
-	
-	
 
 </p>
 <p style="padding-top:20px;"><input name="cambiar_idioma" style="font-size:20px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/></p>
