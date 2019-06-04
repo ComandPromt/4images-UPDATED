@@ -168,16 +168,21 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		}
 				
 		if($_GET['image_id']>1){
-	
+			
+			$id=(int)$_GET['image_id'];
+			--$id;
+
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_media_file FROM '.$GLOBALS['table_prefix'].'images
-			WHERE image_id='.$_GET['image_id'].'-1');
+			SELECT image_media_file,cat_id FROM '.$GLOBALS['table_prefix']."images
+			WHERE image_id='".$id."'");
 			
 			$recuento = mysqli_fetch_row($consulta);
 			
-			print '<div style="float:left;padding-left:30px;">
+			print '<div style="float:left;padding-left:30px;">';
+					
+			print '
 			<a style="text-decoration:none;" href="details.php?image_id='.(--$image_id).'" ><img style="height:40px;width:40px;" src="img/back.png"/>
-			<img style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/></a>
+			<img style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/></a>
 			</div>';
 		}	
 	
@@ -224,15 +229,18 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 		if($_GET['image_id']<$ultima_imagen){
 		
+			$id=(int)$_GET['image_id'];
+			++$id;
+
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_media_file FROM '.$GLOBALS['table_prefix'].'images
-			WHERE image_id='.$_GET['image_id'].'+1');
+			SELECT image_media_file,cat_id FROM '.$GLOBALS['table_prefix']."images
+			WHERE image_id='".$id."'");
 			
 			$recuento = mysqli_fetch_row($consulta);
 		
 			print '
 			<div style="float:left;padding-left:40px;">
-				<a style="text-decoration:none;" href="details.php?image_id='.(++$_GET['image_id']).'" ><img style="height:50px;width:50px;" src="data/media/'.$categoria.'/'.$recuento[0].'"/>
+				<a style="text-decoration:none;" href="details.php?image_id='.$id.'" ><img style="height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
 			<img style="margin-left:10px;height:40px;width:40px;" src="img/next.png"/></a></div>';
 		}	
 	
