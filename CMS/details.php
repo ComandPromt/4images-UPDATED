@@ -99,14 +99,13 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		$categoria=$recuento[1];
 		$imagen=$recuento[2];
-		$image_id=$recuento[4];
 		
 		print '<h1 style="color:#116C5D;">'.$recuento[0].'</h1>
 		
 		<div class="container">
 		
 			<img  style="height: 100%;
-			width: auto;" id='.$image_id.' alt="'.$recuento[0].'" src="data/media/'.$categoria.'/'.$imagen.'" />
+			width: auto;" id='.$recuento[4].' alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
 			
 			<div class="overlay">';
 			
@@ -181,12 +180,10 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 			print '<div style="float:left;padding-left:30px;">';
 					
 			print '
-			<a style="text-decoration:none;" href="details.php?image_id='.(--$image_id).'" ><img style="height:40px;width:40px;" src="img/back.png"/>
+			<a style="text-decoration:none;" href="details.php?image_id='.($id).'" ><img style="height:40px;width:40px;" src="img/back.png"/>
 			<img style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/></a>
 			</div>';
 		}	
-	
-		$image_id++;
 	
 		$icono="fav.ico";
 	
