@@ -94,12 +94,12 @@ if (file_exists('config.php')) {
 	ORDER BY image_id DESC LIMIT 9');
     $fila = mysqli_fetch_array($consulta);
 
-    if ($fila[0] > 1) {
+    if ($fila[0] > 0) {
 
         print '
-		<div style="float:right;padding-left:350px;" class="entire-content">
+		<div style="float:right;padding-left:350px;background-color: rgba(255, 255, 255, 0);" class="entire-content">
 
-		<div style="margin-top:-40px;"class="content-carrousel">';
+		<div style="margin-top:-40px;background-color: rgba(255, 255, 255, 0);"class="content-carrousel">';
 
         $consulta = mysqli_query($GLOBALS['conexion'],
             'SELECT cat_id,image_media_file,image_id,image_name FROM ' . $GLOBALS['table_prefix'] . 'images
@@ -112,15 +112,13 @@ if (file_exists('config.php')) {
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 
-    }
+ print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
-    print '	<h1>' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
-
-	if($fila[0]>=2){
 		$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
-		print '	<h2>' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
-	}
-
+		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
+	
+    }
+   
 	mysqli_close($GLOBALS['conexion']);
 	
 	print '</div></div>';

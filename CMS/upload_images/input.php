@@ -443,7 +443,6 @@ session_start();
 					$_SESSION['categoria']=$_GET['cat_id'];
 			
 					$_SESSION['nombre']=$_GET['nombre'];
-				
 		}
 		
 		else{
