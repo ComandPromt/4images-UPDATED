@@ -114,13 +114,16 @@ if (file_exists('config.php')) {
 
     }
 
-    mysqli_close($GLOBALS['conexion']);
+    print '	<h1>' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
-    $GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
+	if($fila[0]>=2){
+		$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
+		print '	<h2>' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
+	}
 
-    print '	<h1>' . ver_dato('new_img', $GLOBALS['idioma']) . '</h1>  <h2>' . ver_dato('welcome', $GLOBALS['idioma']) . '</h2> </div>
-
-		</div>	  ';
+	mysqli_close($GLOBALS['conexion']);
+	
+	print '</div></div>';
 }
 
 print '</div>

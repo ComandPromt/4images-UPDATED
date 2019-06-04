@@ -28,9 +28,9 @@ poner_menu_geo('../../');
 print '<table style="margin:auto;text-align:center;">
 
 		<tr>
-			<th style="font-size:25px;"><img alt="pagina" class="icono" src="../../img/page.png"/></th>
-			<th style="font-size:25px;"><img alt="localizacion" class="icono" src="../../img/loc.png"/></th>
-			<th style="font-size:25px;"><img alt="pagina" class="icono" src="../../img/city.png"/></th>
+			<th style="font-size:25px;">'. ver_dato('page', $GLOBALS['idioma']).'</th>
+			<th style="font-size:25px;">'. ver_dato('pais', $GLOBALS['idioma']).'</th>
+			<th style="font-size:25px;">'. ver_dato('city', $GLOBALS['idioma']).'</th>
 		</tr>';
 		
 	$country="";
