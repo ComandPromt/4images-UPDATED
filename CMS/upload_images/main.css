@@ -138,9 +138,6 @@ a
 		background-color: #111;
 		background-color: rgba( 0, 0, 0, .5 );
 	}
-	.sm ul
-	{
-	}
 		.sm li
 		{
 			float: right;
@@ -204,8 +201,6 @@ a
 				{
 					left: -0.313rem; /* 5 */
 				}
-
-
 
 /*
 	RESPONSIVENESS
