@@ -7,6 +7,12 @@ if (isset($_FILES['archivo'])) {
 	&& isset($_GET['nombre_imagen'])&& !empty($_GET['nombre_imagen'])
 	&& isset($_GET['cat_id'])
     && !empty($_GET['cat_id'])) && $_GET['cat_id']>0){
+		
+if(isset($_GET['cat_id']) && !empty($_GET['cat_id'])){
+	if(!file_exists('../data/media/'.$_GET['cat_id'])){
+			mkdir('../data/media/'.$_GET['cat_id'], 0777, true);
+		}
+}
 
 	include('../config.php');
 	include('../includes/funciones.php');
