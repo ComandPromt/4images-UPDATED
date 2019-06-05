@@ -1132,7 +1132,7 @@ function poner_menu($ruta = ""){
 				
 					else{
 						print '<li style="margin:auto;text-align:center;padding-top:20px;background-color: rgba(255, 255, 255, 0);">
-						<a style="font-size:0.7;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
+						<a style="font-size:0.7em;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
