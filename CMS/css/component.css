@@ -477,9 +477,6 @@
 	background: rgba(255,248,213,0.1);
 }
 
-.dl-menuwrapper li.dl-back > a {
-	
-}
 
 .dl-menuwrapper .dl-menu {
 	margin: 5px 0 0 0;
@@ -1123,9 +1120,7 @@ All this is done for any sub-level being entered.
 	display: block;
 }
 
-.no-js .dl-menuwrapper li.dl-back {
-	display: none;
-}
+
 
 .no-js .dl-menuwrapper li > a:not(:only-child) {
 	background: rgba(0,0,0,0.1);
