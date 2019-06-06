@@ -25,7 +25,7 @@ poner_menu('../../');
 
 poner_menu_geo('../../');
 
-print '<table style="margin:auto;text-align:center;">
+print '<table class="table" style="margin:auto;text-align:center;">
 
 		<tr>
 			<th style="font-size:25px;">'. ver_dato('page', $GLOBALS['idioma']).'</th>
