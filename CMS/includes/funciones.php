@@ -1110,7 +1110,7 @@ function poner_menu($ruta = ""){
 				<div>
 					<div style="width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger">a</button>
-						<ul style="margin-top:-15px;font-size:3em;"  class="dl-menu">
+						<ul style="margin-top:-15px;font-size:3em;background-color: rgba(255, 255, 255, 0);"  class="dl-menu">
 						';		
 			$id_categorias=array();
 
@@ -1127,7 +1127,7 @@ function poner_menu($ruta = ""){
 				$fila = mysqli_fetch_row($consulta);
 			
 				print '
-				<li  class="menu_categorias">
+				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias">
 				<a style="color:#ffffff;background-color:green;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
 				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
@@ -1136,14 +1136,14 @@ function poner_menu($ruta = ""){
 
 				while ($subcategorias = mysqli_fetch_array($consulta)){
 					if($y==1){
-						print '<ul style="margin-top:10px;" class="dl-submenu">';
-						print '<li style="first-child:margin-top:15px;">
+						print '<ul style="margin-top:10px;background-color: rgba(255, 255, 255, 0);" class="dl-submenu">';
+						print '<li style="first-child:margin-top:15px;background-color: rgba(255, 255, 255, 0);">
 						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
 					}
 				
 					else{
-						print '<li>
+						print '<li style="background-color: rgba(255, 255, 255, 0);">
 						<a style="font-size:0.7;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
 						</li>';
 					}
@@ -1160,7 +1160,7 @@ function poner_menu($ruta = ""){
 			while ($fila = mysqli_fetch_row($consulta)){
 
 				print '
-				<li class="menu_categorias menu">
+				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu">
 				<a style="color:#ffffff;background-color:blue;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		
