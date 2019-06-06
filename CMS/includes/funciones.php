@@ -503,7 +503,7 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		}
 	}
 	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:4em;width:4em;" alt="Imagen '.
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:3em;width:3em;" alt="Imagen '.
 	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
 		
 		<div style="float:right;">
@@ -563,7 +563,7 @@ function ver_categoria($cat_id,$final_sentencia=""){
 		
 			$consulta=$conexion->query($consultavistas);
 	
-			echo '<div style="margin-left:10px;" class="table-responsive-xs">
+			echo '<div style="margin-left:-40px;" class="table-responsive-xs">
 					<table style="border:none;" class="table">';
 			
 			$ids=array();
@@ -585,7 +585,8 @@ function ver_categoria($cat_id,$final_sentencia=""){
 			$y=0;
 
 			for($x=0;$x<count($nombres)-1;$x++){
-				print '<tr style="border:none;"><td style="border:none;font-size:2em;">'.$nombres[$y].'</td><td style="font-size:2em;border:none;">'.$nombres[$y+1].'</td><td style="font-size:2em;border:none;">'.$nombres[$y+2].'</td></tr>';
+				
+				print '<tr style="border:none;"><td style="border:none;font-size:1em;">'.$nombres[$y].'</td><td style="font-size:1em;border:none;">'.$nombres[$y+1].'</td><td style="font-size:1em;border:none;">'.$nombres[$y+2].'</td></tr>';
 						
 				print '<tr style="border:none;">';
 				
@@ -861,7 +862,7 @@ print '
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;" id="mySidebar"><br>
   <div  class="w3-container">
-    <a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"> 
+    <a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"> 
 
     </a>
    

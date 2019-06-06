@@ -18,12 +18,17 @@ cabecera();
 	<input name="filtro" style="margin-bottom:20px;height:40px;font-size;25px;" type="text"/>
 	<input name="busqueda" type="submit"/>
 </form></div>';
+
+if(isset($_GET['filtro']) && $_GET['filtro']!=""){
+	$_SESSION['filtro']=$_GET['filtro'];
+}
+
 		
 if(!isset($_SESSION['filtro'])){
 		
 		$_SESSION['filtro']=$_POST['filtro'];
 		
-	print '<div style="float:left;width:115%;">
+	print '<div style="float:left;width:100%;">
 					<hr/>
 					</div>';
 					
