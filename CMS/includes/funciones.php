@@ -308,9 +308,11 @@ function menu_mensajes(){
 }
 
 function ver_tabla($sql,$icono){
+	
 if(file_exists('../config.php')){
 	include('../config.php');
 }
+
 else{
 	include('config.php');
 }
@@ -319,34 +321,45 @@ else{
     $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
-	print '<table style="border:none;margin:auto;" class="table">
-		<tr ><td colspan="3"><img class="icono" src="img/'.$icono.'.png"/></td></tr>';
+	print '<div style="margin-left:-80px;" class="table-responsive-xs">
+	
+		<table class="table" style="border:none;margin:auto;">
+		
+		<tr>
+			<td colspan="3">
+				<img class="icono" src="img/'.$icono.'.png"/>
+			</td>
+		</tr>';
 
 	$consulta = mysqli_query($GLOBALS['conexion'], $sql);
 	
 	while($fila = mysqli_fetch_row($consulta)){
-		print '<tr><td><img style="width:6em;height:6em;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></td><td>'.$fila[2].'</td><td>'.$fila[3].'</td></tr>';
+		print '<tr>
+				<td>
+					<img style="width:3em;height:3em;" src="data/media/'.$fila[1].'/'.$fila[0].'"/>
+				</td>
+				<td>'.$fila[2].'</td>
+				<td>'.$fila[3].'</td>
+			</tr>';
 	}
 		
-	print '</table>';
+	print '</table></div>';
 	
 	mysqli_close($GLOBALS['conexion']);
 }
 
 function comprobar_config(){
-	if(file_exists('../../config.php')){
-	include('../../config.php');
 	
-}
+	if(file_exists('../../config.php')){
+		include('../../config.php');
+	}
 	
 	if(file_exists('../config.php')){
 		include('../config.php');
-
 	}
 	
 	if(file_exists('config.php')){
-	include('config.php');
-	
+		include('config.php');
 	}
 }
 
