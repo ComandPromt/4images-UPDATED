@@ -471,16 +471,6 @@ session_start();
 			$y=0;
 			
 			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
-				
-				$image_id=array();
-				
-				$consulta=mysqli_query($GLOBALS['conexion'],"SELECT image_id FROM ".$GLOBALS['table_prefix']."images");
-		
-				while($fila = mysqli_fetch_row($consulta)){
-					$image_id[]=$fila[0];
-				}
-				
-				$numero=consecutivos($image_id);
 							
 				$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
 				
@@ -495,31 +485,33 @@ session_start();
 					
 					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
 					
-					
 					if ($fichTemporal != ""){
 							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
 							move_uploaded_file($fichTemporal, $destino);
 					}
 					
-					if(!$_SESSION['subida']){
-						$_SESSION['subida']=true;
-					}
-					
-					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
+					$shaimage=hash_file('sha256',$_FILES['upload']['name']);
 										
-					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'"); 	
+					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) 
+					FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'");
+				
 					$fila = mysqli_fetch_row($consulta);
-					
+				
 					if($fila[0]==0){
+						
+						$_SESSION['subida']=true;	
+						mysqli_query($GLOBALS['conexion'], '
 					
-								mysqli_query($GLOBALS['conexion'], '
-					
-						INSERT INTO '.$GLOBALS['table_prefix']."images VALUES('".$numero."','".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
-					}				
+						INSERT INTO '.$GLOBALS['table_prefix']."images
+						(cat_id, user_id,image_name,image_description,image_keywords,image_date,image_active,image_media_file,image_allow_comments,image_comments,image_downloads,image_votes,image_rating,image_hits,sha256)
+						VALUES('".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
+			
+					}
+				
 				}
 				
-				$y++;
-				unset($image_id);
+					$y++;
+				
 			}
 				
 			mysqli_close($GLOBALS['conexion']);

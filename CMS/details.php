@@ -252,6 +252,9 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 			SELECT image_allow_comments FROM '.$GLOBALS['table_prefix']."images
 			WHERE image_id='".--$_GET['image_id']."'");
 			
+			
+		$_GET['image_id']++;
+		
 		$comentario = mysqli_fetch_row($consulta);
 			
 		if($comentario[0]==1){
