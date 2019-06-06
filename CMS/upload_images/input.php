@@ -490,7 +490,7 @@ session_start();
 							move_uploaded_file($fichTemporal, $destino);
 					}
 					
-					$shaimage=hash_file('sha256',$_FILES['upload']['name']);
+					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
 										
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) 
 					FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'");
@@ -506,6 +506,11 @@ session_start();
 						(cat_id, user_id,image_name,image_description,image_keywords,image_date,image_active,image_media_file,image_allow_comments,image_comments,image_downloads,image_votes,image_rating,image_hits,sha256)
 						VALUES('".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
 			
+					}
+					else{
+						if(file_exists('../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd)){
+							unlink('../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
+						}
 					}
 				
 				}
