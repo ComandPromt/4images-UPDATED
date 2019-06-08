@@ -1,28 +1,33 @@
+
 function fullwin(id){
-window.open("showphoto.php?photo_id="+id,"","fullscreen,scrollbars");
+	
+   window.open("showphoto.php?photo_id="+id, 'popup_name','height=' + screen.height + ',width=' + screen.width + ',resizable=yes,scrollbars=yes,toolbar=yes,menubar=yes,location=yes')
 }
 
 function startTime(){
 
-today=new Date();
+	today=new Date();
 
-h=today.getHours();
+	h=today.getHours();
 
-m=today.getMinutes();
+	m=today.getMinutes();
 
-s=today.getSeconds();
+	s=today.getSeconds();
 
-m=checkTime(m);
+	m=checkTime(m);
 
-s=checkTime(s);
-if(document.getElementById('reloj')!=null){
-	document.getElementById('reloj').innerHTML=h+":"+m+":"+s;
+	s=checkTime(s);
+	
+	if(document.getElementById('reloj')!=null){
+		document.getElementById('reloj').innerHTML=h+":"+m+":"+s;
+	}
+	
+	t=setTimeout('startTime()',500);
 }
-t=setTimeout('startTime()',500);}
 
-function checkTime(i)
-
-{if (i<10) {i="0" + i;}return i;}
+function checkTime(i){
+	if (i<10) {i="0" + i;}return i;
+}
 
 window.onload=function(){startTime();}
 

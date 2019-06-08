@@ -4,7 +4,11 @@ session_start();
 
 $_SESSION['pagina']="index.php";
 
-include ('cabecera.php');
+include ('config.php');
+
+include ('includes/funciones.php');
+
+cabecera();
 
 if(isset($_COOKIE['4images_userid'])){
 	
@@ -51,13 +55,12 @@ if (isset($_POST['submit'])) {
                 && !$SESSION['error']) {
 					
                 $user_password_hashed = salted_hash($_POST['user_password']);
-			
+	
                 mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
                     $GLOBALS['table_prefix'] . 'users (user_level,user_name,user_password,
-				user_email,user_allowemails,user_invisible,user_joindate,user_lastaction,user_location,user_lastvisit,
-				user_comments,user_homepage,user_icq,nacionalidad)
+				user_email,user_allowemails,user_invisible,user_comments,nacionalidad)
 				VALUES(2,' . "'" . $_POST['user_name'] . "'" . ',' . "'" . $user_password_hashed .
-                    "'" . ",'" . $_POST['email'] . "'" . ',1,0,' . time() . ',0,' . "''" . ',0,0,default,default,' . "'" . $_POST['pais'] . "')");
+                    "'" . ",'" . $_POST['email'] . "'" . ',1,0,0,' . "'" . $_POST['pais'] . "')");
 			  
 				mysqli_close($GLOBALS['conexion']); 
 			
@@ -192,7 +195,7 @@ if (!$terminado && $SESSION['licencia']) {
 		ver_dato('agreement', $GLOBALS['idioma']) . '</h3>
 		
 		<div style="height:350px;width:70%;">
-			<hr/> <h2  style="text-align:center;padding-bottom:10px;" class="texto">'
+			<hr/> <h2  style="text-align:center;padding-bottom:10px;height:100px;" class="texto">'
 			. ver_dato('agreement_terms',$GLOBALS['idioma']) . '</h2>
 		</div>
     </div>';

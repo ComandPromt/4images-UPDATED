@@ -484,12 +484,10 @@ session_start();
 					$fichTemporal = $_FILES['upload']['tmp_name'][$y];
 					
 					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
-					
-					if ($fichTemporal != ""){
-							$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
-							move_uploaded_file($fichTemporal, $destino);
-					}
-					
+			
+					$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
+					move_uploaded_file($fichTemporal, $destino);
+										
 					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
 										
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) 

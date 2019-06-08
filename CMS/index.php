@@ -23,7 +23,7 @@ if (file_exists('config.php')) {
 
     include_once 'config.php';
 
-    cabecera('');
+    cabecera();
 
     $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
     mysqli_set_charset($conexion, "utf8");

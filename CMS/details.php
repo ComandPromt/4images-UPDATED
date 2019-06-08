@@ -44,7 +44,9 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 			mysqli_query($GLOBALS['conexion'],
 			'INSERT INTO '.$GLOBALS['table_prefix'] .
-			"comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date) VALUES('".$_GET['image_id']."','".$_COOKIE['4images_userid']."','".$_POST['asunto']."','".$_POST['mensaje']."','".$_SERVER['REMOTE_ADDR']."','".date('Y').'/'.date('m').'/'.date('d')."')" );
+			"comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date) 
+			VALUES('".$_GET['image_id']."','".$_COOKIE['4images_userid']."','".$_POST['asunto']."','".
+			$_POST['mensaje']."','".$_SERVER['REMOTE_ADDR']."','".date('Y').'/'.date('m').'/'.date('d')."')" );
 		
 			mysqli_close($GLOBALS['conexion']);
 		}
@@ -83,13 +85,13 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		$categoria = mysqli_fetch_row($consulta);
 		
 		print '<br/><br/>
-		
-		<div style="float:left;padding-left:20px;">
-			<a style="color:#562676;font-size:25px;font-weight:bold;"
+		<div style="margin:auto;">
+		<div style="float:left;margin:auto;">
+			<a style="padding-left:140px;color:#562676;font-size:25px;font-weight:bold;"
 			href="categories.php?cat_id='.$categoria[0].'">'.$categoria[1].'</a>
 		</div>
 		
-		<div style="float:left;margin-left:10%;">';
+		<div style="float:left;">';
 		
 		$consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT image_name,cat_id,image_media_file,image_description,image_id FROM '.$GLOBALS['table_prefix'].'images
@@ -102,15 +104,19 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		print '<h1 style="color:#116C5D;">'.$recuento[0].'</h1>
 		
-		<div class="container">
+		<div style="background-color: rgba(255, 255, 255, 0);" class="container">
 		
-			<img  style="height: 100%;
-			width: auto;" id='.$recuento[4].' alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
+			<img  class="img-fluid" id='.$recuento[4].' alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
 			
-			<div class="overlay">';
+			<div style="background-color: rgba(255, 255, 255, 0);
+			margin-bottom: -17px; margin-right: -17px; max-height: 505.75px;"
+			class="overlay scrollbar-vista scroll-content scroll-scrolly_visible">';
 			
 			if(!empty($recuento[3])){
-				print '<h3 style="font-size:20px;margin-top:10px;text-align:center;background-color:#008CBA;color:#ffffff;font-weight:bold;">'.$recuento[3].'</h3>';
+				print '
+				<div style="height:350px;margin:auto;">
+					<h2 style="width:70%;font-size:25px;margin:auto;padding-bottom:10px;
+					margin:auto;background-color:#ffffff;color:blue;" class="texto">'.$recuento[3].'</h3></div>';
 			}
 		
 			print '
@@ -126,7 +132,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 		print '<div style="margin-left:-20px;" class="table-responsive-xs">
 	
-		<table style="border:none;margin:auto;" class="table">
+		<table style="border:none;margin-left:-20px;" class="table">
 			<tr style="border:none;">
 				<td style="border:none;">
 					<img style="height:30px;width:30px;"  src="img/view.png"/>
@@ -154,17 +160,11 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		$fila = mysqli_fetch_row($consulta);
 			
 		if($fila[0]==0){
-			print '<div style="float:left;padding-left:55px;"><img style="width:40px;height:40px;" src="img/user.png"/><span style="font-size:15px"> '.$fila[1].'</span></div>';
+			print '<div style="float:left;padding-left:135px;"><img style="width:40px;height:40px;" src="img/user.png"/>
+			<span style="font-size:20px;"> '.$fila[1].'</span></div>';
 		}
 		
-		if(file_exists('data/media/'.$categoria.'/'.$imagen)){
-			
-			$pesoimagen=truncateFloat(truncateFloat(filesize ( 'data/media/'.$categoria.'/'.$imagen)/1024,2)/1024,2);
-		
-			if($pesoimagen!=0){
-				print '<div style="float:left;padding-bottom:40px;padding-left:10px;"><img style="width:40px;height:40px;" src="img/size.png"/><span style="font-size:15px;"> '.$pesoimagen.'</span></div>';
-			}
-		}
+
 				
 		if($_GET['image_id']>1){
 			
@@ -177,7 +177,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 			
 			$recuento = mysqli_fetch_row($consulta);
 			
-			print '<div style="float:left;padding-left:30px;">';
+			print '<div style="float:left;padding-top:40px;padding-left:30px;">';
 					
 			print '
 			<a style="text-decoration:none;" href="details.php?image_id='.($id).'" ><img style="height:40px;width:40px;" src="img/back.png"/>
@@ -200,9 +200,10 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		}
 			
 		if($_COOKIE['4images_userid']>0){
-			$like='<div style="float:left;padding-left:40px;">
+			$like='<div style="float:left;padding-top:40px;padding-left:40px;">
 			<form id="frmajax" method="post">
-				<a onclick="favorito('.$_GET['image_id'].')"><img style="height:40px;width:40px;" src="img/'.$icono.'" id="Imagen '.$_GET['image_id'].'"/></a>
+				<a onclick="favorito('.$_GET['image_id'].')">
+				<img style="height:40px;width:40px;" src="img/'.$icono.'" id="Imagen '.$_GET['image_id'].'"/></a>
 			</form></div>';
 		}
 	
@@ -210,7 +211,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 			print $like;
 		}
 	
-		print '<div style="float:left;padding-left:40px;">
+		print '<div style="float:left;padding-top:40px;padding-left:40px;">
 	
 		<div style="float:left;padding-right:40px;">
 			<a onclick="fullwin('.$_GET['image_id'].');">
@@ -220,7 +221,9 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 			<div style="float:left;">
 				<form id="frmdownload" method="post">
-				<a onclick="descarga('.$_GET['image_id'].')" href="data/media/'.$categoria.'/'.$imagen.'" download><img style="height:40px;width:40px;" src="img/download.png"/></a>
+				<a onclick="descarga('.$_GET['image_id'].')" 
+				href="data/media/'.$categoria.'/'.$imagen.'" download>
+				<img style="height:40px;width:40px;" src="img/download.png"/></a>
 			</form>
 		</div>';
 	
@@ -237,12 +240,13 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 			print '
 			<div style="float:left;padding-left:40px;">
-				<a style="text-decoration:none;" href="details.php?image_id='.$id.'" ><img style="height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
+				<a style="text-decoration:none;" href="details.php?image_id='.$id.'" >
+				<img style="height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
 			<img style="margin-left:10px;height:40px;width:40px;" src="img/next.png"/></a></div>';
 		}	
 	
 		print'</div>
-		<div style="float:left;width:100%;margin:auto;padding-left:60px;">';
+		<div style="float:left;width:100%;">';
 	
 		print '
 		<hr/>
@@ -281,6 +285,8 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 				WHERE image_id='".$_GET['image_id']."'");
 			
 				while($fila = mysqli_fetch_row($consulta)){
+					$fila[1]=str_replace('[URL]','<a href="',$fila[1]);
+					$fila[1]=str_replace('[/URL]','">'.$fila[0].'</a>',$fila[1]);
 					print '
 					<tr>
 						<td style="font-size:23px;">'.$fila[0].'</td>
@@ -315,11 +321,13 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 					<input type="text" title="captcha" required  id="validcaptcha"
 						name="captcha" size="30" value="" class="input" id="captcha_input"
 						placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/></p>
-					<div style="margin-top:-20px;padding-bottom:20px;"><input name="comentario" value="'.ver_dato('submit', $GLOBALS['idioma']).'" type="submit" /></div>
+					<div style="margin-top:-20px;padding-bottom:20px;">
+					<input name="comentario" value="'.ver_dato('submit', $GLOBALS['idioma']).'" type="submit" /></div>
 				</form>
 			
 				</div>
 			
+				</div>
 				</div>';
 			}
 		}

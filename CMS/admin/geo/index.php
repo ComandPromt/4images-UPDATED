@@ -31,6 +31,7 @@ print '<table class="table" style="margin:auto;text-align:center;">
 			<th style="font-size:25px;">'. ver_dato('page', $GLOBALS['idioma']).'</th>
 			<th style="font-size:25px;">'. ver_dato('pais', $GLOBALS['idioma']).'</th>
 			<th style="font-size:25px;">'. ver_dato('city', $GLOBALS['idioma']).'</th>
+			<th style="font-size:25px;"><img class="icono" src="../../img/ip.png"/></th>
 		</tr>';
 		
 	$country="";
@@ -50,17 +51,23 @@ print '<table class="table" style="margin:auto;text-align:center;">
 	$i_direccionIp      = $_SERVER['REMOTE_ADDR'];   
 	$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
 	
-	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT distinct(tx_ipRemota),tx_pagina FROM tbl_tracking WHERE dt_fechaVisita=DATE(NOW()) LIMIT 100");
+	$ips=array();
 	
-	$x=1;
+	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT distinct(tx_ipRemota) FROM tbl_tracking ORDER BY id_tracking DESC LIMIT 100");
 	
 	while($fila = mysqli_fetch_row($consulta)){
+		$ips[]=$fila[0];
+	}
+	
+	$x=1;
 
-		if( !is_private_ip($fila[0])){
+	for($x=0;$x<count($ips);$x++){
 
-			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$fila[0]));
+		if( !is_private_ip($ips[$x])){
+
+			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$ips[$x]));
 			
-			$region=$geo->region;
+			$region=$geo->city;
 			
 			switch($geo->country){
 			
@@ -89,13 +96,83 @@ print '<table class="table" style="margin:auto;text-align:center;">
 				break;
 				
 				case 'Ukraine':
+				$country ="ukr";
+				break;
+				
+				case 'Canada':
+				$country ="ca";
+				break;
+				
+				case 'United Kingdom':
 				$country ="uk";
+				break;
+				
+				case 'India':
+				$country ="india";
+				break;
+				
+				case 'Chile':
+				$country ="chile";
+				break;
+				
+				case 'Brazil':
+				$country ="brasil";
+				break;
+				
+				case 'Thailand':
+				$country ="tai";
+				break;
+				
+				case 'Turkey':
+				$country ="turkia";
+				break;
+				
+				case 'Pakistan':
+				$country ="pakistan";
+				break;
+				
+				case 'Vietnam':
+				$country ="vietnam";
+				break;
+				
+				case 'Peru':
+				$country ="peru";
+				break;
+				
+				case 'Poland':
+				$country ="polonia";
+				break;
+				
+				case 'Indonesia':
+				$country ="indonesia";
+				break;
+				
+				case 'Ireland':
+				$country ="ireland";
+				break;
+				
+				case 'South Korea':
+				$country ="corea";
+				break;
+				
+				default:
+				$country ="us";
 				break;
 			}
 			
-		switch(substr($fila[1],strrpos($fila[1], "/")+1,strlen($fila[1]))){
+			if(empty($country)){
+				$country="us";
+			}
+			
+		$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT tx_pagina FROM tbl_tracking
+		WHERE tx_ipRemota='".$ips[$x]."' ORDER BY id_tracking DESC");
+		
+		$fila2 = mysqli_fetch_row($consulta);
+		
+		switch(substr($fila2[0],strrpos($fila2[0], "/")+1,strlen($fila2[0]))){
 			
 			case 'index.php':
+			case '':
 			$procedencia='home';
 			break;
 			
@@ -120,7 +197,7 @@ print '<table class="table" style="margin:auto;text-align:center;">
 		print '<tr><td style="font-size:20px;">';
 		
 	
-			print '<a target="_blank" href="'.$fila[1].'"/>
+			print '<a target="_blank" href="'.$fila2[0].'"/>
 			<img class="icono" src="../../img/'.$procedencia.'.png"/></td>';
 			
 			if($country!='local'){
@@ -132,12 +209,13 @@ print '<table class="table" style="margin:auto;text-align:center;">
 			}
 			
 			if($region==""){
-				$region=$fila[0];
+				$region=$ips[$x];
 			}
 			
-			print '<td style="font-size:20px;">'.$region.'</td></tr>';
-				
-			$x++;	
+			print '<td style="font-size:25px;">'.$region.'</td>
+			<td style="font-size:25px;">'.$ips[$x].'</td>
+			</tr>';
+		
 		}
 		
 	}

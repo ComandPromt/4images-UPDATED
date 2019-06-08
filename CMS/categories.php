@@ -17,9 +17,6 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 	if(is_int($_GET['cat_id']) && $_GET['cat_id']>0){
 		$_SESSION['categoria']=$_GET['cat_id'];
 	}
-	else{
-		redireccionar('index.php');
-	}
 
 	if($_GET['cat_id']>0 || $_SESSION['categoria']>0 ){
 		
@@ -30,9 +27,9 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 		else{
 			$categoria=$_GET['cat_id'];
 		}
-		
+
 		poner_menu();
-		
+
 		print '<br/><br/> ';
 		
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -52,9 +49,9 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 		if (in_array($categoria, $cat_hijos)) {
 			
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories
+			SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix']."categories
 			WHERE cat_id=(SELECT cat_parent_id FROM 4images_categories
-			WHERE cat_id=5)');
+			WHERE cat_id='".$categoria."')");
 			$fila = mysqli_fetch_row($consulta);
 			
 			$consulta = mysqli_query($GLOBALS['conexion'], '
@@ -63,7 +60,7 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 			$recuento = mysqli_fetch_row($consulta);
 			
 			if($recuento>0){
-				print '<div style="float:left;padding-left:40px;"><a href="categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></div>';
+				print '<div style="float:left;padding-left:40px;"><a style="color:#562676;font-size:25px;font-weight:bold;" href="categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></div>';
 			}
 		}
 

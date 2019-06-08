@@ -18,6 +18,8 @@ function is_private_ip($ip){
 
 function cabecera($ruta=""){
 
+
+
 date_default_timezone_set('Europe/Madrid');
 
 print '
@@ -50,7 +52,7 @@ print '
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estilo.css">
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/scrollbar.css" />
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/tablas.css" />
-	<link rel="icon" type="image/ico" href="'.$ruta.'/img/favicon.ico">
+	<link rel="icon" type="image/ico" href="'.$ruta.'img/favicon.ico">
 
 	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
  
@@ -153,7 +155,7 @@ print '</div</div>
 
 </div>
 
-<div  style="margin: auto; width: 50%;padding-left:10%;width:80%;margin-top:30px;">';
+<div  style="margin: auto; padding-left:15%;width:85%;margin-top:30px;">';
 
 }
 
@@ -336,7 +338,9 @@ else{
 	while($fila = mysqli_fetch_row($consulta)){
 		print '<tr>
 				<td>
-					<img style="width:3em;height:3em;" src="data/media/'.$fila[1].'/'.$fila[0].'"/>
+					<a href="details.php?image_id='.$fila[4].'">
+
+					<img style="width:3em;height:3em;" src="data/media/'.$fila[1].'/'.$fila[0].'"/></a>
 				</td>
 				<td>'.$fila[2].'</td>
 				<td>'.$fila[3].'</td>
@@ -479,12 +483,12 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 	
 	if(isset($_COOKIE['4images_userid'])){
 		
-			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+		or die("No se pudo conectar a la base de datos");
 			
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) as recuento FROM ' .
-			$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
+		$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
 	
 		$fila = mysqli_fetch_row($consulta);
 
@@ -512,6 +516,7 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 				</a>
 		</div>	
 	</td>';
+	
 }
 
 function ver_categoria($cat_id,$final_sentencia=""){
@@ -586,7 +591,11 @@ function ver_categoria($cat_id,$final_sentencia=""){
 
 			for($x=0;$x<count($nombres)-1;$x++){
 				
-				print '<tr style="border:none;"><td style="border:none;font-size:1em;">'.$nombres[$y].'</td><td style="font-size:1em;border:none;">'.$nombres[$y+1].'</td><td style="font-size:1em;border:none;">'.$nombres[$y+2].'</td></tr>';
+				print '<tr style="border:none;">
+						<td style="border:none;font-size:1em;">'.$nombres[$y].'</td>
+						<td style="font-size:1em;border:none;">'.$nombres[$y+1].'</td>
+						<td style="font-size:1em;border:none;">'.$nombres[$y+2].'</td>
+					</tr>';
 						
 				print '<tr style="border:none;">';
 				
@@ -751,8 +760,10 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
     mysqli_close($GLOBALS['conexion']);
 
 }
-	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
->
+
+$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
+
+	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
 <div class="modal-header">
@@ -919,7 +930,7 @@ print '
 		}
 		
 		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
-	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="margin-left:-10px;font-size:1.5em;">'.$fila[0].'</span>
+	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
        <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
@@ -1106,10 +1117,10 @@ function poner_menu($ruta = ""){
 		$recuento = mysqli_fetch_row($consulta);
 	
 		if($recuento[0]>0){
-			print '<aside style="float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
-			<div>
-				<div>
-					<div style="width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">
+			print '<aside style="background-color: rgba(255, 255, 255, 0);float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
+			<div style="background-color: rgba(255, 255, 255, 0);">
+				<div style="background-color: rgba(255, 255, 255, 0);">
+					<div style="background-color: rgba(255, 255, 255, 0);width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger">a</button>
 						<ul style="margin-top:-15px;font-size:3em;background-color: rgba(255, 255, 255, 0);"  class="dl-menu">
 						';		
@@ -1134,25 +1145,20 @@ function poner_menu($ruta = ""){
 				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
 			
 				$y=1;
-
+				
+				print '<ul style="margin-top:10px;background-color: rgba(255, 255, 255, 0);" class="dl-submenu">';
+						
 				while ($subcategorias = mysqli_fetch_array($consulta)){
-					if($y==1){
-						print '<ul style="margin-top:10px;background-color: rgba(255, 255, 255, 0);" class="dl-submenu">';
-						print '<li style="first-child:margin-top:15px;background-color: rgba(255, 255, 255, 0);">
+					
+						print '<li style="margin-top:15px;background-color: rgba(255, 255, 255, 0);">
 						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
-					}
-				
-					else{
-						print '<li style="background-color: rgba(255, 255, 255, 0);">
-						<a style="font-size:0.7;font-weight:bold;" href="#">'.$subcategorias[0].'</a>
-						</li>';
-					}
-				
+									
 					$y++;		
 				}
 				
 				print '</ul></li>';	
+				
 			}
 
 			$consulta = mysqli_query($GLOBALS['conexion'], 

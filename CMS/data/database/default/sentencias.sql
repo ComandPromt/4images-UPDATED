@@ -1,6 +1,6 @@
 
 CREATE TABLE `tbl_tracking` (
-  `id_tracking` int(11) NOT NULL,
+  `id_tracking` int(11) PRIMARY KEY AUTO_INCREMENT,
   `tx_pagina` varchar(70) NOT NULL DEFAULT '',
   `tx_paginaOrigen` varchar(200) NOT NULL DEFAULT '',
   `tx_ipRemota` varchar(15) NOT NULL DEFAULT '',
@@ -118,13 +118,7 @@ CREATE TABLE `4images_users` (
   `user_email` varchar(255) NOT NULL,
   `user_allowemails` tinyint(1) NOT NULL DEFAULT '1',
   `user_invisible` tinyint(1) NOT NULL DEFAULT '0',
-  `user_joindate` int(11)  NOT NULL ,
-  `user_lastaction` int(11)  NOT NULL DEFAULT '0',
-  `user_location` varchar(255) NOT NULL DEFAULT '',
-  `user_lastvisit` int(11)  NOT NULL DEFAULT '0',
   `user_comments` int(11)  NOT NULL DEFAULT '0',
-  `user_homepage` varchar(255) NOT NULL DEFAULT '',
-  `user_icq` varchar(20) NOT NULL DEFAULT '',
   `nacionalidad` varchar(15) DEFAULT 'spanish' not null
 )DEFAULT CHARSET=utf8;
 
