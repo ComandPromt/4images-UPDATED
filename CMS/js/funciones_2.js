@@ -33,7 +33,7 @@ window.onload=function(){startTime();}
 
 function favorito(id){
 
-var icono=document.getElementById("Imagen "+id).src.substr(document.getElementById("Imagen "+id).src.lastIndexOf("/")+1,document.getElementById("Imagen "+id).src.lenght);
+var icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
 
 var accion="lightbox.php?action=guardar";
 
@@ -51,16 +51,16 @@ var accion="lightbox.php?action=guardar";
 				url:accion,
 				data:datos,
 				success:function(r){
-					icono=icono=document.getElementById("Imagen "+id).src.substr(document.getElementById("Imagen "+id).src.lastIndexOf("/")+1,document.getElementById("Imagen "+id).src.lenght);
+					icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
 					
 					if(r==1){
 						
 						if(icono=='fav_2.ico'){
-						document.getElementById("Imagen "+id).src='img/fav.ico';
+						document.getElementById(id).src='img/fav.ico';
 									}
 						
 						else{
-						document.getElementById("Imagen "+id).src= 'img/fav_2.ico';
+						document.getElementById(id).src= 'img/fav_2.ico';
 						}
 					
 				}

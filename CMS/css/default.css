@@ -1,3 +1,16 @@
+.chart-container {
+    width: 80%;
+    height: 480px;
+    margin: 0 auto;
+}
+
+.pie-chart-container,
+.doughnut-chart-container {
+    height: 360px;
+    width: 360px;
+    float: left;
+}
+
 /* General Demo Style */
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 

@@ -51,7 +51,7 @@
 .sidebar a {
     display: block;
     font-size: 120%;
-    color: #eee;
+    color: #ffffff;
     text-decoration: none;
     
 }
@@ -201,7 +201,7 @@ body {
   color: #ffce54;
 }
 .info span .spoilers {
-  color: #999999;
+  color: #1E5798;
   margin-top: 5px;
   font-size: 10px;
 }
@@ -417,7 +417,7 @@ form {
 
 .dropdownmarker {
   font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
-  background-color: #EEEEEE;
+  background-color: #ffffff;
   color: #136c99;
   font-size: 11px;
 }

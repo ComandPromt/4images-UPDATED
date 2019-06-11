@@ -5,7 +5,8 @@ CREATE TABLE `tbl_tracking` (
   `tx_paginaOrigen` varchar(200) NOT NULL DEFAULT '',
   `tx_ipRemota` varchar(15) NOT NULL DEFAULT '',
   `tx_navegador` varchar(255) NOT NULL DEFAULT '',
-  `dt_fechaVisita` date NOT NULL 
+  `dt_fechaVisita` date NOT NULL,
+  `pais` varchar(25) NOT NULL
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE `polaco` (
@@ -147,6 +148,7 @@ CREATE TABLE `4images_sessions` (
 CREATE TABLE `4images_lightboxes` (
   `user_id` int(11),
   `lightbox_image_id` int(11),
+  `orden` int(11),
   PRIMARY KEY(`user_id`,`lightbox_image_id`),
   FOREIGN KEY (`user_id`) REFERENCES `4images_users`(`user_id`),
   FOREIGN KEY (`user_id`) REFERENCES `4images_users`(`user_id`)

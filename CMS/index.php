@@ -70,7 +70,7 @@ if (isset($_COOKIE['4images_userid'])) {
 }
 
 print '<div style="padding-top:80px;font-size:2em;position:fixed;">
-<h2 style="font-size:1em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h2>
+<h1 style="font-size:1em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h1>
 <h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
 
 <div style="margin:auto;margin-top:-20px;padding-left:40px;">

@@ -4,6 +4,50 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function saber_orden(){
+	
+	comprobar_config();
+	
+	$dato=0;
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
+	$consulta=mysqli_query($GLOBALS['conexion'],
+	'SELECT MAX(orden)+1 FROM '.$GLOBALS['table_prefix']."lightboxes WHERE user_id='".$_COOKIE['4images_userid']."'");
+		
+	$fila = mysqli_fetch_row($consulta);
+	
+	$dato=(int)$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $dato;
+}
+
+function ver_hits($pais){
+	
+	$dato=0;
+	
+	comprobar_config();
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+	
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+
+	$consulta=mysqli_query($GLOBALS['conexion'],"SELECT count(id_tracking) FROM tbl_tracking where pais='".$pais."'");
+    
+	$fila = mysqli_fetch_row($consulta);
+	
+	$dato=$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $dato;
+}
+
 function is_private_ip($ip){
 
 	if($ip=='127.0.0.1'){
@@ -17,8 +61,6 @@ function is_private_ip($ip){
 }
 
 function cabecera($ruta=""){
-
-
 
 date_default_timezone_set('Europe/Madrid');
 
@@ -35,6 +77,7 @@ print '
 	<meta name="revisit-after" content="10 days">
 	
 	<script src="'.$ruta.'js/funciones.js"></script>
+	<link rel="stylesheet" href="'.$ruta.'css/dashboard.css"/>
 	<link rel="stylesheet" href="'.$ruta.'css/styles.css">
 	<link rel="stylesheet" href="'.$ruta.'css/w3.css">
 	<link rel="stylesheet" href="'.$ruta.'css/bootstrap.min.css">
@@ -46,6 +89,7 @@ print '
 	<link rel="stylesheet" href="'.$ruta.'css/estilos.css">
     <link rel="stylesheet" href="'.$ruta.'css/scroll.css" />
     <link rel="stylesheet" href="'.$ruta.'css/prettify.css" />
+
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/default.css" />
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/component.css" />
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estiloDelEjemplo.css">
@@ -180,6 +224,7 @@ print '<nav>
     <ul>
             <li style="padding-top:20px;"><a href="'.$ruta3.'categories.php"><img class="icono" src="'.$ruta.'img/tag.png"/></a></li>
         <li style="padding-top:20px;"><a href="'.$ruta2.'index.php"><img class="icono" src="'.$ruta.'img/geo.png"/></a></li>
+<li style="padding-top:20px;"><a href="'.$ruta2.'estadisticas.php"><img class="icono" src="'.$ruta.'img/statics.png"/></a></li>
 
 		<br clear="all" />
     </ul>
@@ -501,13 +546,13 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;">
 
-				<a id="frmajax" onclick="favorito('.$image_id.')"><img alt="fav" style="height:1.5em;width:1.5em;" src="img/'.$icono.'" id="Imagen '.$image_id.'"/></a>
+				<a id="frmajax" onclick="favorito('.$image_id.')"><img alt="fav" style="height:1em;width:1em;" src="img/'.$icono.'" id="'.$image_id.'"/></a>
 		
 			</div>';
 		}
 	}
 	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img id="'.$image_id.'" style="height:3em;width:3em;" alt="Imagen '.
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img style="height:3em;width:3em;" alt="Imagen '.
 	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
 		
 		<div style="float:right;">
@@ -519,7 +564,7 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 	
 }
 
-function ver_categoria($cat_id,$final_sentencia=""){
+function ver_categoria($cat_id,$final_sentencia="",$favorito=false){
 
 	if($cat_id=='*' && $final_sentencia==""){
 		$final_sentencia='';
@@ -529,6 +574,9 @@ function ver_categoria($cat_id,$final_sentencia=""){
 		
 		$final_sentencia='WHERE cat_id='.$cat_id;
 	}
+
+
+$orden=' ORDER BY image_id DESC	LIMIT ';
 
 	include('config.php');
 	
@@ -546,6 +594,16 @@ function ver_categoria($cat_id,$final_sentencia=""){
 				image_media_file
 				FROM
 				'.$GLOBALS['table_prefix'].'images '.$final_sentencia;
+				
+		if($favorito){
+	$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
+
+FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'lightboxes F ON I.image_id=F.lightbox_image_id
+
+	WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix']."lightboxes  WHERE user_id='".$_COOKIE['4images_userid']."' order by orden desc)";
+	$orden=' ORDER BY F.orden DESC LIMIT ';
+}
+				
 		$compag         =(int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
 		$TotalReg       =$conexion->query($consulta);
 
@@ -561,14 +619,11 @@ function ver_categoria($cat_id,$final_sentencia=""){
 		
 		if(is_int($_GET['pag']) && $_GET['pag']<=$TotalRegistro && $_GET['pag']>0){
 	
-			$consultavistas =$consulta."
-								ORDER BY
-								image_id DESC
-								LIMIT ".(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
-		
+			$consultavistas =$consulta.$orden.(($compag-1)*$CantidadMostrar)." , ".$CantidadMostrar;
+
 			$consulta=$conexion->query($consultavistas);
 	
-			echo '<div style="margin-left:-40px;" class="table-responsive-xs">
+			echo '<div class="table-responsive-xs">
 					<table style="border:none;" class="table">';
 			
 			$ids=array();
@@ -587,33 +642,33 @@ function ver_categoria($cat_id,$final_sentencia=""){
 				$imagenes[]=$lista[3];	 
 			}
 			
-			$y=0;
+			$y=-1;
 
 			for($x=0;$x<count($nombres)-1;$x++){
 				
 				print '<tr style="border:none;">
-						<td style="border:none;font-size:1em;">'.$nombres[$y].'</td>
-						<td style="font-size:1em;border:none;">'.$nombres[$y+1].'</td>
-						<td style="font-size:1em;border:none;">'.$nombres[$y+2].'</td>
+						<td style="border:none;font-size:1em;font-weight:bold;">'.$nombres[++$y].'</td>
+						<td style="font-size:1em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
+						<td style="font-size:1em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
 					</tr>';
 						
 				print '<tr style="border:none;">';
 				
 				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 					
-					++$x;
+				++$x;
 					
-					if(!empty($imagenes[$x])){
+				if(!empty($imagenes[$x])){
 						
-						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
-					}
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
+				}
 					
-					++$x;
+				++$x;
 					
-					if(!empty($imagenes[$x])){
+				if(!empty($imagenes[$x])){
 						
-						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
-					}
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
+				}
 					
 					print '</tr>';
 			}
@@ -645,11 +700,18 @@ function ver_categoria($cat_id,$final_sentencia=""){
 		
 			echo '<div style="padding-top:30px;float:right;"><ul>';
 			
-			if($_GET['pag']>0 && $_GET['pag']>1){
+			if($_GET['pag']>2){
 				
-				echo '<li style="padding-left:45px;"class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag=1"><<</a></li>
-
-				<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$DecrementNum.'"><img style="width:3em;height:3em;" src="img/back.png"/></a></li>';
+				
+				echo '<li class="btn">
+						<a href="?cat_id='.$_GET['cat_id'].'&pag=1"><<</a>
+					</li>
+				
+				<li class="btn">
+					<a href="?cat_id='.$_SESSION['categoria'].'&pag='.$DecrementNum.'">
+						<img alt="go back" style="width:3em;height:3em;" src="img/back.png"/>
+					</a>
+				</li>';
 
 			}
 				
@@ -664,26 +726,25 @@ function ver_categoria($cat_id,$final_sentencia=""){
 				if($i<=$TotalRegistro){
 			
 				if($i==$compag){
-					echo "<li class=\"active\"><a href=\"?pag=".$i."\">".$i."</a></li>";
+					echo "<li class=\"active\"><a href=\"?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
 				}
 				else {
-					echo "<li><a href=\"?pag=".$i."\">".$i."</a></li>";
+					echo "<li><a href=\"?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
 				}     		
 				}
 			}
 					
-			if($_GET['pag']>0 && $_GET['pag']<$TotalRegistro){
+			if($_GET['pag']>0 && $_GET['pag']+1<$TotalRegistro){
 				
-				echo '<li class="btn"><a href="?cat_id='.$_GET['cat_id'].'&pag='.$IncrimentNum.'"><img style="width:3em;height:3em;" src="img/next.png"/></a></li>';
+				echo '<li class="btn"><a href="?cat_id='.$_SESSION['categoria'].'&pag='.$IncrimentNum.'"><img alt="go next" style="width:3em;height:3em;" src="img/next.png"/></a></li>';
 				
 				if($IncrimentNum<$TotalRegistro){
-					echo '<li class="btn"><a href=?cat_id='.$_GET['cat_id'].'&pag'.$TotalRegistro.'">>></a></li></ul></div>';
+					echo '<li style="margin-left:10px;" class="btn"><a href="?cat_id='.$_SESSION['categoria'].'&pag='.$TotalRegistro.'">>></a></li></ul></div>';
 				}
 			}
 		}
 		print '</ul>';
 	}
-	
 }
 
 function rmDir_rf($carpeta){
@@ -761,13 +822,13 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 
 }
 
-$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
+
 
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
 <div class="modal-header">
-
+<span style="font-size:20px;">' . ver_dato('cambiar_pass',$GLOBALS['idioma']). '</span>
 <button style="margin-left:40px;float:right;" type="button" class="close"
 data-dismiss="modal">
 <span >&times;</span>
@@ -778,20 +839,19 @@ data-dismiss="modal">
 
         <div class="form-group">
 		<img alt="usuario para registrar" class="icono2" src="'.$ruta.'img/user.png" />
-		<label style="font-size:2em;" for="nombre_usuario">' . ver_dato('user_name',
-    $GLOBALS['idioma']) . '</label>
-<input id="nombre_usuario" name="nombre_usuario" placeholder="' . ver_dato('user_name',
+		<label style="font-size:2em;" for="nombre_usuario">' . ver_dato('user_name',$GLOBALS['idioma']). '</label>
+<input style="margin:auto;width:80%;" id="nombre_usuario" name="nombre_usuario" placeholder="' . ver_dato('user_name',
     $GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
 <br/>
 <img alt="correo de restablecimiento" class="icono2" src="'.$ruta.'img/email.png"/>
 <label style="font-size:2em;" for="correo_restablecimiento">' . ver_dato('email',
     $GLOBALS['idioma']) . '</label>
-        <input id="correo_restablecimiento" name="correo_restablecimiento" placeholder="' .ver_dato('email', $GLOBALS['idioma']) . '"
+        <input style="margin:auto;width:80%;" id="correo_restablecimiento" name="correo_restablecimiento" placeholder="' .ver_dato('email', $GLOBALS['idioma']) . '"
 		type="text" class="form-control" />
       <br/>
 	  </div>
 		<br/><br/>
-           <input name="restablecer_pass" type="submit" value="' .
+           <input style="margin:auto;" name="restablecer_pass" type="submit" value="' .
 ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
 		 </form>
 </div>
@@ -848,9 +908,183 @@ function menu_lateral($ruta = ""){
 			$i_direccionIp='127.0.0.1';
 		}
 		
+		else{
+			
+			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$i_direccionIp));
+			
+			$region=$geo->city;
+			
+			switch($geo->country){
+			
+				case 'Spain':
+				$country ="es";
+				break;
+			
+				case 'France':
+				$country ="fr";
+				break;
+				
+				case 'Germany':
+				$country ="de";
+				break;
+				
+				case 'United States':
+				$country ="us";
+				break;
+				
+				case 'Norway':
+				$country ="no";
+				break;
+				
+				case 'Belgium':
+				$country ="be";
+				break;
+				
+				case 'Ukraine':
+				$country ="ukr";
+				break;
+				
+				case 'Canada':
+				$country ="ca";
+				break;
+				
+				case 'United Kingdom':
+				$country ="uk";
+				break;
+				
+				case 'India':
+				$country ="india";
+				break;
+				
+				case 'Chile':
+				$country ="chile";
+				break;
+				
+				case 'Brazil':
+				$country ="brasil";
+				break;
+				
+				case 'Thailand':
+				$country ="tai";
+				break;
+				
+				case 'Turkey':
+				$country ="turkia";
+				break;
+				
+				case 'Pakistan':
+				$country ="pakistan";
+				break;
+				
+				case 'Vietnam':
+				$country ="vietnam";
+				break;
+				
+				case 'Peru':
+				$country ="peru";
+				break;
+				
+				case 'Poland':
+				$country ="polonia";
+				break;
+				
+				case 'Indonesia':
+				$country ="indonesia";
+				break;
+				
+				case 'Ireland':
+				$country ="ireland";
+				break;
+				
+				case 'South Korea':
+				$country ="corea";
+				break;
+				
+				case 'Greece':
+				$country ="grecia";
+				break;
+					
+				case 'Italy':
+				$country ="italia";
+				break;
+				
+				case 'Netherlands':
+				$country ="holanda";
+				break;
+				
+				case 'Czechia':
+				$country ="chequia";
+				break;
+				
+				case 'Finland':
+				$country ="finlandia";
+				break;
+				
+				case 'Iran':
+				$country ="iran";
+				break;
+				
+				case 'Portugal':
+				$country ="portugal";
+				break;
+				
+				case 'China':
+				$country ="china";
+				break;
+				
+				case 'Israel':
+				$country ="israel";
+				break;
+				
+				case 'Romania':
+				$country ="romania";
+				break;
+				
+				case 'Russia':
+				$country ="rusia";
+				break;
+				
+				case 'Armenia':
+				$country ="armenia";
+				break;
+				
+				case 'Mauritius':
+				$country ="mauricio";
+				break;
+				
+				case 'Iraq':
+				$country ="iraq";
+				break;
+				
+				case 'Malaysia':
+				$country ="malasia";
+				break;
+					
+				case 'Philippines':
+				$country ="filipinas";
+				break;
+				
+				case 'Bangladesh':
+				$country ="bangladesh";
+				break;	
+				
+				case 'Colombia':
+				$country ="colombia";
+				break;
+				
+				case 'Reunion':
+				$country ="reunion";
+				break;
+				
+				default:
+				$country ="unknow";
+				break;
+			}
+		}
+				
 		mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
-		tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita) 
-		VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now()) ;");
+		tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
+		VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
 		
 		mysqli_close($GLOBALS['conexion']);
 	
@@ -937,7 +1171,7 @@ print '
 	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
        <br>
 	   
-	   <a title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
+	   <a style="margin-left:-15px;" title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   ';
 
 	}
@@ -1032,14 +1266,16 @@ if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
 	mysqli_close($GLOBALS['conexion']);
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
-		print '<a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php"><img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png"  ></a><br/>';
+		print '<div style="float:left;padding-left:50px;padding-bottom:20px;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php"><img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png"  ></a></div>';
 	}
 		
 }
 
 print '
- <br/> <a title="rss" href="'.$ruta.'rss.php"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
-<br/><br/><br/><br/><br/><br/><br/>
+ <br/> 
+ <div style="float:left;padding-left:50px;"><a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php"><img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/search.png"/></a></div>
+ <div style="float:left;padding-top:40px;padding-left:50px;padding-bottom:20px;"><a title="rss" href="'.$ruta.'rss.php"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a></div>
+
 </div>
 </nav>';
 
