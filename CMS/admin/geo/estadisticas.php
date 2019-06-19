@@ -10,6 +10,12 @@ include_once('../../includes/funciones.php');
 
 cabecera('../../');
 
+comprobar_cookie('../../');
+
+poner_menu('../../');
+
+poner_menu_geo('../../');
+
 if(isset($_COOKIE['4images_userid'])){
 	
 	$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
@@ -18,10 +24,6 @@ if(isset($_COOKIE['4images_userid'])){
 		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 	}
 }
-
-comprobar_cookie('../../');
-
-poner_menu('../../');
 
 $nombres=array("Russia",
     "USA",
@@ -62,12 +64,11 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 $hits_otros=$fila[0];
 */
 
-$datos=array($hits_rusia, $hits_usa,$hits_francia,
- $hits_alemania, $hits_brasil,$hits_italia);
+$datos=array($hits_rusia, $hits_usa,$hits_francia,$hits_alemania, $hits_brasil,$hits_italia);
 
 ?>
 <div class="content" style="margin-left:-75px;" >
-<div style="height:440px;width:370px;padding-top:80px;">
+<div style="height:440px;width:370px;">
 <canvas  style="width:100%;height:100%;" id="oilChart"></canvas>
 </div>
 <br/><br/>

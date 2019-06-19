@@ -74,9 +74,9 @@ print '<div style="padding-top:80px;font-size:2em;position:fixed;">
 <h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
 
 <div style="margin:auto;margin-top:-20px;padding-left:40px;">
+	<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php"><img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/></a>
     <a title="' . ver_dato('top', $GLOBALS['idioma']) . '" href="top.php"><img alt="' . ver_dato('top', $GLOBALS['idioma']) . '" class="icono" src="img/top.png"/></a>
-    <a title="' . ver_dato('all', $GLOBALS['idioma']) . '" href="todos.php"><img alt="' . ver_dato('all', $GLOBALS['idioma']) . '" class="icono" src="img/view.png"/></a>
-	<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php"><img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/></a>
+    <a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php"><img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/></a>
 </div>
 
 <div><br/>

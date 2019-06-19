@@ -104,7 +104,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		print '<h1 style="color:#116C5D;">'.$recuento[0].'</h1>
 		
-		<div style="background-color: rgba(255, 255, 255, 0);" class="container">
+		<div style="background-color: rgba(255, 255, 255, 0);margin-left:2%;" class="container">
 		
 			<img  class="img-fluid" alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
 			
@@ -244,7 +244,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		}	
 	
 		print'</div>
-		<div style="float:left;width:100%;">';
+		<div style="float:left;width:90%;margin-left:10%;">';
 	
 		print '
 		<hr/>

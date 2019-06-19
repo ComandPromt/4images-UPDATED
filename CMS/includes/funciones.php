@@ -75,7 +75,7 @@ print '
 	<meta name="robots" content="index,follow">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="revisit-after" content="10 days">
-	
+	<meta name="robots" content="index, nofollow">
 	<script src="'.$ruta.'js/funciones.js"></script>
 	<link rel="stylesheet" href="'.$ruta.'css/dashboard.css"/>
 	<link rel="stylesheet" href="'.$ruta.'css/styles.css">
@@ -472,9 +472,9 @@ function footer($ruta=""){
 </html>';
 }
 
-function obtener_lista_negra(){
+function obtener_lista_negra($sql="SELECT Nombre FROM antispam"){
 	
-	include('../config.php');
+	comprobar_config();
 	
 				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -482,7 +482,7 @@ function obtener_lista_negra(){
 	
 	mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
-	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT Nombre FROM antispam');
+	$consulta = mysqli_query($GLOBALS['conexion'], $sql);
 		
 		$lista_negra=array();
 		
@@ -552,8 +552,10 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		}
 	}
 	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;"><a href="details.php?image_id='.$image_id.'"> <img style="height:3em;width:3em;" alt="Imagen '.
-	$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/></a>'.$like.'
+	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
+			<a href="details.php?image_id='.$image_id.'"> 
+				<img class="img-fluid" alt="Imagen '.$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/>
+			</a>'.$like.'
 		
 		<div style="float:right;">
 				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
@@ -623,7 +625,7 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 
 			$consulta=$conexion->query($consultavistas);
 	
-			echo '<div class="table-responsive-xs">
+			echo '<div class="table-responsive-xs" >
 					<table style="border:none;" class="table">';
 			
 			$ids=array();
@@ -647,9 +649,9 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 			for($x=0;$x<count($nombres)-1;$x++){
 				
 				print '<tr style="border:none;">
-						<td style="border:none;font-size:1em;font-weight:bold;">'.$nombres[++$y].'</td>
-						<td style="font-size:1em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
-						<td style="font-size:1em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
+						<td style="border:none;font-size:1.8em;font-weight:bold;">'.$nombres[++$y].'</td>
+						<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
+						<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
 					</tr>';
 						
 				print '<tr style="border:none;">';
@@ -669,8 +671,12 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 						
 					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
 				}
-					
-					print '</tr>';
+				print '</tr>';
+
+					print '<tr style="border:none;">
+					<td style="border:none;" colspan=3><hr/>
+					</td></tr>';
+										
 			}
 		
 			echo "</table></div>";
@@ -698,7 +704,7 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 			
 			$_GET['pag']=(int)$_GET['pag'];
 		
-			echo '<div style="padding-top:30px;float:right;"><ul>';
+			echo '<div style="float:right;"><ul>';
 			
 			if($_GET['pag']>2){
 				
@@ -822,8 +828,6 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 
 }
 
-
-
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
@@ -893,7 +897,7 @@ function ver_dato($accion,$idioma){
 function menu_lateral($ruta = ""){
 	
 	if(!isset($_SESSION['track']) || $_SESSION['track']){
-	
+	$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		$GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
@@ -948,7 +952,7 @@ function menu_lateral($ruta = ""){
 				$country ="ca";
 				break;
 				
-				case 'United Kingdom':
+				case "United Kingdom":
 				$country ="uk";
 				break;
 				
@@ -1076,16 +1080,86 @@ function menu_lateral($ruta = ""){
 				$country ="reunion";
 				break;
 				
+				case "Hong Kong":
+				$country ="hongkong";
+				break;
+				
+				case 'Cambodia':
+				$country ="camboya";
+				break;
+				
+				case "United Arab Emirates":
+				$country ="emiratos";
+				break;
+				
+				case "South Africa":
+				$country ="sudafrica";
+				break;
+				
+				case "Mexico":
+				$country ="mexico";
+				break;
+				
+				case "Estonia":
+				$country ="estonia";
+				break;
+				
+				case "Austria":
+				$country ="austria";
+				break;
+				
+				case "Argentina":
+				$country ="argentina";
+				break;
+				
+				case "Japan":
+				$country ="japon";
+				break;
+				
+				case "Palestinian Territory":
+				$country ="palestina";
+				break;
+				
+				case 'Bolivia':
+				$country ="bolivia";
+				break;
+				
+				case 'Switzerland':
+				$country ="suiza";
+				break;
+				
+				case 'Morocco':
+				$country ="marruecos";
+				break;
+				
+				case "Venezuela":
+				$country ="venezuela";
+				break;
+				
+				case "Democratic Republic of the Congo":
+				$country ="congo";
+				break;
+				
+				case "Botswana":
+				$country ="botswana";
+				break;
+				
+				case "Singapore":
+				$country ="singapur";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
 			}
 		}
-				
-		mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
-		tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
-		VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
 		
+		if(!in_array($i_direccionIp, $lista_negra)){
+			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
+			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
+			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
+		}
+				
 		mysqli_close($GLOBALS['conexion']);
 	
 	}

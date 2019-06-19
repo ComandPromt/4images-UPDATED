@@ -73,7 +73,8 @@ print '<div style="margin:auto;"  class="table-responsive-xs">
 	
 	$ips=array();
 	
-	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT distinct(tx_ipRemota) FROM tbl_tracking ORDER BY id_tracking DESC LIMIT 50");
+	$consulta=mysqli_query ($GLOBALS['conexion'], "SELECT distinct(tx_ipRemota) 
+	FROM tbl_tracking WHERE dt_fechaVisita=CURDATE()ORDER BY id_tracking DESC LIMIT 50");
 	
 	while($fila = mysqli_fetch_row($consulta)){
 		$ips[]=$fila[0];
