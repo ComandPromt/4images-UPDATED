@@ -11,14 +11,17 @@ include('includes/funciones.php');
 cabecera();
 
 poner_menu();
+
+if(isset($_POST['busqueda'])){
+	$_SESSION['filtro']=$_POST['filtro'];
+	redireccionar('search.php?filtro='.$_SESSION['filtro']);
+}
 		
 if(isset($_GET['filtro']) && $_GET['filtro']!=""){
 	$_SESSION['filtro']=$_GET['filtro'];
 }
 	
-if(isset($_POST['busqueda'])){
-	$_SESSION['filtro']=$_POST['filtro'];
-}	
+	
 	
 print '<div style="float:left;padding-top:100px;">
 			<h1 style="font-size:2em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h1>

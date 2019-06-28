@@ -2,13 +2,15 @@
 
 session_start();
 
-$_SESSION['track']=true;
+$_SESSION['track']=false;
 
 include_once('../config.php');
 
 include('../includes/funciones.php');
 
 cabecera('../');
+
+zona_privada('../');
 
 comprobar_cookie('../');
 

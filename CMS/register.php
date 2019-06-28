@@ -50,17 +50,25 @@ if (isset($_POST['submit'])) {
 				
             $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
 
-            if ($comprobacion == 0 && !empty($_POST['user_name'])
-                && !empty($_POST['email']) && !empty($_POST['user_password'])
+            if ($comprobacion == 0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password'])
                 && !$SESSION['error']) {
 					
                 $user_password_hashed = salted_hash($_POST['user_password']);
 	
                 mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
-                    $GLOBALS['table_prefix'] . 'users (user_level,user_name,user_password,
-				user_email,user_allowemails,user_invisible,user_comments,nacionalidad)
-				VALUES(2,' . "'" . $_POST['user_name'] . "'" . ',' . "'" . $user_password_hashed .
-                    "'" . ",'" . $_POST['email'] . "'" . ',1,0,0,' . "'" . $_POST['pais'] . "')");
+                    $GLOBALS['table_prefix'] . "users (user_level,user_name,user_password,
+				user_email,user_allowemails,user_invisible,user_comments,nacionalidad,avatar)
+				VALUES('2','".$_POST['user_name'] . "','".$user_password_hashed .
+                    "','" .$_POST['email'] ."','1','0','0','".$_POST['pais'] . "','nofoto.jpg')");
+			  
+				$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT user_id  FROM ' .
+                    $GLOBALS['table_prefix'] . "users WHERE user_name='".$_POST['user_name'] . "'");
+					
+				$fila = mysqli_fetch_row($consulta);
+			  
+				mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes (remitente,destinatario,asunto,mensaje,leido) 	   
+				VALUES('1','". $fila[0]. "','".ver_dato('welcome', $GLOBALS['idioma'])."','".
+				ver_dato('msg_welcome', $GLOBALS['idioma']) . "','0')");
 			  
 				mysqli_close($GLOBALS['conexion']); 
 			
@@ -197,6 +205,7 @@ if (!$terminado && $SESSION['licencia']) {
 		<div style="height:350px;width:70%;">
 			<hr/> <h2  style="text-align:center;padding-bottom:10px;height:100px;" class="texto">'
 			. ver_dato('agreement_terms',$GLOBALS['idioma']) . '</h2>
+			
 		</div>
     </div>';
 
@@ -205,7 +214,9 @@ if (!$terminado && $SESSION['licencia']) {
     echo '<input style="margin-top:25px;" title="submit" name="envio" value="'.
     ver_dato('ok', $GLOBALS['idioma']) . '" type="submit"/>';
 
-    echo '</form></div></div>';
+    echo '</form>
+
+	</div></div>';
 }
 
 restablecer_pass();

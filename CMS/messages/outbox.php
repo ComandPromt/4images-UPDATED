@@ -16,7 +16,7 @@ if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
 
 poner_menu('../');
 
-print '<div class="container" style="width:113%;margin-auto;padding-top:100px;padding-bottom:30px;">';
+print '<div class="container" style="width:100%;margin-auto;padding-top:100px;padding-bottom:30px;">';
 
 menu_mensajes();
 
@@ -32,7 +32,7 @@ $consulta = mysqli_query($GLOBALS['conexion'], "SELECT COUNT(id) FROM mensajes W
 	
 	if($fila[0]>0){
 		print '<hr/>
-		<table style="margin-bottom:100px;margin:auto;">
+		<table class="table" style="margin-bottom:100px;margin:auto;">
 		<tr>
 		<th></th>
 		<th></th>
@@ -42,7 +42,8 @@ $consulta = mysqli_query($GLOBALS['conexion'], "SELECT COUNT(id) FROM mensajes W
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.destinatario=U.user_id  WHERE remitente='".$_COOKIE['4images_userid']."'");
 	
 		while($fila = mysqli_fetch_row($consulta)){
-				print '<tr><td>'.$fila[0].'</td><td>'.$fila[1].'</td><td><img class="icono" src="../img/user.png"/>'.$fila[2].'</td></tr>';
+				print '<tr><td>'.$fila[0].'</td><td>'.$fila[1].'</td><td><img class="icono" src="../img/user.png"/>'.$fila[2].'</td></tr>
+				<tr><td colspan="3"><hr/></td>';
 		}
 
 		print '</table>';

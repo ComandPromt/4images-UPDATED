@@ -146,7 +146,6 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 				</td>
 		
 				<td style="border:none;">
-				
 					<img alt="download" style="height:30px;width:30px;"  src="img/download.png"/>
 					<span id="descargas" style="font-size:14px;color:blue;">'.$fila[1].'</span>
 				</td>
@@ -160,11 +159,23 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		$fila = mysqli_fetch_row($consulta);
 			
 		if($fila[0]==0){
-			print '<div style="float:left;padding-left:135px;"><img alt="usuario" style="width:40px;height:40px;" src="img/user.png"/>
+					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM '.$GLOBALS['table_prefix'] . "users WHERE user_name='".$fila[1]."'");
+	
+		$avatar = mysqli_fetch_row($consulta);
+	
+		$avatar=trim($avatar[0]);
+		
+		if($avatar!='nofoto.jpg' && !empty($avatar)){
+			
+			$imagen_usuario='avatars/'.$avatar;
+		}
+		else{
+			$imagen_usuario='img/user.png';
+		}
+			print '<div style="float:left;padding-left:135px;">
+			<img alt="usuario" class="imgRedonda" style="padding-left:10px;width:40px;height:40px;" src="'.$imagen_usuario.'"/>
 			<span style="font-size:20px;"> '.$fila[1].'</span></div>';
 		}
-		
-
 				
 		if($_GET['image_id']>1){
 			
@@ -324,6 +335,12 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 						</div>
 					</div>
 				</div>';
+			}
+			
+			else{
+	
+				print '<a style="font-size:30px;padding-bottom:60px;" href="register.php"><img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/></a>';
+				
 			}
 		}
 	

@@ -28,14 +28,13 @@ or die("No se pudo conectar a la base de datos");
 
 mysqli_query($GLOBALS['conexion'], "UPDATE mensajes SET leido=1 WHERE destinatario='".$_COOKIE['4images_userid']."'");
 	
-
 $consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."'");
 	$fila = mysqli_fetch_row($consulta);
 	
 	if($fila[0]>0){
 print '
 <hr/>
-<table style="margin-bottom:100px;margin:auto;">
+<table class="table" style="margin-bottom:100px;margin:auto;">
 <tr>
 <th></th>
 <th></th>
@@ -44,7 +43,8 @@ print '
 $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.remitente=U.user_id WHERE destinatario='".$_COOKIE['4images_userid']."'");
 	
 while($fila = mysqli_fetch_row($consulta)){
-		print '<tr><td>'.$fila[0].'</td><td>'.$fila[1].'</td><td><img class="icono" src="../img/user.png"/>'.$fila[2].'</td></tr>';
+		print '<tr><td style="color:#7a4a0f;font-weight:bold;">'.$fila[0].'</td><td>'.$fila[1].'</td><td><img style="height:40px;width:40px;margin-right:20px;" src="../img/user.png"/>'.$fila[2].'</td></tr>
+		<tr><td colspan="3"><hr/></td></tr>';
 }
 
 print '

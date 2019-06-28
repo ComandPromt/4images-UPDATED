@@ -1,13 +1,19 @@
 <?php
 
+session_start();
+
+$_SESSION['track']=true;
+
 include('config.php');
+
 include('includes/funciones.php');
 
 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 
-$result = mysqli_query($GLOBALS['conexion'],'select image_name,cat_id,image_media_file,image_id from '.$GLOBALS['table_prefix'].'images order by image_id desc limit 10');
+$result = mysqli_query($GLOBALS['conexion'],'SELECT image_name,cat_id,image_media_file,image_id FROM
+ '.$GLOBALS['table_prefix'].'images ORDER BY image_id desc LIMIT 10');
 
 header("Content-type: text/xml");
 

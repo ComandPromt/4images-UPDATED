@@ -73,10 +73,17 @@ print '<div style="padding-top:80px;font-size:2em;position:fixed;">
 <h1 style="font-size:1em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h1>
 <h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
 
-<div style="margin:auto;margin-top:-20px;padding-left:40px;">
-	<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php"><img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/></a>
-    <a title="' . ver_dato('top', $GLOBALS['idioma']) . '" href="top.php"><img alt="' . ver_dato('top', $GLOBALS['idioma']) . '" class="icono" src="img/top.png"/></a>
-    <a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php"><img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/></a>
+<div style="margin:auto;margin-top:-20px;padding-left:40px;">';
+
+if(!logueado()){
+	print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
+			<img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
+		</a>';
+}
+
+print '<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
+			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
+		</a>
 </div>
 
 <div><br/>
@@ -112,7 +119,7 @@ if (file_exists('config.php')) {
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 
- print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
+		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
 		$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
 		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 

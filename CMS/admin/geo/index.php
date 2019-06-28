@@ -10,6 +10,8 @@ include_once('../../includes/funciones.php');
 
 cabecera('../../');
 
+zona_privada('../../');
+
 if(isset($_COOKIE['4images_userid'])){
 	
 	$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
@@ -46,7 +48,7 @@ SELECT tx_pagina, COUNT( tx_pagina )  AS i_total
 print '</div>';
 
 print '<div style="margin:auto;"  class="table-responsive-xs">
-<table class="table" style="text-align:center;margin:auto;margin-left:-40px;">
+<table class="table" style="text-align:center;margin-left:-60px;">
 
 		<tr>
 			<th style="font-size:20px;text-align:center;">'. ver_dato('page', $GLOBALS['idioma']).'</th>
@@ -142,12 +144,14 @@ print '<div style="margin:auto;"  class="table-responsive-xs">
 				
 			if($fila[1]!='local'){
 				print '<td>
-					<img alt="'.$procedencia.'" class="icono" src="../../img/countries/'.$fila[1].'.png"/>
-				</td>';
+						<a title="'.$fila[1].'">
+							<img alt="'.$procedencia.'" class="icono" src="../../img/countries/'.$fila[1].'.png"/>
+						</a>
+					</td>';
 			}
 				
 			else{
-				print '<td><span style="text-align:center;font-size:25px;">'.$fila[1].'</span></td>';
+				print '<td><span style="text-align:center;font-size:20px;">'.$fila[1].'</span></td>';
 			}
 			
 			if($region=="" || $fila[1] =="unknow"){
@@ -159,7 +163,7 @@ print '<div style="margin:auto;"  class="table-responsive-xs">
 				}
 			}
 				
-			print '<td style="font-size:25px;text-align:center;">'.$region.'</td>
+			print '<td style="font-size:20px;text-align:center;">'.$region.'</td>
 			</tr>';
 		
 		}

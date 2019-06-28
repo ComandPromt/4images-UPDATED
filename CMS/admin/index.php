@@ -8,6 +8,8 @@ cabecera('../');
 
 comprobar_cookie('../');
 
+zona_privada('../');
+
 poner_menu('../');
 
 poner_menu_geo('../');

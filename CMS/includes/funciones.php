@@ -4,6 +4,43 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function zona_privada($ruta=""){
+	
+	if(isset($_COOKIE['4images_userid'])){
+		
+		$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
+		
+		$salir=false;
+		
+		if($_COOKIE['4images_userid']<=0){
+			$salir=true;
+		}
+		
+		else{
+			
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
+	$consulta=mysqli_query($GLOBALS['conexion'],
+	'SELECT user_level FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
+		
+	$fila = mysqli_fetch_row($consulta);
+	
+	$dato=(int)$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	if($dato!=9){
+		$salir=true;
+	}
+	
+		}
+	}
+if($salir){
+	redireccionar($ruta.'index.php');
+}
+}
+
 function saber_orden(){
 	
 	comprobar_config();
@@ -19,6 +56,35 @@ function saber_orden(){
 	$fila = mysqli_fetch_row($consulta);
 	
 	$dato=(int)$fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $dato;
+}
+
+function ver_os($os,$final=""){
+	
+	$dato=0;
+	
+	comprobar_config();
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+	
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
+	
+	$sql="SELECT count(id_tracking) FROM tbl_tracking WHERE tx_navegador like '%".$os."%'";
+	
+	if($final!=""){
+		$sql.=" AND tx_navegador NOT LIKE '%".$final."%'";
+	}
+	
+	$consulta=mysqli_query($GLOBALS['conexion'],$sql);
+    
+	$fila = mysqli_fetch_row($consulta);
+	
+	$dato=$fila[0];
 	
 	mysqli_close($GLOBALS['conexion']);
 	
@@ -261,6 +327,9 @@ print '<nav>
         <li style="padding-top:20px;"><a href="cambiar_idioma.php">
 		'.ver_dato('cambiar_idioma', $GLOBALS['idioma']).'</a></li>
 
+		<li style="padding-top:20px;"><a href="cambiar_avatar.php">
+		'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'</a></li>
+
 		<br clear="all" />
     </ul>
 
@@ -290,19 +359,35 @@ function consecutivos(array $array){
 	return $numero;
 }
 
+function logueado($ruta=""){
+	
+	$pass="";
+		
+	$respuesta=false;
+
+	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
+		$respuesta=true;
+	}
+	
+	return $respuesta;
+}
+
 function comprobar_cookie($ruta=""){
 	
 	$pass="";
 
-	if(isset($_COOKIE['pass'])){
+	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
 		
-		$pass=saber_pass($_COOKIE['4images_userid']);
-
+		
+			$pass=saber_pass($_COOKIE['4images_userid']);
+		
+		
+		
 	}
 	
-	if(!isset($_COOKIE['4images_userid']) || !isset($_COOKIE['pass']) ||$_COOKIE['4images_userid']<=0 || $pass!=$_COOKIE['pass']){
-		redireccionar($ruta.'index.php');
-	}
+	else{
+			redireccionar($ruta.'index.php');
+		}
 }
 
 function saber_pass($id){
@@ -833,7 +918,7 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 <div class="modal-content">
 <div class="modal-header">
 <span style="font-size:20px;">' . ver_dato('cambiar_pass',$GLOBALS['idioma']). '</span>
-<button style="margin-left:40px;float:right;" type="button" class="close"
+<button style="margin-left:30px;float:right;" type="button" class="close"
 data-dismiss="modal">
 <span >&times;</span>
 </button>
@@ -867,8 +952,11 @@ function crear_carpetas(){
 	
 	if(!file_exists('data/media')){
 			mkdir('data/media', 0777, true);
-		}
+	}
 	
+	if(!file_exists('avatars')){
+			mkdir('avatars', 0777, true);
+	}
 }
 
 function ver_dato($accion,$idioma){
@@ -910,6 +998,11 @@ function menu_lateral($ruta = ""){
 		
 		if(strlen($i_direccionIp)<12){
 			$i_direccionIp='127.0.0.1';
+			$country ="home";
+		}
+		
+		if(is_private_ip($i_direccionIp)){
+			$country ="home";
 		}
 		
 		else{
@@ -1128,6 +1221,10 @@ function menu_lateral($ruta = ""){
 				$country ="suiza";
 				break;
 				
+				case 'Sweden':
+				$country ="suecia";
+				break;
+				
 				case 'Morocco':
 				$country ="marruecos";
 				break;
@@ -1146,6 +1243,102 @@ function menu_lateral($ruta = ""){
 				
 				case "Singapore":
 				$country ="singapur";
+				break;
+				
+				case "Moldova":
+				$country ="moldavia";
+				break;
+				
+				case "Honduras":
+				$country ="honduras";
+				break;
+				
+				case "Ecuador":
+				$country ="ecuador";
+				break;
+				
+				case "Mongolia":
+				$country ="mongolia";
+				break;
+				
+				case "Nigeria":
+				$country ="nigeria";
+				break;
+				
+				case "Egypt":
+				$country ="egipto";
+				break;
+				
+				case 'Latvia':
+				$country ="letonia";
+				break;
+				
+				case "Croatia":
+				$country ="croacia";
+				break;
+				
+				case 'Slovakia':
+				$country ="eslovaquia";
+				break;
+				
+				case 'Nepal':
+				$country ="nepal";
+				break;
+				
+				case 'Angola':
+				$country ="angola";
+				break;
+				
+				case 'Kenya':
+				$country ="kenya";
+				break;
+				
+				case 'Australia':
+				$country ="australia";
+				break;
+				
+				case 'Hungary':
+				$country ="hungria";
+				break;
+				
+				case 'Kazakhstan':
+				$country ="kazajistan";
+				break;
+				
+				case 'Denmark':
+				$country ="dinamarca";
+				break;
+				
+				case 'Tunisia':
+				$country ="tunez";
+				break;
+				
+				case 'Bulgaria':
+				$country ="bulgaria";
+				break;
+				
+				case 'Timor Leste':
+				$country ="timor-oriental";
+				break;
+				
+				case 'Serbia':
+				$country ="serbia";
+				break;
+				
+				case 'Lithuania':
+				$country ="lituania";
+				break;
+				
+				case 'Nicaragua':
+				$country ="nicaragua";
+				break;
+				
+				case 'Panama':
+				$country ="panama";
+				break;
+				
+				case 'Saudi Arabia':
+				$country ="arabia-saudi";
 				break;
 				
 				default:
@@ -1206,7 +1399,6 @@ print '
 			<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
         <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput">
         <br/><br/>
-
    
 		<input id="login" style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
@@ -1220,6 +1412,9 @@ print '
 	}
 	
 	else{
+		
+		$imagen_usuario=$ruta.'img/user.png';
+		
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
@@ -1230,15 +1425,34 @@ print '
 		$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
 		$recuento = mysqli_fetch_row($consulta);
 		
+		$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM '.$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
+	
+		$avatar = mysqli_fetch_row($consulta);
+	
+		$avatar=trim($avatar[0]);
+		
+		
+		if($avatar!='nofoto.jpg' && !empty($avatar)){
+			
+			$imagen_usuario=$ruta.'avatars/'.$avatar;
+		}
+		
 		mysqli_close($GLOBALS['conexion']);
 
 		if($recuento[0]>0){
+			
+			if(strpos(obtener_direccion(),"messages")>0){
+				$enlace="";
+			}
+			else{
+				$enlace="messages/";
+			}
 			print '
-			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="messages/inbox.php"><span style="font-size:2em;">'.$recuento[0].'</span></a>';
+			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php"><span style="font-size:2em;">'.$recuento[0].'</span></a>';
 		}
 		
 		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
-	   <img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/user.png"/><br/><br/><span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
+	   <a title="'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'" href="'.$ruta.'cambiar_avatar.php"><img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono imgRedonda" src="'.$imagen_usuario.'"/></a><br/><br/><span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
        <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
 	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
@@ -1427,7 +1641,7 @@ function poner_menu($ruta = ""){
 		$recuento = mysqli_fetch_row($consulta);
 	
 		if($recuento[0]>0){
-			print '<aside style="background-color: rgba(255, 255, 255, 0);float:right;margin-left:37%;margin-top:-45px;position:fixed;z-index:1;">
+			print '<aside style="background-color: rgba(255, 255, 255, 0);float:right;margin-left:30%;margin-top:-45px;position:fixed;z-index:1;">
 			<div style="background-color: rgba(255, 255, 255, 0);">
 				<div style="background-color: rgba(255, 255, 255, 0);">
 					<div style="background-color: rgba(255, 255, 255, 0);width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">

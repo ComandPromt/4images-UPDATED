@@ -1,3 +1,9 @@
+.imgRedonda {
+    width:300px;
+    height:300px;
+    border-radius:150px;
+}
+
 .menu:last-child {
 	padding-top:10px;
 }
