@@ -72,6 +72,48 @@ var accion="lightbox.php?action=guardar";
 		
 	});
 	}
+
+function ocultar(id){
+
+var icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
+
+var accion="acciones.php?action=ocultar";
+
+	if(icono=='fav_2.ico'){
+		var accion="acciones.php?action=ver";
+	}
+
+	$(document).ready(function(){
+
+	accion+="&image_id="+id;
+
+	var datos=$('#frmajax').serialize();
+			$.ajax({
+				type:"POST",
+				url:accion,
+				data:datos,
+				success:function(r){
+					icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
+					
+					if(r==1){
+						
+						if(icono=='fav_2.ico'){
+						document.getElementById(id).src='img/fav.ico';
+									}
+						
+						else{
+						document.getElementById(id).src= 'img/fav_2.ico';
+						}
+					
+				}
+			
+				}
+			});
+
+			return false;
+		
+	});
+	}
 	
 		function descarga(id){
 

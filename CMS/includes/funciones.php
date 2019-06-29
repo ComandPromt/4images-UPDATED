@@ -606,7 +606,7 @@ function deliver_response($status){
     echo $json_response;
 }
 
-function vercampo($nombre,$categoria,$imagen,$image_id){
+function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 	
 	$icono="fav.ico";
 	$like="";
@@ -631,7 +631,9 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;">
 
-				<a id="frmajax" onclick="favorito('.$image_id.')"><img alt="fav" style="height:1em;width:1em;" src="img/'.$icono.'" id="'.$image_id.'"/></a>
+				<a id="frmajax" onclick="favorito('.$image_id.')">
+					<img alt="fav" style="height:1em;width:1em;" src="img/'.$icono.'" id="'.$image_id.'"/>
+				</a>
 		
 			</div>';
 		}
@@ -645,13 +647,45 @@ function vercampo($nombre,$categoria,$imagen,$image_id){
 		<div style="float:right;">
 				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
 					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="img/download.png"/>
-				</a>
+				</a>';
+				
+				if($mis_cargas){
+					
+					
+				$icono2='view.png';
+				
+					$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+			
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active FROM ' .
+		$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
+	
+		$fila = mysqli_fetch_row($consulta);
+
+		if((int)$fila[0]==1){
+			$icono2="hide.png";
+		}
+
+		mysqli_close($GLOBALS['conexion']);
+					
+					print '<a id="frmajax" onclick="ocultar('.$image_id.')">
+					<img style="height:1em;width:1em;" src="img/'.$icono2.'"/>
+					</a>';
+					
+					print '<a id="frmajax" onclick="delete('.$image_id.')">
+					<img style="height:1em;width:1em;" src="img/delete.ico"/>
+					</a>';
+				}
+				
+				
+		print '		
 		</div>	
 	</td>';
 	
 }
 
-function ver_categoria($cat_id,$final_sentencia="",$favorito=false){
+function ver_categoria($cat_id,$final_sentencia="",$favorito=false,$mis_cargas=false){
 
 	if($cat_id=='*' && $final_sentencia==""){
 		$final_sentencia='';
@@ -661,7 +695,10 @@ function ver_categoria($cat_id,$final_sentencia="",$favorito=false){
 		
 		$final_sentencia='WHERE cat_id='.$cat_id;
 	}
-
+	
+if($mis_cargas){
+	$final_sentencia='WHERE user_id='.$_COOKIE['4images_userid'];
+}
 
 $orden=' ORDER BY image_id DESC	LIMIT ';
 
@@ -710,7 +747,7 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 
 			$consulta=$conexion->query($consultavistas);
 	
-			echo '<div class="table-responsive-xs" >
+			echo '<div style="padding-top:40px;" class="table-responsive-xs" >
 					<table style="border:none;" class="table">';
 			
 			$ids=array();
@@ -741,20 +778,20 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 						
 				print '<tr style="border:none;">';
 				
-				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
+				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
 					
 				++$x;
 					
 				if(!empty($imagenes[$x])){
 						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
 				}
 					
 				++$x;
 					
 				if(!empty($imagenes[$x])){
 						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x]);
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
 				}
 				print '</tr>';
 
@@ -1290,7 +1327,7 @@ function menu_lateral($ruta = ""){
 				break;
 				
 				case 'Kenya':
-				$country ="kenya";
+				$country ="kenia";
 				break;
 				
 				case 'Australia':
@@ -1453,12 +1490,13 @@ print '
 		
 		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
 	   <a title="'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'" href="'.$ruta.'cambiar_avatar.php"><img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono imgRedonda" src="'.$imagen_usuario.'"/></a><br/><br/><span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
-       <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav.png"></a><br>
+       <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"></a><br>
 	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
        <br>
 	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
        <br>
-	   
+	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"></a><br/>
+       <br>
 	   <a style="margin-left:-15px;" title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
 	   ';
 

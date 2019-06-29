@@ -2,7 +2,7 @@
 
 session_start();
 
-$_SESSION['pagina']="index.php";
+$_SESSION['pagina']="messages/inbox.php";
 
 include ('config.php');
 
