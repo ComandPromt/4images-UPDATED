@@ -21,7 +21,7 @@ if (file_exists('config.php')) {
         unlink('data/database/default/sentencias.sql');
     }
 
-    include_once 'config.php';
+    include('config.php');
 
     cabecera();
 
@@ -91,13 +91,12 @@ print '<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.ph
 
 if (file_exists('config.php')) {
 
-    include 'config.php';
     $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 
     $consulta = mysqli_query($GLOBALS['conexion'],
-        'SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'] . 'images
+        'SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'] . 'images WHERE image_active=1
 	ORDER BY image_id DESC LIMIT 9');
     $fila = mysqli_fetch_array($consulta);
 
@@ -109,7 +108,7 @@ if (file_exists('config.php')) {
 		<div style="margin-top:-40px;background-color: rgba(255, 255, 255, 0);"class="content-carrousel">';
 
         $consulta = mysqli_query($GLOBALS['conexion'],
-            'SELECT cat_id,image_media_file,image_id,image_name FROM ' . $GLOBALS['table_prefix'] . 'images
+            'SELECT cat_id,image_media_file,image_id,image_name FROM ' . $GLOBALS['table_prefix'] . 'images WHERE image_active=1
 		ORDER BY image_iD DESC LIMIT 9');
 
         while ($fila = mysqli_fetch_array($consulta)) {
@@ -118,15 +117,20 @@ if (file_exists('config.php')) {
           class="shadow"><a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> <img alt="' . $fila[2] . '" style="width:4em;height:4em;"
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
-
+		
+	mysqli_close($GLOBALS['conexion']);
+	
 		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
-		$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
+		if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
+			$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
+		}
+
 		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
 	
     }
    
-	mysqli_close($GLOBALS['conexion']);
+
 	
 	print '</div></div>';
 }

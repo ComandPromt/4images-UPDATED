@@ -23,10 +23,7 @@ comprobar_cookie();
 
 poner_menu();
 
-print '<div style="backgound-color:red;">';
 ver_categoria('*',"",false,true);
-
-print '</div>';
 
 restablecer_pass();
 

@@ -179,21 +179,40 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 				
 		if($_GET['image_id']>1){
 			
-			$id=(int)$_GET['image_id'];
-			--$id;
+		
+ 
+ $id_images=array();
+ 
+$consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT image_id FROM '.$GLOBALS['table_prefix']."images
+			WHERE image_active='1'");
+			
+			while($recuento = mysqli_fetch_row($consulta)){
+				$id_images[]=$recuento[0];
+			}
 
-			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_media_file,cat_id,image_name FROM '.$GLOBALS['table_prefix']."images
-			WHERE image_id='".$id."'");
+			$imagen_anterior= array_search($_GET['image_id'], $id_images);
 			
-			$recuento = mysqli_fetch_row($consulta);
+			$imagen_anterior--;
+
+			if($imagen_anterior>=0){
+				
+				$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT image_media_file,cat_id,image_name FROM '.$GLOBALS['table_prefix']."images
+				WHERE image_id='".$id_images[$imagen_anterior]."'");
 			
-			print '<div style="float:left;padding-top:40px;padding-left:30px;">';
+				$recuento = mysqli_fetch_row($consulta);
+		
+				print '<div style="float:left;padding-top:40px;padding-left:30px;">';
 					
-			print '
-			<a style="text-decoration:none;" href="details.php?image_id='.($id).'" ><img alt="go back" style="height:40px;width:40px;" src="img/back_2.png"/>
-			<img alt="'.$recuento[2].'" style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/></a>
-			</div>';
+				print '
+				<a style="text-decoration:none;" href="details.php?image_id='.$id_images[$imagen_anterior].'" >
+					<img alt="go back" style="height:40px;width:40px;" src="img/back_2.png"/>
+					<img alt="'.$recuento[2].'" style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
+				</a>
+				</div>';
+			}
+
 		}	
 	
 		$icono="fav.ico";
@@ -223,7 +242,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 		print '<div style="float:left;padding-top:40px;padding-left:10px;">
 	
-		<div style="float:left;padding-right:40px;">
+		<div style="float:left;padding-left:20px;padding-right:40px;">
 			<a onclick="fullwin('.$_GET['image_id'].');">
 				<img alt="full screen" style="height:40px;width:40px;" src="img/full_screen.png">
 			</a>
@@ -238,20 +257,37 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 	
 		if($_GET['image_id']<$ultima_imagen){
 		
-			$id=(int)$_GET['image_id'];
-			++$id;
-
-			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_media_file,cat_id,image_name FROM '.$GLOBALS['table_prefix']."images
-			WHERE image_id='".$id."'");
+		///////////////////////////////////////////////////////////////////////////////////////////
+				
+		 $id_images=array();
+ 
+$consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT image_id FROM '.$GLOBALS['table_prefix']."images
+			WHERE image_active='1'");
 			
-			$recuento = mysqli_fetch_row($consulta);
+			while($recuento = mysqli_fetch_row($consulta)){
+				$id_images[]=$recuento[0];
+			}
+
+			$imagen_posterior= array_search($_GET['image_id'], $id_images);
+			
+			$imagen_posterior++;
 		
-			print '
-			<div style="float:left;padding-left:40px;">
-				<a style="text-decoration:none;" href="details.php?image_id='.$id.'" >
-				<img alt="'.$recuento[2].'" style="height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
-			<img alt="go next" style="margin-left:10px;height:40px;width:40px;" src="img/next_2.png"/></a></div>';
+				$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT image_media_file,cat_id,image_name FROM '.$GLOBALS['table_prefix']."images
+				WHERE image_id='".$id_images[$imagen_posterior]."'");
+			
+				$recuento = mysqli_fetch_row($consulta);
+		
+				print '<div style="float:left;padding-left:30px;">';
+					
+				print '
+				<a style="text-decoration:none;" href="details.php?image_id='.$id_images[$imagen_posterior].'" >
+					<img alt="'.$recuento[2].'" style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
+					<img alt="go next" style="height:40px;width:40px;margin-left:10px;" src="img/next_2.png"/>
+				</a>
+				</div>';
+		
 		}	
 	
 		print'</div>

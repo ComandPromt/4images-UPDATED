@@ -25,8 +25,8 @@ print '
 		<p>
 		<label>'.
 		ver_dato('insertar_categoria', $GLOBALS['idioma']).'</label>
+		
 		<select style="font-size:20px;" name="categoria">';
-
 
 include('../config.php');
 
@@ -46,6 +46,11 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 		$numero_categorias=1;
 
 		while($fila = mysqli_fetch_row($consulta)){
+			
+			if(!file_exists('../data/media/'.$fila[1])){
+				mkdir('../data/media/'.$fila[1], 0777, true);
+			}
+			
 			print '<option value="'.$fila[1].'">'.$fila[0].'</option>';
 
 		}

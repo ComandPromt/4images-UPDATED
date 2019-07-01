@@ -38,14 +38,14 @@ var icono=document.getElementById(id).src.substr(document.getElementById(id).src
 var accion="lightbox.php?action=guardar";
 
 	if(icono=='fav_2.ico'){
-		var accion="lightbox.php?action=eliminar";
+		accion="lightbox.php?action=eliminar";
 	}
 
 	$(document).ready(function(){
 
 	accion+="&image_id="+id;
 
-	var datos=$('#frmajax').serialize();
+	var datos=$('#frmajax_img_'+id).serialize();
 			$.ajax({
 				type:"POST",
 				url:accion,
@@ -73,77 +73,76 @@ var accion="lightbox.php?action=guardar";
 	});
 	}
 
-function ocultar(id){
+function ocultar_img(id){
 
-var icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
+	var icono=document.getElementById('IMG_'+id).src.substr(document.getElementById('IMG_'+id).src.lastIndexOf("/")+1,document.getElementById('IMG_'+id).src.lenght);
 
-var accion="acciones.php?action=ocultar";
-
-	if(icono=='fav_2.ico'){
-		var accion="acciones.php?action=ver";
+	var accion="acciones.php?action=ver";
+	
+	if(icono=='hide.png'){
+		accion="acciones.php?action=ocultar";
 	}
 
 	$(document).ready(function(){
 
 	accion+="&image_id="+id;
 
-	var datos=$('#frmajax').serialize();
+	var datos=$('#frm_img_'+id).serialize();
 			$.ajax({
 				type:"POST",
 				url:accion,
 				data:datos,
 				success:function(r){
-					icono=document.getElementById(id).src.substr(document.getElementById(id).src.lastIndexOf("/")+1,document.getElementById(id).src.lenght);
-					
+					icono=document.getElementById('IMG_'+id).src.substr(document.getElementById('IMG_'+id).src.lastIndexOf("/")+1,document.getElementById('IMG_'+id).src.lenght);
+		
 					if(r==1){
+					
+						if(icono=='hide.png'){
+							document.getElementById('IMG_'+id).src= 'img/view.png';
+						}
 						
-						if(icono=='fav_2.ico'){
-						document.getElementById(id).src='img/fav.ico';
-									}
 						
 						else{
-						document.getElementById(id).src= 'img/fav_2.ico';
+							document.getElementById('IMG_'+id).src='img/hide.png';
 						}
-					
+					}	
 				}
 			
-				}
+				
 			});
 
 			return false;
 		
 	});
-	}
-	
-		function descarga(id){
+}
 
-var numero_descargas=parseInt(document.getElementById('descargas').innerHTML);
+function descarga(id){
 
-var accion="download.php?image_id="+id;
+	var numero_descargas=parseInt(document.getElementById('descargas').innerHTML);
 
+	var accion="download.php?image_id="+id;
 
 	$(document).ready(function(){
 
-	var datos=$('#frmdownload').serialize();
-			$.ajax({
-				type:"POST",
-				url:accion,
-				data:datos,
-				success:function(r){
-						
-					if(r==1){
-						document.getElementById('descargas').innerHTML=++numero_descargas;
-					
-				}
-			
-				}
-			});
-
-			return false;
+		var datos=$('#frmdownload').serialize();
 		
+		$.ajax({
+			type:"POST",
+			url:accion,
+			data:datos,
+			success:function(r){
+					
+				if(r==1){
+					document.getElementById('descargas').innerHTML=++numero_descargas;
+				
+			}
+		
+			}
+		});
+		
+		return false;
 	});
-	}
-	
+}
 
 function mostrar() {
     document.getElementById("sidebar").style.width = "300px";
@@ -151,6 +150,7 @@ function mostrar() {
     document.getElementById("abrir").style.display = "none";
     document.getElementById("cerrar").style.display = "inline";
 }
+
 function ocultar() {
     document.getElementById("sidebar").style.width = "0";
     document.getElementById("contenido").style.marginLeft = "0";

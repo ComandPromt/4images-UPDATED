@@ -505,11 +505,7 @@ session_start();
 						VALUES('".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
 			
 					}
-					else{
-						if(file_exists('../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd)){
-							unlink('../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
-						}
-					}
+					
 				
 				}
 				

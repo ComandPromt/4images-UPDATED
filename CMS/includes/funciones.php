@@ -631,7 +631,7 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;">
 
-				<a id="frmajax" onclick="favorito('.$image_id.')">
+				<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
 					<img alt="fav" style="height:1em;width:1em;" src="img/'.$icono.'" id="'.$image_id.'"/>
 				</a>
 		
@@ -652,34 +652,43 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 				if($mis_cargas){
 					
 					
-				$icono2='view.png';
+				$icono2='hide.png';
 				
 					$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
 			
-		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active FROM ' .
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
 		$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
 	
 		$fila = mysqli_fetch_row($consulta);
+	
+		$cat_id=$fila[1];
+		
+		$file=$fila[2];
 
 		if((int)$fila[0]==1){
-			$icono2="hide.png";
+			$icono2="view.png";
 		}
 
 		mysqli_close($GLOBALS['conexion']);
-					
-					print '<a id="frmajax" onclick="ocultar('.$image_id.')">
-					<img style="height:1em;width:1em;" src="img/'.$icono2.'"/>
+		
+print "<a id=\"frm_img_del_".$image_id.'" href="delete.php?image_id='.$image_id.",&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
+					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="img/delete.ico"/>
 					</a>';
 					
-					print '<a id="frmajax" onclick="delete('.$image_id.')">
-					<img style="height:1em;width:1em;" src="img/delete.ico"/>
+					print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
+					<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="img/'.$icono2.'"/>
 					</a>';
+					
+					
+
+
 				}
 				
 				
-		print '		
+		print '	
+	
 		</div>	
 	</td>';
 	
@@ -696,11 +705,11 @@ function ver_categoria($cat_id,$final_sentencia="",$favorito=false,$mis_cargas=f
 		$final_sentencia='WHERE cat_id='.$cat_id;
 	}
 	
-if($mis_cargas){
-	$final_sentencia='WHERE user_id='.$_COOKIE['4images_userid'];
-}
+	if($mis_cargas){
+		$final_sentencia='WHERE user_id='.$_COOKIE['4images_userid'];
+	}
 
-$orden=' ORDER BY image_id DESC	LIMIT ';
+	$orden=' ORDER BY image_id DESC	LIMIT ';
 
 	include('config.php');
 	
@@ -722,7 +731,7 @@ $orden=' ORDER BY image_id DESC	LIMIT ';
 		if($favorito){
 	$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
 
-FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'lightboxes F ON I.image_id=F.lightbox_image_id
+	FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'lightboxes F ON I.image_id=F.lightbox_image_id
 
 	WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix']."lightboxes  WHERE user_id='".$_COOKIE['4images_userid']."' order by orden desc)";
 	$orden=' ORDER BY F.orden DESC LIMIT ';
@@ -778,6 +787,8 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 						
 				print '<tr style="border:none;">';
 				
+				
+				
 				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
 					
 				++$x;
@@ -788,11 +799,15 @@ FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'light
 				}
 					
 				++$x;
+				
+				if(count($nombres)>2){
 					
-				if(!empty($imagenes[$x])){
+					if(!empty($imagenes[$x])){
 						
 					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
-				}
+					}
+				}	
+				
 				print '</tr>';
 
 					print '<tr style="border:none;">
@@ -1384,7 +1399,7 @@ function menu_lateral($ruta = ""){
 			}
 		}
 		
-		if(!in_array($i_direccionIp, $lista_negra)){
+		if(comprobar_si_es_valido($i_direccionIp,$lista_negra)){
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
 			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
 			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
@@ -1745,34 +1760,37 @@ function poner_menu($ruta = ""){
 
 function imagen_aleatoria(){
 	
+	$resultado="";
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
-	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT MAX(image_id) FROM '.$GLOBALS['table_prefix'].'images WHERE image_active=1');
+	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT image_id FROM '.$GLOBALS['table_prefix']."images WHERE image_active='1'");
 
 	if(mysqli_affected_rows($GLOBALS['conexion'])>0){
 	 
-		$num_imagenes = mysqli_fetch_array($consulta);
+	 $id_imagenes=array();
+	 
+		while($num_imagenes = mysqli_fetch_array($consulta)){
+			$id_imagenes[]=$num_imagenes[0];
+		}
+				
+			$id_imagen_aleatoria = $id_imagenes[array_rand($id_imagenes)];
 		
-		if($num_imagenes[0]!=""){
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT FLOOR(RAND()*'.$num_imagenes[0].')+1');
-			$id_imagen_aleatoria = mysqli_fetch_array($consulta);
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_media_file,image_id,image_name FROM '.$GLOBALS['table_prefix'].'images WHERE image_id='.$id_imagen_aleatoria[0]);
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_id,image_media_file,image_name FROM '.$GLOBALS['table_prefix']."images WHERE image_active='1' AND image_id='".$id_imagen_aleatoria."'");
+			
 			$imagen_aleatoria = mysqli_fetch_array($consulta);
 	  
-			return $imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$imagen_aleatoria[2]."#".$imagen_aleatoria[3];
+			$resultado=$imagen_aleatoria[0]."-".$imagen_aleatoria[1]."*".$id_imagen_aleatoria."#".$imagen_aleatoria[2];
 		}
-		
-	   else{
-			return 'vacio';
-		}
-	}
- 
+	
 	else{
-		return 'vacio';
+		$resultado= 'vacio';
 	}
 	
 	mysqli_close($GLOBALS['conexion']);
+ 
+	return $resultado;
 }
 
 function comprobar_si_es_valido($cadena,array $lista_negra){
