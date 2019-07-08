@@ -1,5 +1,14 @@
 <?php
-include('cabecera.php');
+
+session_start();
+
+$_SESSION['pagina']="forgot_pass.php";
+
+include_once('config.php');
+
+include('includes/funciones.php');
+
+cabecera();
 
 if(isset($_COOKIE['4images_userid'])){
 	
@@ -9,7 +18,7 @@ if(isset($_COOKIE['4images_userid'])){
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 			}
 		}
-		
+
 	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">

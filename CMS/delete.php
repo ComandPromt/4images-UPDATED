@@ -71,17 +71,20 @@ print '<div style="float:left;padding-top:80px;margin-left:10%;" >
 <hr/>
 
 	<form method="post" action="'.$_SERVER['PHP_SELF']."?image_id=".$_GET['image_id'].",&cat_id=".$_GET['cat_id']."&file=".$_GET['file']."&pag=".$_GET['pag'].'">
+
 <legend style="margin-left:-20px;">Esta seguro de borrar la imagen?</legend>
+
 <div  style="margin-left:5px;padding-bottom:10px;padding-top:20px;" class="custom-control custom-radio">
-  <input type="radio" class="custom-control-input" id="defaultGroupExample1" value="Si" name="eleccion" checked />
+  <input type="radio" class="custom-control-input" id="defaultGroupExample1" value="Si" name="eleccion"  />
   <label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample1">SI</label>
-  
+  <img class="icono" src="img/check.png"/>
   
 </div>
 
 <div style="margin-left:20px;padding-top:80px;" class="custom-control custom-radio">
-  <input type="radio" class="custom-control-input" id="defaultGroupExample2" value="No" name="eleccion" />
+  <input type="radio" class="custom-control-input" id="defaultGroupExample2" value="No" name="eleccion" checked/>
   <label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample2">No</label>
+  <img class="icono" src="img/error.png"/>
 </div>
 
 <input name="eliminar_img" style="margin-top:50px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>

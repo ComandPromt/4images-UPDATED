@@ -4,6 +4,21 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function visible($imagen){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT image_active FROM '.$GLOBALS['table_prefix']."images
+				WHERE image_id='".$imagen."'");
+			
+	$visible = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return (int)$visible[0];
+}
+
 function zona_privada($ruta=""){
 	
 	if(isset($_COOKIE['4images_userid'])){
@@ -694,19 +709,25 @@ print "<a id=\"frm_img_del_".$image_id.'" href="delete.php?image_id='.$image_id.
 	
 }
 
-function ver_categoria($cat_id,$final_sentencia="",$favorito=false,$mis_cargas=false){
+function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,$mis_cargas=false,$filtro=false){
 
-	if($cat_id=='*' && $final_sentencia==""){
-		$final_sentencia='';
+	if($cat_id=='*' && !$final_sentencia==""){
+		$final_sentencia='WHERE image_active=1 ';
 	}
 
 	if($cat_id!='*' && $final_sentencia==""){
 		
-		$final_sentencia='WHERE cat_id='.$cat_id;
+		$final_sentencia.='AND cat_id='.$cat_id;
 	}
 	
-	if($mis_cargas){
-		$final_sentencia='WHERE user_id='.$_COOKIE['4images_userid'];
+	if(!$mis_cargas){
+	
+		$final_sentencia.="AND user_id='".$_COOKIE['4images_userid']."'";
+	}
+
+	if($filtro){
+	
+		$final_sentencia.="AND image_id='".$_GET['image_id']."'";
 	}
 
 	$orden=' ORDER BY image_id DESC	LIMIT ';
@@ -714,7 +735,7 @@ function ver_categoria($cat_id,$final_sentencia="",$favorito=false,$mis_cargas=f
 	include('config.php');
 	
 	if ($conexion->connect_errno) {
-		echo "Fallo al conectar a MySQL: (" . $conexion->connect_errno . ") " . $conexion->connect_error;
+		echo 'Fallo al conectar a MySQL: (' . $conexion->connect_errno . ') ' . $conexion->connect_error;
 	}
 	
 	else{
@@ -727,7 +748,7 @@ function ver_categoria($cat_id,$final_sentencia="",$favorito=false,$mis_cargas=f
 				image_media_file
 				FROM
 				'.$GLOBALS['table_prefix'].'images '.$final_sentencia;
-				
+	
 		if($favorito){
 	$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
 
@@ -1393,6 +1414,58 @@ function menu_lateral($ruta = ""){
 				$country ="arabia-saudi";
 				break;
 				
+				case 'Georgia':
+				$country ="georgia";
+				break;
+				
+				case 'Taiwan':
+				$country ="taiwan";
+				break;
+				
+				case 'Paraguay':
+				$country ="paraguay";
+				break;
+				
+				case 'New Zealand':
+				$country ="nueva_zelanda";
+				break;
+				
+				case 'Albania':
+				$country ="albania";
+				break;
+				
+				case 'Guam':
+				$country ="guam";
+				break;
+				
+				case 'Slovenia':
+				$country ="eslovenia";
+				break;
+				
+				case 'Malawi':
+				$country ="malaui";
+				break;
+				
+				case 'Zimbabwe':
+				$country ="zimbabue";
+				break;
+				
+				case 'Uganda':
+				$country ="uganda";
+				break;
+				
+				case 'Madagascar':
+				$country ="madagascar";
+				break;
+				
+				case 'Mali':
+				$country ="mali";
+				break;
+				
+				case "Sri Lanka":
+				$country ="sri_lanka";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
@@ -1694,10 +1767,10 @@ function poner_menu($ruta = ""){
 		$recuento = mysqli_fetch_row($consulta);
 	
 		if($recuento[0]>0){
-			print '<aside style="background-color: rgba(255, 255, 255, 0);float:right;margin-left:30%;margin-top:-45px;position:fixed;z-index:1;">
-			<div style="background-color: rgba(255, 255, 255, 0);">
-				<div style="background-color: rgba(255, 255, 255, 0);">
-					<div style="background-color: rgba(255, 255, 255, 0);width:10em;float:right;" id="dl-menu" class="dl-menuwrapper">
+			print '<aside class="transparente" style="float:right;margin-left:30%;margin-top:-45px;position:fixed;z-index:1;">
+			<div class="transparente">
+				<div class="transparente">
+					<div style="width:10em;float:right;background-color: rgba(255, 255, 255, 0);" id="dl-menu" class="dl-menuwrapper">
 					<br/>	<button class="dl-trigger">a</button>
 						<ul style="margin-top:-15px;font-size:3em;background-color: rgba(255, 255, 255, 0);"  class="dl-menu">
 						';		
@@ -1723,11 +1796,11 @@ function poner_menu($ruta = ""){
 			
 				$y=1;
 				
-				print '<ul style="margin-top:10px;background-color: rgba(255, 255, 255, 0);" class="dl-submenu">';
+				print '<ul style="background-color: rgba(255, 255, 255, 0);" class="dl-submenu ">';
 						
 				while ($subcategorias = mysqli_fetch_array($consulta)){
 					
-						print '<li style="margin-top:15px;background-color: rgba(255, 255, 255, 0);">
+						print '<li style="margin-top:15px;background-color: rgba(255, 255, 255, 0);" >
 						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
 									
@@ -1744,7 +1817,7 @@ function poner_menu($ruta = ""){
 			while ($fila = mysqli_fetch_row($consulta)){
 
 				print '
-				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu">
+				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu ">
 				<a style="color:#ffffff;background-color:blue;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		

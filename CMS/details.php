@@ -18,12 +18,28 @@ if(!isset($_SESSION['insert'])){
 	$_SESSION['insert']=false;
 }
 	
-if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
-	
 	include('config.php');
+	
+if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0 && visible($_GET['image_id'])==1){
+	
+
 
 	if(isset($_COOKIE['4images_userid'])){
-	
+
+	if(isset($_POST['renombrar']) && isset($_GET['image_id']) && (int)$_GET['image_id']>0 ){
+
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+
+		mysqli_query($GLOBALS['conexion'],
+		'UPDATE '.$GLOBALS['table_prefix'] .
+		"IMAGES SET image_name='".$_POST['nuevo_nombre']."'
+		WHERE image_id='".(int)$_GET['image_id']."'" );
+		
+		mysqli_close($GLOBALS['conexion']);
+	}
+			
 		$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
 	
 		if($_COOKIE['4images_userid']>0){
@@ -106,7 +122,7 @@ if(isset($_GET['image_id']) &&  (int)$_GET['image_id']>0){
 		
 		<div style="background-color: rgba(255, 255, 255, 0);margin-left:2%;" class="container">
 		
-			<img  class="img-fluid" alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
+			<img  class="img-fluid maximos"   alt="'.$recuento[0].'" src="data/media/'.$recuento[1].'/'.$recuento[2].'" />
 			
 			<div style="background-color: rgba(255, 255, 255, 0);
 			margin-bottom: -17px; margin-right: -17px; max-height: 505.75px;"
@@ -215,6 +231,8 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 
 		}	
 	
+				if(isset($_COOKIE['4images_userid']) && !empty($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
+					
 		$icono="fav.ico";
 	
 		$like="";
@@ -229,10 +247,49 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 			$icono="fav_2.ico";
 		}
 			
-		if($_COOKIE['4images_userid']>0){
 			$like='<div style="float:left;padding-top:40px;padding-left:40px;">
+			
 				<a id="frmajax" onclick="favorito('.$_GET['image_id'].')">
-				<img id="'.$_GET['image_id'].'" alt="favorite" style="height:40px;width:40px;" src="img/'.$icono.'" /></a>
+				<img id="'.$_GET['image_id'].'" alt="favorite" class="iconos" src="img/'.$icono.'" /></a>
+				
+
+				<a style="padding-left:10px;" data-toggle="modal" data-target="#renameModal">
+				<img class="iconos" src="img/rename.png" alt="'.ver_dato('rename', $GLOBALS['idioma']).'"/>
+</a>
+
+
+<!-- Ventana Modal -->
+
+<div class="modal fade transparente" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		<div class="modal-content ">
+			<div class="modal-header ">
+
+			<h5 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">'.ver_dato('rename', $GLOBALS['idioma']).'</h5>
+
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+
+			</button>
+			</div>
+			
+			<div class="modal-body">
+			
+				<form action="'.$_SERVER['PHP_SELF'].'?image_id='.$_GET['image_id'].'" method="post">
+				
+					<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" placeholder="'.ver_dato('new_name', $GLOBALS['idioma']).'"/>
+			
+					<input name="renombrar" style="margin-top:20px;" type="submit" value="'.ver_dato('rename', $GLOBALS['idioma']).'" />
+				
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
 			</div>';
 		}
 	
@@ -261,6 +318,9 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 				
 		 $id_images=array();
  
+ 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+ 
 $consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_id FROM '.$GLOBALS['table_prefix']."images
 			WHERE image_active='1'");
@@ -280,13 +340,16 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 				$recuento = mysqli_fetch_row($consulta);
 		
 				print '<div style="float:left;padding-left:30px;">';
+
+					if(!empty($recuento[0])&& !empty($recuento[1])){
+						print '
+						<a style="text-decoration:none;" href="details.php?image_id='.$id_images[$imagen_posterior].'" >
+						<img alt="'.$recuento[2].'" style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
+						<img alt="go next" style="height:40px;width:40px;margin-left:10px;" src="img/next_2.png"/>
+						</a>';
+					}
 					
-				print '
-				<a style="text-decoration:none;" href="details.php?image_id='.$id_images[$imagen_posterior].'" >
-					<img alt="'.$recuento[2].'" style="margin-left:10px;height:50px;width:50px;" src="data/media/'.$recuento[1].'/'.$recuento[0].'"/>
-					<img alt="go next" style="height:40px;width:40px;margin-left:10px;" src="img/next_2.png"/>
-				</a>
-				</div>';
+				print '</div>';
 		
 		}	
 	
@@ -296,10 +359,13 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 		print '
 		<hr/>
 		<div style="float:left;margin:auto;width:100%;">';
-	
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
 		$consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_allow_comments FROM '.$GLOBALS['table_prefix']."images
-			WHERE image_id='".--$_GET['image_id']."'");
+			WHERE image_active=1 AND image_id='".$_GET['image_id']."'");
 			
 		$_GET['image_id']++;
 		
@@ -389,5 +455,11 @@ $consulta = mysqli_query($GLOBALS['conexion'], '
 	}
 	
 }
+
+else{
+	redireccionar('index.php');
+}
+
+restablecer_pass();
 
 ?>

@@ -38,7 +38,7 @@ $_GET['cat_id']=(int)$_GET['cat_id'];
 	
 		$consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix'].'images
-			WHERE cat_id='.$categoria);
+			WHERE image_active=1 AND cat_id='.$categoria);
 			$fila = mysqli_fetch_row($consulta);
 			
 		if($fila[0]>0){
