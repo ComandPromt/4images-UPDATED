@@ -4,21 +4,21 @@ session_start();
 
 $_SESSION['track']=false;
 
-$_SESSION['pagina']="member.php";
-
 include_once('config.php');
 
 include('includes/funciones.php');
 
-cabecera();
-
 comprobar_cookie();
 
-poner_menu();
+if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && !empty($_GET['file'])){
 
-$permitir_borrar=false;
+	cabecera();
+	
+	poner_menu();
 
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$permitir_borrar=false;
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
 	$consulta=mysqli_query($GLOBALS['conexion'],
@@ -34,7 +34,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	
 	mysqli_close($GLOBALS['conexion']);
 
-if($permitir_borrar){
+	if($permitir_borrar){
 
 	if(isset($_POST['eliminar_img']) && $_POST['eleccion']=='Si'){
 
@@ -52,58 +52,71 @@ if($permitir_borrar){
 			unlink('data/media/'.$_GET['cat_id'].'/'.$_GET['file']);
 		}
 		
-		if(!isset($_GET['pag'])){
-			$_GET['pag']=1;
+		if(isset($_GET['pag']) && (int)$_GET['pag']>0){
+			redireccionar('my_uploads.php?pag='.$_GET['pag']);	
 		}
+		
+		else{
+			redireccionar('index.php');
+		}
+	}
 
-		redireccionar('my_uploads.php?pag='.$_GET['pag']);	
+	if(substr($_SESSION['pagina'],0,11)=='details.php' && isset($_POST['eliminar_img']) && $_POST['eleccion']=='No'){
+	
+		redireccionar($_SESSION['pagina']);
 	}
 	
-	if(isset($_POST['eliminar_img']) && $_POST['eleccion']=='No'){
+	if(isset($_GET['pag']) && isset($_POST['eliminar_img']) && $_POST['eleccion']=='No'){
 		redireccionar('my_uploads.php?pag='.$_GET['pag']);	
 	}
 	
 	else{
 		
-print '<div style="float:left;padding-top:80px;margin-left:10%;" >
-
-<img style="height:200px;width:200px;" alt="Imagen a borrar" src="data/media/'.$_GET['cat_id'].'/'.$_GET['file'].'"/>
-<hr/>
+	print '<div style="float:left;padding-top:80px;margin-left:10%;" >
+	<a alt="go back" href="details.php?image_id='.$_GET['image_id'].'">
+						<img alt="go back" style="width:3em;height:3em;" src="img/back_2.png"/>
+					</a>
+					<a alt="ver imagen" href="details.php?image_id='.$_GET['image_id'].'">
+	<img style="height:200px;width:200px;" alt="Imagen a borrar" src="data/media/'.$_GET['cat_id'].'/'.$_GET['file'].'"/>
+	</a>
+	<hr/>
 
 	<form method="post" action="'.$_SERVER['PHP_SELF']."?image_id=".$_GET['image_id'].",&cat_id=".$_GET['cat_id']."&file=".$_GET['file']."&pag=".$_GET['pag'].'">
 
-<legend style="margin-left:-20px;">Esta seguro de borrar la imagen?</legend>
+	<legend style="margin-left:-20px;">Esta seguro de borrar la imagen?</legend>
 
-<div  style="margin-left:5px;padding-bottom:10px;padding-top:20px;" class="custom-control custom-radio">
-  <input type="radio" class="custom-control-input" id="defaultGroupExample1" value="Si" name="eleccion"  />
-  <label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample1">SI</label>
-  <img class="icono" src="img/check.png"/>
+	<div  style="margin-left:5px;padding-bottom:10px;padding-top:20px;" class="custom-control custom-radio">
+	<input type="radio" class="custom-control-input" id="defaultGroupExample1" value="Si" name="eleccion"  />
+	<label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample1">SI</label>
+	<img class="icono" src="img/check.png"/>
   
-</div>
+	</div>
 
-<div style="margin-left:20px;padding-top:80px;" class="custom-control custom-radio">
-  <input type="radio" class="custom-control-input" id="defaultGroupExample2" value="No" name="eleccion" checked/>
-  <label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample2">No</label>
-  <img class="icono" src="img/error.png"/>
-</div>
+	<div style="margin-left:20px;padding-top:80px;" class="custom-control custom-radio">
+	<input type="radio" class="custom-control-input" id="defaultGroupExample2" value="No" name="eleccion" checked/>
+	<label style="font-size:3em;" class="custom-control-label" for="defaultGroupExample2">No</label>
+	<img class="icono" src="img/error.png"/>
+	</div>
 
-<input name="eliminar_img" style="margin-top:50px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+	<input name="eliminar_img" style="margin-top:50px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 
 	</form>
 ';
+
 }
-print '</div>';
 
+print '</div>';	
 
+restablecer_pass();
+		
+footer();
+
+}
 
 }
 
 else{
 	redireccionar('index.php');
 }
-
-restablecer_pass();
-		
-footer();
  
 ?>

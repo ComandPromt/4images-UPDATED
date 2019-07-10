@@ -8,11 +8,9 @@ include_once('../config.php');
 
 include('../includes/funciones.php');
 
-cabecera('../');
+comprobar_cookie('../');
 
-if(!isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']<=0){
-	redireccionar('../index.php');
-}
+cabecera('../');
 
 if(isset($_POST['enviar_correo']) && trim($_POST['asunto'])!="" && trim($_POST['mensaje'])!="" ){
 	
@@ -27,17 +25,17 @@ if(isset($_POST['enviar_correo']) && trim($_POST['asunto'])!="" && trim($_POST['
 			
 	$consulta = mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes
 	
-	(remitente,destinatario,asunto,mensaje,leido)
+	(remitente,destinatario,asunto,mensaje,leido,oculto)
 	
-	VALUES( '".$_COOKIE['4images_userid']."','".$_POST['destinatario']."','".$_POST['asunto']."','".$_POST['mensaje']."','0')");
+	VALUES( '".$_COOKIE['4images_userid']."','".$_POST['destinatario']."','".$_POST['asunto']."','".$_POST['mensaje']."','0','0')");
 		
 	mysqli_close($GLOBALS['conexion']);
 	mensaje(ver_dato('msg_success', $GLOBALS['idioma']));
 }
 
-poner_menu('../');
+poner_menu();
 
-print '<div class="container" style="width:113%;margin-auto;padding-top:100px;">';
+print '<div class="container" style="margin-auto;padding-top:100px;">';
 
 menu_mensajes();
 

@@ -10,6 +10,8 @@ include('includes/funciones.php');
 
 cabecera();
 
+comprobar_cookie();
+
 if(isset($_COOKIE['4images_userid'])){
 	
 	$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
@@ -18,8 +20,6 @@ if(isset($_COOKIE['4images_userid'])){
 		$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 	}
 }
-
-comprobar_cookie();
 
 poner_menu();
 

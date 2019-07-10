@@ -69,21 +69,56 @@ if (isset($_COOKIE['4images_userid'])) {
 
 }
 
-print '<div style="padding-top:80px;font-size:2em;position:fixed;">
-<h1 style="font-size:1em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h1>
-<h2 style="padding-top:40px;padding-bottom:40px;font-size:1em;padding-left:40px;margin-top:-60px;" id="reloj"></h2>
+print '<div style="padding-top:60px;font-size:2em;">
 
-<div style="margin:auto;margin-top:-20px;padding-left:40px;">';
+<div style="float:right;padding-left:70%;padding-right:20px;padding-top:50px;">
+
+<h2 style="padding-top:15px;padding-bottom:40px;font-size:0.8em;margin-top:-60px;" id="reloj"></h2>
+
+</div>
+
+<div style="float:left;margin-left:-40px;margin-top:-60px;">
+<h1 style="font-size:0.8em;color:#0F4B90;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
+
+
+</div>
+
+
+<div style="margin:auto;margin-top:100px;padding-left:40px;float;left;padding-right:20px;">';
 
 if(!logueado()){
+
 	print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
 			<img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
 		</a>';
 }
 
-print '<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
+else{
+
+	print '<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="upload_images/index.php">
+			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/>
+		</a>
+		
+		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="my_uploads.php">
+			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/my_uploads.ico"/>
+		</a>
+		
+		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="favoritos.php">
+			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/fav_2.ico"/>
+		</a><hr/>
+		';
+}
+
+print '
+		
+		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
 			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
 		</a>
+		
+		<a title="rss" href="'.$ruta.'rss.php">
+			<img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
+		</a>
+		
 </div>
 
 <div><br/>
@@ -92,24 +127,25 @@ print '<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.ph
 if (file_exists('config.php')) {
 
     $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
 
-    $consulta = mysqli_query($GLOBALS['conexion'],
-        'SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'] . 'images WHERE image_active=1
-	ORDER BY image_id DESC LIMIT 9');
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+    $consulta = mysqli_query($GLOBALS['conexion'],'SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'].
+
+    'images WHERE image_active=1 ORDER BY image_id DESC LIMIT 9');
+
     $fila = mysqli_fetch_array($consulta);
 
     if ($fila[0] > 0) {
 
-        print '
-		<div style="float:right;padding-left:350px;background-color: rgba(255, 255, 255, 0);" class="entire-content">
+        print '<div style="float:right;margin-top:-5px;padding-left:350px;background-color: rgba(255, 255, 255, 0);"
+        class="entire-content">
 
 		<div style="margin-top:-40px;background-color: rgba(255, 255, 255, 0);"class="content-carrousel">';
 
-        $consulta = mysqli_query($GLOBALS['conexion'],
-            'SELECT cat_id,image_media_file,image_id,image_name FROM ' . $GLOBALS['table_prefix'] . 'images WHERE image_active=1
-		ORDER BY image_iD DESC LIMIT 9');
+        $consulta = mysqli_query($GLOBALS['conexion'],'SELECT cat_id,image_media_file,image_id,image_name FROM '.
+        
+        $GLOBALS['table_prefix'] . 'images WHERE image_active=1	ORDER BY image_iD DESC LIMIT 9');
 
         while ($fila = mysqli_fetch_array($consulta)) {
 
@@ -118,7 +154,7 @@ if (file_exists('config.php')) {
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 		
-	mysqli_close($GLOBALS['conexion']);
+	    mysqli_close($GLOBALS['conexion']);
 	
 		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
@@ -129,9 +165,7 @@ if (file_exists('config.php')) {
 		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
 	
     }
-   
-
-	
+  
 	print '</div></div>';
 }
 

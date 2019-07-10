@@ -134,7 +134,8 @@ CREATE TABLE `mensajes`(
 	`destinatario` int(11),
 	`asunto` varchar(30),
 	`mensaje` text,
-	`leido` tinyint(1) DEFAULT '0',
+	`leido` tinyint(1) DEFAULT '0' NOT NULL,
+	`oculto` tinyint(1) DEFAULT '0' NOT NULL,
 	FOREIGN KEY(`remitente`) REFERENCES `4images_users`(`user_id`),
 	FOREIGN KEY(`destinatario`) REFERENCES `4images_users`(`user_id`)
 );
@@ -338,7 +339,10 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('87','msg_welcome','Witamy na tej stronie. Tutaj możesz przesyłać, udostępniać i zapisywać obrazy jako ulubione. Możesz również wysyłać wiadomości wewnętrzne w ten sposób, a także zmieniać ustawienia swojego konta. Dziękuję'),
 ('88','cambiar_avatar','Zmień awatar'),
 ('89','new_name','Nowa nazwa'),
-('90','rename','zmień nazwę');
+('90','rename','zmień nazwę'),
+('91','reply','Odpowiedź'),
+('92','clear_inbox','Wyczyść skrzynkę odbiorczą'),
+('93','clear_outbox','Wyczyść tacę wyjściową');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -430,7 +434,10 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('87','msg_welcome','이 사이트에 오신 것을 환영합니다. 여기서 이미지를 업로드하고 공유하고 즐겨 찾기로 저장할 수 있습니다. 이와 같은 내부 메시지를 보내거나 계정 설정을 변경할 수도 있습니다. 고마워.'),
 ('88','cambiar_avatar','아바타 변경'),
 ('89','new_name','새 이름'),
-('90','rename','이름 바꾸기');
+('90','rename','이름 바꾸기'),
+('91','reply','대답하다'),
+('92','clear_inbox','받은 편지함 정리'),
+('93','clear_outbox','배출 트레이 청소');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -522,7 +529,10 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('87','msg_welcome','Chào mừng đến với trang web này. Tại đây bạn có thể tải lên, chia sẻ và lưu hình ảnh làm mục yêu thích. Bạn cũng có thể gửi tin nhắn nội bộ như thế này, cũng như thay đổi cài đặt tài khoản của bạn. Cảm ơn'),
 ('88','cambiar_avatar','Thay đổi hình đại diện'),
 ('89','new_name','Tên mới'),
-('90','rename','đổi tên');
+('90','rename','đổi tên'),
+('91','reply','Trả lời'),
+('92','clear_inbox','Hộp thư sạch'),
+('93','clear_outbox','Làm sạch khay đầu ra');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -614,7 +624,10 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('87','msg_welcome','Willkommen auf dieser Seite. Hier können Sie Bilder hochladen, teilen und als Favoriten speichern. Sie können auch interne Nachrichten wie diese senden und die Einstellungen Ihres Kontos ändern. Vielen Dank'),
 ('88','cambiar_avatar','Avatar wechseln'),
 ('89','new_name','Neuer Name'),
-('90','rename','Umbenennen');
+('90','rename','Umbenennen'),
+('91','reply','Antworten'),
+('92','clear_inbox','Posteingang reinigen'),
+('93','clear_outbox','Ausgabefach reinigen');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -706,7 +719,10 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('87','msg_welcome','مرحبا بكم في هذا الموقع يمكنك هنا تحميل الصور ومشاركتها وحفظها كمفضلة. يمكنك أيضًا إرسال رسائل داخلية مثل هذا ، وكذلك تغيير إعدادات حسابك. شكرا'),
 ('88','cambiar_avatar','تغيير الصورة الرمزية'),
 ('89','new_name','اسم جديد'),
-('90','rename','إعادة تسمية');
+('90','rename','إعادة تسمية'),
+('91','reply','إجابة'),
+('92','clear_inbox','البريد الوارد نظيفة'),
+('93','clear_outbox','علبة إخراج نظيفة');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -798,7 +814,10 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('87','msg_welcome','এই সাইটে স্বাগতম। এখানে আপনি পছন্দসই হিসাবে ছবি আপলোড, ভাগ এবং সংরক্ষণ করতে পারেন। আপনি এইরকম অভ্যন্তরীণ বার্তাগুলি পাঠাতে পারেন, পাশাপাশি আপনার অ্যাকাউন্টের সেটিংস পরিবর্তন করতে পারেন। ধন্যবাদ'),
 ('88','cambiar_avatar','অবতার পরিবর্তন করুন'),
 ('89','new_name','নতুন নাম'),
-('90','rename','নামান্তর');
+('90','rename','নামান্তর'),
+('91','reply','উত্তর'),
+('92','clear_inbox','साफ इनबॉक्स'),
+('93','clear_outbox','साफ उत्पादन ट्रे');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -890,7 +909,10 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('87','msg_welcome','Benvinguts a aquest lloc. Aquí pots pujar, compartir i guardar imatges com a favorites. També pots enviar missatges interns com aquest, així com canviar la configuració del teu compte. gràcies'),
 ('88','cambiar_avatar','canviar avatar'),
 ('89','new_name','nou nom'),
-('90','rename','canviar el nom');
+('90','rename','canviar el nom'),
+('91','reply','Respondre'),
+('92','clear_inbox','Netejar safata de entrada'),
+('93','clear_outbox','Netejar safata de sortida');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -982,7 +1004,10 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('87','msg_welcome','歡迎來到這個網站。在這裡，您可以上傳，共享和保存圖像作為收藏夾。您還可以發送此類內部消息，以及更改帳戶的設置。謝謝'),
 ('88','cambiar_avatar','改變頭像'),
 ('89','new_name','新名字'),
-('90','rename','重命名');
+('90','rename','重命名'),
+('91','reply','答案'),
+('92','clear_inbox','清潔收件箱'),
+('93','clear_outbox','清潔輸出托盤');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1074,7 +1099,10 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('87','msg_welcome','Ongi etorri gune honetara. Hemen irudiak gogoko gisa igo, partekatu eta gorde ditzakezu. Honelako mezuak ere bidal ditzakezu, baita zure kontuaren ezarpenak aldatu ere. Eskerrik asko'),
 ('88','cambiar_avatar','Aldatu avatar'),
 ('89','new_name','Izen berria'),
-('90','rename','Izena aldatu');
+('90','rename','Izena aldatu'),
+('91','reply','Erantzun'),
+('92','clear_inbox','Sarrera ontzia garbitu'),
+('93','clear_outbox','Garbitu irteera erretilua');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1166,7 +1194,10 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('87','msg_welcome','Bienvenue sur ce site. Ici, vous pouvez télécharger, partager et enregistrer des images en tant que favoris. Vous pouvez également envoyer des messages internes comme celui-ci, ainsi que modifier les paramètres de votre compte. Merci'),
 ('88','cambiar_avatar','Changer de avatar'),
 ('89','new_name','Nouveau nom'),
-('90','rename','Renommer');
+('90','rename','Renommer'),
+('91','reply','Répondre'),
+('92','clear_inbox','Nettoyer la boîte de réception'),
+('93','clear_outbox','Nettoyer le bac de sortie');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1258,7 +1289,10 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('87','msg_welcome','इस साइट पर आपका स्वागत है। यहां आप छवियों को पसंदीदा के रूप में अपलोड, साझा और सहेज सकते हैं। आप इस तरह से आंतरिक संदेश भी भेज सकते हैं, साथ ही अपने खाते की सेटिंग भी बदल सकते हैं। आपका धन्यवाद'),
 ('88','cambiar_avatar','अवतार बदलें'),
 ('89','new_name','नया नाम'),
-('90','rename','नाम बदलने');
+('90','rename','नाम बदलने'),
+('91','reply','उत्तर'),
+('92','clear_inbox','साफ इनबॉक्स'),
+('93','clear_outbox','साफ उत्पादन ट्रे');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1350,7 +1384,10 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('87','msg_welcome','Welcome to this site. Here you can upload, share and save images as favorites. You can also send internal messages like this, as well as change the settings of your account. Thank you'),
 ('88','cambiar_avatar','Change avatar'),
 ('89','new_name','New name'),
-('90','rename','Rename');
+('90','rename','Rename'),
+('91','reply','Reply'),
+('92','clear_inbox','Clear inbox'),
+('93','clear_outbox','Clear outbox');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1442,7 +1479,10 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('87','msg_welcome','Benvenuti in questo sito. Qui puoi caricare, condividere e salvare le immagini come preferite. Puoi anche inviare messaggi interni come questo, così come modificare le impostazioni del tuo account. Grazie'),
 ('88','cambiar_avatar','Cambia avatar'),
 ('89','new_name','Nuovo nome'),
-('90','rename','Rinominare');
+('90','rename','Rinominare'),
+('91','reply','Risposta'),
+('92','clear_inbox','Pulisci casella di posta'),
+('93','clear_outbox','Pulire il vassoio di uscita');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1534,7 +1574,10 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('87','msg_welcome','このサイトへようこそ。ここで、画像をアップロード、共有、お気に入りとして保存できます。アカウントの設定を変更するだけでなく、このような内部メッセージを送信することもできます。ありがとう'),
 ('88','cambiar_avatar','アバターを変更する'),
 ('89','new_name','新しい名前'),
-('90','rename','改名');
+('90','rename','改名'),
+('91','reply','返事'),
+('92','clear_inbox','クリーン受信トレイ'),
+('93','clear_outbox','排紙トレイを清掃する');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1626,7 +1669,10 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('87','msg_welcome','Bem vindo a este site. Aqui você pode fazer upload, compartilhar e salvar imagens como favoritos. Você também pode enviar mensagens internas como esta, além de alterar as configurações da sua conta. Obrigado'),
 ('88','cambiar_avatar','Alterar avatar'),
 ('89','new_name','Novo nome'),
-('90','rename','Renomear');
+('90','rename','Renomear'),
+('91','reply','Responder'),
+('92','clear_inbox','Limpar caixa de entrada'),
+('93','clear_outbox','Limpar bandeja de saída');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1718,7 +1764,10 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('87','msg_welcome','Добро пожаловать на этот сайт. Здесь вы можете загружать, делиться и сохранять изображения в избранное. Вы также можете отправлять внутренние сообщения, как это, а также изменять настройки своей учетной записи. Спасибо'),
 ('88','cambiar_avatar','Сменить аватар'),
 ('89','new_name','Новое имя'),
-('90','rename','переименовать');
+('90','rename','переименовать'),
+('91','reply','ответ'),
+('92','clear_inbox','чистый почтовый ящик'),
+('93','clear_outbox','очистить лоток');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -1810,7 +1859,10 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('87','msg_welcome','Bienvenid@ a este sitio. Aquí puedes subir, compartir y guardar imágenes como favoritas. También puedes enviar mensajes internos como este, así como cambiar la configuración de tu cuenta. Gracias'),
 ('88','cambiar_avatar','Cambiar avatar'),
 ('89','new_name','Nuevo nombre'),
-('90','rename','Renombrar');
+('90','rename','Renombrar'),
+('91','reply','Responder'),
+('92','clear_inbox','Limpiar bandeja de entrada'),
+('93','clear_outbox','Limpiar bandeja de salida');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 
@@ -2920,4 +2972,40 @@ INSERT INTO bots (IP) VALUES
 ('207.46.13.47'   ),
 ('157.55.39.192'  ),
 ('207.46.13.179'  ),
-('157.55.39.161'  );
+('157.55.39.161'  ),
+('157.55.39.59'  ),
+('207.46.13.16'  ),
+('192.151.152.98'),
+('40.77.167.131' ),
+('207.46.13.97'  ),
+('217.249.205.17'),
+('40.77.167.126' ),
+('157.55.39.215' ),
+('78.46.85.236'  ),
+('157.55.39.234' ),
+('157.55.39.94'  ),
+('40.77.167.80'  ),
+('40.77.167.32'  ),
+('157.55.39.163' ),
+('40.77.167.110' ),
+('157.55.39.61'  ),
+('157.55.39.135' ),
+('157.55.39.156' ),
+('157.55.39.54'  ),
+('66.249.64.124' ),
+('66.249.64.126' ),
+('66.249.64.122' ),
+('66.249.64.108' ),
+('40.77.167.36'  ),
+('66.249.79.245' ),
+('66.249.79.247' ),
+('66.249.79.243' ),
+('95.216.19.59'  ),
+('40.77.167.58'  ),
+('40.77.167.57'  ),
+('157.55.39.207' ),
+('40.77.167.69'  ),
+('157.55.39.131' ),
+('207.46.13.91'  ),
+('207.46.13.246' ),
+('157.55.39.73'  );

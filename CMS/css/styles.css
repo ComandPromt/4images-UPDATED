@@ -43,14 +43,12 @@
 html, body {
 	overflow-x: hidden;
 	overflow-y: auto;
-	background-color: #6adecd;
 }
 
 #slideshow {
 
 	margin: auto;
 	width: 100%;
-	background-color: #6adecd;
 	box-sizing: border-box;
 }
 

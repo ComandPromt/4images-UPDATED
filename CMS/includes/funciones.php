@@ -4,6 +4,21 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function subida_por_mi($id){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT image_id FROM '.$GLOBALS['table_prefix']."images
+				WHERE image_id='".$id."' AND user_id='".$_COOKIE['4images_userid']."'");
+			
+	$imagen = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return (int)$imagen[0];
+}
+
 function visible($imagen){
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -392,12 +407,8 @@ function comprobar_cookie($ruta=""){
 	$pass="";
 
 	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
-		
-		
+				
 			$pass=saber_pass($_COOKIE['4images_userid']);
-		
-		
-		
 	}
 	
 	else{
@@ -435,6 +446,7 @@ function safe_htmlspecialchars($chars) {
 }
 
 function menu_mensajes(){
+	
 		if(isset($_COOKIE['4images_userid'])){
 	
 			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
@@ -443,15 +455,42 @@ function menu_mensajes(){
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 			}
 		}
+		
 	print '<nav>
     <ul>
         <li><a title="'.ver_dato('msg_write',$GLOBALS['idioma']).'" href="index.php"><img alt="'.ver_dato('msg_write',$GLOBALS['idioma']).'" class="icono" src="../img/write.png"/></a></li>
         <li style="padding-top:20px;"><a title="'.ver_dato('inbox',$GLOBALS['idioma']).'" href="inbox.php"><img title="'.ver_dato('inbox',$GLOBALS['idioma']).'" class="icono" src="../img/inbox1.png"/></a></li>
         <li style="padding-top:20px;"><a title="'.ver_dato('outbox',$GLOBALS['idioma']).'" href="outbox.php"><img title="'.ver_dato('outbox',$GLOBALS['idioma']).'" class="icono" src="../img/box.png"/></a></li>
+		<li style="padding-top:20px;"><a data-toggle="modal" data-target="#clear" title="'.ver_dato('outbox',$GLOBALS['idioma']).'" href="outbox.php"><img title="'.ver_dato('outbox',$GLOBALS['idioma']).'" class="icono" src="../img/Recycle_Bin_Full_2.png"/></a></li>
+
 		<br clear="all" />
     </ul>
 
-</nav>';
+</nav>
+
+<div class="modal fade transparente" id="clear" tabindex="-1" role="dialog" aria-labelledby="clearLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered transparente" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h2 class="modal-title" style="padding-right:10px;font-size:2em;" id="clearLabel">'.ver_dato('reset', $GLOBALS['idioma']).'</h2>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body" >
+          <form style="font-size:1.5em;">
+		      <p><a href="clear.php?delete=1"><span>'.ver_dato('clear_inbox', $GLOBALS['idioma']).'</span></a></p>
+			  <p><a href="clear.php?delete=2"><span>'.ver_dato('clear_outbox', $GLOBALS['idioma']).'</span></a></p>
+        </form>
+
+</div>
+
+
+</div>
+</div>
+</div>
+';
+
 }
 
 function ver_tabla($sql,$icono){
@@ -1466,6 +1505,26 @@ function menu_lateral($ruta = ""){
 				$country ="sri_lanka";
 				break;
 				
+				case 'Kosovo':
+				$country ="kosovo";
+				break;
+				
+				case "Bosnia and Herzegovina":
+				$country ="bosnia";
+				break;
+				
+				case 'Cyprus':
+				$country ="chipre";
+				break;
+				
+				case "Costa Rica":
+				$country ="costa_rica";
+				break;
+				
+				case 'Belarus':
+				$country ="bielorrusia";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
@@ -1547,7 +1606,7 @@ print '
 			$consulta = mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id='".$_COOKIE['4images_userid']."'");
 		$fila = mysqli_fetch_row($consulta);
 		
-		$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
+		$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
 		$recuento = mysqli_fetch_row($consulta);
 		
 		$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM '.$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
@@ -1565,13 +1624,15 @@ print '
 		mysqli_close($GLOBALS['conexion']);
 
 		if($recuento[0]>0){
+	
 			
-			if(strpos(obtener_direccion(),"messages")>0){
+			if(strpos($_SERVER['PHP_SELF'],"messages")>0){
 				$enlace="";
 			}
 			else{
 				$enlace="messages/";
 			}
+
 			print '
 			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php"><span style="font-size:2em;">'.$recuento[0].'</span></a>';
 		}
