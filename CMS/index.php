@@ -77,7 +77,7 @@ print '<div style="padding-top:60px;font-size:2em;">
 
 </div>
 
-<div style="float:left;margin-left:-40px;margin-top:-60px;">
+<div style="float:left;margin-left:-40px;margin-top:-40px;">
 <h1 style="font-size:0.8em;color:#0F4B90;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
 
 

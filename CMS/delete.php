@@ -14,8 +14,6 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 
 	cabecera();
 	
-	poner_menu();
-
 	$permitir_borrar=false;
 
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -53,7 +51,14 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 		}
 		
 		if(isset($_GET['pag']) && (int)$_GET['pag']>0){
-			redireccionar('my_uploads.php?pag='.$_GET['pag']);	
+			
+			if($_SESSION['pagina']=="my_uploads.php"){
+				redireccionar('my_uploads.php?pag='.$_GET['pag']);
+			}
+			
+			else{
+				redireccionar('admin/imagenes_repetidas.php');
+			}	
 		}
 		
 		else{

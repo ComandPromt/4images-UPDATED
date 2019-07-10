@@ -182,7 +182,7 @@ echo '<input type="text" title="captcha" required  id="validcaptcha"
 				<input title="register" type="hidden" name="action" value="register" />
 
 				<input title="submit" name="submit" type="submit" value="' .
-				ver_dato('submit', $GLOBALS['idioma']) . '"/>
+				ver_dato('register', $GLOBALS['idioma']) . '"/>
 				
 				<br/><br/>
 				

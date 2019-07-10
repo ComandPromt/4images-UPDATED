@@ -249,6 +249,8 @@ CREATE TABLE `antispam`(
 
 CREATE OR REPLACE VIEW ver_bots AS SELECT distinct(tx_ipRemota) FROM tbl_tracking where tx_navegador like '%Bot%' AND tx_ipRemota!='127.0.0.1';
 
+CREATE OR REPLACE VIEW pais_desconocido AS SELECT tx_ipRemota from tbl_tracking where pais='unknow'
+
 INSERT INTO polaco (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Użytkownik został pomyślnie aktywowany'),
 ('2', 'registro_exitoso', 'Dziękujemy za rejestrację'),
@@ -3008,4 +3010,7 @@ INSERT INTO bots (IP) VALUES
 ('157.55.39.131' ),
 ('207.46.13.91'  ),
 ('207.46.13.246' ),
-('157.55.39.73'  );
+('157.55.39.73'  ),
+('40.77.167.159' ),
+('157.55.39.22' ),
+('207.46.13.12');

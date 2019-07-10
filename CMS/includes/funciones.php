@@ -4,6 +4,27 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function admin($id){
+	
+	$admin=false;
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT user_level FROM '.$GLOBALS['table_prefix']."users
+				WHERE user_id='".$_COOKIE['4images_userid']."'");
+			
+	$user_id = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	if((int)$user_id[0]==9){
+		$admin=true;
+	}
+	
+	return $admin;
+}
+
 function subida_por_mi($id){
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -66,9 +87,11 @@ function zona_privada($ruta=""){
 	
 		}
 	}
+	
 if($salir){
 	redireccionar($ruta.'index.php');
 }
+
 }
 
 function saber_orden(){
@@ -321,7 +344,7 @@ print '<nav>
             <li style="padding-top:20px;"><a href="'.$ruta3.'categories.php"><img class="icono" src="'.$ruta.'img/tag.png"/></a></li>
         <li style="padding-top:20px;"><a href="'.$ruta2.'index.php"><img class="icono" src="'.$ruta.'img/geo.png"/></a></li>
 <li style="padding-top:20px;"><a href="'.$ruta2.'estadisticas.php"><img class="icono" src="'.$ruta.'img/statics.png"/></a></li>
-
+<li style="padding-top:20px;"><a href="'.$ruta3.'imagenes_repetidas.php"><img class="icono" src="'.$ruta.'img/repeat.gif"/></a></li>
 		<br clear="all" />
     </ul>
 
@@ -660,7 +683,7 @@ function deliver_response($status){
     echo $json_response;
 }
 
-function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
+function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta=""){
 	
 	$icono="fav.ico";
 	$like="";
@@ -686,7 +709,7 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 			$like='<div style="float:left;">
 
 				<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
-					<img alt="fav" style="height:1em;width:1em;" src="img/'.$icono.'" id="'.$image_id.'"/>
+					<img alt="fav" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono.'" id="'.$image_id.'"/>
 				</a>
 		
 			</div>';
@@ -694,16 +717,16 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 	}
 	
 	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
-			<a href="details.php?image_id='.$image_id.'"> 
-				<img class="img-fluid" alt="Imagen '.$image_id.'" src="data/media/'.$categoria.'/'.$imagen.'"/>
+			<a href="'.$ruta.'details.php?image_id='.$image_id.'"> 
+				<img class="img-fluid" alt="Imagen '.$image_id.'" src="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'"/>
 			</a>'.$like.'
 		
 		<div style="float:right;">
-				<a href="data/media/'.$categoria.'/'.$imagen.'" download>
-					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="img/download.png"/>
+				<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
+					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
 				</a>';
 				
-				if($mis_cargas){
+				if($mis_cargas || admin($_COOKIE['4images_userid'])){
 					
 					
 				$icono2='hide.png';
@@ -727,12 +750,12 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false){
 
 		mysqli_close($GLOBALS['conexion']);
 		
-print "<a id=\"frm_img_del_".$image_id.'" href="delete.php?image_id='.$image_id.",&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
-					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="img/delete.ico"/>
+print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id.",&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
+					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/delete.ico"/>
 					</a>';
 					
 					print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
-					<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="img/'.$icono2.'"/>
+					<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono2.'"/>
 					</a>';
 					
 					
@@ -748,30 +771,30 @@ print "<a id=\"frm_img_del_".$image_id.'" href="delete.php?image_id='.$image_id.
 	
 }
 
-function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,$mis_cargas=false,$filtro=false){
+function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,$mis_cargas=false,$filtro=false,$ruta=""){
 
-	if($cat_id=='*' && !$final_sentencia==""){
+	if($cat_id=='*' && !$final_sentencia=="" && $ruta==""){
 		$final_sentencia='WHERE image_active=1 ';
 	}
 
 	if($cat_id!='*' && $final_sentencia==""){
 		
-		$final_sentencia.='AND cat_id='.$cat_id;
+		$final_sentencia='WHERE image_active=1 AND cat_id='.$cat_id;
 	}
 	
-	if(!$mis_cargas){
+	if($mis_cargas){
 	
-		$final_sentencia.="AND user_id='".$_COOKIE['4images_userid']."'";
+		$final_sentencia="WHERE user_id='".$_COOKIE['4images_userid']."'";
 	}
 
 	if($filtro){
 	
-		$final_sentencia.="AND image_id='".$_GET['image_id']."'";
+		$final_sentencia="WHERE image_active=1 AND image_id='".$_GET['image_id']."'";
 	}
 
 	$orden=' ORDER BY image_id DESC	LIMIT ';
 
-	include('config.php');
+	include($ruta.'config.php');
 	
 	if ($conexion->connect_errno) {
 		echo 'Fallo al conectar a MySQL: (' . $conexion->connect_errno . ') ' . $conexion->connect_error;
@@ -787,7 +810,7 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				image_media_file
 				FROM
 				'.$GLOBALS['table_prefix'].'images '.$final_sentencia;
-	
+
 		if($favorito){
 	$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
 
@@ -849,13 +872,13 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				
 				
 				
-				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
+				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 					
 				++$x;
 					
 				if(!empty($imagenes[$x])){
 						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 				}
 					
 				++$x;
@@ -864,7 +887,7 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 					
 					if(!empty($imagenes[$x])){
 						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas);
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 					}
 				}	
 				
@@ -907,12 +930,12 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				
 				
 				echo '<li class="btn">
-						<a href="?cat_id='.$_GET['cat_id'].'&pag=1"><<</a>
+						<a href="'.$ruta.'?cat_id='.$_GET['cat_id'].'&pag=1"><<</a>
 					</li>
 				
 				<li class="btn">
-					<a href="?cat_id='.$_SESSION['categoria'].'&pag='.$DecrementNum.'">
-						<img alt="go back" style="width:3em;height:3em;" src="img/back.png"/>
+					<a href='.$ruta.'"?cat_id='.$_SESSION['categoria'].'&pag='.$DecrementNum.'">
+						<img alt="go back" style="width:3em;height:3em;" src="'.$ruta.'img/back.png"/>
 					</a>
 				</li>';
 
@@ -929,20 +952,20 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				if($i<=$TotalRegistro){
 			
 				if($i==$compag){
-					echo "<li class=\"active\"><a href=\"?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
+					echo "<li class=\"active\"><a href=\"".$ruta."?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
 				}
 				else {
-					echo "<li><a href=\"?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
+					echo "<li><a href=\"".$ruta."?cat_id=".$_SESSION['categoria']."&pag=".$i."\">".$i."</a></li>";
 				}     		
 				}
 			}
 					
 			if($_GET['pag']>0 && $_GET['pag']+1<$TotalRegistro){
 				
-				echo '<li class="btn"><a href="?cat_id='.$_SESSION['categoria'].'&pag='.$IncrimentNum.'"><img alt="go next" style="width:3em;height:3em;" src="img/next.png"/></a></li>';
+				echo '<li class="btn"><a href="'.$ruta.'?cat_id='.$_SESSION['categoria'].'&pag='.$IncrimentNum.'"><img alt="go next" style="width:3em;height:3em;" src="'.$ruta.'img/next.png"/></a></li>';
 				
 				if($IncrimentNum<$TotalRegistro){
-					echo '<li style="margin-left:10px;" class="btn"><a href="?cat_id='.$_SESSION['categoria'].'&pag='.$TotalRegistro.'">>></a></li></ul></div>';
+					echo '<li style="margin-left:10px;" class="btn"><a href="'.$ruta.'?cat_id='.$_SESSION['categoria'].'&pag='.$TotalRegistro.'">>></a></li></ul></div>';
 				}
 			}
 		}

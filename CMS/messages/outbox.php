@@ -38,9 +38,11 @@ print '<div class="container" style="margin-auto;padding-top:100px;padding-botto
 
 menu_mensajes();
 
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 $GLOBALS['db_password'], $GLOBALS['db_name'])
 or die("No se pudo conectar a la base de datos");	
+	
+
 	
 $consulta = mysqli_query($GLOBALS['conexion'], "SELECT COUNT(id) FROM mensajes WHERE oculto!='".$_COOKIE['4images_userid']."' AND remitente='".$_COOKIE['4images_userid']."'");
 	
@@ -64,6 +66,8 @@ $longitud=0;
 $asuntos=array();
 
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name,id,destinatario FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.destinatario=U.user_id  WHERE oculto!='".$_COOKIE['4images_userid']."' AND remitente='".$_COOKIE['4images_userid']."' ORDER BY id DESC");
+	
+
 	
 		while($fila = mysqli_fetch_row($consulta)){
 			
@@ -104,12 +108,15 @@ $asuntos=array();
 
 </div>
 
+
 </div>
 </div>
 </div>';
 		}
 
+
 	}
+
 
 print '
 

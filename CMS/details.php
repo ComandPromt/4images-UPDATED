@@ -30,7 +30,7 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 
             mysqli_query($GLOBALS['conexion'],
                 'UPDATE ' . $GLOBALS['table_prefix'] .
-                "IMAGES SET image_name='" . $_POST['nuevo_nombre'] . "'
+                "images SET image_name='" . $_POST['nuevo_nombre'] . "'
 		WHERE image_id='" . (int) $_GET['image_id'] . "'");
 
             mysqli_close($GLOBALS['conexion']);
