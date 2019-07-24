@@ -4,6 +4,71 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function nevar(){
+	print '		<script>
+
+var f = new Date();
+
+
+if(f.getDate()>=23 && f.getMonth()==8 || f.getDate()>=1 && f.getMonth()<11 && f.getMonth()>=9||
+		f.getDate()<=21 && f.getMonth()==11 ){
+			var fallObjects=new Array();function newObject(url,height,width){fallObjects[fallObjects.length]=new Array(url,height,width);}
+			
+			var numObjs=40, waft=50, fallSpeed=10, wind=0;
+			newObject("img/oto.png",22,22);
+			newObject("img/oto.png",22,22);
+			
+			function winSize(){winWidth=(moz)?window.innerWidth-180:document.body.clientWidth-180;winHeight=(moz)?window.innerHeight+500:document.body.clientHeight+500;}
+			function winOfy(){winOffset=(moz)?window.pageYOffset:document.body.scrollTop;}
+			function fallObject(num,vari,nu){
+			objects[num]=new Array(parseInt(Math.random()*(winWidth-waft)),-30,(parseInt(Math.random()*waft))*((Math.random()>0.5)?1:-1),0.02+Math.random()/20,0,1+parseInt(Math.random()*fallSpeed),vari,fallObjects[vari][1],fallObjects[vari][2]);
+			if(nu==1){document.write(\'<img id="fO\'+i+\'" style="position:fixed;" src="\'+fallObjects[vari][0]+\'">\'); }
+			}
+			function fall(){
+			for(i=0;i<numObjs;i++){
+			var fallingObject=document.getElementById(\'fO\'+i);
+			if((objects[i][1]>(winHeight-(objects[i][5]+objects[i][7])))||(objects[i][0]>(winWidth-(objects[i][2]+objects[i][8])))){fallObject(i,objects[i][6],0);}
+			objects[i][0]+=wind;objects[i][1]+=objects[i][5];objects[i][4]+=objects[i][3];
+			with(fallingObject.style){ top=objects[i][1]+winOffset+\'px\';left=objects[i][0]+(objects[i][2]*Math.cos(objects[i][4]))+\'px\';}
+			}
+			setTimeout("fall()",31);
+			}
+			var objects=new Array(),winOffset=0,winHeight,winWidth,togvis,moz=(document.getElementById&&!document.all)?1:0;winSize();
+			for (i=0;i<numObjs;i++){fallObject(i,parseInt(Math.random()*fallObjects.length),1);}
+			fall();
+}
+else{
+if(f.getDate()>=20 && f.getMonth()==11 || f.getDate()>=1 && f.getMonth()<2 || f.getDate()<=20 && f.getMonth()==2){
+	var fallObjects=new Array();function newObject(url,height,width){fallObjects[fallObjects.length]=new Array(url,height,width);}
+			
+			var numObjs=40, waft=50, fallSpeed=10, wind=0;
+			newObject("img/nieve2_jessi_diyva.png",22,22);
+			newObject("img/nieve1_jessi_diyva.png",22,22);
+			
+			function winSize(){winWidth=(moz)?window.innerWidth-180:document.body.clientWidth-180;winHeight=(moz)?window.innerHeight+500:document.body.clientHeight+500;}
+			function winOfy(){winOffset=(moz)?window.pageYOffset:document.body.scrollTop;}
+			function fallObject(num,vari,nu){
+			objects[num]=new Array(parseInt(Math.random()*(winWidth-waft)),-30,(parseInt(Math.random()*waft))*((Math.random()>0.5)?1:-1),0.02+Math.random()/20,0,1+parseInt(Math.random()*fallSpeed),vari,fallObjects[vari][1],fallObjects[vari][2]);
+			if(nu==1){document.write(\'<img id="fO\'+i+\'" style="position:fixed;" src="\'+fallObjects[vari][0]+\'">\'); }
+			}
+			function fall(){
+			for(i=0;i<numObjs;i++){
+			var fallingObject=document.getElementById(\'fO\'+i);
+			if((objects[i][1]>(winHeight-(objects[i][5]+objects[i][7])))||(objects[i][0]>(winWidth-(objects[i][2]+objects[i][8])))){fallObject(i,objects[i][6],0);}
+			objects[i][0]+=wind;objects[i][1]+=objects[i][5];objects[i][4]+=objects[i][3];
+			with(fallingObject.style){ top=objects[i][1]+winOffset+\'px\';left=objects[i][0]+(objects[i][2]*Math.cos(objects[i][4]))+\'px\';}
+			}
+			setTimeout("fall()",31);
+			}
+			var objects=new Array(),winOffset=0,winHeight,winWidth,togvis,moz=(document.getElementById&&!document.all)?1:0;winSize();
+			for (i=0;i<numObjs;i++){fallObject(i,parseInt(Math.random()*fallObjects.length),1);}
+			fall();
+}
+}
+	
+			</script>';
+}
+
 function admin($id){
 	
 	$admin=false;
@@ -295,7 +360,7 @@ print '
 
 	</head>
 <body style="zoom:90%;">
-
+'.nevar().'
 <div id="navega"> 
 
 <div id="menu"> 
@@ -686,7 +751,6 @@ function deliver_response($status){
 function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta=""){
 	
 	$icono="fav.ico";
-	$like="";
 	
 	if(isset($_COOKIE['4images_userid'])){
 		
@@ -705,29 +769,36 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 
 		mysqli_close($GLOBALS['conexion']);
 		
-		if($_COOKIE['4images_userid']>0){
-			$like='<div style="float:left;">
+		
+	}
+	
+	print '<td style="border-right:1px dashed blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
+
+			<a href="'.$ruta.'details.php?image_id='.$image_id.'"> 
+				<img class="img-fluid" alt="Imagen '.$image_id.'" src="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'"/>
+			</a>'.$like.'
+		
+		<div style="float:right;clear:both;">';
+		
+			if($_COOKIE['4images_userid']>0){
+			print '
 
 				<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
 					<img alt="fav" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono.'" id="'.$image_id.'"/>
 				</a>
 		
-			</div>';
+			';
 		}
-	}
-	
-	print '<td style="border-right:1px solid blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
-			<a href="'.$ruta.'details.php?image_id='.$image_id.'"> 
-				<img class="img-fluid" alt="Imagen '.$image_id.'" src="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'"/>
-			</a>'.$like.'
-		
-		<div style="float:right;">
+		print '
 				<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
 					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
 				</a>';
 				
 				if($mis_cargas || admin($_COOKIE['4images_userid'])){
 					
+					if($mis_cargas){
+						$final_sentencia="AND user_id='".$_COOKIE['4images_userid']."'";
+					}
 					
 				$icono2='hide.png';
 				
@@ -736,21 +807,23 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 		or die("No se pudo conectar a la base de datos");
 			
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
-		$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' AND user_id='" . $_COOKIE['4images_userid']."'" );
+		$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' ".$final_sentencia );
 	
 		$fila = mysqli_fetch_row($consulta);
+	
+		if((int)$fila[0]==1){
+			$icono2="view.png";
+		}
 	
 		$cat_id=$fila[1];
 		
 		$file=$fila[2];
 
-		if((int)$fila[0]==1){
-			$icono2="view.png";
-		}
+		
 
 		mysqli_close($GLOBALS['conexion']);
 		
-print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id.",&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
+print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id."&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
 					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/delete.ico"/>
 					</a>';
 					
@@ -773,7 +846,7 @@ print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$
 
 function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,$mis_cargas=false,$filtro=false,$ruta=""){
 
-	if($cat_id=='*' && !$final_sentencia=="" && $ruta==""){
+	if($cat_id=='*' && $final_sentencia=="" && $ruta==""){
 		$final_sentencia='WHERE image_active=1 ';
 	}
 
@@ -869,8 +942,6 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 					</tr>';
 						
 				print '<tr style="border:none;">';
-				
-				
 				
 				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 					
@@ -1117,9 +1188,8 @@ function ver_dato($accion,$idioma){
 	return $dato;
 }
 
-function menu_lateral($ruta = ""){
-	
-	if(!isset($_SESSION['track']) || $_SESSION['track']){
+function track(){
+		if(!isset($_SESSION['track']) || $_SESSION['track']){
 	$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		$GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -1160,7 +1230,7 @@ function menu_lateral($ruta = ""){
 				$country ="de";
 				break;
 				
-				case 'United States':
+				case "United States":
 				$country ="us";
 				break;
 				
@@ -1452,7 +1522,7 @@ function menu_lateral($ruta = ""){
 				$country ="bulgaria";
 				break;
 				
-				case 'Timor Leste':
+				case "Timor Leste":
 				$country ="timor-oriental";
 				break;
 				
@@ -1472,7 +1542,7 @@ function menu_lateral($ruta = ""){
 				$country ="panama";
 				break;
 				
-				case 'Saudi Arabia':
+				case "Saudi Arabia":
 				$country ="arabia-saudi";
 				break;
 				
@@ -1488,7 +1558,7 @@ function menu_lateral($ruta = ""){
 				$country ="paraguay";
 				break;
 				
-				case 'New Zealand':
+				case "New Zealand":
 				$country ="nueva_zelanda";
 				break;
 				
@@ -1548,6 +1618,71 @@ function menu_lateral($ruta = ""){
 				$country ="bielorrusia";
 				break;
 				
+				case 'Lebanon':
+				$country ="libano";
+				break;
+				
+				case 'Cameroon':
+				$country ="camerun";
+				break;
+				
+				case "Sierra Leone":
+				$country ="sierra_leona";
+				break;
+				
+				case "Macedonia":
+				$country ="macedonia";
+				break;
+				
+				case 'Sudan':
+				$country ="sudan";
+				break;
+				
+				case 'Kyrgyzstan':
+				$country ="kirguistan";
+				break;
+				
+				case 'Ghana':
+				$country ="ghana";
+				break;
+				
+				case 'Uruguay':
+				$country ="uruguay";
+				break;
+				
+				case 'Myanmar':
+				$country ="birmania";
+				break;
+				
+				case 'Qatar':
+				$country ="qatar";
+				break;
+				
+				case "South Sudan":
+				$country ="sudan_sur";
+				break;
+				
+				case 'Guatemala':
+				$country ="guatemala";
+				break;
+				
+				case "Dominican Republic":
+				$country ="republica_dominicana";
+				break;
+				
+				case 'Luxembourg':
+				$country ="luxemburgo";
+				break;
+				
+				case "Puerto Rico":
+				$country ="puerto_rico";
+				break;
+				
+				case "Namibia":
+				$country ="namibia";
+				break;
+				
+
 				default:
 				$country ="unknow";
 				break;
@@ -1563,6 +1698,11 @@ function menu_lateral($ruta = ""){
 		mysqli_close($GLOBALS['conexion']);
 	
 	}
+}
+
+function menu_lateral($ruta = ""){
+	
+	track();
 	
 	if(isset($_COOKIE['4images_userid'])){
 	
@@ -1589,7 +1729,10 @@ print '
   <div style="margin-left:-50px;" class="w3-bar-block">';
   
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
-		print '<a title="'.ver_dato('home', $GLOBALS['idioma']).'" href="'.$ruta.'index.php"><img alt="inicio" class="icono" src="'.$ruta.'img/home.png" ></a><hr/>';
+		print '<a title="'.ver_dato('home', $GLOBALS['idioma']).'" href="'.$ruta.'index.php">
+					<img alt="inicio" class="icono" style="margin-top:20px;" src="'.$ruta.'img/home.png" >
+				</a>
+				<hr class="separador"/>';
 	}
 	
 	if($_GET['l']=='yes' || $_COOKIE['4images_userid']=="-1" || !isset($_COOKIE['4images_userid']) || $_COOKIE['4images_userid']=="-1"){
@@ -1597,19 +1740,19 @@ print '
 		print '<form method="post" action="'.$ruta.'login.php" >
 
        <img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
-		<br/><br/>
+	
 		<label for="user_name"  style="font-size:2em;">'.ver_dato('user_name',$GLOBALS['idioma']).'</label>
 		<input id="user_name" style="height:40px;font-size:2em;" type="text" name="user_name" class="logininput">
         
-		<br/>
-		<img alt="clave de acceso" class="icono" style="margin:auto;" src="'.$ruta.'img/user_pass.png"><br/><br/>
+		
+		<img alt="clave de acceso" class="icono" style="margin:auto;margin-top:30px;" src="'.$ruta.'img/user_pass.png"><br/><br/>
 			<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
         <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput">
-        <br/><br/>
+       
    
-		<input id="login" style="margin-top:10px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
+		<input id="login" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button">
       </form>
-	  <hr/>
+	  <hr class="separador"/>
 	  
 	  <a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:1em;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
 	  <a  data-toggle="modal" data-target="#exampleModal">
@@ -1657,24 +1800,70 @@ print '
 			}
 
 			print '
-			<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php"><span style="font-size:2em;">'.$recuento[0].'</span></a>';
+			<div style="float:left;padding-left:10px;">
+				<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php">
+					<span style="font-size:2em;">'.$recuento[0].'</span>
+				</a>
+			</div>';
 		}
 		
-		print '<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php"><img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"></a>
-	   <a title="'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'" href="'.$ruta.'cambiar_avatar.php"><img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono imgRedonda" src="'.$imagen_usuario.'"/></a><br/><br/><span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
-       <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php"><br/><br/><img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"></a><br>
-	   <br><a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php"><img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png"></a><br/>
-       <br>
-	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"></a><br/>
-       <br>
-	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php"><img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"></a><br/>
-       <br>
-	   <a style="margin-left:-15px;" title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" ><img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"></a>
+		print '
+		
+		<div style="float:left;padding-left:10px;">
+			<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php">
+				<img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"/>
+			</a>
+		</div>
+		
+		<div style="float:left;padding-left:10px;">
+	   <a title="'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'" href="'.$ruta.'cambiar_avatar.php">
+		<img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono imgRedonda" src="'.$imagen_usuario.'"/>
+		</a></div>
+		
+		<div style="float:left;padding-top:10px;">
+		<span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
+		<hr/></div>
+		
+		<div style="float:left;padding-top:110px;padding-left:10px;">
+	   <a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
+			<img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png">
+		</a></div>
+		
+		<div style="float:left;padding-top:40px;padding-left:10px;">
+       <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
+		<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"/>
+	   </a></div>
+	     
+	
+		
+		<div style="float:left;padding-top:10px;padding-left:10px;">
+	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
+			<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"/>
+		</a></div>
+			<div style="float:left;padding-top:10px;padding-left:10px;">
+	   <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
+		<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"/>
+		</a></div>
+		<div style="float:left;padding-top:10px;padding-left:10px;">
+	   <a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
+			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/coment.png"/>
+		</a></div>
+		
+		<div style="float:left;padding-top:10px;padding-left:10px;">
+			<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
+			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/search.png"/>
+			</a>
+		</div>
+
+		<div style="float:left;padding-top:100px;">
+		<hr/>
+	   <a style="margin-left:-15px;" title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" >
+			<img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"/>
+		</a></div>
 	   ';
 
 	}
-	
-print '<hr/>';
+
 
 $imagen_aleatoria=imagen_aleatoria();
 
@@ -1683,65 +1872,59 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
 if($imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	
-	print '
-	<img alt="aleatorio" style="margin-left:10px;height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
-	<br/><br/>';
+	print '<div style="float:left;width:100%;"><hr class="separador"/>
+	<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
+	</div>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
 	$image_id=substr($image_id,0,strpos($image_id,"#"));
 
 	print '
+	<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
 	<a title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" href="'.$ruta.'details.php?image_id='.$image_id.'">
 	<img style="height:7.5em;width:7.5em;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" /></a>
-	<br/><br/>
-	<hr/>';
+
+	<hr class="separador" /></div>';
 }
 
 $redes_sociales='';
 
   if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
-	$redes_sociales.='<a title="facebook" target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a>';  
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="facebook" target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a></div>';  
   }
   
   if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
-	$redes_sociales.=' <a title="instagram" target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a>';  
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"> <a  title="instagram" target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a></div>';  
   }
   
     if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
-	$redes_sociales.='<a title="twitter" target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a>';  
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="twitter" target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a></div>';  
   }
   
     if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
-	$redes_sociales.='<a title="youtube" target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a>';   
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="youtube" target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a></div>';   
   }
   
     if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
-	$redes_sociales.='<br/><a title="debianart" target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a>';   
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="debianart" target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a></div>';   
   }
   
     if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
 		
-		if(empty($GLOBALS['deviantart'])){
-			$redes_sociales.='<br/>';
-		}
-		
-	$redes_sociales.='<a title="slideshare" target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a>';  
+	
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a title="slideshare" target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a></div>';  
    }
    
     if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
-		
-		if(empty($GLOBALS['debianart']) && empty($GLOBALS['instagram'])){
-			$redes_sociales.='<br/>';
-		}
-		
-	$redes_sociales.='<a title="debianart" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a>';    
+	
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a title="debianart" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a></div>';    
   }
       
 
      if(!empty($redes_sociales)){
-		print '<div style="-moz-transform: scale(1.2,1.2);zoom:150%;" class="w3-panel w3-large">';
+		print '<div style="float:left;zoom:150%;-moz-transform: scale(1.3,1.3);">';
 		print $redes_sociales.'</div>
-		<hr/>';
+		';
 	 }        	     
 
 if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
@@ -1764,15 +1947,23 @@ if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
 	mysqli_close($GLOBALS['conexion']);
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
-		print '<div style="float:left;padding-left:50px;padding-bottom:20px;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php"><img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png"  ></a></div>';
+$admin='
+			<div stlye="float:left;padding-bottom:40px;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php">
+				<img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png" / >
+			</a><hr/></div>
+		';
 	}
 		
 }
 
 print '
- <br/> 
- <div style="float:left;padding-left:50px;"><a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php"><img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/search.png"/></a></div>
- <div style="float:left;padding-top:40px;padding-left:50px;padding-bottom:20px;"><a title="rss" href="'.$ruta.'rss.php"><img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a></div>
+
+  <div style="float:left;padding-top:40px;padding-left:50px;padding-bottom:20px;">
+    <hr style="margin-left:-70px;width:310%;"/>'.$admin.'
+	
+ <div stlye="float:left;"> <a title="rss" href="'.$ruta.'rss.php">
+
+  <img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a></div></div>
 
 </div>
 </nav>';
@@ -1873,7 +2064,7 @@ function poner_menu($ruta = ""){
 				$fila = mysqli_fetch_row($consulta);
 			
 				print '
-				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias">
+				<li style="background-color: rgba(255, 255, 255, 0);padding-top:20px;" class="menu_categorias">
 				<a style="color:#ffffff;background-color:green;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
 				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
@@ -1884,7 +2075,7 @@ function poner_menu($ruta = ""){
 						
 				while ($subcategorias = mysqli_fetch_array($consulta)){
 					
-						print '<li style="margin-top:15px;background-color: rgba(255, 255, 255, 0);" >
+						print '<li style="background-color: rgba(255, 255, 255, 0);" >
 						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
 									
@@ -1901,7 +2092,7 @@ function poner_menu($ruta = ""){
 			while ($fila = mysqli_fetch_row($consulta)){
 
 				print '
-				<li style="background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu ">
+				<li style="padding-top:20px;background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu ">
 				<a style="color:#ffffff;background-color:blue;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		

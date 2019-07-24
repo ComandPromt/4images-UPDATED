@@ -344,7 +344,8 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('90','rename','zmień nazwę'),
 ('91','reply','Odpowiedź'),
 ('92','clear_inbox','Wyczyść skrzynkę odbiorczą'),
-('93','clear_outbox','Wyczyść tacę wyjściową');
+('93','clear_outbox','Wyczyść tacę wyjściową'),
+('94','comentarios','Komentarze');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -439,7 +440,8 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('90','rename','이름 바꾸기'),
 ('91','reply','대답하다'),
 ('92','clear_inbox','받은 편지함 정리'),
-('93','clear_outbox','배출 트레이 청소');
+('93','clear_outbox','배출 트레이 청소'),
+('94','comentarios','댓글');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -534,7 +536,8 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('90','rename','đổi tên'),
 ('91','reply','Trả lời'),
 ('92','clear_inbox','Hộp thư sạch'),
-('93','clear_outbox','Làm sạch khay đầu ra');
+('93','clear_outbox','Làm sạch khay đầu ra'),
+('94','comentarios','Bình luận');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -629,7 +632,8 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('90','rename','Umbenennen'),
 ('91','reply','Antworten'),
 ('92','clear_inbox','Posteingang reinigen'),
-('93','clear_outbox','Ausgabefach reinigen');
+('93','clear_outbox','Ausgabefach reinigen'),
+('94','comentarios','Kommentare');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -724,7 +728,8 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('90','rename','إعادة تسمية'),
 ('91','reply','إجابة'),
 ('92','clear_inbox','البريد الوارد نظيفة'),
-('93','clear_outbox','علبة إخراج نظيفة');
+('93','clear_outbox','علبة إخراج نظيفة'),
+('94','comentarios','تعليقات');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -819,7 +824,8 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('90','rename','নামান্তর'),
 ('91','reply','উত্তর'),
 ('92','clear_inbox','साफ इनबॉक्स'),
-('93','clear_outbox','साफ उत्पादन ट्रे');
+('93','clear_outbox','साफ उत्पादन ट्रे'),
+('94','comentarios','মন্তব্য');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -914,7 +920,8 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('90','rename','canviar el nom'),
 ('91','reply','Respondre'),
 ('92','clear_inbox','Netejar safata de entrada'),
-('93','clear_outbox','Netejar safata de sortida');
+('93','clear_outbox','Netejar safata de sortida'),
+('94','comentarios','comentaris');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1009,7 +1016,8 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('90','rename','重命名'),
 ('91','reply','答案'),
 ('92','clear_inbox','清潔收件箱'),
-('93','clear_outbox','清潔輸出托盤');
+('93','clear_outbox','清潔輸出托盤'),
+('94','comentarios','評論');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1104,7 +1112,8 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('90','rename','Izena aldatu'),
 ('91','reply','Erantzun'),
 ('92','clear_inbox','Sarrera ontzia garbitu'),
-('93','clear_outbox','Garbitu irteera erretilua');
+('93','clear_outbox','Garbitu irteera erretilua'),
+('94','comentarios','Iruzkinak');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1199,7 +1208,8 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('90','rename','Renommer'),
 ('91','reply','Répondre'),
 ('92','clear_inbox','Nettoyer la boîte de réception'),
-('93','clear_outbox','Nettoyer le bac de sortie');
+('93','clear_outbox','Nettoyer le bac de sortie'),
+('94','comentarios','Commentaires');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1294,7 +1304,8 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('90','rename','नाम बदलने'),
 ('91','reply','उत्तर'),
 ('92','clear_inbox','साफ इनबॉक्स'),
-('93','clear_outbox','साफ उत्पादन ट्रे');
+('93','clear_outbox','साफ उत्पादन ट्रे'),
+('94','comentarios','टिप्पणियाँ');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1389,7 +1400,8 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('90','rename','Rename'),
 ('91','reply','Reply'),
 ('92','clear_inbox','Clear inbox'),
-('93','clear_outbox','Clear outbox');
+('93','clear_outbox','Clear outbox'),
+('94','comentarios','Comments');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1484,7 +1496,8 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('90','rename','Rinominare'),
 ('91','reply','Risposta'),
 ('92','clear_inbox','Pulisci casella di posta'),
-('93','clear_outbox','Pulire il vassoio di uscita');
+('93','clear_outbox','Pulire il vassoio di uscita'),
+('94','comentarios','Commenti');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1579,7 +1592,8 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('90','rename','改名'),
 ('91','reply','返事'),
 ('92','clear_inbox','クリーン受信トレイ'),
-('93','clear_outbox','排紙トレイを清掃する');
+('93','clear_outbox','排紙トレイを清掃する'),
+('94','comentarios','コメント');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1674,7 +1688,8 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('90','rename','Renomear'),
 ('91','reply','Responder'),
 ('92','clear_inbox','Limpar caixa de entrada'),
-('93','clear_outbox','Limpar bandeja de saída');
+('93','clear_outbox','Limpar bandeja de saída'),
+('94','comentarios','Comentários');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1769,7 +1784,9 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('90','rename','переименовать'),
 ('91','reply','ответ'),
 ('92','clear_inbox','чистый почтовый ящик'),
-('93','clear_outbox','очистить лоток');
+('93','clear_outbox','очистить лоток'),
+('94','comentarios','комментарии'),
+('95','mencion','te ha mencionado');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -1864,7 +1881,9 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('90','rename','Renombrar'),
 ('91','reply','Responder'),
 ('92','clear_inbox','Limpiar bandeja de entrada'),
-('93','clear_outbox','Limpiar bandeja de salida');
+('93','clear_outbox','Limpiar bandeja de salida'),
+('94','comentarios','Comentarios'),
+('95','mencion','te ha mencionado');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 
@@ -3013,4 +3032,96 @@ INSERT INTO bots (IP) VALUES
 ('157.55.39.73'  ),
 ('40.77.167.159' ),
 ('157.55.39.22' ),
-('207.46.13.12');
+('207.46.13.12'),
+('52.168.126.172' ),
+('207.46.13.137'  ),
+('176.9.146.84'   ),
+('40.77.167.27'   ),
+('207.244.157.10' ),
+('66.249.64.106'  ),
+('157.55.39.134'  ),
+('40.77.167.62'   ),
+('207.46.13.227'  ),
+('208.110.93.78'  ),
+('157.55.39.204'  ),
+('173.208.130.202'),
+('66.249.64.104'  ),
+('66.249.76.154'  ),
+('144.76.81.229' ),
+('66.249.79.229' ),
+('66.249.79.227' ),
+('207.46.13.29'  ),
+('103.131.71.167'),
+('40.77.167.64'  ),
+('91.137.17.122' ),
+('207.46.13.243' ),
+('157.55.39.200' ),
+('207.46.13.13'  ),
+('207.46.13.86'  ),
+('40.77.167.115' ),
+('40.77.167.11 '),
+('207.46.13.85 '),
+('40.77.167.91 '),
+('40.77.167.125'),
+('157.55.39.56'   ),
+('66.249.79.30'   ),
+('66.249.79.28'   ),
+('157.55.39.210'  ),
+('40.77.167.53'   ),
+('157.55.39.186'  ),
+('157.55.39.137'  ),
+('148.251.78.18'  ),
+('144.76.137.254' ),
+('178.63.11.212'  ),
+('157.55.39.247'  ),
+('85.10.199.185'  ),
+('85.10.207.195'  ),
+('91.209.51.22'   ),
+('148.251.122.126'),
+('192.151.145.82' ),
+('157.55.39.84'   ),
+('207.46.13.35'   ),
+('148.251.49.112' ),
+('66.249.76.90'   ),
+('178.63.13.154'  ),
+('40.77.167.42'   ),
+('144.76.29.148'  ),
+('40.77.167.75'   ),
+('40.77.167.13' ),
+('144.76.2.149' ),
+('18.232.99.123'),
+('207.46.13.212'),
+('157.55.39.147'),
+('157.55.39.232'),
+('207.46.13.80' ),
+('40.77.167.12' ),
+('54.174.43.27' ),
+('157.55.39.64' ),
+('157.55.39.211'),
+('91.121.109.55'),
+('157.55.39.58' ),
+('40.77.167.121'),
+('157.55.39.241'  ),
+('173.212.220.26' ),
+('207.46.13.24'   ),
+('69.30.205.218'  ),
+('204.12.208.154' ),
+('207.46.13.215'  ),
+('148.251.235.104'),
+('207.46.13.224'  ),
+('157.55.39.150' ),
+('198.204.244.90'),
+('207.46.13.58'  ),
+('207.46.13.222' ),
+('207.46.13.211' ),
+('144.76.14.153' ),
+('40.77.167.24'  ),
+('157.55.39.208' ),
+('148.251.10.183'),
+('144.76.38.40'  ),
+('144.76.6.230' ),
+('157.55.39.255'),
+('62.138.2.243' ),
+('207.46.13.61' ),
+('207.180.220.114'),
+('207.46.13.63');

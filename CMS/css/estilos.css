@@ -1,4 +1,55 @@
 
+.separador{
+	margin-left:-40px;
+	width:170%;
+}
+
+.titulo_boton {
+  float:left; 
+  padding:5px;  
+ 
+  width:400px;
+  font-family:helvetica;
+  font-size:16px;
+  font-weight:bold;
+}
+.boton_mostrar {
+  float:right;
+  font-size:12px;
+  line-height:20px;
+  color:#DE7217;
+}
+#contenido{
+  float:left;
+  clear:both;
+  border:2px solid #e6e6e6;
+  margin-top:2px;
+  padding:5px;
+  width:396px;
+  overflow:auto;
+  font-family:helvetica;
+  font-size:14px;
+  text-align: justify;
+}
+.comentario { 
+  height: 30px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 1px 0 0 0; 
+  border-radius: 20px;
+} 
+
+hr.comentario:before { 
+ display: block; 
+  content: ""; 
+  height: 30px; 
+  margin-top: -31px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 0 0 1px 0; 
+  border-radius: 20px; 
+}
+		
 .maximos{
 	max-width:640px;
 	max-height:480px;

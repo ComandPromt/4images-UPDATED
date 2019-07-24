@@ -4,9 +4,13 @@ session_start();
 
 $_SESSION['track']=true;
 
+$_SESSION['pagina'] = 'rss.php';
+
 include('config.php');
 
 include('includes/funciones.php');
+
+track();
 
 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])

@@ -506,6 +506,9 @@ session_start();
 			
 					}
 					
+					else{
+						unlink('../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
+					}
 				
 				}
 				

@@ -77,20 +77,20 @@ print '<div style="padding-top:60px;font-size:2em;">
 
 </div>
 
-<div style="float:left;margin-left:-40px;margin-top:-40px;">
+<div style="float:left;margin-top:-40px;">
 <h1 style="font-size:0.8em;color:#0F4B90;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
 
 
 </div>
 
 
-<div style="margin:auto;margin-top:100px;padding-left:40px;float;left;padding-right:20px;">';
+<div style="margin:auto;margin-top:10px;padding-left:40px;float:left;padding-right:20px;">';
 
 if(!logueado()){
 
-	print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
+	print '<div style="float:left;"><a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
 			<img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
-		</a>';
+		</a></div>';
 }
 
 else{
@@ -105,7 +105,11 @@ else{
 		
 		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="favoritos.php">
 			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/fav_2.ico"/>
-		</a><hr/>
+		</a>
+		
+		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
+			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
+		</a>
 		';
 }
 
@@ -118,8 +122,8 @@ print '
 		<a title="rss" href="'.$ruta.'rss.php">
 			<img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
 		</a>
-		
-</div>
+	</div>	
+
 
 <div><br/>
 ';
@@ -138,10 +142,10 @@ if (file_exists('config.php')) {
 
     if ($fila[0] > 0) {
 
-        print '<div style="float:right;margin-top:-5px;padding-left:350px;background-color: rgba(255, 255, 255, 0);"
-        class="entire-content">
+        print '<div style="float:right;padding-left:250px;margin-top:200px;padding-top:60px;background-color: rgba(255, 255, 255, 0);"
+        class="entire-content col-xs-4" >
 
-		<div style="margin-top:-40px;background-color: rgba(255, 255, 255, 0);"class="content-carrousel">';
+		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
 
         $consulta = mysqli_query($GLOBALS['conexion'],'SELECT cat_id,image_media_file,image_id,image_name FROM '.
         
@@ -149,8 +153,8 @@ if (file_exists('config.php')) {
 
         while ($fila = mysqli_fetch_array($consulta)) {
 
-            print '<figure style="width:4em;height:4em;"
-          class="shadow"><a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> <img alt="' . $fila[2] . '" style="width:4em;height:4em;"
+            print '<figure style="width:3em;height:3em;margin:auto;"
+          class="shadow"><a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> <img alt="' . $fila[2] . '" style="width:3em;height:3em;"
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 		
@@ -174,6 +178,7 @@ print '</div>
 </div>';
 
 restablecer_pass();
+
 
 footer();
 

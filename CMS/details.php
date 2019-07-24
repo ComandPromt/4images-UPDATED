@@ -16,31 +16,35 @@ if (!isset($_SESSION['insert'])) {
     $_SESSION['insert'] = false;
 }
 
-include 'config.php';
+include ('config.php');
 
-if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['image_id']) == 1) {
+if (isset($_GET['image_id']) ) {
+	
+$_GET['image_id']=(int)$_GET['image_id'];
 
-    if (isset($_COOKIE['4images_userid'])) {
+	if($_GET['image_id']>0 && visible($_GET['image_id']) == 1){
 
-        if (isset($_POST['renombrar']) && isset($_GET['image_id']) && (int) $_GET['image_id'] > 0) {
+		if (isset($_COOKIE['4images_userid'])) {
 
-            $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			if (isset($_POST['renombrar']) && isset($_GET['image_id']) && (int) $_GET['image_id'] > 0) {
+
+				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
                 $GLOBALS['db_password'], $GLOBALS['db_name'])
-            or die("No se pudo conectar a la base de datos");
+				or die("No se pudo conectar a la base de datos");
 
-            mysqli_query($GLOBALS['conexion'],
+				mysqli_query($GLOBALS['conexion'],
                 'UPDATE ' . $GLOBALS['table_prefix'] .
                 "images SET image_name='" . $_POST['nuevo_nombre'] . "'
-		WHERE image_id='" . (int) $_GET['image_id'] . "'");
+				WHERE image_id='" . (int) $_GET['image_id'] . "'");
 
-            mysqli_close($GLOBALS['conexion']);
-        }
+				mysqli_close($GLOBALS['conexion']);
+			}
 
-        $_COOKIE['4images_userid'] = (int) $_COOKIE['4images_userid'];
+			$_COOKIE['4images_userid'] = (int) $_COOKIE['4images_userid'];
 
-        if ($_COOKIE['4images_userid'] > 0) {
-            $GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
-        }
+			if ($_COOKIE['4images_userid'] > 0) {
+				$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
+			}
     }
 
     if (isset($_POST['comentario']) && !empty($_POST['captcha']) && (trim(strtolower($_POST['captcha'])) == $_SESSION['captcha'])) {
@@ -50,15 +54,52 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
         if (comprobar_si_es_valido($_POST['mensaje'], $lista_negra)
             && comprobar_si_es_valido($_POST['asunto'], $lista_negra)) {
 
+			$usuario="";
+
+			if(strpos($_POST['mensaje'],"[user]")>=0 && strpos($_POST['mensaje'],"[/user]")>0){
+				
+				$usuario=substr($_POST['mensaje'],strpos($_POST['mensaje'],"[user]")+6,strpos($_POST['mensaje'],"[/user]")-6);
+			
+				$_POST['mensaje']=str_replace("[user]","@",$_POST['mensaje']);
+		
+				$_POST['mensaje']=str_replace("[/user]","",$_POST['mensaje']);
+	
+			}		
+
             $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-                $GLOBALS['db_password'], $GLOBALS['db_name'])
+            $GLOBALS['db_password'], $GLOBALS['db_name'])
             or die("No se pudo conectar a la base de datos");
 
             mysqli_query($GLOBALS['conexion'],
-                'INSERT INTO ' . $GLOBALS['table_prefix'] .
-                "comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date)
+            'INSERT INTO ' . $GLOBALS['table_prefix'] .
+            "comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date)
 			VALUES('" . $_GET['image_id'] . "','" . $_COOKIE['4images_userid'] . "','" . $_POST['asunto'] . "','" .
-                $_POST['mensaje'] . "','" . $_SERVER['REMOTE_ADDR'] . "','" . date('Y') . '/' . date('m') . '/' . date('d') . "')");
+            $_POST['mensaje'] . "','" . $_SERVER['REMOTE_ADDR'] . "','" . date('Y') . '/' . date('m') . '/' . date('d') . "')");
+
+			if($usuario!=""){
+				
+				$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_id,nacionalidad FROM '. $GLOBALS['table_prefix'] .
+				"users WHERE user_name='". $usuario."'");
+				
+				$user_id = mysqli_fetch_row($consulta);
+						
+				if((int)$user_id[0]>0){
+				
+				$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
+				"users WHERE user_id='". $_COOKIE['4images_userid']."'");
+				
+				$remitente = mysqli_fetch_row($consulta2);
+				
+				mysqli_query($GLOBALS['conexion'],
+                "INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
+
+				VALUES( '".$_COOKIE['4images_userid']."','".$user_id[0]."','".ucwords($remitente[0]).' '.
+				ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
+				"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
+	
+				}
+				
+			}
 
             mysqli_close($GLOBALS['conexion']);
         }
@@ -122,12 +163,12 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 			<img  class="img-fluid "   alt="' . $recuento[0] . '" src="data/media/' . $recuento[1] . '/' . $recuento[2] . '" />
 
 			<div style="background-color: rgba(255, 255, 255, 0);
-			margin-bottom: -17px; margin-right: -17px; max-height: 505.75px;"
-			class="overlay scrollbar-vista scroll-content scroll-scrolly_visible">';
+			margin-bottom: -17px; margin-right: -17px; max-height: 505.75px;overflow: hidden;"
+			class="overlay scrollbar-vista ">';
 
         if (!empty($recuento[3])) {
             print '
-				<div style="height:350px;margin:auto;">
+				<div style="height:350px;margin:auto;" class="transparente">
 					<h2 style="width:70%;font-size:25px;margin:auto;padding-bottom:10px;
 					margin:auto;background-color:#ffffff;color:blue;" class="texto">' . $recuento[3] . '</h3></div>';
         }
@@ -251,7 +292,7 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
             if (subida_por_mi($_GET['image_id'])) {
 
                 print '
-		<div style="float:right;">
+		<div style="float:right;padding-top:40px;">
 
 			<a style="padding-left:10px;" data-toggle="modal" data-target="#renameModal">
 				<img class="iconos" src="img/rename.png" alt="' . ver_dato('rename', $GLOBALS['idioma']) . '"/>
@@ -264,7 +305,7 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 		<div class="modal-content ">
 			<div class="modal-header ">
 
-			<h5 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">' . ver_dato('rename', $GLOBALS['idioma']) . '</h5>
+			<h2 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">' . ver_dato('rename', $GLOBALS['idioma']) . '</h2>
 
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -351,11 +392,14 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
         }
 
         print '</div>
-		<div style="float:left;width:90%;margin-left:10%;">';
+		
+		<div style="float:left;">';
 
         print '
-		<hr/>
-		<div style="float:left;margin:auto;width:100%;">';
+
+		<div style="float:left;margin:auto;width:100%;padding-top:40px;">';
+
+$titulo_comentario=ver_dato('comments', $GLOBALS['idioma']);
 
         $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
             $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
@@ -363,8 +407,6 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
         $consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_allow_comments FROM ' . $GLOBALS['table_prefix'] . "images
 			WHERE image_active=1 AND image_id='" . $_GET['image_id'] . "'");
-
-        $_GET['image_id']++;
 
         $comentario = mysqli_fetch_row($consulta);
 
@@ -376,20 +418,26 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 
             $recuento = mysqli_fetch_row($consulta);
 
-            if ($recuento[0] > 0) {
+            if ($recuento[0] > 0 && logueado()) {
 
                 print '
-				<table style="margin:auto;text-align:center;" class="table" >
-					<tr style="font-size:20px;">
-						<th>
-						</th>
-						<th>
-						</th>
-					</tr>';
+<div  style=" border: dashed 2px #500C9D;" class="demo">
+<h2>'.$titulo_comentario.'</h2>	
+  <a style="cursor: pointer;" onClick="muestra_oculta(\'contenido\')" title="" class="boton_mostrar"> <img id="ver_comentario" src="img/view.png" class="icono" /></a>
+</div>
+
+				<div id="contenido" style="height:500px;width:90%;margin-left:10px;margin-top:30px;border-style: none!important;"  >
+				
+					<table style="margin:auto;text-align:center;" class="table table-responsive-xs">
+					
+						<tr style="font-size:20px;">
+							<th></th>
+							<th></th>
+						</tr>';
 
                 $consulta = mysqli_query($GLOBALS['conexion'], '
 				SELECT comment_headline,comment_text FROM ' . $GLOBALS['table_prefix'] . "comments
-				WHERE image_id='" . $_GET['image_id'] . "'");
+				WHERE image_id='" . $_GET['image_id'] . "' order by comment_id desc");
 
                 while ($fila = mysqli_fetch_row($consulta)) {
                     $fila[1] = str_replace('[URL]', '<a href="', $fila[1]);
@@ -398,11 +446,16 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 					<tr>
 						<td style="font-size:23px;">' . $fila[0] . '</td>
 						<td style="font-size:23px;">' . $fila[1] . '</td>
-					</tr>';
+						
+					</tr>
+					<tr>
+					<td colspan="3"><hr class="comentario" /></td>
+					</tr>
+					';
                 }
 
                 mysqli_close($GLOBALS['conexion']);
-                print '</table><hr/>';
+                print '</table></div>';
             }
 
             if (isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid'] > 0) {
@@ -410,6 +463,9 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
                 print '
 
 							</div>
+							</div>
+							
+						<div style="float:left;padding-left:30%;padding-top:20px;">
 
 							<form method="post" action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '">
 								<p><img alt="asunto del comentario" style="height:100px;width:100px;" src="img/comment.png"/></p>
@@ -431,12 +487,17 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
 								<div style="margin-top:-20px;padding-bottom:20px;">
 								<input name="comentario" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit" /></div>
 							</form>
+							
 						</div>
 					</div>
 				</div>';
             } else {
 
-                print '<a style="font-size:30px;padding-bottom:60px;" href="register.php"><img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/></a>';
+                print '<div style="float:left;padding-top:80px;padding-bottom:40px;">
+					<a style="font-size:30px;padding-bottom:60px;" href="register.php">
+						<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
+					</a>
+				</div>';
 
             }
         }
@@ -446,7 +507,7 @@ if (isset($_GET['image_id']) && (int) $_GET['image_id'] > 0 && visible($_GET['im
         $_SESSION['pagina'] = "details.php?image_id=" . $ultima_imagen;
         redireccionar('details.php?image_id=' . $ultima_imagen);
     }
-
+}
 } else {
     redireccionar('index.php');
 }

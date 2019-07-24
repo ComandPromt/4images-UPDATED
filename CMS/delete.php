@@ -86,7 +86,7 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 	</a>
 	<hr/>
 
-	<form method="post" action="'.$_SERVER['PHP_SELF']."?image_id=".$_GET['image_id'].",&cat_id=".$_GET['cat_id']."&file=".$_GET['file']."&pag=".$_GET['pag'].'">
+	<form method="post" action="'.$_SERVER['PHP_SELF']."?image_id=".$_GET['image_id']."&cat_id=".$_GET['cat_id']."&file=".$_GET['file']."&pag=".$_GET['pag'].'">
 
 	<legend style="margin-left:-20px;">Esta seguro de borrar la imagen?</legend>
 

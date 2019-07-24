@@ -127,6 +127,10 @@ print '<div style="margin:auto;"  class="table-responsive-xs">
 				$procedencia='registrar';
 				break;
 				
+				case 'rss.php':
+				$procedencia='rss';
+				break;
+				
 				case 'inbox.php':
 				case 'outbox.php':
 				$procedencia='email';
