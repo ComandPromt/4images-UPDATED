@@ -1,3 +1,52 @@
+
+function redireciconar_accion(id,accion){
+	location.href="action.php?image_id="+id+"&del="+accion;
+}
+
+function accion(img_id,id,pagina){
+	
+  $.ajax({      
+      data: {img_id},
+      url: pagina,
+      type: 'get',
+      dataType : "text",
+      async: true,
+      error: function(X){
+            alert("Error");            
+        },
+      success: function(respuesta){ 
+	  	  
+      location.href="details.php?image_id="+id;
+	  }
+    });  
+
+}
+
+function mencionar(id){
+	
+	var texto="";
+	
+	var cerrar="";
+	
+	switch(id){
+		
+		case 1:
+		texto='[user]'+document.getElementById('mention_users').value+'[/user]';
+		cerrar='mencion';
+		break;
+		
+		case 2:
+		texto='[URL]'+document.getElementById('ctr_url').value+'[/URL]';
+		cerrar='url';
+		break;
+	}
+	
+document.getElementById("mensaje").value+=' '+texto;
+
+$("#"+cerrar).hide();
+
+}
+
 function muestra_oculta(id){
 if (document.getElementById){ //se obtiene el id
 var el = document.getElementById(id); //se define la variable "el" igual a nuestro div

@@ -88,7 +88,7 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 
 	<form method="post" action="'.$_SERVER['PHP_SELF']."?image_id=".$_GET['image_id']."&cat_id=".$_GET['cat_id']."&file=".$_GET['file']."&pag=".$_GET['pag'].'">
 
-	<legend style="margin-left:-20px;">Esta seguro de borrar la imagen?</legend>
+	<legend style="margin-left:-20px;">'.ver_dato('del_sure', $GLOBALS['idioma']).'</legend>
 
 	<div  style="margin-left:5px;padding-bottom:10px;padding-top:20px;" class="custom-control custom-radio">
 	<input type="radio" class="custom-control-input" id="defaultGroupExample1" value="Si" name="eleccion"  />

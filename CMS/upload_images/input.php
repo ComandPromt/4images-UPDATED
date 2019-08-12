@@ -3,6 +3,8 @@
 include('../includes/funciones.php');
 include('../config.php');
 
+$_SESSION['track']=false;
+
 comprobar_cookie('../');
 
 if(isset($_POST['categoria']) && !empty($_POST['categoria'])){

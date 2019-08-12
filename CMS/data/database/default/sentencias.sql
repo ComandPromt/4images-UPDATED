@@ -205,7 +205,8 @@ CREATE TABLE `4images_comments`(
 	`comment_text`text NOT NULL,
 	`comment_ip` varchar(20) NOT NULL DEFAULT '',
 	`comment_date` date NOT NULL,
-	FOREIGN KEY(`image_id`) REFERENCES `4images_images`(`image_id`),
+	`visible` tinyint(1) NOT NULL DEFAULT '0',
+	FOREIGN KEY(`image_id`) REFERENCES `4images_images`(`image_id`) ON DELETE CASCADE,
 	FOREIGN KEY(`user_id`) REFERENCES `4images_users`(`user_id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -249,7 +250,7 @@ CREATE TABLE `antispam`(
 
 CREATE OR REPLACE VIEW ver_bots AS SELECT distinct(tx_ipRemota) FROM tbl_tracking where tx_navegador like '%Bot%' AND tx_ipRemota!='127.0.0.1';
 
-CREATE OR REPLACE VIEW pais_desconocido AS SELECT tx_ipRemota from tbl_tracking where pais='unknow'
+CREATE OR REPLACE VIEW pais_desconocido AS SELECT tx_ipRemota from tbl_tracking where pais='unknow';
 
 INSERT INTO polaco (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Użytkownik został pomyślnie aktywowany'),
@@ -345,7 +346,14 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('91','reply','Odpowiedź'),
 ('92','clear_inbox','Wyczyść skrzynkę odbiorczą'),
 ('93','clear_outbox','Wyczyść tacę wyjściową'),
-('94','comentarios','Komentarze');
+('94','comentarios','Komentarze'),
+('95','mencion','wspomniałem o tobie'),
+('96','mention','Wspomnij'),
+('97','txt_mencion','Wybierz użytkownika, o którym chcesz wspomnieć'),
+('98','visibilidad','Widoczność'),
+('99','publica','Publiczne'),
+('100','solo_users','Tylko użytkownicy'),
+('101','del_sure','Czy na pewno chcesz usunąć obraz?');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -441,7 +449,14 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('91','reply','대답하다'),
 ('92','clear_inbox','받은 편지함 정리'),
 ('93','clear_outbox','배출 트레이 청소'),
-('94','comentarios','댓글');
+('94','comentarios','댓글'),
+('95','mencion','너를 언급했다'),
+('96','mention','언급'),
+('97','txt_mencion','언급 할 사용자를 선택하십시오'),
+('98','visibilidad','공개 설정'),
+('99','publica','공개'),
+('100','solo_users','사용자 만'),
+('101','del_sure','이미지를 삭제 하시겠습니까?');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -537,7 +552,14 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('91','reply','Trả lời'),
 ('92','clear_inbox','Hộp thư sạch'),
 ('93','clear_outbox','Làm sạch khay đầu ra'),
-('94','comentarios','Bình luận');
+('94','comentarios','Bình luận'),
+('95','mencion','đề cập đến bạn'),
+('96','mention','Đề cập'),
+('97','txt_mencion','Chọn người dùng để đề cập'),
+('98','visibilidad','Tầm nhìn'),
+('99','publica','Công cộng'),
+('100','solo_users','Chỉ người dùng'),
+('101','del_sure','Bạn có chắc chắn để xóa hình ảnh?');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -633,7 +655,14 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('91','reply','Antworten'),
 ('92','clear_inbox','Posteingang reinigen'),
 ('93','clear_outbox','Ausgabefach reinigen'),
-('94','comentarios','Kommentare');
+('94','comentarios','Kommentare'),
+('95','mencion','hat dich erwähnt'),
+('96','mention','Erwähnung'),
+('97','txt_mencion','Wählen Sie den zu erwähnenden Benutzer aus'),
+('98','visibilidad','Sichtbarkeit'),
+('99','publica','Öffentlich'),
+('100','solo_users','Nur Benutzer'),
+('101','del_sure','Möchten Sie das Bild wirklich löschen?');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -729,7 +758,14 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('91','reply','إجابة'),
 ('92','clear_inbox','البريد الوارد نظيفة'),
 ('93','clear_outbox','علبة إخراج نظيفة'),
-('94','comentarios','تعليقات');
+('94','comentarios','تعليقات'),
+('95','mencion','ذكرت لك'),
+('96','mention','ذكر'),
+('97','txt_mencion','حدد المستخدم لذكرها'),
+('98','visibilidad','رؤية'),
+('99','publica','جمهور'),
+('100','solo_users','المستخدمين فقط'),
+('101','del_sure','هل أنت متأكد من حذف الصورة؟');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -825,7 +861,14 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('91','reply','উত্তর'),
 ('92','clear_inbox','साफ इनबॉक्स'),
 ('93','clear_outbox','साफ उत्पादन ट्रे'),
-('94','comentarios','মন্তব্য');
+('94','comentarios','মন্তব্য'),
+('95','mencion','আপনি উল্লেখ'),
+('96','mention','উল্লেখ'),
+('97','txt_mencion','উল্লেখ ব্যবহারকারী নির্বাচন করুন'),
+('98','visibilidad','দৃষ্টিপাত'),
+('99','publica','প্রকাশ্য'),
+('100','solo_users','কেবল ব্যবহারকারীরা'),
+('101','del_sure','আপনি কি ছবিটি মুছে ফেলার বিষয়ে নিশ্চিত?');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -921,7 +964,14 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('91','reply','Respondre'),
 ('92','clear_inbox','Netejar safata de entrada'),
 ('93','clear_outbox','Netejar safata de sortida'),
-('94','comentarios','comentaris');
+('94','comentarios','comentaris'),
+('95','mencion','te ha esmentat'),
+('96','mention','Menció'),
+('97','txt_mencion','Selecciona le usuari a esmentar'),
+('98','visibilidad','Visibilitat'),
+('99','publica','Pública'),
+('100','solo_users','Només els usuaris'),
+('101','del_sure','¿Segur que voleu eliminar la imatge?');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1017,7 +1067,14 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('91','reply','答案'),
 ('92','clear_inbox','清潔收件箱'),
 ('93','clear_outbox','清潔輸出托盤'),
-('94','comentarios','評論');
+('94','comentarios','評論'),
+('95','mencion','提到你了'),
+('96','mention','提'),
+('97','txt_mencion','選擇要提及的用戶'),
+('98','visibilidad','能見度'),
+('99','publica','公開'),
+('100','solo_users','只有用戶'),
+('101','del_sure','您確定要刪除圖片嗎？');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1113,7 +1170,14 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('91','reply','Erantzun'),
 ('92','clear_inbox','Sarrera ontzia garbitu'),
 ('93','clear_outbox','Garbitu irteera erretilua'),
-('94','comentarios','Iruzkinak');
+('94','comentarios','Iruzkinak'),
+('95','mencion','Aipatu duzu'),
+('96','mention','Aipatu'),
+('97','txt_mencion','Hautatu aipatu erabiltzailea'),
+('98','visibilidad','Ikuspena'),
+('99','publica','Publiko'),
+('100','solo_users','Erabiltzaileak bakarrik'),
+('101','del_sure','Ziur irudia ezabatuko duzula?');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1209,7 +1273,14 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('91','reply','Répondre'),
 ('92','clear_inbox','Nettoyer la boîte de réception'),
 ('93','clear_outbox','Nettoyer le bac de sortie'),
-('94','comentarios','Commentaires');
+('94','comentarios','Commentaires'),
+('95','mencion','vous avez mentionné'),
+('96','mention','Mention'),
+('97','txt_mencion','Sélectionnez le utilisateur à mentionner'),
+('98','visibilidad','La visibilité'),
+('99','publica','Publique'),
+('100','solo_users','Seulement les utilisateurs'),
+('101','del_sure','Êtes-vous sûr de vouloir supprimer la image?');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1305,7 +1376,14 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('91','reply','उत्तर'),
 ('92','clear_inbox','साफ इनबॉक्स'),
 ('93','clear_outbox','साफ उत्पादन ट्रे'),
-('94','comentarios','टिप्पणियाँ');
+('94','comentarios','टिप्पणियाँ'),
+('95','mencion','आपका उल्लेख किया'),
+('96','mention','उल्लेख'),
+('97','txt_mencion','उल्लेख करने के लिए उपयोगकर्ता का चयन करें'),
+('98','visibilidad','दृश्यता'),
+('99','publica','सार्वजनिक'),
+('100','solo_users','केवल उपयोगकर्ता'),
+('101','del_sure','क्या आप छवि हटाना सुनिश्चित कर रहे हैं?');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1401,7 +1479,14 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('91','reply','Reply'),
 ('92','clear_inbox','Clear inbox'),
 ('93','clear_outbox','Clear outbox'),
-('94','comentarios','Comments');
+('94','comentarios','Comments'),
+('95','mencion','Mentioned you'),
+('96','mention','Mention'),
+('97','txt_mencion','Select the user to mention'),
+('98','visibilidad','Visibility'),
+('99','publica','Public'),
+('100','solo_users','Only users'),
+('101','del_sure','Are you sure to delete the image?');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1497,7 +1582,14 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('91','reply','Risposta'),
 ('92','clear_inbox','Pulisci casella di posta'),
 ('93','clear_outbox','Pulire il vassoio di uscita'),
-('94','comentarios','Commenti');
+('94','comentarios','Commenti'),
+('95','mencion','Ti ho menzionato'),
+('96','mention','Menzionare'),
+('97','txt_mencion','Seleziona le utente da menzionare'),
+('98','visibilidad','visibilità'),
+('99','publica','Pubblico'),
+('100','solo_users','Solo utenti'),
+('101','del_sure','Sei sicuro di eliminare la immagine?');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1593,7 +1685,14 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('91','reply','返事'),
 ('92','clear_inbox','クリーン受信トレイ'),
 ('93','clear_outbox','排紙トレイを清掃する'),
-('94','comentarios','コメント');
+('94','comentarios','コメント'),
+('95','mencion','あなたに言った'),
+('96','mention','言及'),
+('97','txt_mencion','言及するユーザーを選択してください'),
+('98','visibilidad','視認性'),
+('99','publica','一般公開'),
+('100','solo_users','ユーザーのみ'),
+('101','del_sure','画像を削除してよろしいですか？');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1689,7 +1788,14 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('91','reply','Responder'),
 ('92','clear_inbox','Limpar caixa de entrada'),
 ('93','clear_outbox','Limpar bandeja de saída'),
-('94','comentarios','Comentários');
+('94','comentarios','Comentários'),
+('95','mencion','mencionei você'),
+('96','mention','Menção'),
+('97','txt_mencion','Selecione o usuário para mencionar'),
+('98','visibilidad','Visibilidade'),
+('99','publica','Public'),
+('100','solo_users','Somente usuários'),
+('101','del_sure','Tem certeza de excluir a imagem?');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1786,7 +1892,13 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('92','clear_inbox','чистый почтовый ящик'),
 ('93','clear_outbox','очистить лоток'),
 ('94','comentarios','комментарии'),
-('95','mencion','te ha mencionado');
+('95','mencion','упомянул тебя'),
+('96','mention','упомянуть'),
+('97','txt_mencion','Выберите пользователя для упоминания'),
+('98','visibilidad','видимость'),
+('99','publica','общественности'),
+('100','solo_users','Только пользователи'),
+('101','del_sure','Вы уверены, что хотите удалить изображение?');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -1883,7 +1995,13 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('92','clear_inbox','Limpiar bandeja de entrada'),
 ('93','clear_outbox','Limpiar bandeja de salida'),
 ('94','comentarios','Comentarios'),
-('95','mencion','te ha mencionado');
+('95','mencion','te ha mencionado'),
+('96','mention','Mención'),
+('97','txt_mencion','Selecciona el usuario a mencionar'),
+('98','visibilidad','Visibilidad'),
+('99','publica','Pública'),
+('100','solo_users','Sólo los usuarios'),
+('101','del_sure','¿Esta seguro de borrar la imagen?');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 
@@ -3124,4 +3242,91 @@ INSERT INTO bots (IP) VALUES
 ('62.138.2.243' ),
 ('207.46.13.61' ),
 ('207.180.220.114'),
-('207.46.13.63');
+('207.46.13.63'),
+('204.12.220.106' ),
+('144.76.96.236'  ),
+('178.63.87.197'  ),
+('141.8.132.30'   ),
+('207.180.234.126'),
+('207.46.13.49'   ),
+('207.46.13.228'  ),
+('207.46.13.72'   ),
+('144.76.118.82'  ),
+('50.110.91.221'  ),
+('207.46.13.90'   ),
+('162.210.196.100'),
+('178.154.200.14' ),
+('52.168.125.139' ),
+('40.77.167.82'   ),
+('66.249.66.140'  ),
+('178.19.228.251' ),
+('157.55.39.77'   ),
+('157.55.39.198'  ),
+('157.55.39.130'  ),
+('157.55.39.50'   ),
+('157.55.39.79'   ),
+('157.55.39.62'   ),
+('173.234.153.122'),
+('92.220.29.21'   ),
+('173.212.224.157'),
+('207.46.13.57'   ),
+('95.216.11.95' ),
+('157.55.39.96'   ),
+('207.46.13.143'  ),
+('157.55.39.66'   ),
+('148.251.195.14' ),
+('207.46.13.40'   ),
+('207.46.13.14'   ),
+('40.77.167.111'  ),
+('40.77.167.55'   ),
+('157.55.39.212'  ),
+('103.131.71.178' ),
+('157.55.39.190'  ),
+('192.99.13.88'   ),
+('157.55.39.57' ),
+('207.46.13.73' ),
+('207.46.13.22' ),
+('207.46.13.60' ),
+('66.249.64.134'),
+('66.249.64.150'),
+('207.46.13.17' ),
+('40.77.167.99' ),
+('66.249.64.28' ),
+('66.249.64.30' ),
+('66.249.64.29' ),
+('66.249.64.58' ),
+('66.249.64.56' ),
+('66.249.70.12' ),
+('66.249.70.14' ),
+('66.249.64.92' ),
+('66.249.64.94' ),
+('66.249.64.90' ),
+('66.249.64.52' ),
+('66.249.64.54' ),
+('66.249.64.208'),
+('66.249.64.206'),
+('66.249.64.60' ),
+('66.249.64.184'),
+('66.249.64.186'),
+('144.76.90.142'),
+('63.141.231.10'),
+('40.77.167.67' ),
+('192.99.13.228'),
+('40.77.167.88'  ),
+('66.249.64.110' ),
+('66.249.64.18'  ),
+('66.249.64.74'  ),
+('40.77.167.89'  ),
+('66.249.64.76'  ),
+('54.36.148.44'  ),
+('75.162.70.70'  ),
+('95.91.140.170' ),
+('157.55.39.180' ),
+('40.77.167.23'  ),
+('5.189.159.208' ),
+('40.77.167.33'  ),
+('192.99.10.93'  ),
+('103.131.71.176'),
+('40.77.167.65'  ),
+('157.55.39.141' ),
+('157.55.39.85'   );

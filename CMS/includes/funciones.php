@@ -5,8 +5,17 @@ session_start();
 date_default_timezone_set('Europe/Madrid');
 
 function nevar(){
-	print '		<script>
+	
+	if(!is_private_ip($i_direccionIp)){
+		
+	$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$_SERVER['REMOTE_ADDR']));
+	$geo->lat=(int)$geo->lat;
 
+			
+	if($geo->lat>0){
+		
+			print '		<script>
+		
 var f = new Date();
 
 
@@ -67,6 +76,77 @@ if(f.getDate()>=20 && f.getMonth()==11 || f.getDate()>=1 && f.getMonth()<2 || f.
 }
 	
 			</script>';
+	}
+	
+	else{
+		
+		print '<script>var f = new Date();
+
+
+if(f.getDate()>=21 && f.getMonth()==2 || f.getDate()>=1 && f.getMonth()==3||
+f.getDate()>=1 && f.getMonth()==4 ||
+		f.getDate()<=20 && f.getMonth()==5 ){
+				var fallObjects=new Array();function newObject(url,height,width){fallObjects[fallObjects.length]=new Array(url,height,width);}
+			
+			var numObjs=40, waft=50, fallSpeed=10, wind=0;
+			newObject("img/oto.png",22,22);
+			newObject("img/oto.png",22,22);
+			
+			function winSize(){winWidth=(moz)?window.innerWidth-180:document.body.clientWidth-180;winHeight=(moz)?window.innerHeight+500:document.body.clientHeight+500;}
+			function winOfy(){winOffset=(moz)?window.pageYOffset:document.body.scrollTop;}
+			function fallObject(num,vari,nu){
+			objects[num]=new Array(parseInt(Math.random()*(winWidth-waft)),-30,(parseInt(Math.random()*waft))*((Math.random()>0.5)?1:-1),0.02+Math.random()/20,0,1+parseInt(Math.random()*fallSpeed),vari,fallObjects[vari][1],fallObjects[vari][2]);
+			if(nu==1){document.write(\'<img id="fO\'+i+\'" style="position:fixed;" src="\'+fallObjects[vari][0]+\'">\'); }
+			}
+			function fall(){
+			for(i=0;i<numObjs;i++){
+			var fallingObject=document.getElementById(\'fO\'+i);
+			if((objects[i][1]>(winHeight-(objects[i][5]+objects[i][7])))||(objects[i][0]>(winWidth-(objects[i][2]+objects[i][8])))){fallObject(i,objects[i][6],0);}
+			objects[i][0]+=wind;objects[i][1]+=objects[i][5];objects[i][4]+=objects[i][3];
+			with(fallingObject.style){ top=objects[i][1]+winOffset+\'px\';left=objects[i][0]+(objects[i][2]*Math.cos(objects[i][4]))+\'px\';}
+			}
+			setTimeout("fall()",31);
+			}
+			var objects=new Array(),winOffset=0,winHeight,winWidth,togvis,moz=(document.getElementById&&!document.all)?1:0;winSize();
+			for (i=0;i<numObjs;i++){fallObject(i,parseInt(Math.random()*fallObjects.length),1);}
+			fall();
+		}
+		
+		else{
+			if(f.getDate()>=21 && f.getMonth()==5 || f.getDate()>=1 && f.getMonth()==6 || f.getDate()>=1 && f.getMonth()==7 ||
+			f.getDate()<=21 && f.getMonth()==8){
+			var fallObjects=new Array();function newObject(url,height,width){fallObjects[fallObjects.length]=new Array(url,height,width);}
+			
+			var numObjs=40, waft=50, fallSpeed=10, wind=0;
+			newObject("img/nieve2_jessi_diyva.png",22,22);
+			newObject("img/nieve1_jessi_diyva.png",22,22);
+			
+			function winSize(){winWidth=(moz)?window.innerWidth-180:document.body.clientWidth-180;winHeight=(moz)?window.innerHeight+500:document.body.clientHeight+500;}
+			function winOfy(){winOffset=(moz)?window.pageYOffset:document.body.scrollTop;}
+			function fallObject(num,vari,nu){
+			objects[num]=new Array(parseInt(Math.random()*(winWidth-waft)),-30,(parseInt(Math.random()*waft))*((Math.random()>0.5)?1:-1),0.02+Math.random()/20,0,1+parseInt(Math.random()*fallSpeed),vari,fallObjects[vari][1],fallObjects[vari][2]);
+			if(nu==1){document.write(\'<img id="fO\'+i+\'" style="position:fixed;" src="\'+fallObjects[vari][0]+\'">\'); }
+			}
+			function fall(){
+			for(i=0;i<numObjs;i++){
+			var fallingObject=document.getElementById(\'fO\'+i);
+			if((objects[i][1]>(winHeight-(objects[i][5]+objects[i][7])))||(objects[i][0]>(winWidth-(objects[i][2]+objects[i][8])))){fallObject(i,objects[i][6],0);}
+			objects[i][0]+=wind;objects[i][1]+=objects[i][5];objects[i][4]+=objects[i][3];
+			with(fallingObject.style){ top=objects[i][1]+winOffset+\'px\';left=objects[i][0]+(objects[i][2]*Math.cos(objects[i][4]))+\'px\';}
+			}
+			setTimeout("fall()",31);
+			}
+			var objects=new Array(),winOffset=0,winHeight,winWidth,togvis,moz=(document.getElementById&&!document.all)?1:0;winSize();
+			for (i=0;i<numObjs;i++){fallObject(i,parseInt(Math.random()*fallObjects.length),1);}
+			fall();	
+			}
+		}
+		
+			</script>';
+		
+		
+	}
+	}
 }
 
 function admin($id){
@@ -1189,6 +1269,7 @@ function ver_dato($accion,$idioma){
 }
 
 function track(){
+	
 		if(!isset($_SESSION['track']) || $_SESSION['track']){
 	$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -1218,15 +1299,15 @@ function track(){
 			
 			switch($geo->country){
 			
-				case 'Spain':
+				case "Spain":
 				$country ="es";
 				break;
 			
-				case 'France':
+				case "France":
 				$country ="fr";
 				break;
 				
-				case 'Germany':
+				case "Germany":
 				$country ="de";
 				break;
 				
@@ -1234,19 +1315,19 @@ function track(){
 				$country ="us";
 				break;
 				
-				case 'Norway':
+				case "Norway":
 				$country ="no";
 				break;
 				
-				case 'Belgium':
+				case "Belgium":
 				$country ="be";
 				break;
 				
-				case 'Ukraine':
+				case "Ukraine":
 				$country ="ukr";
 				break;
 				
-				case 'Canada':
+				case "Canada":
 				$country ="ca";
 				break;
 				
@@ -1254,127 +1335,127 @@ function track(){
 				$country ="uk";
 				break;
 				
-				case 'India':
+				case "India":
 				$country ="india";
 				break;
 				
-				case 'Chile':
+				case "Chile":
 				$country ="chile";
 				break;
 				
-				case 'Brazil':
+				case "Brazil":
 				$country ="brasil";
 				break;
 				
-				case 'Thailand':
+				case "Thailand":
 				$country ="tai";
 				break;
 				
-				case 'Turkey':
+				case "Turkey":
 				$country ="turkia";
 				break;
 				
-				case 'Pakistan':
+				case "Pakistan":
 				$country ="pakistan";
 				break;
 				
-				case 'Vietnam':
+				case "Vietnam":
 				$country ="vietnam";
 				break;
 				
-				case 'Peru':
+				case "Peru":
 				$country ="peru";
 				break;
 				
-				case 'Poland':
+				case "Poland":
 				$country ="polonia";
 				break;
 				
-				case 'Indonesia':
+				case "Indonesia":
 				$country ="indonesia";
 				break;
 				
-				case 'Ireland':
+				case "Ireland":
 				$country ="ireland";
 				break;
 				
-				case 'South Korea':
+				case "South Korea":
 				$country ="corea";
 				break;
 				
-				case 'Greece':
+				case "Greece":
 				$country ="grecia";
 				break;
 					
-				case 'Italy':
+				case "Italy":
 				$country ="italia";
 				break;
 				
-				case 'Netherlands':
+				case "Netherlands":
 				$country ="holanda";
 				break;
 				
-				case 'Czechia':
+				case "Czechia":
 				$country ="chequia";
 				break;
 				
-				case 'Finland':
+				case "Finland":
 				$country ="finlandia";
 				break;
 				
-				case 'Iran':
+				case "Iran":
 				$country ="iran";
 				break;
 				
-				case 'Portugal':
+				case "Portugal":
 				$country ="portugal";
 				break;
 				
-				case 'China':
+				case "China":
 				$country ="china";
 				break;
 				
-				case 'Israel':
+				case "Israel":
 				$country ="israel";
 				break;
 				
-				case 'Romania':
+				case "Romania":
 				$country ="romania";
 				break;
 				
-				case 'Russia':
+				case "Russia":
 				$country ="rusia";
 				break;
 				
-				case 'Armenia':
+				case "Armenia":
 				$country ="armenia";
 				break;
 				
-				case 'Mauritius':
+				case "Mauritius":
 				$country ="mauricio";
 				break;
 				
-				case 'Iraq':
+				case "Iraq":
 				$country ="iraq";
 				break;
 				
-				case 'Malaysia':
+				case "Malaysia":
 				$country ="malasia";
 				break;
 					
-				case 'Philippines':
+				case "Philippines":
 				$country ="filipinas";
 				break;
 				
-				case 'Bangladesh':
+				case "Bangladesh":
 				$country ="bangladesh";
 				break;	
 				
-				case 'Colombia':
+				case "Colombia":
 				$country ="colombia";
 				break;
 				
-				case 'Reunion':
+				case "Reunion":
 				$country ="reunion";
 				break;
 				
@@ -1382,7 +1463,7 @@ function track(){
 				$country ="hongkong";
 				break;
 				
-				case 'Cambodia':
+				case "Cambodia":
 				$country ="camboya";
 				break;
 				
@@ -1418,19 +1499,19 @@ function track(){
 				$country ="palestina";
 				break;
 				
-				case 'Bolivia':
+				case "Bolivia":
 				$country ="bolivia";
 				break;
 				
-				case 'Switzerland':
+				case "Switzerland":
 				$country ="suiza";
 				break;
 				
-				case 'Sweden':
+				case "Sweden":
 				$country ="suecia";
 				break;
 				
-				case 'Morocco':
+				case "Morocco":
 				$country ="marruecos";
 				break;
 				
@@ -1474,7 +1555,7 @@ function track(){
 				$country ="egipto";
 				break;
 				
-				case 'Latvia':
+				case "Latvia":
 				$country ="letonia";
 				break;
 				
@@ -1482,43 +1563,43 @@ function track(){
 				$country ="croacia";
 				break;
 				
-				case 'Slovakia':
+				case "Slovakia":
 				$country ="eslovaquia";
 				break;
 				
-				case 'Nepal':
+				case "Nepal":
 				$country ="nepal";
 				break;
 				
-				case 'Angola':
+				case "Angola":
 				$country ="angola";
 				break;
 				
-				case 'Kenya':
+				case "Kenya":
 				$country ="kenia";
 				break;
 				
-				case 'Australia':
+				case "Australia":
 				$country ="australia";
 				break;
 				
-				case 'Hungary':
+				case "Hungary":
 				$country ="hungria";
 				break;
 				
-				case 'Kazakhstan':
+				case "Kazakhstan":
 				$country ="kazajistan";
 				break;
 				
-				case 'Denmark':
+				case "Denmark":
 				$country ="dinamarca";
 				break;
 				
-				case 'Tunisia':
+				case "Tunisia":
 				$country ="tunez";
 				break;
 				
-				case 'Bulgaria':
+				case "Bulgaria":
 				$country ="bulgaria";
 				break;
 				
@@ -1526,19 +1607,19 @@ function track(){
 				$country ="timor-oriental";
 				break;
 				
-				case 'Serbia':
+				case "Serbia":
 				$country ="serbia";
 				break;
 				
-				case 'Lithuania':
+				case "Lithuania":
 				$country ="lituania";
 				break;
 				
-				case 'Nicaragua':
+				case "Nicaragua":
 				$country ="nicaragua";
 				break;
 				
-				case 'Panama':
+				case "Panama":
 				$country ="panama";
 				break;
 				
@@ -1546,15 +1627,15 @@ function track(){
 				$country ="arabia-saudi";
 				break;
 				
-				case 'Georgia':
+				case "Georgia":
 				$country ="georgia";
 				break;
 				
-				case 'Taiwan':
+				case "Taiwan":
 				$country ="taiwan";
 				break;
 				
-				case 'Paraguay':
+				case "Paraguay":
 				$country ="paraguay";
 				break;
 				
@@ -1562,35 +1643,35 @@ function track(){
 				$country ="nueva_zelanda";
 				break;
 				
-				case 'Albania':
+				case "Albania":
 				$country ="albania";
 				break;
 				
-				case 'Guam':
+				case "Guam":
 				$country ="guam";
 				break;
 				
-				case 'Slovenia':
+				case "Slovenia":
 				$country ="eslovenia";
 				break;
 				
-				case 'Malawi':
+				case "Malawi":
 				$country ="malaui";
 				break;
 				
-				case 'Zimbabwe':
+				case "Zimbabwe":
 				$country ="zimbabue";
 				break;
 				
-				case 'Uganda':
+				case "Uganda":
 				$country ="uganda";
 				break;
 				
-				case 'Madagascar':
+				case "Madagascar":
 				$country ="madagascar";
 				break;
 				
-				case 'Mali':
+				case "Mali":
 				$country ="mali";
 				break;
 				
@@ -1598,7 +1679,7 @@ function track(){
 				$country ="sri_lanka";
 				break;
 				
-				case 'Kosovo':
+				case "Kosovo":
 				$country ="kosovo";
 				break;
 				
@@ -1606,7 +1687,7 @@ function track(){
 				$country ="bosnia";
 				break;
 				
-				case 'Cyprus':
+				case "Cyprus":
 				$country ="chipre";
 				break;
 				
@@ -1614,15 +1695,15 @@ function track(){
 				$country ="costa_rica";
 				break;
 				
-				case 'Belarus':
+				case "Belarus":
 				$country ="bielorrusia";
 				break;
 				
-				case 'Lebanon':
+				case "Lebanon":
 				$country ="libano";
 				break;
 				
-				case 'Cameroon':
+				case "Cameroon":
 				$country ="camerun";
 				break;
 				
@@ -1634,27 +1715,27 @@ function track(){
 				$country ="macedonia";
 				break;
 				
-				case 'Sudan':
+				case "Sudan":
 				$country ="sudan";
 				break;
 				
-				case 'Kyrgyzstan':
+				case "Kyrgyzstan":
 				$country ="kirguistan";
 				break;
 				
-				case 'Ghana':
+				case "Ghana":
 				$country ="ghana";
 				break;
 				
-				case 'Uruguay':
+				case "Uruguay":
 				$country ="uruguay";
 				break;
 				
-				case 'Myanmar':
+				case "Myanmar":
 				$country ="birmania";
 				break;
 				
-				case 'Qatar':
+				case "Qatar":
 				$country ="qatar";
 				break;
 				
@@ -1662,7 +1743,7 @@ function track(){
 				$country ="sudan_sur";
 				break;
 				
-				case 'Guatemala':
+				case "Guatemala":
 				$country ="guatemala";
 				break;
 				
@@ -1670,7 +1751,7 @@ function track(){
 				$country ="republica_dominicana";
 				break;
 				
-				case 'Luxembourg':
+				case "Luxembourg":
 				$country ="luxemburgo";
 				break;
 				
@@ -1682,7 +1763,46 @@ function track(){
 				$country ="namibia";
 				break;
 				
-
+				case "Uzbekistan":
+				$country ="uzbekistan";
+				break;
+				
+				case "Turkmenistan":
+				$country ="turkmenistan";
+				break;
+				
+				case 'Syria':
+				$country ="siria";
+				break;
+				
+				case "Algeria":
+				$country ='argelia';
+				break;
+				
+				case "Oman":
+				$country ='oman';
+				break;
+				
+				case "Tajikistan":
+				$country ='tayikistan';
+				break;
+				
+				case "Montenegro":
+				$country ='montenegro';
+				break;
+				
+				case "Azerbaijan":
+				$country ='azerbaiyan';
+				break;
+				
+				case "Swaziland":
+				$country ='esuatini';
+				break;
+				
+				case "Libya":
+				$country ='libia';
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
@@ -1959,13 +2079,28 @@ $admin='
 print '
 
   <div style="float:left;padding-top:40px;padding-left:50px;padding-bottom:20px;">
-    <hr style="margin-left:-70px;width:310%;"/>'.$admin.'
+    <hr style="margin-left:-70px;width:310%;"/>'.$admin;
 	
- <div stlye="float:left;"> <a title="rss" href="'.$ruta.'rss.php">
+	if(file_exists('forum')){
+			
+		print ' <div stlye="float:left;">		<a title="foro" target="_blank" href="forum">
+			<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
+		</a></div>';	
+		
+		}
+	
+	print '
+	 <div stlye="float:left;padding-top:20px;"> <a title="buscador" href="'.$ruta.'search.php">
 
-  <img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a></div></div>
+  <img  style="margin-top:20px;" class="icono" src="'.$ruta.'img/search.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 
 </div>
+
+ <div stlye="float:left;padding-top:20px;"> <a title="rss" href="'.$ruta.'rss.php">
+
+  <img style="margin-top:20px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
+
+</div></div>
 </nav>';
 
 }

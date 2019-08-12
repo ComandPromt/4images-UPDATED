@@ -6,6 +6,8 @@ include_once('../config.php');
 
 include('../includes/funciones.php');
 
+$_SESSION['track']=false;
+
 cabecera('../');
 
 comprobar_cookie('../');

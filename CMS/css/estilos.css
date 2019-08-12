@@ -13,12 +13,14 @@
   font-size:16px;
   font-weight:bold;
 }
+
 .boton_mostrar {
   float:right;
   font-size:12px;
   line-height:20px;
   color:#DE7217;
 }
+
 #contenido{
   float:left;
   clear:both;

@@ -117,9 +117,17 @@ print '
 		
 		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
 			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
-		</a>
+		</a>';
 		
-		<a title="rss" href="'.$ruta.'rss.php">
+		if(file_exists('forum')){
+			
+		print '		<a title="foro" target="_blank" href="forum">
+			<img class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
+		</a>';	
+		
+		}
+		
+print '		<a title="rss" href="'.$ruta.'rss.php">
 			<img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
 		</a>
 	</div>	
@@ -142,7 +150,7 @@ if (file_exists('config.php')) {
 
     if ($fila[0] > 0) {
 
-        print '<div style="float:right;padding-left:250px;margin-top:200px;padding-top:60px;background-color: rgba(255, 255, 255, 0);"
+        print '<div style="float:right;padding-left:250px;margin-top:220px;padding-top:50px;background-color: rgba(255, 255, 255, 0);"
         class="entire-content col-xs-4" >
 
 		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
