@@ -353,7 +353,9 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('98','visibilidad','Widoczność'),
 ('99','publica','Publiczne'),
 ('100','solo_users','Tylko użytkownicy'),
-('101','del_sure','Czy na pewno chcesz usunąć obraz?');
+('101','del_sure','Czy na pewno chcesz usunąć obraz?'),
+('102','change_cat','Zmiana kategorii'),
+('103','img_random','Losowy obraz');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -456,7 +458,9 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('98','visibilidad','공개 설정'),
 ('99','publica','공개'),
 ('100','solo_users','사용자 만'),
-('101','del_sure','이미지를 삭제 하시겠습니까?');
+('101','del_sure','이미지를 삭제 하시겠습니까?'),
+('102','change_cat','카테고리 변경'),
+('103','img_random','임의의 이미지');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -559,7 +563,9 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('98','visibilidad','Tầm nhìn'),
 ('99','publica','Công cộng'),
 ('100','solo_users','Chỉ người dùng'),
-('101','del_sure','Bạn có chắc chắn để xóa hình ảnh?');
+('101','del_sure','Bạn có chắc chắn để xóa hình ảnh?'),
+('102','change_cat','Thay đổi danh mục'),
+('103','img_random','Hình ảnh ngẫu nhiên');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -662,7 +668,9 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('98','visibilidad','Sichtbarkeit'),
 ('99','publica','Öffentlich'),
 ('100','solo_users','Nur Benutzer'),
-('101','del_sure','Möchten Sie das Bild wirklich löschen?');
+('101','del_sure','Möchten Sie das Bild wirklich löschen?'),
+('102','change_cat','Kategoriewechsel'),
+('103','img_random','Zufälliges Bild');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -765,7 +773,9 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('98','visibilidad','رؤية'),
 ('99','publica','جمهور'),
 ('100','solo_users','المستخدمين فقط'),
-('101','del_sure','هل أنت متأكد من حذف الصورة؟');
+('101','del_sure','هل أنت متأكد من حذف الصورة؟'),
+('102','change_cat','تغيير الفئة'),
+('103','img_random','صورة عشوائية');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -868,7 +878,9 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('98','visibilidad','দৃষ্টিপাত'),
 ('99','publica','প্রকাশ্য'),
 ('100','solo_users','কেবল ব্যবহারকারীরা'),
-('101','del_sure','আপনি কি ছবিটি মুছে ফেলার বিষয়ে নিশ্চিত?');
+('101','del_sure','আপনি কি ছবিটি মুছে ফেলার বিষয়ে নিশ্চিত?'),
+('102','change_cat','বিভাগ পরিবর্তন'),
+('103','img_random','এলোমেলো চিত্র');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -971,7 +983,9 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('98','visibilidad','Visibilitat'),
 ('99','publica','Pública'),
 ('100','solo_users','Només els usuaris'),
-('101','del_sure','¿Segur que voleu eliminar la imatge?');
+('101','del_sure','¿Segur que voleu eliminar la imatge?'),
+('102','change_cat','Canvi de categoria'),
+('103','img_random','Imatge aleatòria');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1074,7 +1088,9 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('98','visibilidad','能見度'),
 ('99','publica','公開'),
 ('100','solo_users','只有用戶'),
-('101','del_sure','您確定要刪除圖片嗎？');
+('101','del_sure','您確定要刪除圖片嗎？'),
+('102','change_cat','類別變更'),
+('103','img_random','隨機圖像');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1177,7 +1193,9 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('98','visibilidad','Ikuspena'),
 ('99','publica','Publiko'),
 ('100','solo_users','Erabiltzaileak bakarrik'),
-('101','del_sure','Ziur irudia ezabatuko duzula?');
+('101','del_sure','Ziur irudia ezabatuko duzula?'),
+('102','change_cat','Kategoria aldaketa'),
+('103','img_random','Ausazko irudia');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1280,7 +1298,9 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('98','visibilidad','La visibilité'),
 ('99','publica','Publique'),
 ('100','solo_users','Seulement les utilisateurs'),
-('101','del_sure','Êtes-vous sûr de vouloir supprimer la image?');
+('101','del_sure','Êtes-vous sûr de vouloir supprimer la image?'),
+('102','change_cat','Changement de catégorie'),
+('103','img_random','Image aléatoire');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1383,7 +1403,9 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('98','visibilidad','दृश्यता'),
 ('99','publica','सार्वजनिक'),
 ('100','solo_users','केवल उपयोगकर्ता'),
-('101','del_sure','क्या आप छवि हटाना सुनिश्चित कर रहे हैं?');
+('101','del_sure','क्या आप छवि हटाना सुनिश्चित कर रहे हैं?'),
+('102','change_cat','श्रेणी परिवर्तन'),
+('103','img_random','रैंडम छवि');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1486,7 +1508,9 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('98','visibilidad','Visibility'),
 ('99','publica','Public'),
 ('100','solo_users','Only users'),
-('101','del_sure','Are you sure to delete the image?');
+('101','del_sure','Are you sure to delete the image?'),
+('102','change_cat','Category change'),
+('103','img_random','Random image');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1589,7 +1613,9 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('98','visibilidad','visibilità'),
 ('99','publica','Pubblico'),
 ('100','solo_users','Solo utenti'),
-('101','del_sure','Sei sicuro di eliminare la immagine?');
+('101','del_sure','Sei sicuro di eliminare la immagine?'),
+('102','change_cat','Cambio di categoria'),
+('103','img_random','Immagine casuale');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1692,7 +1718,9 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('98','visibilidad','視認性'),
 ('99','publica','一般公開'),
 ('100','solo_users','ユーザーのみ'),
-('101','del_sure','画像を削除してよろしいですか？');
+('101','del_sure','画像を削除してよろしいですか？'),
+('102','change_cat','カテゴリー変更'),
+('103','img_random','ランダム画像');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1795,7 +1823,9 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('98','visibilidad','Visibilidade'),
 ('99','publica','Public'),
 ('100','solo_users','Somente usuários'),
-('101','del_sure','Tem certeza de excluir a imagem?');
+('101','del_sure','Tem certeza de excluir a imagem?'),
+('102','change_cat','Mudança de categoria'),
+('103','img_random','Imagem aleatória');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -1898,7 +1928,9 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('98','visibilidad','видимость'),
 ('99','publica','общественности'),
 ('100','solo_users','Только пользователи'),
-('101','del_sure','Вы уверены, что хотите удалить изображение?');
+('101','del_sure','Вы уверены, что хотите удалить изображение?'),
+('102','change_cat','Изменение категории'),
+('103','img_random','Случайное изображение');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -2001,7 +2033,18 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('98','visibilidad','Visibilidad'),
 ('99','publica','Pública'),
 ('100','solo_users','Sólo los usuarios'),
-('101','del_sure','¿Esta seguro de borrar la imagen?');
+('101','del_sure','¿Esta seguro de borrar la imagen?'),
+('102','change_cat','Cambio de categoría'),
+('103','img_random','Imagen aleatoria'),
+('104','comentar','Comentar'),
+('105','reload_captcha','Recargar captcha'),
+('106','del_img','Borrar imagen'),
+('107','change_view','Borrar imagen'),
+('108','download','Descargar'),
+('109','full_screen','Pantalla completa'),
+('110','like','Me gusta'),
+('111','back_img','Imagen anterior'),
+('112','next_img','Imagen posterior');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 
@@ -3329,4 +3372,67 @@ INSERT INTO bots (IP) VALUES
 ('103.131.71.176'),
 ('40.77.167.65'  ),
 ('157.55.39.141' ),
-('157.55.39.85'   );
+('157.55.39.85'   ),
+('69.30.198.186'  ),
+('46.28.108.201'  ),
+('207.46.13.51'   ),
+('144.76.236.112' ),
+('207.46.13.67'   ),
+('173.212.246.232'),
+('207.180.226.173'),
+('91.137.16.89'   ),
+('83.240.61.14'   ),
+('66.249.69.40'   ),
+('66.249.69.42'   ),
+('66.249.69.44'   ),
+('148.251.8.250'  ),
+('194.247.173.123'),
+('157.55.39.99'   ),
+('103.131.71.179' ),
+('176.31.104.153' ),
+('207.46.13.75'   ),
+('40.77.167.83'   ),
+('192.99.7.128'   ),
+('185.20.6.136'   ),
+('207.46.13.82'   ),
+('144.76.176.171' ),
+('173.249.24.3'   ),
+('40.77.167.15'   ),
+('157.55.39.236'  ),
+('66.249.73.11'    ),
+('157.55.39.149'   ),
+('157.55.39.80'    ),
+('198.204.243.138' ),
+('157.55.39.152'   ),
+('40.77.167.85' ),
+('95.108.213.6' ),
+('88.198.33.145'),
+('40.117.35.169'),
+('207.46.13.21'  ),
+('157.55.39.167' ),
+('103.131.71.173'),
+('172.241.112.83'),
+('40.77.167.52'  ),
+('69.30.210.242' ),
+('207.46.13.31'  ),
+('18.206.13.39'  ),
+('185.20.6.103'  ),
+('157.55.39.189' ),
+('204.12.197.234'),
+('199.47.87.143' ),
+('66.249.73.26'  ),
+('78.46.105.172' ),
+('95.216.15.225' ),
+('192.99.13.133' ),
+('66.249.75.28'    ),
+('66.249.75.29'    ),
+('66.249.75.30'    ),
+('66.249.79.44'    ),
+('66.249.79.41'    ),
+('66.249.79.47'    ),
+('173.212.247.190' ),
+('158.69.245.214'  ),
+('157.55.39.182'   ),
+('66.249.79.53'    ),
+('66.249.79.56'    ),
+('66.249.79.59'    );

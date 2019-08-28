@@ -286,9 +286,12 @@ class SimpleCaptcha {
     }
 
     protected function WriteImage($font) {
+		
 		$fondo=mt_rand(1,9);
-	 $color=mt_rand(1,6);
+	 $color=mt_rand(1,7);
+	 
  switch($color){
+	 
 		case 1:
 		$red=239;
 		$green=239;
@@ -313,20 +316,28 @@ class SimpleCaptcha {
 		$blue=163;
 		
 		break;
+		
 		case 5:
 		$red=216;
 		$green=216;
 		$blue=17;
 		
 		break;
+		
 		case 6:
 		$red=243;
 		$green=109;
 		$blue=36;
 		
 		break;
+		
+		case 7:
+		$red=242;
+		$green=10;
+		$blue=60;
+		
+		break;
 	}
-	
 	
    $this->im = @imagecreatefrompng('resources/fondos/'.$fondo.'.png');
  $text = $this->GetRandomCaptchaText();
@@ -342,4 +353,5 @@ imagettftext($this->im, 40,350, 10, 40, imagecolorallocate($this->im,$red,$green
         imagedestroy($this->im);
     }
 }
+
 ?>

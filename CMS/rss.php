@@ -10,6 +10,10 @@ include('config.php');
 
 include('includes/funciones.php');
 
+if(isset($_GET['action'])|| isset($_GET['image_id']) ){
+	redireccionar('register.php');
+}
+
 track();
 
 $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],

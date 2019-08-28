@@ -69,71 +69,65 @@ if (isset($_COOKIE['4images_userid'])) {
 
 }
 
-print '<div style="padding-top:60px;font-size:2em;">
+print '<div style="margin-left:-75px;padding-top:50px;font-size:2em;">
 
-<div style="float:right;padding-left:70%;padding-right:20px;padding-top:50px;">
 
-<h2 style="padding-top:15px;padding-bottom:40px;font-size:0.8em;margin-top:-60px;" id="reloj"></h2>
-
+<div style="float:left;">
+	<a target="_blank" title="rss" href="'.$ruta.'rss.php">
+			<img style="margin-top:20px;margin-left:40px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
+		</a>
+	<h1 style="font-size:0.8em;color:#0F4B90;padding-left:20px;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
+	<h2 style="padding-top:50px;font-size:0.8em;margin-top:-60px;padding-left:20px;" id="reloj"></h2>
 </div>
 
-<div style="float:left;margin-top:-40px;">
-<h1 style="font-size:0.8em;color:#0F4B90;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
-
-
-</div>
-
-
-<div style="margin:auto;margin-top:10px;padding-left:40px;float:left;padding-right:20px;">';
+<div style="margin:auto;padding-left:20px;float:left;padding-right:20px;">';
 
 if(!logueado()){
 
-	print '<div style="float:left;"><a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
-			<img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
-		</a></div>';
+	print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
+			<img style="margin-top:20px;" alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
+		</a>';
+		
+		
+		// Si el comentario es publico mostrar icono
+		
+		
+		/*print '		
+				
+		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
+			<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
+		</a>';*/
+		
+		
 }
 
 else{
 
-	print '<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="upload_images/index.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/>
-		</a>
-		
-		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="my_uploads.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/my_uploads.ico"/>
-		</a>
-		
-		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="favoritos.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/fav_2.ico"/>
-		</a>
-		
+	print '		
+				
 		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
+			<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
+		</a>
+		
+		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
+			<img style="margin-top:20px;" alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
 		</a>
 		';
 }
-
-print '
-		
-		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
-			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
-		</a>';
 		
 		if(file_exists('forum')){
 			
-		print '		<a title="foro" target="_blank" href="forum">
-			<img class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
+		print '<a title="foro" target="_blank" href="forum">
+			<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
 		</a>';	
 		
 		}
 		
-print '		<a title="rss" href="'.$ruta.'rss.php">
-			<img class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
-		</a>
+print '
 	</div>	
 
 
-<div><br/>
+<div>
 ';
 
 if (file_exists('config.php')) {
@@ -150,7 +144,8 @@ if (file_exists('config.php')) {
 
     if ($fila[0] > 0) {
 
-        print '<div style="float:right;padding-left:250px;margin-top:220px;padding-top:50px;background-color: rgba(255, 255, 255, 0);"
+        print '<div style="float:right;padding-left:250px;margin-top:240px;padding-top:100px;
+		background-color: rgba(255, 255, 255, 0);"
         class="entire-content col-xs-4" >
 
 		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
@@ -182,7 +177,7 @@ if (file_exists('config.php')) {
 }
 
 print '</div>
-
+	
 </div>';
 
 restablecer_pass();

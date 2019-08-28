@@ -8,6 +8,12 @@ include_once('config.php');
 
 include('includes/funciones.php');
 
+if(!in_array($_GET['cat_id'], num_categorias())||isset($_GET['page']) || preg_match("/\bhttp\b/i",$_GET['cat_id'])
+|| preg_match("/\bwww\b/i",$_GET['cat_id'])
+|| strpos($_GET['pag'], "/")){
+	redireccionar('register.php');
+}
+
 if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria']) ){
 	
 	cabecera();
@@ -47,7 +53,13 @@ if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria'])
 		
 		$fila = mysqli_fetch_row($consulta);
 		
-		print '<div style="margin:auto;padding-left:40px;"><h1>'.$fila[0].'</h1></div>';
+		print '<div style="margin:auto;padding-left:40px;"><h1>'.$fila[0].'</h1>';
+		
+	if(logueado){
+		print '<a style="float:right;padding-bottom:20px;" href="upload_images/index.php?cat='.$categoria.'"><img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/></a>';
+	}
+	
+	print '</div>';
 	
 		ver_categoria($categoria,"");
 	

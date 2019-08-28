@@ -4,6 +4,65 @@ session_start();
 
 date_default_timezone_set('Europe/Madrid');
 
+function num_categorias(){
+	
+	$categorias=array();
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+    $cat_consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT cat_id FROM '.$GLOBALS['table_prefix'].'categories');
+
+		 
+    while( $cat = mysqli_fetch_row($cat_consulta)){
+		$categorias[]=$cat[0];
+	}
+	  
+	mysqli_close($GLOBALS['conexion']);
+	
+	return $categorias;
+}
+
+function ver_categorias($categoria){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+    $cat_consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 UNION 
+
+	SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND
+	cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE 
+	cat_parent_id!=0) order by cat_name');
+
+		 
+    while( $cat = mysqli_fetch_row($cat_consulta)){
+		
+		if($categoria!=$cat[1]){
+			print '<option value="'.$cat[1].'">'.$cat[0].'</option>';
+		}
+	}
+	  
+	mysqli_close($GLOBALS['conexion']);
+}
+
+function saber_categoria($cat){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT cat_name FROM '.$GLOBALS['table_prefix']."categories
+				WHERE cat_id='".$cat."'");
+			
+	$categoria = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return $categoria[0];
+	
+}
+
 function nevar(){
 	
 	if(!is_private_ip($i_direccionIp)){
@@ -439,7 +498,7 @@ print '
 	<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
 
 	</head>
-<body style="zoom:90%;">
+<body>
 '.nevar().'
 <div id="navega"> 
 
@@ -559,14 +618,30 @@ function consecutivos(array $array){
 
 function logueado($ruta=""){
 	
-	$pass="";
-		
+	
 	$respuesta=false;
 
+
+
 	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
-		$respuesta=true;
-	}
+		
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+		
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_password FROM ' .
+		$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
 	
+		$resultado = mysqli_fetch_row($consulta);
+		
+		if($resultado[0]==$_COOKIE['pass']){
+			$respuesta=true;
+		}
+		
+		mysqli_close($GLOBALS['conexion']);
+	}
+
 	return $respuesta;
 }
 
@@ -765,7 +840,9 @@ function truncateFloat($number, $digitos){
 
 function footer($ruta=""){
 	print '
+		
 	</div>
+	<script src="'.$ruta.'js/popper.min.js"></script>
 		<script src="'.$ruta.'js/jquery.min.js"></script>
 		<script src="'.$ruta.'js/bootstrap.min.js"></script>
 		<script src="'.$ruta.'js/prettify.js"></script>
@@ -775,6 +852,7 @@ function footer($ruta=""){
 		<script src="'.$ruta.'js/jquery.dlmenu.js"></script>
 		<script src="'.$ruta.'js/bootstrap-select.js"></script>
 		<script src="'.$ruta.'js/funciones_2.js"></script>
+		<script src="'.$ruta.'js/modificarEstiloInputFile.js"></script>
 	</body>
 </html>';
 }
@@ -828,7 +906,7 @@ function deliver_response($status){
     echo $json_response;
 }
 
-function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta=""){
+function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="",$colspan=false){
 	
 	$icono="fav.ico";
 	
@@ -852,7 +930,13 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 		
 	}
 	
-	print '<td style="border-right:1px dashed blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
+	$relleno="";
+	
+	if($colspan){
+		$relleno='colspan=3';
+	}
+	
+	print '<td '.$relleno.' style="border-right:1px dashed blue;border-top:0px;border-left:0px;border-bottom:0px;font-size:2em;">
 
 			<a href="'.$ruta.'details.php?image_id='.$image_id.'"> 
 				<img class="img-fluid" alt="Imagen '.$image_id.'" src="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'"/>
@@ -899,23 +983,17 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 		
 		$file=$fila[2];
 
-		
-
 		mysqli_close($GLOBALS['conexion']);
 		
-print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id."&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
+		print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id."&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
 					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/delete.ico"/>
-					</a>';
+				</a>';
 					
-					print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
+		print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
 					<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono2.'"/>
-					</a>';
-					
-					
-
-
-				}
+				</a>';
 				
+				}
 				
 		print '	
 	
@@ -1012,47 +1090,61 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 			}
 			
 			$y=-1;
+			
+			$recuento=count($nombres);
 
-			for($x=0;$x<count($nombres)-1;$x++){
-				
-				print '<tr style="border:none;">
-						<td style="border:none;font-size:1.8em;font-weight:bold;">'.$nombres[++$y].'</td>
-						<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
-						<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
-					</tr>';
-						
-				print '<tr style="border:none;">';
-				
-				vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
-					
-				++$x;
-					
-				if(!empty($imagenes[$x])){
-						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
-				}
-					
-				++$x;
-				
-				if(count($nombres)>2){
-					
-					if(!empty($imagenes[$x])){
-						
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
-					}
-				}	
-				
-				print '</tr>';
+			if($recuento>1){
 
+				for($x=0;$x<$recuento-1;$x++){
+					
 					print '<tr style="border:none;">
-					<td style="border:none;" colspan=3><hr/>
-					</td></tr>';
-										
+							<td style="border:none;font-size:1.8em;font-weight:bold;">'.$nombres[++$y].'</td>
+							<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
+							<td style="font-size:1.8em;border:none;font-weight:bold;">'.$nombres[++$y].'</td>
+						</tr>';
+							
+					print '<tr style="border:none;">';
+					
+					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
+						
+					++$x;
+						
+					if(!empty($imagenes[$x])){
+							
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
+					}
+						
+					++$x;
+					
+					if(count($nombres)>2){
+						
+						if(!empty($imagenes[$x])){
+							
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
+						}
+					}	
+					
+					print '</tr>';
+	
+						print '<tr style="border:none;">
+						<td style="border:none;" colspan=3><hr/>
+						</td></tr>';
+											
+				}
+			}
+		
+			else{
+			
+				if(!empty($nombres[0])){
+				
+					vercampo($nombres[0],$categorias[0],$imagenes[0],$ids[0],$mis_cargas,$ruta,true);	
+				}
 			}
 		
 			echo "</table></div>";
 			
 			if(!isset($_GET['pag'])){
+			
 				$IncrimentNum =2;
 				$DecrementNum =1;
 			}
@@ -1062,11 +1154,12 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				if($_GET['pag']>=$TotalRegistro){
 					$IncrimentNum=$TotalRegistro;
 				}
+				
 				else{
 					$IncrimentNum=$_GET['pag']+1;
 						$DecrementNum=$_GET['pag']-1;
 				}
-		
+				
 				if($DecrementNum<=0){
 					$DecrementNum=1;
 				}
@@ -1120,6 +1213,7 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 				}
 			}
 		}
+		
 		print '</ul>';
 	}
 }
@@ -1330,7 +1424,7 @@ function track(){
 				case "Canada":
 				$country ="ca";
 				break;
-				
+
 				case "United Kingdom":
 				$country ="uk";
 				break;
@@ -1803,6 +1897,14 @@ function track(){
 				$country ='libia';
 				break;
 				
+				case "Zambia":
+				$country ="zambia";
+				break;
+				
+				case "Benin":
+				$country ="benin";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
@@ -1839,7 +1941,7 @@ function menu_lateral($ruta = ""){
 	
 print '
 
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left redondo " style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;" id="mySidebar"><br>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;" id="mySidebar"><br>
   <div  class="w3-container">
     <a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"> 
 
@@ -1859,13 +1961,14 @@ print '
 		
 		print '<form method="post" action="'.$ruta.'login.php" >
 
-       <img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png">
+       <a title="'.ver_dato('user_name',$GLOBALS['idioma']).'"><img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png"/></a>
 	
 		<label for="user_name"  style="font-size:2em;">'.ver_dato('user_name',$GLOBALS['idioma']).'</label>
 		<input id="user_name" style="height:40px;font-size:2em;" type="text" name="user_name" class="logininput">
         
 		
-		<img alt="clave de acceso" class="icono" style="margin:auto;margin-top:30px;" src="'.$ruta.'img/user_pass.png"><br/><br/>
+		 <a title="'.ver_dato('password',$GLOBALS['idioma']).'"><img alt="clave de acceso" class="icono" style="margin:auto;margin-top:30px;" src="'.$ruta.'img/user_pass.png"/></a>
+	
 			<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
         <input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput">
        
@@ -1875,7 +1978,7 @@ print '
 	  <hr class="separador"/>
 	  
 	  <a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:1em;" href="'.$ruta.'register.php"><img alt="registar" class="icono" src="'.$ruta.'img/registrar.png"></a>
-	  <a  data-toggle="modal" data-target="#exampleModal">
+	  <a title="'.ver_dato('recordar',$GLOBALS['idioma']).'" data-toggle="modal" data-target="#exampleModal">
 	  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/forgot_password.png"/>
 	 </a>
 	 ';
@@ -1920,7 +2023,7 @@ print '
 			}
 
 			print '
-			<div style="float:left;padding-left:10px;">
+			<div style="float:left;">
 				<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php">
 					<span style="font-size:2em;">'.$recuento[0].'</span>
 				</a>
@@ -1935,48 +2038,56 @@ print '
 			</a>
 		</div>
 		
-		<div style="float:left;padding-left:10px;">
+		<div style="float:left;padding-top:60px;">
 	   <a title="'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'" href="'.$ruta.'cambiar_avatar.php">
 		<img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" class="icono imgRedonda" src="'.$imagen_usuario.'"/>
 		</a></div>
 		
-		<div style="float:left;padding-top:10px;">
-		<span class="redondo" style="margin-left:-13px;font-size:1.5em;">'.$fila[0].'</span>
-		<hr/></div>
+		<div style="float:left;padding-top:10px;padding-left:4px;">
+		<span  style="margin-left:-13px;font-size:1.5em;font-weight:bold;
+	color:#FFC151;
+	background-color:#0B7C92;
+	padding-left:5px;
+	padding-right:5px;
+	border: 1px solid #4D56EE;
+	-moz-border-radius: 9px;
+	-webkit-border-radius:9px;" >'.ucwords($fila[0]).'</span>
+		<hr class="separador"/></div>
 		
 		<div style="float:left;padding-top:110px;padding-left:10px;">
-	   <a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
+	   <a target="_blank" title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
 			<img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png">
 		</a></div>
 		
 		<div style="float:left;padding-top:40px;padding-left:10px;">
-       <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
+       <a target="_blank" title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
 		<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"/>
 	   </a></div>
-	     
-	
-		
+	     		
 		<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
+	   <a target="_blank" title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
 			<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"/>
 		</a></div>
+		
 			<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
+	   <a target="_blank" title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
 		<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"/>
-		</a></div>
-		<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/coment.png"/>
 		</a></div>
 		
 		<div style="float:left;padding-top:10px;padding-left:10px;">
-			<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
+	   <a target="_blank" title="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
+			<img alt="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/coment.png"/>
+		</a></div>
+		
+		<div style="float:left;padding-top:10px;padding-left:10px;">
+			<a target="_blank" title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
 			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/search.png"/>
 			</a>
 		</div>
 
 		<div style="float:left;padding-top:100px;">
 		<hr/>
+		
 	   <a style="margin-left:-15px;" title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" >
 			<img alt="'.ver_dato('logout', $GLOBALS['idioma']).'" style="padding-bottom:10px;" class="icono" src="'.$ruta.'img/logout.png"/>
 		</a></div>
@@ -1993,7 +2104,7 @@ $image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 if($imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	
 	print '<div style="float:left;width:100%;"><hr class="separador"/>
-	<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
+	<a title="'.ver_dato('img_random', $GLOBALS['idioma']).'" ><img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/></a>
 	</div>';
 
 	$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
@@ -2037,7 +2148,7 @@ $redes_sociales='';
    
     if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
 	
-	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a title="debianart" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a></div>';    
+	$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a title="github" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a></div>';    
   }
       
 
@@ -2068,7 +2179,7 @@ if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
 $admin='
-			<div stlye="float:left;padding-bottom:40px;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php">
+			<div style="float:left;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php">
 				<img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png" / >
 			</a><hr/></div>
 		';
@@ -2078,25 +2189,29 @@ $admin='
 
 print '
 
-  <div style="float:left;padding-top:40px;padding-left:50px;padding-bottom:20px;">
-    <hr style="margin-left:-70px;width:310%;"/>'.$admin;
+  <div style="float:left;padding-left:50px;padding-bottom:20px;">
+    <hr style="margin-left:-70px;width:180%;"/>'.$admin;
 	
-	if(file_exists('forum')){
+	if(file_exists($ruta.'forum')){
 			
-		print ' <div stlye="float:left;">		<a title="foro" target="_blank" href="forum">
+		print ' <div style="float:left;">		<a title="foro" target="_blank" href="'.$ruta.'forum">
 			<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
 		</a></div>';	
 		
 		}
 	
-	print '
-	 <div stlye="float:left;padding-top:20px;"> <a title="buscador" href="'.$ruta.'search.php">
+	if(logueado()){
+		print '<div style="float:left;padding-top:20px;"> <a title="buscador" href="'.$ruta.'search.php">
 
   <img  style="margin-top:20px;" class="icono" src="'.$ruta.'img/search.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 
-</div>
+</div>';
+	}
+	
+	print '
+	 
 
- <div stlye="float:left;padding-top:20px;"> <a title="rss" href="'.$ruta.'rss.php">
+ <div style="float:left;padding-top:20px;"> <a title="rss" href="'.$ruta.'rss.php">
 
   <img style="margin-top:20px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" /></a>
 
@@ -2187,7 +2302,7 @@ function poner_menu($ruta = ""){
 			$id_categorias=array();
 
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0');
+			SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 ORDER BY cat_name');
 
 			while ($recuento = mysqli_fetch_row($consulta)){
 				$id_categorias[]=$recuento[0];
@@ -2200,9 +2315,9 @@ function poner_menu($ruta = ""){
 			
 				print '
 				<li style="background-color: rgba(255, 255, 255, 0);padding-top:20px;" class="menu_categorias">
-				<a style="color:#ffffff;background-color:green;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
+				<a style="color:#ffffff;background-color:#9D37BE;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
-				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x]);
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x].' ORDER BY cat_name');
 			
 				$y=1;
 				
@@ -2222,13 +2337,13 @@ function poner_menu($ruta = ""){
 			}
 
 			$consulta = mysqli_query($GLOBALS['conexion'], 
-			'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0)');
+			'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0) ORDER BY cat_name');
 
 			while ($fila = mysqli_fetch_row($consulta)){
 
 				print '
 				<li style="padding-top:20px;background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu ">
-				<a style="color:#ffffff;background-color:blue;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+				<a style="color:#ffffff;background-color:#4952C2;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
 			}
 		
 			print '		</ul>

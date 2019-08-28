@@ -4,6 +4,10 @@ session_start();
 
 $_SESSION['pagina']="messages/inbox.php";
 
+if(!file_exists ("avatars")) {
+		mkdir("avatars");
+}
+
 include ('config.php');
 
 include ('includes/funciones.php');
@@ -34,54 +38,95 @@ if (isset($_POST['submit'])) {
     $_POST['user_password'] = eliminar_espacios($_POST['user_password']);
 	
     if (isset($_SESSION['captcha'])) {
+		
         if ($_SESSION['captcha'] && $_REQUEST['captcha'] != $_SESSION['captcha']) {
             mensaje(ver_dato('error_captcha', $GLOBALS['idioma']));
             $SESSION['error'] = true;
         } else {
 			
-			include('config.php');
-			
-			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-			$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-		
-            $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
-                $GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['user_name'] .
-                "'");
-				
-            $comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
-
-            if ($comprobacion == 0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password'])
-                && !$SESSION['error']) {
-					
-                $user_password_hashed = salted_hash($_POST['user_password']);
+				$avatar=$_FILES['avatar']['name'];
 	
-                mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
-                    $GLOBALS['table_prefix'] . "users (user_level,user_name,user_password,
-				user_email,user_allowemails,user_invisible,user_comments,nacionalidad,avatar)
-				VALUES('2','".$_POST['user_name'] . "','".$user_password_hashed .
-                    "','" .$_POST['email'] ."','1','0','0','".$_POST['pais'] . "','nofoto.jpg')");
-			  
-				$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT user_id  FROM ' .
-                    $GLOBALS['table_prefix'] . "users WHERE user_name='".$_POST['user_name'] . "'");
-					
-				$fila = mysqli_fetch_row($consulta);
-			  
-				mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes (remitente,destinatario,asunto,mensaje,leido) 	   
-				VALUES('1','". $fila[0]. "','".ver_dato('welcome', $GLOBALS['idioma'])."','".
-				ver_dato('msg_welcome', $GLOBALS['idioma']) . "','0')");
-			  
-				mysqli_close($GLOBALS['conexion']); 
+				if(!empty($avatar)){
+
+					$extension= substr($_FILES['avatar']['name'], -4);
+		
 			
-                $terminado = true;
+						if($extension=='jpeg' || $extension=='JPEG' || $extension=='.JPG'){
+							$extension='.jpg';
+						}
+						
+						$ext_validas = array(".jpg",".png", ".PNG", ".gif", ".GIF");
+						
+						if(!in_array($extension, $ext_validas)){
+							$avatar='nofoto.jpg';
+						}
+						
+						if($avatar!="nofoto.jpg"){
+							
+							$nombre = date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s');
+							
+							$extension=strtolower($extension);
+							
+							$avatar=$nombre.$extension; 
+						}
+			
+						$target_path = "avatars/" . basename($avatar);
+			
+						if(!move_uploaded_file($_FILES['avatar']['tmp_name'], $target_path)){
+							$avatar='nofoto.jpg';
+						}
+			
+				}
+	
+				else{
+					$avatar='nofoto.jpg';
+				}
+						
+				include('config.php');
 				
-				redireccionar('login.php?user_name='.$_POST['user_name'].'&user_password='.$user_password_hashed);
+				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+				$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 			
-		   } else {
-                echo mensaje(ver_dato('error', $GLOBALS['idioma']));
-            }
-        }
-    }
-}
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM ' .
+					$GLOBALS['table_prefix'] . "users WHERE user_name='" . $_POST['user_name'] .
+					"'");
+					
+				$comprobacion = mysqli_affected_rows($GLOBALS['conexion']);
+	
+				if ($comprobacion == 0 && !empty($_POST['user_name']) && !empty($_POST['email']) && !empty($_POST['user_password'])
+					&& !$SESSION['error']) {
+						
+					$user_password_hashed = salted_hash($_POST['user_password']);
+					
+					mysqli_query($GLOBALS['conexion'], 'INSERT INTO ' .
+						$GLOBALS['table_prefix'] . "users (user_level,user_name,user_password,
+					user_email,user_allowemails,user_invisible,user_comments,nacionalidad,avatar)
+					VALUES('2','".$_POST['user_name'] . "','".$user_password_hashed .
+						"','" .$_POST['email'] ."','1','0','0','".$_POST['pais'] . "','$avatar')");
+				
+					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT user_id  FROM ' .
+					$GLOBALS['table_prefix'] . "users WHERE user_name='".$_POST['user_name'] . "'");
+						
+					$fila = mysqli_fetch_row($consulta);
+				
+					mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes (remitente,destinatario,asunto,mensaje,leido) 	   
+					VALUES('1','". $fila[0]. "','".ver_dato('welcome', $GLOBALS['idioma'])."','".
+					ver_dato('msg_welcome', $GLOBALS['idioma']) . "','0')");
+				
+					mysqli_close($GLOBALS['conexion']); 
+				
+					$terminado = true;
+					
+					redireccionar('login.php?user_name='.$_POST['user_name'].'&user_password='.$user_password_hashed);
+				
+				} 
+				
+				else {
+					echo mensaje(ver_dato('error', $GLOBALS['idioma']));
+				}
+			}
+		}
+	}
 
 if (!$terminado && (isset($_POST['envio']))) {
 
@@ -90,9 +135,9 @@ if (!$terminado && (isset($_POST['envio']))) {
     echo '<h1 style="padding-left:60px;" class="titulo"><br/>' . ver_dato('register_msg',
         $GLOBALS['idioma']) . '</h1>
 		
-		<br/>
+
 		
-	<form  style="padding-left:60px;" method="post" action="' . $_SERVER['PHP_SELF'] . '">
+	<form  enctype="multipart/form-data" style="padding-left:60px;" method="post" action="' . $_SERVER['PHP_SELF'] . '">
 
 					<div class="row1 texto"><img alt="usuario para registrar"
 					class="icono2" src="img/user.png"/>
@@ -101,11 +146,19 @@ if (!$terminado && (isset($_POST['envio']))) {
 						name="user_name" size="30" 
 						placeholder="' . ver_dato('user_name',$GLOBALS['idioma']) . '" class="input" />
 						
-                        <br/>
 						
 					</div>
-
-					<div class="row2 texto">
+					
+  <div style="float:right;width:200px;margin-top:40px;" onLoad="mostrarInputFileModificado(1);">
+       
+            <div style="font-size:30px;" class="botonInputFileModificado">
+			       <div class="boton">Seleccionar avatar</div>  
+                <input style="width:150px;" name="avatar" type="file" />
+           
+            </div>        
+             
+        </div>
+					<div style="margin-top:200px;" class="row2 texto">
 					
 						<img alt="user password" class="icono2"	src="img/key.png"/>
 
@@ -113,36 +166,36 @@ if (!$terminado && (isset($_POST['envio']))) {
 						class="input" id="user_password"  name="user_password" size="30"
 						placeholder="' . ver_dato('password', $GLOBALS['idioma']) . '"  />
 						
-                        <br/>
+    
 						
 				    </div>
 
-					<div class="row1 texto">
-
-						<hr/>
+					<div style="margin-top:40px;" class="row1 texto">
+					
+						<img alt="user password" class="icono2"	src="img/idiomas.png"/>
 						
-						<input name="pais" value="spanish" type="radio" checked="checked"/><img src="images/icons/1.png"/>
-						<input name="pais" value="aleman" type="radio"/><img src="images/icons/2.png"/>
-						<input name="pais" value="ingles" type="radio"/><img src="images/icons/3.png"/>
-						<input name="pais" value="frances" type="radio"/><img src="images/icons/4.png"/>
-						<input name="pais" value="ruso" type="radio"/><img src="images/icons/5.png"/>
-						<input name="pais" value="italiano" type="radio"/><img src="images/icons/6.png"/><br/><br/>
-						<input name="pais" value="portuges" type="radio"/><img src="images/icons/7.png"/>
-						<input name="pais" value="chino" type="radio"/><img src="images/icons/8.png"/>
-						<input name="pais" value="hindu" type="radio"/><img src="images/icons/9.png"/>
-						<input name="pais" value="japones" type="radio"/><img src="images/icons/10.png"/>
-						<input name="pais" value="catalan" type="radio"/><img src="images/icons/11.png"/>
-						<input name="pais" value="bengali" type="radio"/><img src="images/icons/12.png"/><br/><br/>
-						<input name="pais" value="arabe" type="radio"/><img src="images/icons/13.png"/>
-						<input name="pais" value="euskera" type="radio"/><img src="images/icons/14.png"/>
-						<input name="pais" value="coreano" type="radio"/><img src="images/icons/15.png"/>
-						<input name="pais" value="vietnamita" type="radio"/><img src="images/icons/16.png"/>
-						<input name="pais" value="polaco" type="radio"><img src="images/icons/17.png"/>
-						<br/>
-						
-						<hr/><br/>
+						<select>
+							<option name="pais" value="spanish"  checked="checked"/>Espa&ntilde;ol</option>
+							<option name="pais" value="aleman" />Deutsch</option>
+							<option name="pais" value="ingles" />English</option>
+							<option name="pais" value="frances" />Francais</option>
+							<option name="pais" value="ruso" />русский</option>
+							<option name="pais" value="italiano" />Italiano</option>
+							<option name="pais" value="portuges" />Portugues</option>
+							<option name="pais" value="chino" />中國</option>
+							<option name="pais" value="hindu" />हिन्दू</option>
+							<option name="pais" value="japones" />日本人</option>
+							<option name="pais" value="catalan" />Catalá</option>
+							<option name="pais" value="bengali" />বাঙালি</option>
+							<option name="pais" value="arabe" />العربية</option>
+							<option name="pais" value="euskera" />Euskal</option>
+							<option name="pais" value="coreano" />한국인</option>
+							<option name="pais" value="vietnamita" />Việt nam</option>
+							<option name="pais" value="polaco" >Polski</option>
+						</select>
+	
 			 
-						<img  alt="user_email" class="icono2" src="img/email.png"/>
+						<img style="margin-top:40px;" alt="user_email" class="icono2" src="img/email.png"/>
 			
 						<span id="palabra2" onmouseover="mostrarTooltip(this,\'' .
 						ver_dato('nota_email', $GLOBALS['idioma']) . '\');"/>*</span>
@@ -167,26 +220,21 @@ if (!$terminado && (isset($_POST['envio']))) {
 			            id="change-image">
 							<img alt="reload captcha" class="icono2" src="img/reload.png"/>
 						</a>
-						
-						<br/>
-						<br/>
+
 <?php
 
-echo '<input type="text" title="captcha" required  id="validcaptcha"
+echo '<input style="margin-top:40px;" type="text" title="captcha" required  id="validcaptcha"
 			name="captcha" size="30" value="" class="input" id="captcha_input"
 			placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/>
 			
-						<br/>
 						</div>
-
+    
 				<input title="register" type="hidden" name="action" value="register" />
 
-				<input title="submit" name="submit" type="submit" value="' .
+				<input style="margin-top:40px;"  title="submit" name="submit" type="submit" value="' .
 				ver_dato('register', $GLOBALS['idioma']) . '"/>
-				
-				<br/><br/>
-				
-				<input title="reset" type="reset" value="' . ver_dato('reset',$GLOBALS['idioma']) . '"/> 
+	
+				<input style="margin-top:50px;margin-bottom:30px;" title="reset" type="reset" value="' . ver_dato('reset',$GLOBALS['idioma']) . '"/> 
 	        </form>';
 }
 

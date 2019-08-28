@@ -1,7 +1,13 @@
 <?php
 
 session_start();
-include('cabecera.php');
+
+include('config.php');
+
+include('includes/funciones.php');
+
+cabecera();
+
 
 if(isset($_COOKIE['4images_userid'])){
 	
@@ -17,9 +23,11 @@ if(!isset($_SESSION['id_usuario']) || empty($_SESSION['pagina'])){
 }
 
 else{
+	
+
 
 	if(isset($_POST['cambiar_pass']) && !empty($_POST['nueva_pass'])){
-		
+
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");

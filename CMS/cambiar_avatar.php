@@ -50,19 +50,28 @@ if(!file_exists('avatars')){
 	mkdir('avatars');
 }
 
-$target_path = "avatars/";
-
 $extension= substr($_FILES['uploadedfile']['name'], -4);
 
-if($extension=='jpeg' || $extension=='JPEG'){
+if($extension=='jpeg' || $extension=='JPEG' || $extension=='.JPG'){
 	$extension='.jpg';
 }
 
-$nombre = date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s');
-		
-$avatar=$nombre.$extension; 
+$ext_validas = array(".jpg",".JPG", ".png", ".PNG", ".gif", ".GIF");
+ 
+if(!in_array($extension, $ext_validas)){
+	$avatar='nofoto.jpg';
+}
+
+if($avatar!="nofoto.jpg"){
 	
-$target_path = $target_path . basename($avatar);
+	$nombre = date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s');
+	
+	$extension=strtolower($extension);
+	
+	$avatar=$nombre.$extension; 
+}
+	
+$target_path = "avatars/" . basename($avatar);
 
 if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)){ 
 

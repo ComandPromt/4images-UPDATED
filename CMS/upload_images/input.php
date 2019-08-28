@@ -23,8 +23,83 @@ session_start();
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Drag and Drop File Uploading</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<link rel="stylesheet" href="main.css">
-		<link rel="stylesheet" href="css.css">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/estilos.css">
+		<link rel="icon" type="image/ico" href="../img/favicon.ico">
+<?php
+print '		
+		<script>
+		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
+		var tgs = new Array( \'div\',\'td\',\'tr\');
+		
+		//Indicar el nombre de los diferentes tamaños de fuente:
+		var szs = new Array( \'xx-small\',\'x-small\',\'small\',\'medium\',\'large\',\'x-large\',\'xx-large\' );
+		var startSz = 2;
+		
+		function ts( trgt,inc ) {
+			if (!document.getElementById) return
+			
+			var d = document,cEl = null,sz = startSz,i,j,cTags;
+			
+			sz += inc;
+			
+			if ( sz < 0 ) sz = 0;
+			if ( sz > 6 ) sz = 6;
+			
+			startSz = sz;
+			
+			if ( !( cEl = d.getElementById( trgt ) ) ) cEl = d.getElementsByTagName( trgt )[ 0 ];
+			
+			cEl.style.fontSize = szs[ sz ];
+			
+			for ( i = 0 ; i < tgs.length ; i++ ) {
+				cTags = cEl.getElementsByTagName( tgs[ i ] );
+				for ( j = 0 ; j < cTags.length ; j++ ) cTags[ j ].style.fontSize = szs[ sz ];
+			}
+		}
+		
+		var captcha_reload_count = 0;
+		var captcha_image_url = "./captcha.php";
+		
+		function new_captcha_image() {
+			if (captcha_image_url.indexOf(\'?\') == -1) {
+				document.getElementById(\'captcha_image\').src= captcha_image_url+\'?c=\'+captcha_reload_count;
+				} else {
+				document.getElementById(\'captcha_image\').src= captcha_image_url+\'&c=\'+captcha_reload_count;
+				}
+		
+			document.getElementById(\'captcha_input\').value="";
+			document.getElementById(\'captcha_input\').focus();
+			captcha_reload_count++;
+		}
+				
+		if (document.layers){
+			document.captureEvents(Event.MOUSEDOWN);
+			document.onmousedown = right;
+		}
+		else if (document.all && !document.getElementById){
+			document.onmousedown = right;
+		}
+		
+		var txt = "'.$GLOBALS['site_name'].'";
+			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
+			txt=txt.toUpperCase();
+			txt=" "+txt+"  ";
+			var espera=600;
+			var refresco=null;
+		
+			function rotulo_title() {
+				document.title=txt;
+				txt=txt.substring(1,txt.length)+txt.charAt(0);
+				refresco=setTimeout("rotulo_title()",espera);
+			}
+			
+			rotulo_title();
+	
+	</script>';
+	
+	?>
+		
 		<style>
 			html
 			{
@@ -258,14 +333,65 @@ session_start();
 	<body>
 	
 		<div style="margin-top:-60px;" class="container">
-		<p style="padding-bottom:20px;"><a href="../index.php"><img style="height:40px;width:40px;margin-right:20px;" src="../img/home.png"/></a><a href="index.php"><img style="height:40px;width:40px;" src="../img/back_2.png"/></a></p>
+		
+		<?php
+		
+			$nombre_categoria="";
+		
+			if(isset($_POST['categoria'])){
+				$nombre_categoria=$_POST['categoria'];
+			}
+			
+			if(isset($_SESSION['categoria'])){
+				$nombre_categoria=$_SESSION['categoria'];
+			}
+			
+			if($nombre_categoria!=""){
+				
+				print '<div style="float:right;padding-right:10px;">
+				<img class="iconos" style="margin-left:10px;" src="../img/tag_2.png"/> <h2 style="margin-left:10px;font-size:20px;margin-top:5px;font-weight:bold;
+	color:#FFC151;
+	background-color:#0B7C92;
+	padding-left:5px;
+	padding-right:5px;
+	border: 1px solid #4D56EE;
+	-moz-border-radius: 9px;
+	-webkit-border-radius:9px;">'.saber_categoria($nombre_categoria).'</h2>
+				</div>';
+				
+				print '<div style="float:right;padding-right:20px;border-right: 4px dotted blue;">
+
+								<img class="iconos" src="../img/write.png"/> <h2  style="font-size:20px;margin-top:5px;font-weight:bold;
+	color:#FFC151;
+	background-color:#0B7C92;
+	padding-left:5px;
+	padding-right:5px;
+	border: 1px solid #4D56EE;
+	-moz-border-radius: 9px;
+	-webkit-border-radius:9px;" >'.$_POST['nombre'].'</h2>
+								
+								</div>';
+			}
+		?>
+		
+		<p style="padding-bottom:20px;">
+		
+			<a href="../index.php">
+				<img style="height:40px;width:40px;margin-right:20px;" src="../img/home.png"/>
+			</a>
+			
+			<a href="index.php">
+				<img style="height:40px;width:40px;" src="../img/back_2.png"/>
+			</a>
+		</p>
+		
 			<form method="post"  action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
 					<div class="box__input">
 						<svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
-						<input type="file" name="upload[]" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple="">
+						<input type="file" name="upload[]" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple=""/>
 						<h1><label id="mensaje" for="file">Select</label></h1>
 					</div>
-				<input type="hidden" name="ajax" value="1">
+				<input type="hidden" name="ajax" value="1"/>
 			</form>
 		</div>
 		
@@ -448,11 +574,18 @@ session_start();
 		}
 		
 		else{
+			
+			$_POST['nombre']=eliminar_espacios($_POST['nombre']);
+			
 			if(isset($_POST['admin_upload']) && !empty($_POST['categoria'])
 			 && !empty($_POST['nombre'])){
 				$_SESSION['categoria']=$_POST['categoria'];
 				$_SESSION['nombre']=trim($_POST['nombre']);
 				$_SESSION['subida']=false;
+			}
+			
+			else{
+				redireccionar('index.php');
 			}
 		}
 		

@@ -14,6 +14,8 @@ comprobar_cookie('../');
 
 poner_menu('../');
 
+$categoria="";
+
 $GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 
 print '
@@ -30,6 +32,13 @@ print '
 		
 		<select style="font-size:20px;" name="categoria">';
 
+	if(logueado && isset($_GET['cat']) && (int)$_GET['cat']>0){
+		
+		$categoria=saber_categoria($_GET['cat']);
+		
+		print '<option value="'.$_GET['cat'].'">'.$categoria.'</option>';
+	}
+
 include('../config.php');
 
 			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -38,8 +47,9 @@ include('../config.php');
 	
 mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
-    $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM ' .
-        $GLOBALS['table_prefix'] .'categories ORDER BY cat_id');
+    $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 UNION 
+
+	SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id!=0) order by cat_name');
 	
 	$numero_categorias=0;
 	
@@ -53,8 +63,9 @@ mysqli_set_charset($GLOBALS['conexion'],"utf8");
 				mkdir('../data/media/'.$fila[1], 0777, true);
 			}
 			
-			print '<option value="'.$fila[1].'">'.$fila[0].'</option>';
-
+			if($categoria!=$fila[0]){
+				print '<option value="'.$fila[1].'">'.$fila[0].'</option>';
+			}
 		}
 	}
 	

@@ -8,6 +8,10 @@ include_once('config.php');
 
 include('includes/funciones.php');
 
+if(!logueado()){
+	redireccionar('register.php');
+}
+
 cabecera();
 
 poner_menu();
