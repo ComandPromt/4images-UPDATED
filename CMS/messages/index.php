@@ -30,10 +30,11 @@ if(isset($_POST['enviar_correo']) && trim($_POST['asunto'])!="" && trim($_POST['
 	VALUES( '".$_COOKIE['4images_userid']."','".$_POST['destinatario']."','".$_POST['asunto']."','".$_POST['mensaje']."','0','0')");
 		
 	mysqli_close($GLOBALS['conexion']);
+	
 	mensaje(ver_dato('msg_success', $GLOBALS['idioma']));
 }
 
-poner_menu();
+poner_menu('../');
 
 print '<div class="container" style="margin-auto;padding-top:100px;">';
 

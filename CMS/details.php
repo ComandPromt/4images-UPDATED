@@ -320,7 +320,7 @@ if($logueado){
 
                 $imagen_usuario = 'avatars/' . $avatar;
             } else {
-                $imagen_usuario = 'img/user.png';
+                $imagen_usuario = 'img/nofoto.png';
             }
 			
             print '
@@ -335,27 +335,31 @@ if($logueado){
         }
 }
 
-
-if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_userid'])){
-	
-        print '<div style="float:right;width:100%;margin-bottom:40px;">
-		<div style="float:right;border-style: dashed; border-color: blue;
-		padding-top:10px;width:'.$anchura.';margin-top:30px;padding-bottom:10px;padding:20px;">
+if($logueado){
+	        print '
+		<div style="float:left;clear:both;border-style: dashed; border-color: blue;margin-left:100px;padding-top:20px;margin-top:20px;
+		padding-left:20px;padding-right:20px;
+		">';
 		
 		
+		print '
+		<div style="float:left;">
 		<a title="'.ver_dato('full_screen', $GLOBALS['idioma']). '" onclick="fullwin(' . $_GET['image_id'] . ');">
 				<img style="margin-left:5px;" alt="full screen" class="iconos" src="img/full_screen.png">
 			</a>
-			
-				<a title="'.ver_dato('download', $GLOBALS['idioma']). '" 
-				 href="data/media/' . $categoria . '/' . $imagen . '" download>
-					<img  alt="download" class="iconos" style="margin-left:5px;" src="img/download.png"/>
-				</a>
-		
+			</div>	
+			<div style="float:left;">
+				<form id="frmdownload" method="post">
+				<a onclick="descarga(' . $_GET['image_id'] . ')" href="data/media/' . $categoria . '/' . $imagen . '" download>
+				<img alt="download" style="height:40px;width:40px;margin-left:10px;" src="img/download.png"/></a>
+			</form>
+		</div>
 		
 		';
 
-
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
 			
 			
 			
@@ -383,35 +387,47 @@ if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_user
 				}
 	
 				
-				print '
+				print '<div style="float:left;">
 						<a title="'.ver_dato($titulo, $GLOBALS['idioma']). '" id="frmajax" 
 						onclick="favorito(' . $_GET['image_id'] . ')">
 						
-							<img id="' . $_GET['image_id'] . '" 
+							<img style="margin-left:10px;" id="' . $_GET['image_id'] . '" 
 							alt="favorite" class="iconos" src="img/' . $icono . '" />
-						</a>';
+						</a></div>';
 	
-			}		
+			}
+			
+			mysqli_close($GLOBALS['conexion']);
+				print '</div>';
+}
 
-				$icono2='hide.png';
-				
+if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_userid'])){
+	
+	print '<div style="float:right;width:100%;margin-bottom:40px;"><div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
+		padding-top:10px;margin-top:30px;padding-bottom:10px;padding:20px;">';
+	
+$icono2='hide.png';
+
+$accion='change_view_o';
+	
 				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 				
 			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
-			$GLOBALS['table_prefix'] . "images WHERE image_id='".$_GET['image_id']."' AND user_id='".$_COOKIE['4images_userid']."'" );
+			$GLOBALS['table_prefix'] . "images WHERE image_id='".$_GET['image_id']."'" );
 		
 			$fila = mysqli_fetch_row($consulta);
 		
 			if((int)$fila[0]==1){
 				$icono2="view.png";
+				$accion='change_view_v';
 			}
 		
 			$cat_id=$fila[1];
 			
 			$file=$fila[2];
 		
-			print '<a title="'. ver_dato('change_view', $GLOBALS['idioma']) . '" id="frm_img_'.$_GET['image_id'].'"
+			print '<a title="'. ver_dato($accion, $GLOBALS['idioma']) . '" id="frm_img_'.$_GET['image_id'].'"
 					onclick="ocultar_img('.$_GET['image_id'].')">
 						<img alt="'. ver_dato('change_view', $GLOBALS['idioma']) . '" 
 						alt="IMG_'.$_GET['image_id'].'"  id="IMG_'.$_GET['image_id'].'" class="iconos" src="img/'.$icono2.'"/>
@@ -438,7 +454,7 @@ if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_user
 				
 			</a>
 			
-			<a title="'. ver_dato('change_cat', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
+			<a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
 			
 					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
 				
@@ -701,35 +717,34 @@ print '</option>
 		</div>
 	</div>
 	
+</div>	
 	
 	
-	
-</div>
+
 
 ';
 				
 		}
 
-		else{
-			print '</div>';
-		}
-		
 print '</div>';
 
-       if ($_GET['image_id'] > 1) {
+  if ($_GET['image_id'] > 1 || $_GET['image_id'] < $ultima_imagen) {
+	  
+			$id_images = array();
 
-            $id_images = array();
-
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+            $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+                $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
             $consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_id FROM ' . $GLOBALS['table_prefix'] . "images
-			WHERE image_active='1'");
+			WHERE image_active='1' AND cat_id='".$categoria."'");
 
             while ($recuento = mysqli_fetch_row($consulta)) {
                 $id_images[] = $recuento[0];
             }
+	}
+	
+       if ($_GET['image_id'] > 1) {
 
             $imagen_anterior = array_search($_GET['image_id'], $id_images);
 
@@ -743,7 +758,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 
                 $recuento = mysqli_fetch_row($consulta);
 
-                print '<div style="float:right;margin-top:40px;margin-left:-20px;">';
+                print '<div style="float:right;margin-top:40px;margin-left:-20px;padding-bottom:30px;">';
 
                 print '
 								
@@ -751,10 +766,9 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 					href="details.php?image_id=' . $id_images[$imagen_anterior] . '" >
 					
 						<img class="iconos" alt="go back" src="img/back_2.png" />';
-						
-						
+												
 						if($logueado){
-							print '<img style="margin-left:10px;"  alt="' . $recuento[2] . '" class="icono"
+							print '<img style="margin-left:10px;"  alt="' . $recuento[2] . '" class="icono rounded"
 							src="data/media/' . $recuento[1] . '/' . $recuento[0] . '"/>';
 						}
 						
@@ -763,34 +777,22 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 
         }
 
-
         if ($_GET['image_id'] < $ultima_imagen) {
-
-            $id_images = array();
-
-            $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-                $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-
-            $consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_id FROM ' . $GLOBALS['table_prefix'] . "images
-			WHERE image_active='1'");
-
-            while ($recuento = mysqli_fetch_row($consulta)) {
-                $id_images[] = $recuento[0];
-            }
 
             $imagen_posterior = array_search($_GET['image_id'], $id_images);
 
             $imagen_posterior++;
 
-            $consulta = mysqli_query($GLOBALS['conexion'], '
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+            $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+            $consulta2 = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_media_file,cat_id,image_name FROM ' . $GLOBALS['table_prefix'] . "images
 			WHERE image_id='" . $id_images[$imagen_posterior] . "'");
 
-            $recuento = mysqli_fetch_row($consulta);
-
-            
-            if (!empty($recuento[0]) && !empty($recuento[1])) {
+            $recuento2 = mysqli_fetch_row($consulta2);
+    
+            if (!empty($recuento2[0]) && !empty($recuento2[1])) {
 				
                 print '
 					<a title="'.ver_dato('next_img', $GLOBALS['idioma']). '"
@@ -799,8 +801,8 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 					if($logueado){
 						
 						print '
-						<img  style="margin-left:20px;" alt="' . $recuento[2] . '" class="icono"
-						src="data/media/' . $recuento[1] . '/' . $recuento[0] . '" />';
+						<img  style="margin-left:20px;" alt="' . $recuento2[2] . '" class="icono rounded"
+						src="data/media/' . $recuento2[1] . '/' . $recuento2[0] . '" />';
 						
 					}
 					
@@ -812,8 +814,6 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
             print '</div>';
 		
         }
-
-
 
 		$titulo_comentario=ver_dato('comments', $GLOBALS['idioma']);
 
@@ -850,9 +850,11 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 					<a style="cursor: pointer;" onClick="muestra_oculta(\'contenido\')" title="" class="boton_mostrar"> <img id="ver_comentario" src="img/view.png" class="icono" /></a>
 				</div>
 
-				<div id="contenido" style="float:left;margin-left:-100px;height:500px;margin-top:30px;border-style: none!important;"  >
+				<div id="contenido" style="float:left;margin-left:-85px;height:500px;
 				
-					<table style="margin:auto;text-align:center;padding-left:20px;padding-right:20px;" class="table table-responsive-xs">
+				margin-top:30px;border-style: none!important;width:120%;"  >
+				
+					<table style="margin:auto;text-align:center;padding-right:20px;" class="table table-responsive-xs">
 					
 						<tr style="font-size:25px;">
 							<th></th>
@@ -954,7 +956,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 			<div class="modal-body">
 ';
 
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
 	$consulta = mysqli_query($GLOBALS['conexion'], '

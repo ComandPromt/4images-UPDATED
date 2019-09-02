@@ -589,6 +589,9 @@ print '
 			}
 		}
 		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
 		FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
 
@@ -638,7 +641,6 @@ print '
 						INSERT INTO '.$GLOBALS['table_prefix']."images
 						(cat_id, user_id,image_name,image_description,image_keywords,image_date,image_active,image_media_file,image_allow_comments,image_comments,image_downloads,image_votes,image_rating,image_hits,sha256)
 						VALUES('".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
-			
 					}
 					
 					else{

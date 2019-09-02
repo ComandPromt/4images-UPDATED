@@ -57,6 +57,10 @@ if (!in_array($db_name, $tablas)) {
     if (file_exists('lang')) {
         rmDir_rf('lang');
     }
+	
+	if (file_exists('img/Install')) {
+        rmDir_rf('img/Install');
+    }
 }
 
 poner_menu();
@@ -128,9 +132,14 @@ print '
 
 
 <div>
+
+<div style="float:right;padding-left:260px;margin-top:240px;padding-top:100px;
+		background-color: rgba(255, 255, 255, 0);"
+        class="entire-content col-xs-4" >
+
 ';
 
-if (file_exists('config.php')) {
+if (file_exists('config.php') && logueado()) {
 
     $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 
@@ -144,9 +153,7 @@ if (file_exists('config.php')) {
 
     if ($fila[0] > 0) {
 
-        print '<div style="float:right;padding-left:250px;margin-top:240px;padding-top:100px;
-		background-color: rgba(255, 255, 255, 0);"
-        class="entire-content col-xs-4" >
+        print '
 
 		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
 
@@ -172,11 +179,18 @@ if (file_exists('config.php')) {
 		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
 	
     }
-  
-	print '</div></div>';
+	
+  print '</div>';
+	
 }
 
-print '</div>
+else{
+		print '<a href="register.php">
+			<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
+		</a>';
+}
+
+print '</div></div>
 	
 </div>';
 

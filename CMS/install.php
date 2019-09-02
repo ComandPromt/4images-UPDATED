@@ -410,12 +410,22 @@ if (file_exists('config.php')) {
         $_POST['github'] = eliminar_espacios($_POST['github']);
         $_POST['debianart'] = eliminar_espacios($_POST['debianart']);
         $_POST['slideshare'] = eliminar_espacios($_POST['slideshare']);
+		
         if ($_POST['timezone_select'] == '1.5') {
             $selected_timezone = 'Europe/Madrid';
         }
+		
         if (file_exists('config.php')) {
             unlink('config.php');
         }
+		
+		$miArchivo = fopen('.htaccess', 'w') or die('No se puede abrir/crear el archivo!');
+        $php ='ErrorDocument 404 '.substr($_SERVER["REQUEST_URI"],0,strripos($_SERVER["REQUEST_URI"],"/")+1).'404.php';
+
+		fwrite($miArchivo, $php);
+        fclose($miArchivo);
+        chmod('.htaccess', 0777);
+
         $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
         $php = '<?php
     error_reporting(0);

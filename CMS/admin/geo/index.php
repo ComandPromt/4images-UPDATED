@@ -56,12 +56,6 @@ print '<div style="margin:auto;"  class="table-responsive-xs">
 			<th style="font-size:20px;text-align:center;">'. ver_dato('city', $GLOBALS['idioma']).'</th>
 		</tr>';
 		
-	$fila[1]="";
-
-	$region="";
-		
-	$procedencia="";
-		
 	$local=ver_dato('local', $GLOBALS['idioma']);
 		
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],

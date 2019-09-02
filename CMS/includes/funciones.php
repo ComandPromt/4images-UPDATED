@@ -469,22 +469,9 @@ print '
 			document.getElementById(\'captcha_input\').focus();
 			captcha_reload_count++;
 		}
-				
-		if (document.layers){
-			document.captureEvents(Event.MOUSEDOWN);
-			document.onmousedown = right;
-		}
-		else if (document.all && !document.getElementById){
-			document.onmousedown = right;
-		}
-		
-		var txt = "'.$GLOBALS['site_name'].'";
-			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
-			txt=txt.toUpperCase();
-			txt=" "+txt+"  ";
-			var espera=600;
-			var refresco=null;
-		
+	var txt = "'.$GLOBALS['site_name'].'";
+	var espera=600;
+	var refresco=null;
 			function rotulo_title() {
 				document.title=txt;
 				txt=txt.substring(1,txt.length)+txt.charAt(0);
@@ -493,13 +480,35 @@ print '
 			
 			rotulo_title();
 	
-	</script>
+	</script>';
 	
-	<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
+	if(!logueado()){
+		
+		print '<script>	
+			if (document.layers){
+				document.captureEvents(Event.MOUSEDOWN);
+				document.onmousedown = right;
+			}
+			else if (document.all && !document.getElementById){
+				document.onmousedown = right;
+			}
+			
+			var txt = "'.$GLOBALS['site_name'].'";
+			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
+			txt=txt.toUpperCase();
+			txt=" "+txt+"  ";
+			
+		</script>';
+	}
+	
+	print '<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
 
 	</head>
+	
 <body>
+
 '.nevar().'
+
 <div id="navega"> 
 
 <div id="menu"> 
@@ -950,13 +959,11 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 				<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
 					<img alt="fav" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono.'" id="'.$image_id.'"/>
 				</a>
-		
+		<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
+					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
+				</a>
 			';
 		}
-		print '
-				<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
-					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
-				</a>';
 				
 				if($mis_cargas || admin($_COOKIE['4images_userid'])){
 					
@@ -1002,7 +1009,8 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 	
 }
 
-function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,$mis_cargas=false,$filtro=false,$ruta=""){
+function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorito=false,
+$mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT ",$comentario=false){
 
 	if($cat_id=='*' && $final_sentencia=="" && $ruta==""){
 		$final_sentencia='WHERE image_active=1 ';
@@ -1023,7 +1031,11 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 		$final_sentencia="WHERE image_active=1 AND image_id='".$_GET['image_id']."'";
 	}
 
-	$orden=' ORDER BY image_id DESC	LIMIT ';
+	if($comentario){
+	
+		$final_sentencia='JOIN '.$GLOBALS['table_prefix']."comments C ON C.image_id=I.image_id
+		where image_active='1' ";
+	}
 
 	include($ruta.'config.php');
 	
@@ -1035,21 +1047,22 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 
 		$CantidadMostrar=9;
 		$consulta='SELECT
-				image_id,
-				cat_id,
-				image_name,
-				image_media_file
+				distinct(I.image_id),
+				I.cat_id,
+				I.image_name,
+				I.image_media_file
 				FROM
-				'.$GLOBALS['table_prefix'].'images '.$final_sentencia;
+				'.$GLOBALS['table_prefix'].'images I '.$final_sentencia;
 
 		if($favorito){
-	$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
-
-	FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'lightboxes F ON I.image_id=F.lightbox_image_id
-
-	WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix']."lightboxes  WHERE user_id='".$_COOKIE['4images_userid']."' order by orden desc)";
-	$orden=' ORDER BY F.orden DESC LIMIT ';
-}
+			
+			$consulta='SELECT I.image_id, I.cat_id, I.image_name, I.image_media_file,F.orden 
+		
+			FROM '.$GLOBALS['table_prefix'].'images I JOIN '.$GLOBALS['table_prefix'].'lightboxes F ON I.image_id=F.lightbox_image_id
+		
+			WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix']."lightboxes  WHERE user_id='".$_COOKIE['4images_userid']."' order by orden desc)";
+			$orden=' ORDER BY F.orden DESC LIMIT ';
+		}
 				
 		$compag         =(int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
 		$TotalReg       =$conexion->query($consulta);
@@ -1365,17 +1378,33 @@ function ver_dato($accion,$idioma){
 function track(){
 	
 		if(!isset($_SESSION['track']) || $_SESSION['track']){
-	$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
+			
+		$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
+		
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		$GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
 	
-		$tx_pagina              = $_SERVER['REQUEST_URI']; 
-		$tx_paginaOrigen        = $_SERVER['HTTP_REFERER'];
-		$tx_paginaActual        =   $_SERVER['PHP_SELF']; 
+		$consulta=mysqli_query($GLOBALS['conexion'],"SELECT * FROM ver_bots");
+				
+			while($bots = mysqli_fetch_row($consulta)){
+				
+				mysqli_query($GLOBALS['conexion'],"INSERT INTO bots (IP) VALUES('".$bots[0]."');");
+
+				$lista_negra[]=$bots[0];
+			}
+			
+		mysqli_query($GLOBALS['conexion'],"DELETE FROM tbl_tracking where tx_navegador like '%crawler%' OR tx_navegador like '%Bot%' AND tx_ipRemota!='127.0.0.1';");
+
 		$i_direccionIp      = $_SERVER['REMOTE_ADDR'];   
-		$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
-		
+				
+		if(comprobar_si_es_valido($i_direccionIp,$lista_negra)){
+			
+			$tx_pagina              = $_SERVER['REQUEST_URI']; 
+			$tx_paginaOrigen        = $_SERVER['HTTP_REFERER'];
+			$tx_paginaActual        =   $_SERVER['PHP_SELF']; 
+			$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
+			
 		if(strlen($i_direccionIp)<12){
 			$i_direccionIp='127.0.0.1';
 			$country ="home";
@@ -1905,13 +1934,17 @@ function track(){
 				$country ="benin";
 				break;
 				
+				case "Mozambique":
+				$country ="mozambique";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
 			}
 		}
 		
-		if(comprobar_si_es_valido($i_direccionIp,$lista_negra)){
+
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
 			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
 			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
@@ -1986,7 +2019,7 @@ print '
 	
 	else{
 		
-		$imagen_usuario=$ruta.'img/user.png';
+		$imagen_usuario=$ruta.'img/nofoto.png';
 		
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -2044,7 +2077,7 @@ print '
 		</a></div>
 		
 		<div style="float:left;padding-top:10px;padding-left:4px;">
-		<span  style="margin-left:-13px;font-size:1.5em;font-weight:bold;
+		<span  style="margin-left:-15px;font-size:1.5em;font-weight:bold;
 	color:#FFC151;
 	background-color:#0B7C92;
 	padding-left:5px;
@@ -2055,32 +2088,32 @@ print '
 		<hr class="separador"/></div>
 		
 		<div style="float:left;padding-top:110px;padding-left:10px;">
-	   <a target="_blank" title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
+	   <a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
 			<img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png">
 		</a></div>
 		
 		<div style="float:left;padding-top:40px;padding-left:10px;">
-       <a target="_blank" title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
+       <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
 		<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/upload.png"/>
 	   </a></div>
 	     		
 		<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a target="_blank" title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
+	   <a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
 			<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"/>
 		</a></div>
 		
 			<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a target="_blank" title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
+	   <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
 		<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"/>
 		</a></div>
 		
 		<div style="float:left;padding-top:10px;padding-left:10px;">
-	   <a target="_blank" title="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
+	   <a title="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
 			<img alt="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/coment.png"/>
 		</a></div>
 		
 		<div style="float:left;padding-top:10px;padding-left:10px;">
-			<a target="_blank" title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
+			<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
 			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/search.png"/>
 			</a>
 		</div>
