@@ -166,9 +166,183 @@ if (file_exists('config.php')) {
         exit;
     }
 
-    echo '
+    if (isset($_POST['submit'])) {
+
+        $_POST['site'] = eliminar_espacios($_POST['site']);
+        $_POST['timezone_select'] = eliminar_espacios($_POST['timezone_select']);
+        $_POST['db_host'] = eliminar_espacios($_POST['db_host']);
+        $_POST['db_name'] = eliminar_espacios($_POST['db_name']);
+        $_POST['db_user'] = eliminar_espacios($_POST['db_user']);
+        $_POST['db_password'] = eliminar_espacios($_POST['db_password']);
+        $_POST['table_prefix'] = eliminar_espacios($_POST['table_prefix']);
+        $_POST['admin_email'] = eliminar_espacios($_POST['admin_email']);
+        $_POST['instagram'] = eliminar_espacios($_POST['instagram']);
+        $_POST['facebook'] = eliminar_espacios($_POST['facebook']);
+        $_POST['twitter'] = eliminar_espacios($_POST['twitter']);
+        $_POST['youtube'] = eliminar_espacios($_POST['youtube']);
+        $_POST['github'] = eliminar_espacios($_POST['github']);
+        $_POST['debianart'] = eliminar_espacios($_POST['debianart']);
+        $_POST['slideshare'] = eliminar_espacios($_POST['slideshare']);
+		
+        if ($_POST['timezone_select'] == '1.5') {
+            $selected_timezone = 'Europe/Madrid';
+        }
+		
+        if (file_exists('config.php')) {
+            unlink('config.php');
+        }
+		
+		$miArchivo = fopen('.htaccess', 'w') or die('No se puede abrir/crear el archivo!');
+        $php ='ErrorDocument 404 '.substr($_SERVER["REQUEST_URI"],0,strripos($_SERVER["REQUEST_URI"],"/")+1).'404.php';
+
+		fwrite($miArchivo, $php);
+        fclose($miArchivo);
+        chmod('.htaccess', 0777);
+
+        $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
+
+        $php = '<?php
+        error_reporting(0);
+	    date_default_timezone_set("' . $selected_timezone . '");
+	    $site_name = "' . $_POST['site'] . '";
+	    $db_host = "' . $_POST['db_host'] . '";
+	    $db_name = "' . $_POST['db_name'] . '";
+	    $db_user = "' . $_POST['db_user'] . '";
+	    $db_password = "' . $_POST['db_password'] . '";
+	    $table_prefix = "' . $_POST['table_prefix'] . '";
+	    $admin_email = "' . $_POST['admin_email'] . '";
+	    $protocolo = "' . $_POST['protocolo'] . '";
+	    $facebook="' . $_POST['facebook'] . '";
+	    $instagram="' . $_POST['instagram'] . '";
+	    $twitter="' . $_POST['twitter'] . '";
+	    $youtube="' . $_POST['youtube'] . '";
+	    $github="' . $_POST['github'] . '";
+	    $debianart="' . $_POST['debianart'] . '";
+	    $slideshare="' . $_POST['slideshare'] . '";
+        $idioma="' . $_POST['idioma'] . '";
+	    $conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
+        mysqli_set_charset($conexion,"utf8");
+	    ?>';
+
+        fwrite($miArchivo, $php);
+        fclose($miArchivo);
+        chmod('config.php', 0777);
+
+        $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
+
+        if ($dwes->set_charset('utf8')) {
+            $dwes->query('DROP DATABASE ' . $_POST['db_name']);
+            $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
+            $dwes->query('use ' . $_POST['db_name']);
+        }
+
+        $nombre = 'data/database/default/sentencias.sql';
+
+        if (file_exists($nombre)) {
+            $texto = file_get_contents($nombre);
+            $sentencia = explode(";", $texto);
+            for ($i = 0; $i < (count($sentencia) - 1); $i++) {
+                $sentencia[$i] .= ";";
+                $dwes->query($sentencia[$i]);
+            }
+        }
+
+        $dwes->close();
+
+        $current_time = time();
+        $admin_pass_hashed = salted_hash($admin_password);
+    }
+
+    if ($action == 'startinstall') {
+
+        $error = array();
+
+        if ($db_servertype == '') {
+            $error['db_servertype'] = 1;
+        }
+
+        if ($db_host == '') {
+            $error['db_host'] = 1;
+        }
+
+        if ($db_name == '') {
+            $error['db_name'] = 1;
+        }
+
+        if ($db_user == '') {
+            $error['db_user'] = 1;
+        }
+
+        if ($admin_user == '') {
+            $error['admin_user'] = 1;
+        }
+
+        if ($admin_password != $admin_password2 || $admin_password == '' || $admin_password2 == '') {
+            $error['admin_password'] = 1;
+            $error['admin_password2'] = 1;
+        }
+
+        if (!empty($error)) {
+
+            foreach ($error as $key => $val) {
+                $lang[$key] = sprintf('<span class="marktext">%s *</span>', $lang[$key]);
+            }
+
+            $action = 'intro';
+
+        } else {
+         
+            if (empty($error_log)) {
+
+                $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
+                $dwes->set_charset('utf8');
+                $dwes->query(
+                    "UPDATE users
+                    SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
+                     WHERE user_name = 'admin'");
+
+                if ($table_prefix != '4images_') {
+                    $dwes->query('RENAME TABLE 4images_users TO ' . $table_prefix . 'users');
+                    $dwes->query('RENAME TABLE 4images_sessions TO ' . $table_prefix . 'sessions');
+                    $dwes->query('RENAME TABLE 4images_lightboxes TO ' . $table_prefix . 'lightboxes');
+                    $dwes->query('RENAME TABLE 4images_categories TO ' . $table_prefix . 'categories');
+                    $dwes->query('RENAME TABLE 4images_images TO ' . $table_prefix . 'images');
+                    $dwes->query('RENAME TABLE 4images_comments TO ' . $table_prefix . 'comments');
+                    $dwes->query('RENAME TABLE 4images_etiquetas TO ' . $table_prefix . 'etiquetas');
+                    $dwes->query('RENAME TABLE 4images_tags TO ' . $table_prefix . 'tags');
+                    $dwes->query('RENAME TABLE 4images_groups TO ' . $table_prefix . 'groups');
+                }
+
+                $dwes->close();
+                echo '<script>location.href="index.php";</script>';
+
+            } else {
+
+                $msg = $lang['database_error'];
+                $error_msg .= '<ol>';
+
+                foreach ($error_log as $val) {
+                    $error_msg .= sprintf('<li>%s</li>', $val);
+                }
+
+                $error_msg .= '</ol>';
+            }
+
+            echo '<p>' . $msg . $error_msg . '</p>';
+
+            if (isset($cant_write_config)) {
+                echo '<input title="enviar" type="submit" value="' . $lang['config_download'] . '" class="button" name="submit">
+		        <hr/>';
+            }
+        }
+    }
+
+?>
+
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="description" content="<?php print $db_name;?>">
@@ -177,136 +351,143 @@ if (file_exists('config.php')) {
 	<meta name="robots" content="index,follow">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="revisit-after" content="10 days">
-	<script src="js/funciones.js"></script>
+
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/w3.css">
 	<link rel="stylesheet" href="css/css.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/estilos.css">
-
-        <link rel="stylesheet" href="css/scroll.css" />
-        <link rel="stylesheet" href="css/prettify.css" />
-        <link rel="stylesheet" href="css/jquery.scrollbar.css" />
-		<link rel="stylesheet" type="text/css" href="css/default.css" />
-		<link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="stylesheet" href="css/scroll.css" />
+    <link rel="stylesheet" href="css/prettify.css" />
+    <link rel="stylesheet" href="css/jquery.scrollbar.css" />
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
+	<link rel="stylesheet" type="text/css" href="css/component.css" />
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="icon" type="image/ico" href="img/favicon.ico">
-				<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
+	<link rel="stylesheet" type="text/css" href="tooltip/css/estilo.css">
 
 	<title>Web</title>
-	          <style>
-			  .imagen{
+
+	<style>
+
+		.imagen{
 				  height:65px;
 				  width:65px;
-			  }
-			  *{
-				  background-color:#ffffff;
-				  margin:auto;
-				  text-align:center;
-				  font-size:20px;
-			  }
-                            /******************* WINDOWS VISTA SCROLLBAR *******************/
-                            .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
-                            .scrollbar-vista > .scroll-content.scroll-scrollx_visible { top:  -17px; margin-top:  17px; }
-                            .scrollbar-vista > .scroll-element {
-                                background-color: #fcfdff;
-                            }
-                            .scrollbar-vista > .scroll-element,
-                            .scrollbar-vista > .scroll-element *
-                            {
-                                border: none;
-                                margin: 0;
-                                overflow: hidden;
-                                padding: 0;
-                                position: absolute;
-                                z-index: 10;
-                            }
-                            .scrollbar-vista > .scroll-element .scroll-element_outer,
-                            .scrollbar-vista > .scroll-element .scroll-element_size,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner,
-                            .scrollbar-vista > .scroll-element .scroll-bar,
-                            .scrollbar-vista > .scroll-element .scroll-bar div
-                            {
-                                height: 100%;
-                                left: 0;
-                                top: 0;
-                                width: 100%;
-                            }
-                            .scrollbar-vista > .scroll-element .scroll-element_outer,
-                            .scrollbar-vista > .scroll-element .scroll-element_size,
-                            .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
-                            .scrollbar-vista > .scroll-element .scroll-bar_body
-                            {
-                                background: none !important;
-                            }
-                            .scrollbar-vista > .scroll-element.scroll-x {
-                                border-top: solid 1px #fcfdff;
-                                bottom: 0;
-                                height: 16px;
-                                left: 0;
-                                min-width: 100%;
-                                width: 100%;
-                            }
-                            .scrollbar-vista > .scroll-element.scroll-y {
-                                border-left: solid 1px #fcfdff;
-                                height: 100%;
-                                min-height: 100%;
-                                right: 0;
-                                top: 0;
-                                width: 16px;
-                            }
+		}
 
-                            .scrollbar-vista > .scroll-element.scroll-y div {
-                                background-image: url("skins/vista-y.png");
-                                background-repeat: repeat-y;
-                            }
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-arrow {}
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar { min-width: 16px; background-position: 0px -34px; background-repeat: no-repeat; }
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body { left: 2px; }
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body-inner { left: -4px; background-position: 0px -17px; }
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_center { left: 50%; margin-left: -6px; width: 12px; background-position: 24px -34px; }
-                            .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_bottom { left: auto; right: 0; width: 2px; background-position: 37px -34px; }
-                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar { min-height: 16px; background-position: -34px 0px; background-repeat: no-repeat; }
-                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body { top: 2px; }
-                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body-inner { top: -4px; background-position: -17px 0px; }
-                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_center { top: 50%; margin-top: -6px; height: 12px; background-position: -34px 24px; }
-                            .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_bottom { top: auto; bottom: 0; height: 2px; background-position: -34px 37px; }
-                            /* SCROLL ARROWS */
-                            .scrollbar-vista > .scroll-element .scroll-arrow { display: none; }
-                            .scrollbar-vista > .scroll-element.scroll-element_arrows_visible .scroll-arrow { display: block; z-index: 12; }
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_less { height: 100%; width: 17px; background-position: 0px -51px;}
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_more { height: 100%; left: auto; right: 0; width: 17px; background-position: 17px -51px;}
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_outer { left: 17px; }
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_inner { left: -34px; }
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_size { left: -34px; }
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_less { width: 100%; height: 17px; background-position: -51px 0px;}
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_more { width: 100%; top: auto; bottom: 0; height: 17px; background-position: -51px 17px;}
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_outer { top: 17px; }
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_inner { top: -34px; }
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_size { top: -34px; }
-                            /* PROCEED OFFSET IF ANOTHER SCROLL VISIBLE */
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -17px; }
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -17px; }
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_inner { left: -17px; }
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_inner { top: -17px; }
-                            /* PROCEED OFFSET IF ARROWS & ANOTHER SCROLL */
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-arrow_more { right: 17px;}
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_inner { left: -51px;}
-                            .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_size { left: -51px;}
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-arrow_more { bottom: 17px;}
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_inner { top: -51px;}
-                            .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_size { top: -51px;}
-                        </style>
-	<style>
-	@media only screen and (min-width: 900px) {
-	#menu_usuario {
-		opacity:0;
-	}
-}
+		*{
+			background-color:#ffffff;
+			margin:auto;
+			text-align:center;
+			font-size:20px;
+		}
+
+                            /******************* WINDOWS VISTA SCROLLBAR *******************/
+        .scrollbar-vista > .scroll-content.scroll-scrolly_visible { left: -17px; margin-left: 17px; }
+        .scrollbar-vista > .scroll-content.scroll-scrollx_visible { top:  -17px; margin-top:  17px; }
+        .scrollbar-vista > .scroll-element {
+            background-color: #fcfdff;
+        }
+
+        .scrollbar-vista > .scroll-element,
+        .scrollbar-vista > .scroll-element * {
+            border: none;
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .scrollbar-vista > .scroll-element .scroll-element_outer,
+        .scrollbar-vista > .scroll-element .scroll-element_size,
+        .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+        .scrollbar-vista > .scroll-element .scroll-element_inner,
+        .scrollbar-vista > .scroll-element .scroll-bar,
+        .scrollbar-vista > .scroll-element .scroll-bar div{
+            height: 100%;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        .scrollbar-vista > .scroll-element .scroll-element_outer,
+        .scrollbar-vista > .scroll-element .scroll-element_size,
+        .scrollbar-vista > .scroll-element .scroll-element_inner-wrapper,
+        .scrollbar-vista > .scroll-element .scroll-bar_body{
+            background: none !important;
+        }
+
+        .scrollbar-vista > .scroll-element.scroll-x {
+            border-top: solid 1px #fcfdff;
+            bottom: 0;
+            height: 16px;
+            left: 0;
+            min-width: 100%;
+            width: 100%;
+        }
+
+        .scrollbar-vista > .scroll-element.scroll-y {
+            border-left: solid 1px #fcfdff;
+            height: 100%;
+            min-height: 100%;
+            right: 0;
+            top: 0;
+            width: 16px;
+        }
+
+        .scrollbar-vista > .scroll-element.scroll-y div {
+            background-image: url("skins/vista-y.png");
+            background-repeat: repeat-y;
+        }
+        
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-arrow {}
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-bar { min-width: 16px; background-position: 0px -34px; background-repeat: no-repeat; }
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body { left: 2px; }
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_body-inner { left: -4px; background-position: 0px -17px; }
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_center { left: 50%; margin-left: -6px; width: 12px; background-position: 24px -34px; }
+        .scrollbar-vista > .scroll-element.scroll-x .scroll-bar_bottom { left: auto; right: 0; width: 2px; background-position: 37px -34px; }
+        .scrollbar-vista > .scroll-element.scroll-y .scroll-bar { min-height: 16px; background-position: -34px 0px; background-repeat: no-repeat; }
+        .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body { top: 2px; }
+        .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_body-inner { top: -4px; background-position: -17px 0px; }
+        .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_center { top: 50%; margin-top: -6px; height: 12px; background-position: -34px 24px; }
+        .scrollbar-vista > .scroll-element.scroll-y .scroll-bar_bottom { top: auto; bottom: 0; height: 2px; background-position: -34px 37px; }
+        /* SCROLL ARROWS */
+        .scrollbar-vista > .scroll-element .scroll-arrow { display: none; }
+        .scrollbar-vista > .scroll-element.scroll-element_arrows_visible .scroll-arrow { display: block; z-index: 12; }
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_less { height: 100%; width: 17px; background-position: 0px -51px;}
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-arrow_more { height: 100%; left: auto; right: 0; width: 17px; background-position: 17px -51px;}
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_outer { left: 17px; }
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_inner { left: -34px; }
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible .scroll-element_size { left: -34px; }
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_less { width: 100%; height: 17px; background-position: -51px 0px;}
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-arrow_more { width: 100%; top: auto; bottom: 0; height: 17px; background-position: -51px 17px;}
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_outer { top: 17px; }
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_inner { top: -34px; }
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible .scroll-element_size { top: -34px; }
+        /* PROCEED OFFSET IF ANOTHER SCROLL VISIBLE */
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -17px; }
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -17px; }
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_inner { left: -17px; }
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_inner { top: -17px; }
+        /* PROCEED OFFSET IF ARROWS & ANOTHER SCROLL */
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-arrow_more { right: 17px;}
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_inner { left: -51px;}
+        .scrollbar-vista > .scroll-element.scroll-x.scroll-element_arrows_visible.scroll-scrolly_visible .scroll-element_size { left: -51px;}
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-arrow_more { bottom: 17px;}
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_inner { top: -51px;}
+        .scrollbar-vista > .scroll-element.scroll-y.scroll-element_arrows_visible.scroll-scrollx_visible .scroll-element_size { top: -51px;}
+
+	    @media only screen and (min-width: 900px) {
+	        #menu_usuario {
+		        opacity:0;
+	        }
+        }
 	</style>
+
 	<script>
+
 		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
 		var tgs = new Array( "div","td","tr");
 
@@ -340,6 +521,7 @@ if (file_exists('config.php')) {
 		var captcha_image_url = "./captcha.php";
 
 		function new_captcha_image() {
+
 			if (captcha_image_url.indexOf("?") == -1) {
 				document.getElementById("captcha_image").src= captcha_image_url+"?c="+captcha_reload_count;
 				} else {
@@ -351,15 +533,16 @@ if (file_exists('config.php')) {
 			captcha_reload_count++;
 		}
 
-
 		if (document.layers){
 			document.captureEvents(Event.MOUSEDOWN);
 			document.onmousedown = right;
-		}
+        }
+        
 		else if (document.all && !document.getElementById){
 			document.onmousedown = right;
-		}
-		var txt = "' . $GLOBALS['site_name'] . '"
+        }
+        
+		var txt = "4images Updated - Install"
 			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
 
 			txt=txt.toUpperCase();
@@ -376,172 +559,29 @@ if (file_exists('config.php')) {
 			rotulo_title();
 
 	</script>
-	</head>
+
+</head>
+
 <body>
-<div class="container">
-<br/>
-	<div style="height:65px;width:100%;float:left;">
 
-			<a style="color:blue;padding:5px;" href="#home"><img class="imagen" src="img/home.png"/></a>
-			<a style="color:blue;padding:5px;" href="#site"><img class="imagen" src="img/director.png"/></a>
-			<a style="color:blue;padding:5px;" href="#zonahoraria"><img class="imagen" src="img/clock.png"/></a>
-			<a style="color:blue;padding:5px;" href="#admin"><img class="imagen" src="img/admin.png"/></a>
-			<a style="color:blue;padding:5px;" href="#email"><img class="imagen" src="img/email.png"/></a>
-			<a style="color:blue;padding:5px;" href="#socials"><img class="imagen" src="img/users.png"/></a>
+    <div style="margin-bottom:40px;" class="container">
 
-	</div>
-<br/><br/><br/><br/>
-<div>
-	<form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
-	<br/>';
-    if (isset($_POST['submit'])) {
-        $_POST['site'] = eliminar_espacios($_POST['site']);
-        $_POST['timezone_select'] = eliminar_espacios($_POST['timezone_select']);
-        $_POST['db_host'] = eliminar_espacios($_POST['db_host']);
-        $_POST['db_name'] = eliminar_espacios($_POST['db_name']);
-        $_POST['db_user'] = eliminar_espacios($_POST['db_user']);
-        $_POST['db_password'] = eliminar_espacios($_POST['db_password']);
-        $_POST['table_prefix'] = eliminar_espacios($_POST['table_prefix']);
-        $_POST['admin_email'] = eliminar_espacios($_POST['admin_email']);
-        $_POST['instagram'] = eliminar_espacios($_POST['instagram']);
-        $_POST['facebook'] = eliminar_espacios($_POST['facebook']);
-        $_POST['twitter'] = eliminar_espacios($_POST['twitter']);
-        $_POST['youtube'] = eliminar_espacios($_POST['youtube']);
-        $_POST['github'] = eliminar_espacios($_POST['github']);
-        $_POST['debianart'] = eliminar_espacios($_POST['debianart']);
-        $_POST['slideshare'] = eliminar_espacios($_POST['slideshare']);
-		
-        if ($_POST['timezone_select'] == '1.5') {
-            $selected_timezone = 'Europe/Madrid';
-        }
-		
-        if (file_exists('config.php')) {
-            unlink('config.php');
-        }
-		
-		$miArchivo = fopen('.htaccess', 'w') or die('No se puede abrir/crear el archivo!');
-        $php ='ErrorDocument 404 '.substr($_SERVER["REQUEST_URI"],0,strripos($_SERVER["REQUEST_URI"],"/")+1).'404.php';
+<?php
+      echo '<div  class="flotar_derecha  espacios centrar">'.$lang_select . '</div>';
+?>
 
-		fwrite($miArchivo, $php);
-        fclose($miArchivo);
-        chmod('.htaccess', 0777);
+    	<div class="flotar_izquierda espacios">
 
-        $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
-        $php = '<?php
-    error_reporting(0);
-	date_default_timezone_set("' . $selected_timezone . '");
-	$site_name = "' . $_POST['site'] . '";
-	$db_host = "' . $_POST['db_host'] . '";
-	$db_name = "' . $_POST['db_name'] . '";
-	$db_user = "' . $_POST['db_user'] . '";
-	$db_password = "' . $_POST['db_password'] . '";
-	$table_prefix = "' . $_POST['table_prefix'] . '";
-	$admin_email = "' . $_POST['admin_email'] . '";
-	$protocolo = "' . $_POST['protocolo'] . '";
-	$facebook="' . $_POST['facebook'] . '";
-	$instagram="' . $_POST['instagram'] . '";
-	$twitter="' . $_POST['twitter'] . '";
-	$youtube="' . $_POST['youtube'] . '";
-	$github="' . $_POST['github'] . '";
-	$debianart="' . $_POST['debianart'] . '";
-	$slideshare="' . $_POST['slideshare'] . '";
-    $idioma="' . $_POST['idioma'] . '";
-	$conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
-    mysqli_set_charset($conexion,"utf8");
-	?>';
+    	    		<a style="color:blue;padding:5px;" href="#home"><img class="imagen" src="img/home.png"/></a>
+    	    		<a style="color:blue;padding:5px;" href="#site"><img class="imagen" src="img/director.png"/></a>
+    	    		<a style="color:blue;padding:5px;" href="#zonahoraria"><img class="imagen" src="img/clock.png"/></a>
+    	    		<a style="color:blue;padding:5px;" href="#admin"><img class="imagen" src="img/admin.png"/></a>
+    	    		<a style="color:blue;padding:5px;" href="#email"><img class="imagen" src="img/email.png"/></a>
+    	    		<a style="color:blue;padding:5px;" href="#socials"><img class="imagen" src="img/users.png"/></a>
 
-        fwrite($miArchivo, $php);
-        fclose($miArchivo);
-        chmod('config.php', 0777);
+	    </div>
 
-        $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
-
-        if ($dwes->set_charset('utf8')) {
-            $dwes->query('DROP DATABASE ' . $_POST['db_name']);
-            $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
-            $dwes->query('use ' . $_POST['db_name']);
-        }
-
-        $nombre = 'data/database/default/sentencias.sql';
-
-        if (file_exists($nombre)) {
-            $texto = file_get_contents($nombre);
-            $sentencia = explode(";", $texto);
-            for ($i = 0; $i < (count($sentencia) - 1); $i++) {
-                $sentencia[$i] .= ";";
-                $dwes->query($sentencia[$i]);
-            }
-        }
-        $dwes->close();
-
-        $current_time = time();
-        $admin_pass_hashed = salted_hash($admin_password);
-    }
-    if ($action == 'startinstall') {
-        $error = array();
-        if ($db_servertype == '') {
-            $error['db_servertype'] = 1;
-        }
-        if ($db_host == '') {
-            $error['db_host'] = 1;
-        }
-        if ($db_name == '') {
-            $error['db_name'] = 1;
-        }
-        if ($db_user == '') {
-            $error['db_user'] = 1;
-        }
-        if ($admin_user == '') {
-            $error['admin_user'] = 1;
-        }
-        if ($admin_password != $admin_password2 || $admin_password == '' || $admin_password2 == '') {
-            $error['admin_password'] = 1;
-            $error['admin_password2'] = 1;
-        }
-        if (!empty($error)) {
-            foreach ($error as $key => $val) {
-                $lang[$key] = sprintf('<span class="marktext">%s *</span>', $lang[$key]);
-            }
-            $action = 'intro';
-        } else {
-         
-            if (empty($error_log)) {
-                $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
-                $dwes->set_charset('utf8');
-                $dwes->query(
-                    "UPDATE users
-              SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
-              WHERE user_name = 'admin'");
-
-                if ($table_prefix != '4images_') {
-                    $dwes->query('RENAME TABLE 4images_users TO ' . $table_prefix . 'users');
-                    $dwes->query('RENAME TABLE 4images_sessions TO ' . $table_prefix . 'sessions');
-                    $dwes->query('RENAME TABLE 4images_lightboxes TO ' . $table_prefix . 'lightboxes');
-                    $dwes->query('RENAME TABLE 4images_categories TO ' . $table_prefix . 'categories');
-                    $dwes->query('RENAME TABLE 4images_images TO ' . $table_prefix . 'images');
-                    $dwes->query('RENAME TABLE 4images_comments TO ' . $table_prefix . 'comments');
-                    $dwes->query('RENAME TABLE 4images_etiquetas TO ' . $table_prefix . 'etiquetas');
-                    $dwes->query('RENAME TABLE 4images_tags TO ' . $table_prefix . 'tags');
-                    $dwes->query('RENAME TABLE 4images_groups TO ' . $table_prefix . 'groups');
-                }
-
-                $dwes->close();
-                echo '<script>location.href="index.php";</script>';
-            } else {
-                $msg = $lang['database_error'];
-                $error_msg .= '<ol>';
-                foreach ($error_log as $val) {
-                    $error_msg .= sprintf('<li>%s</li>', $val);
-                }
-                $error_msg .= '</ol>';
-            }
-            echo '<p>' . $msg . $error_msg . '</p>';
-            if (isset($cant_write_config)) {
-                echo '<input title="enviar" type="submit" value="' . $lang['config_download'] . '" class="button" name="submit">
-		   <hr/>';
-            }
-        }
-    }
+<?php
 	
     if ($action == 'intro') {
 		
@@ -549,7 +589,9 @@ if (file_exists('config.php')) {
             $lang['start_install_desc'] = $lang['start_install_desc'] . sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
         }
 		
-        echo $lang_select . '
+        print '
+            <div class="flotar_izquierda clear " >
+            <form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
               <h2>' . $lang['protocolo'] . '</h2>
 				<select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
 				<option>http</option>
@@ -575,15 +617,16 @@ if (file_exists('config.php')) {
 			  <p>
                 <input title="table_prefix" type="text" value="4images_" name="table_prefix" required/>
               </p>
-			  <br/>
-           <hr/>
-		   <br/>
-		   <h2 id="site">' . $lang['site'] . '</h2>
-<p>
-		   <input title="site" type="text"  name="site" required/>
-</p>
-			  <br/>
-			  <hr/>
+	
+           <hr class="espacios" />
+		 
+           <h2 id="site">' . $lang['site'] . '</h2>
+           
+            <p>
+		        <input title="site" type="text"  name="site" required/>
+            </p>
+
+			  <hr class="espacio_arriba" />
              <h2 id="zonahoraria">' . $lang['timezone_select'] . '</h2>
               <p>
                 <select title="timezone_select" name="timezone_select">
@@ -630,8 +673,8 @@ if (file_exists('config.php')) {
                     <option value="14">Line Island Time (UTC+14)</option>
                 </select>
 				</p>
-				<br/>
-				<hr/>
+
+				<hr class="espacio_arriba"/>
 				<h2 id="admin">' . $lang['admin_user'] . '</h2>
 				<p><img class="imagen" alt="admin" class="imagen" src="img/director.png"/><br/><br/>
 					<input title="admin_user" type="text"  placeholder="admin" name="admin_user" required/>
