@@ -66,7 +66,7 @@ $longitud=0;
 
 $asuntos=array();
 
-$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name,id,remitente FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.remitente=U.user_id WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."' ORDER BY id DESC");
+$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name,id,remitente,avatar FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.remitente=U.user_id WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."' ORDER BY id DESC");
 	
 while($fila = mysqli_fetch_row($consulta)){
 	
@@ -74,9 +74,16 @@ while($fila = mysqli_fetch_row($consulta)){
 	
 	$id_mensajes[]=$fila[3];
 			
-			$destinatarios[]=$fila[4];
+	$destinatarios[]=$fila[4];
+	
+	$avatar='img/nofoto.png';
 			
-		print '<tr><td style="color:#7a4a0f;font-weight:bold;">'.$fila[0].'</td><td>'.$fila[1].'</td><td><img style="height:40px;width:40px;margin-right:20px;" src="../img/user.png"/>'.$fila[2].'</td></tr>
+	if($fila[5]!="nofoto.jpg"){
+		
+		$avatar='avatars/'.$fila[5];
+	}
+	
+	print '<tr><td style="color:#7a4a0f;font-weight:bold;">'.$fila[0].'</td><td>'.$fila[1].'</td><td><img class="imgRedonda" style="height:40px;width:40px;margin-right:20px;" src="../'.$avatar.'"/>'.$fila[2].'</td></tr>
 		
 				<tr><td colspan="3"><button type="button" style="height:50px;" data-toggle="modal" data-target="#reply'.$longitud.'">
    '.ver_dato('reply', $GLOBALS['idioma']).'

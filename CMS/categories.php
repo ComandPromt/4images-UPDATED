@@ -64,19 +64,16 @@ if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria'])
 	}
 	
 	else{
-		print '<a href="register.php">
-			<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
-		</a>';
+		registrar();
 	}
 	
 	print '</div>';
 	
 		ver_categoria($categoria,"");
+		
 	if(!$logueado){
 
-		print '<div style="float:left;"><a href="register.php">
-			<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
-		</a></div>';
+		print '<div style="float:left;">'.registrar().'</div>';
 	}
 		restablecer_pass();
 	}

@@ -2,6 +2,38 @@
  
 date_default_timezone_set('Europe/Madrid');
 
+function categoria_link(){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+    $cat_consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT cat_id FROM '.$GLOBALS['table_prefix']."categories WHERE cat_name='Links'");
+		 
+    $cat = mysqli_fetch_row($cat_consulta);
+	
+	$cat=(int)$cat[0];
+
+	if($cat>0){
+		
+		print '	<a title="Links" href="details.php?image_id=462">
+					
+			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/url.png"/>
+		</a>';
+	}
+		
+}
+
+function registrar(){
+	
+	print '
+	<h3>Please register for free to download images among others</h3>
+	<a href="register.php">
+	
+			<img alt="registrar" class="icono2" src="img/reg-now.gif"/>
+		</a>';
+}
+
 function num_categorias(){
 	
 	$categorias=array();
@@ -11,7 +43,6 @@ function num_categorias(){
 
     $cat_consulta = mysqli_query($GLOBALS['conexion'],
 	'SELECT cat_id FROM '.$GLOBALS['table_prefix'].'categories');
-
 		 
     while( $cat = mysqli_fetch_row($cat_consulta)){
 		$categorias[]=$cat[0];
@@ -33,7 +64,6 @@ function ver_categorias($categoria){
 	SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id=0 AND
 	cat_id NOT IN (SELECT DISTINCT cat_parent_id FROM '.$GLOBALS['table_prefix'].'categories WHERE 
 	cat_parent_id!=0) order by cat_name');
-
 		 
     while( $cat = mysqli_fetch_row($cat_consulta)){
 		
@@ -67,14 +97,12 @@ function nevar(){
 		
 	$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$_SERVER['REMOTE_ADDR']));
 	$geo->lat=(int)$geo->lat;
-
 			
 	if($geo->lat>0){
 		
 			print '		<script>
 		
 var f = new Date();
-
 
 if(f.getDate()>=23 && f.getMonth()==8 || f.getDate()>=1 && f.getMonth()<11 && f.getMonth()>=9||
 		f.getDate()<=21 && f.getMonth()==11 ){
@@ -103,7 +131,9 @@ if(f.getDate()>=23 && f.getMonth()==8 || f.getDate()>=1 && f.getMonth()<11 && f.
 			for (i=0;i<numObjs;i++){fallObject(i,parseInt(Math.random()*fallObjects.length),1);}
 			fall();
 }
+
 else{
+	
 if(f.getDate()>=20 && f.getMonth()==11 || f.getDate()>=1 && f.getMonth()<2 || f.getDate()<=20 && f.getMonth()==2){
 	var fallObjects=new Array();function newObject(url,height,width){fallObjects[fallObjects.length]=new Array(url,height,width);}
 			

@@ -39,10 +39,14 @@ if (isset($_POST['submit'])) {
 	
     if (isset($_SESSION['captcha'])) {
 		
-        if ($_SESSION['captcha'] && $_REQUEST['captcha'] != $_SESSION['captcha']) {
+        if ($_POST['captcha'] != $_SESSION['captcha']) {
+			
             mensaje(ver_dato('error_captcha', $GLOBALS['idioma']));
+			
             $SESSION['error'] = true;
-        } else {
+        } 
+		
+		else {
 			
 				$avatar=$_FILES['avatar']['name'];
 	
@@ -134,13 +138,11 @@ if (!$terminado && (isset($_POST['envio']))) {
 
     echo '<h1 style="padding-left:60px;" class="titulo"><br/>' . ver_dato('register_msg',
         $GLOBALS['idioma']) . '</h1>
-		
-
-		
+				
 	<form  enctype="multipart/form-data" style="padding-left:60px;" method="post" action="' . $_SERVER['PHP_SELF'] . '">
 
 					<div class="row1 texto"><img alt="usuario para registrar"
-					class="icono2" src="img/user.png"/>
+					class="icono" src="img/user.png"/>
 
 					    <input required title="user name" type="text" id="user_name"
 						name="user_name" size="30" 
@@ -160,7 +162,7 @@ if (!$terminado && (isset($_POST['envio']))) {
         </div>
 					<div style="margin-top:200px;" class="row2 texto">
 					
-						<img alt="user password" class="icono2"	src="img/key.png"/>
+						<img alt="user password" class="icono"	src="img/key.png"/>
 
 					    <input required  title="user password" type="password"
 						class="input" id="user_password"  name="user_password" size="30"
@@ -172,7 +174,7 @@ if (!$terminado && (isset($_POST['envio']))) {
 
 					<div style="margin-top:40px;" class="row1 texto">
 					
-						<img alt="user password" class="icono2"	src="img/idiomas.png"/>
+						<img alt="user password" class="icono"	src="img/idiomas.png"/>
 						
 						<select>
 							<option name="pais" value="spanish"  checked="checked"/>Espa&ntilde;ol</option>
@@ -195,7 +197,7 @@ if (!$terminado && (isset($_POST['envio']))) {
 						</select>
 	
 			 
-						<img style="margin-top:40px;" alt="user_email" class="icono2" src="img/email.png"/>
+						<img style="margin-top:40px;" alt="user_email" class="icono" src="img/email.png"/>
 			
 						<span id="palabra2" onmouseover="mostrarTooltip(this,\'' .
 						ver_dato('nota_email', $GLOBALS['idioma']) . '\');"/>*</span>
@@ -218,7 +220,7 @@ if (!$terminado && (isset($_POST['envio']))) {
 						Math.random();
 			            document.getElementById('captcha-form').focus();"
 			            id="change-image">
-							<img alt="reload captcha" class="icono2" src="img/reload.png"/>
+							<img alt="reload captcha" class="icono" src="img/reload.png"/>
 						</a>
 
 <?php

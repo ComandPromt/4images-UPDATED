@@ -65,7 +65,7 @@ $longitud=0;
 
 $asuntos=array();
 
-		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name,id,destinatario FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.destinatario=U.user_id  WHERE oculto!='".$_COOKIE['4images_userid']."' AND remitente='".$_COOKIE['4images_userid']."' ORDER BY id DESC");
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT asunto,mensaje,user_name,id,destinatario,avatar FROM mensajes M JOIN '.$GLOBALS['table_prefix']."users U ON M.destinatario=U.user_id  WHERE oculto!='".$_COOKIE['4images_userid']."' AND remitente='".$_COOKIE['4images_userid']."' ORDER BY id DESC");
 	
 
 	
@@ -77,7 +77,14 @@ $asuntos=array();
 			
 			$destinatarios[]=$fila[4];
 			
-				print '<tr><td style="color:#7a4a0f;font-weight:bold;">'.$fila[0].'</td><td>'.$fila[1].'</td><td><img style="height:40px;width:40px;margin-right:20px;" src="../img/user.png"/>'.$fila[2].'</td></tr>
+			$avatar='img/nofoto.png';
+			
+			if($fila[5]!="nofoto.jpg"){
+				
+				$avatar='avatars/'.$fila[5];
+			}
+		
+				print '<tr><td style="color:#7a4a0f;font-weight:bold;">'.$fila[0].'</td><td>'.$fila[1].'</td><td><img class="imgRedonda" style="height:40px;width:40px;margin-right:20px;" src="../'.$avatar.'"/>'.$fila[2].'</td></tr>
 		
 				<tr><td colspan="3"><button type="button" style="height:50px;" data-toggle="modal" data-target="#reply'.$longitud.'">
    '.ver_dato('reply', $GLOBALS['idioma']).'
@@ -90,16 +97,27 @@ $asuntos=array();
 
 		for($x=0;$x<$longitud;$x++){
 			
-			print '<div class="modal fade transparente" id="reply'.$x.'" tabindex="-1" role="dialog" aria-labelledby="ctrlreply'.$x.'" aria-hidden="true">
+			print '
+			<div class="modal fade transparente" id="reply'.$x.'" tabindex="-1" role="dialog" aria-labelledby="ctrlreply'.$x.'" aria-hidden="true">
+
 <div class="modal-dialog modal-dialog-centered transparente" role="document">
+
 <div class="modal-content ">
+
 <div class="modal-header transparente">
+
 <h2 class="modal-title"  style="padding-right:20px;" id="ctrlreply'.$x.'">'.ver_dato('reply', $GLOBALS['idioma']).'</h2>
+
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
+
+	<span aria-hidden="true">&times;</span>
+
 </button>
+
 </div>
+
 <div class="modal-body transparente">
+
           <form action="'.$_SERVER['PHP_SELF'].'?msg_id='.$id_mensajes[$x].'&destinatario='.$destinatarios[$x].'&asunto='.$asuntos[$x].'" method="post">
 
 		     <input class="input" name="msg_reply" type="text"/>

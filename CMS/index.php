@@ -2,7 +2,7 @@
 
 session_start();
 
-include_once ('includes/funciones.php');
+include_once 'includes/funciones.php';
 
 $_SESSION['pagina'] = "index.php";
 
@@ -73,68 +73,75 @@ if (isset($_COOKIE['4images_userid'])) {
 
 }
 
-print '<div id="menu_arriba">
+print '<div style="margin-left:-75px;padding-top:50px;font-size:2em;">
 
-<div class="flotar_izquierda">
 
+<div style="float:left;">
 	<a target="_blank" title="rss" href="'.$ruta.'rss.php">
-			<img class="icono espacio_arriba_2 espacio_izquierda_2" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
-    </a>
-    
-    <h1 id="fecha">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
-    
-    <h2 id="reloj"></h2>
-    
+			<img style="margin-top:20px;margin-left:40px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
+		</a>
+	<h1 style="font-size:0.8em;color:#0F4B90;padding-left:20px;">' . date('d') . '/' . date('m') . '/' . date('Y') . '</h1>
+	<h2 style="padding-top:50px;font-size:0.8em;margin-top:-60px;padding-left:20px;" id="reloj"></h2>
 </div>
 
-<div id="menu_indice">';
+<div style="margin:auto;padding-left:20px;float:left;padding-right:20px;">';
+
+categoria_link();
 
 if(!logueado()){
 
-    print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
-    
-			<img alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono espacio_arriba_2" src="img/registrar.png"/>
-        </a>
-        
-        <a href="register.php">
-
-            <img alt="registrar"  class="icono2" src="img/reg-now.gif"/>
-
-        </a>';
+	print '<a title="' . ver_dato('register', $GLOBALS['idioma']) . '" href="register.php">
+			<img style="margin-top:20px;" alt="' . ver_dato('register', $GLOBALS['idioma']) . '" class="icono" src="img/registrar.png"/>
+		</a>';
 		
 		
 		// Si el comentario es publico mostrar icono
 		
 		
 		/*print '		
-				
 		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
-			<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
+					
+		<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
 		</a>';*/
-				
+		
+		
+		// Si existe categoria Links mostrar
+	
 }
 
 else{
 
-	print '<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
-			<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono espacio_arriba_2" src="img/coment.png"/>
+	print '		
+				
+		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
+			<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
 		</a>
 		
 		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
-			<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono espacio_arriba_2" src="img/search.png"/>
-        </a>';
-        
+			<img style="margin-top:20px;" alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
+		</a>
+		';
 }
-    
-if(file_exists('forum')){
+		
+		if(file_exists('forum')){
 			
-    print '<a title="foro" target="_blank" href="forum">
-			    <img class="icono espacio_arriba_2" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
-		    </a>';	
+		print '<a title="foro" target="_blank" href="forum">
+			<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
+		</a>';	
 		
-}
+		}
 		
-print '</div>';
+?>
+
+	</div>	
+
+<div>
+
+<div style="float:right;padding-left:260px;margin-top:240px;padding-top:100px;
+		"
+        class="entire-content col-xs-4 transparente" >
+
+<?php
 
 if (file_exists('config.php') && logueado()) {
 
@@ -146,54 +153,51 @@ if (file_exists('config.php') && logueado()) {
 
     'images WHERE image_active=1 ORDER BY image_id DESC LIMIT 9');
 
-    $fila = mysqli_fetch_array($consureg-a);
+    $fila = mysqli_fetch_row($consulta);
 
     if ($fila[0] > 0) {
 
-        print '<div class="content-carrousel content transparente">';
+        print '
+
+		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
 
         $consulta = mysqli_query($GLOBALS['conexion'],'SELECT cat_id,image_media_file,image_id,image_name FROM '.
         
         $GLOBALS['table_prefix'] . 'images WHERE image_active=1	ORDER BY image_iD DESC LIMIT 9');
 
-        $num_lineas=mysqli_num_rows($consulta);
+        while ($fila = mysqli_fetch_array($consulta)) {
 
-        if($num_lineas>=9){
-
-            print '<div class="menu_figura flotar_derecha entire-content col-xs-4 transparente" >';
-
-            while ($fila = mysqli_fetch_array($consulta)) {
-
-                print '<figure id="figura" class="shadow">
-                            <a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> 
-                                <img alt="' . $fila[2] . '" class="imagen_figura" src="data/media/' . $fila[0] . '/' . $fila[1] . '"/>
-                            </a>
-                        </figure>';
-            }
-
+            print '<figure style="width:3em;height:3em;margin:auto;"
+          class="shadow"><a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> <img alt="' . $fila[2] . '" style="width:3em;height:3em;"
+          src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
-
+		
 	    mysqli_close($GLOBALS['conexion']);
-    
-        if($num_lineas>=9){
-		print '<h1 class="transparente">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
+	
+		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 
 		if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
 			$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
 		}
 
-        print '	<h2 class="transparente">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>
-        </div>'; 
-
-        }
+		print '	<h2 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('new_img', $GLOBALS['idioma']) . '</h2>'; 
+	
     }
-
+	
+  print '</div>';
+	
 }
 
-print '</div>
-	</div>';
+else{
+		registrar();
+}
+
+print '</div></div>
+	
+</div>';
 
 restablecer_pass();
+
 
 footer();
 

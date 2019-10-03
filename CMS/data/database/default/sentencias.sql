@@ -2205,7 +2205,9 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL'),
+
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 

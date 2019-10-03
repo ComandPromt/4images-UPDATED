@@ -1,3 +1,4 @@
+
 .id_modal_mensaje{
     padding-right:10px;
     font-size:2em;
@@ -175,6 +176,10 @@
     margin-left:40px;
 }
 
+#espacio_izquierda_3{
+    margin-left:20px;
+}
+
 .espacio_derecha{
     margin-right:5px;
 }
@@ -321,7 +326,7 @@ hr.comentario:before {
 }
 
 .titulo{
-	color:blue;
+	color:#006CFD;
 	font-weight:bold;
 	font-size:25px;
 
