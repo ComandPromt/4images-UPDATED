@@ -1,3 +1,4 @@
+
 CREATE TABLE `bots`(
 	`id`int(11)AUTO_INCREMENT PRIMARY KEY,
 	`IP`varchar(64)NOT NULL UNIQUE
@@ -365,7 +366,8 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -480,7 +482,8 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -595,7 +598,8 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -710,7 +714,8 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -825,7 +830,8 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -940,7 +946,8 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -1055,7 +1062,8 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1170,7 +1178,8 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1285,7 +1294,8 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('110','like','Me gusta'),
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen');
+('113','change_view_o','Ocultar imagen'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1400,7 +1410,8 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('110','like','Je aime'),
 ('111','back_img','Image précédente'),
 ('112','next_img','Image arrière'),
-('113','change_view_o','Masquer la image');
+('113','change_view_o','Masquer la image'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1515,7 +1526,8 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('110','like','मुझे यह पसंद है'),
 ('111','back_img','पिछली छवि'),
 ('112','next_img','पीछे की छवि'),
-('113','change_view_o','छवि छिपाएँ');
+('113','change_view_o','छवि छिपाएँ'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1630,7 +1642,8 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('110','like','I like it'),
 ('111','back_img','Back image'),
 ('112','next_img','Next image'),
-('113','change_view_o','Hide image');
+('113','change_view_o','Hide image'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1745,7 +1758,8 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('110','like','Mi piace'),
 ('111','back_img','Immagine precedente'),
 ('112','next_img','Immagine posteriore'),
-('113','change_view_o','Nascondi immagine');
+('113','change_view_o','Nascondi immagine'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1860,7 +1874,8 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('110','like','私はそれが好き'),
 ('111','back_img','前の画像'),
 ('112','next_img','バック画像'),
-('113','change_view_o','画像を隠す');
+('113','change_view_o','画像を隠す'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -1975,7 +1990,8 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('110','like','Eu gosto'),
 ('111','back_img','Imagem anterior'),
 ('112','next_img','Voltar imagem'),
-('113','change_view_o','Ocultar imagem');
+('113','change_view_o','Ocultar imagem'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -2090,7 +2106,8 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('110','like','Мне это нравится'),
 ('111','back_img','Предыдущее изображение'),
 ('112','next_img','Вернуться изображение'),
-('113','change_view_o','Скрыть изображение');
+('113','change_view_o','Скрыть изображение'),
+('114','txt_url','Introduce la URL');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -2206,7 +2223,7 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
 ('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL'),
+('114','txt_url','Introduce la URL');
 
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');

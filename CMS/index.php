@@ -25,13 +25,18 @@ if (file_exists('config.php')) {
 
     cabecera();
 
-    $conexion = mysqli_connect($db_host, $db_user, $db_password, 'mysql');
-    mysqli_set_charset($conexion, "utf8");
-    $consulta = mysqli_query($conexion, "SHOW DATABASES");
+$mysqli = new mysqli($db_host, $db_user, $db_password, 'mysql');
+	
+$mysqli->set_charset("utf8");
 
-    while ($fila = mysqli_fetch_row($consulta)) {
+
+    $consulta = $mysqli->query( "SHOW DATABASES");
+
+    while ($fila = $consulta->fetch_row()) {
         $tablas[] = $fila[0];
     }
+	
+	$mysqli->close();
 
 }
 
@@ -145,15 +150,14 @@ else{
 
 if (file_exists('config.php') && logueado()) {
 
-    $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
 
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
-    $consulta = mysqli_query($GLOBALS['conexion'],'SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'].
+	$consulta = $mysqli->query('SELECT COUNT(image_id) FROM ' . $GLOBALS['table_prefix'].
 
     'images WHERE image_active=1 ORDER BY image_id DESC LIMIT 9');
 
-    $fila = mysqli_fetch_row($consulta);
+    $fila = $consulta->fetch_row();
 
     if ($fila[0] > 0) {
 
@@ -161,18 +165,18 @@ if (file_exists('config.php') && logueado()) {
 
 		<div style="background-color: rgba(255, 255, 255, 0);" class="content-carrousel content">';
 
-        $consulta = mysqli_query($GLOBALS['conexion'],'SELECT cat_id,image_media_file,image_id,image_name FROM '.
+        $consulta = $mysqli->query('SELECT cat_id,image_media_file,image_id,image_name FROM '.
         
         $GLOBALS['table_prefix'] . 'images WHERE image_active=1	ORDER BY image_iD DESC LIMIT 9');
 
-        while ($fila = mysqli_fetch_array($consulta)) {
+        while ($fila = $consulta->fetch_row()) {
 
             print '<figure style="width:3em;height:3em;margin:auto;"
           class="shadow"><a title="' . $fila[3] . '" href="details.php?image_id=' . $fila[2] . '"> <img alt="' . $fila[2] . '" style="width:3em;height:3em;"
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 		
-	    mysqli_close($GLOBALS['conexion']);
+	   $mysqli->close();
 	
 		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 

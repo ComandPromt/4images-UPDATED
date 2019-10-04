@@ -401,10 +401,21 @@ if($logueado){
 				print '</div>';
 }
 
-if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_userid'])){
-	
+
 	print '<div style="float:right;width:100%;margin-bottom:40px;"><div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
 		padding-top:10px;margin-top:30px;padding-bottom:10px;padding:20px;">';
+
+if($logueado || $_GET['image_id']==1326){
+	print '
+<a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
+			
+					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
+				
+			</a>';
+}
+if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_userid'])){
+	
+
 	
 $icono2='hide.png';
 
@@ -454,19 +465,110 @@ $accion='change_view_o';
 				
 			</a>
 			
-			<a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
 			
-					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
-				
-			</a>
-			';
+			
 		
 		
-		print '
-						
-			<div class="modal fade transparente" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+		
+	
+	
+			<div class="modal fade transparente" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered transparente" role="document">
 			<div class="modal-content ">
+			<div class="modal-header ">
+
+			<h2 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">' . ver_dato('rename', $GLOBALS['idioma']) . '</h2>
+
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+
+			</button>
+			</div>
+
+			<div class="modal-body">
+
+				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+
+					<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" value="'.$image_name.'" placeholder="' . ver_dato('new_name', $GLOBALS['idioma']) . '"/>
+
+					<input name="renombrar" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
+
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+		<div class="modal fade transparente" id="changecatModal" tabindex="-1" role="dialog" aria-labelledby="cat_changeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		<div class="modal-content ">
+			<div class="modal-header ">
+
+			<h2 style="padding-right:10px;" class="modal-title" id="cat_changeModalLabel">' . ver_dato('change_cat', $GLOBALS['idioma']) . '</h2>
+
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+
+			</button>
+			</div>
+
+			<div class="modal-body">
+
+				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">';
+				
+				print '<select name="cat_selected" style="font-size:20px;">';
+				
+				$categoria_seleccionada=saber_categoria($categoria);
+				
+				print '<option value="'.$categoria.'">'.$categoria_seleccionada.'</option>';
+				 
+				ver_categorias($categoria);
+		
+				print '</select>
+	
+				<input name="cambiar_categoria" style="margin-top:20px;" type="submit"/>
+		
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+	
+</div>	
+	
+	
+
+
+';
+		
+
+
+
+
+
+		
+		}
+		
+	else{print '</div>';}	
+		
+		
+		
+		
+
+print '</div>';
+
+if($logueado || $_GET['image_id']==1326){
+	
+	print '
+						
+			<div  style=" overflow: scroll;" class="modal fade transparente" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+			
+			<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			<div class="modal-content ">
+			
 			<div class="modal-header ">
 
 			<h2 style="padding-right:10px;" class="modal-title" id="commentModalLabel">' . ver_dato('comentar', $GLOBALS['idioma']) . '</h2>
@@ -558,63 +660,18 @@ $accion='change_view_o';
 								</div>
 							
 							</form>
-							
-							
-							
-							<div class="modal fade transparente" id="mencion" tabindex="-1" role="dialog" aria-labelledby="mencionModalLabel" aria-hidden="true">
-	
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-	
-		<div class="modal-content ">
-		
-			<div class="modal-header ">
-
-			<h2 style="padding-right:10px;" class="modal-title" id="mencionModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
-
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-						
-					<h2>' . ver_dato('txt_mencion', $GLOBALS['idioma']) . '</h2>';
-					
-	print '<p><select id="mention_users" style="font-size:20px;font-weight:bold;margin-top:40px;" name="usuarios">';
-	
-$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-$GLOBALS['db_password'], $GLOBALS['db_name'])
-or die("No se pudo conectar a la base de datos");
-$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id>0 and user_id!='".$_COOKIE['4images_userid']."' ");
-	
-while($fila = mysqli_fetch_row($consulta)){
-		print '<option value="'.$fila[0].'">'.$fila[0].'</option>';
-}
-	
-mysqli_close($GLOBALS['conexion']);
-
-print '</option>
-	</select>
-</p>
-
-<button style="width:300px;" onclick="mencionar(1)" type="button" data-dismiss="modal"><span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span></button>
-
-				</form>
-
-			</div>
-
+			
 		</div>
 	</div>
-		
+</div>
+	
+	
+	</div>
+	
+	</div>
+	
 
-		</div>
-					</div>
-				</div>
-				
-				<div class="modal fade transparente" id="url" tabindex="-1" role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
+<div class="modal fade transparente" id="url" tabindex="-1" role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
 	
 	<div class="modal-dialog modal-dialog-centered transparente" role="document">
 	
@@ -648,16 +705,15 @@ print '</option>
 
 			</div>
 
-		</div>
-	</div>
-</div>
-			
-			<div class="modal fade transparente" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered transparente" role="document">
-			<div class="modal-content ">
+	<div class="modal fade transparente" id="mencion" tabindex="-1" role="dialog" aria-labelledby="mencionModalLabel" aria-hidden="true">
+	
+	<div class="modal-dialog modal-dialog-centered transparente" role="document">
+	
+		<div class="modal-content ">
+		
 			<div class="modal-header ">
 
-			<h2 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">' . ver_dato('rename', $GLOBALS['idioma']) . '</h2>
+			<h2 style="padding-right:10px;" class="modal-title" id="mencionModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
 
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -668,10 +724,28 @@ print '</option>
 			<div class="modal-body">
 
 				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+						
+					<h2>' . ver_dato('txt_mencion', $GLOBALS['idioma']) . '</h2>';
+					
+print '<p><select id="mention_users" style="font-size:20px;font-weight:bold;margin-top:40px;" name="usuarios">';
+	
+$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
 
-					<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" value="'.$image_name.'" placeholder="' . ver_dato('new_name', $GLOBALS['idioma']) . '"/>
+$consulta = $mysqli->query('SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id>0 
 
-					<input name="renombrar" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
+and user_id!='".$_COOKIE['4images_userid']."' ");
+	
+while($fila = $consulta->fetch_row()){
+		print '<option value="'.$fila[0].'">'.$fila[0].'</option>';
+}
+	
+$mysqli->close();
+
+print '</option>
+	</select>
+</p>
+
+<button style="width:300px;" onclick="mencionar(1)" type="button" data-dismiss="modal"><span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span></button>
 
 				</form>
 
@@ -679,54 +753,17 @@ print '</option>
 
 		</div>
 	</div>
-</div>
-
-		<div class="modal fade transparente" id="changecatModal" tabindex="-1" role="dialog" aria-labelledby="cat_changeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-		<div class="modal-content ">
-			<div class="modal-header ">
-
-			<h2 style="padding-right:10px;" class="modal-title" id="cat_changeModalLabel">' . ver_dato('change_cat', $GLOBALS['idioma']) . '</h2>
-
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">';
-				
-				print '<select name="cat_selected" style="font-size:20px;">';
-				
-				$categoria_seleccionada=saber_categoria($categoria);
-				
-				print '<option value="'.$categoria.'">'.$categoria_seleccionada.'</option>';
-				 
-				ver_categorias($categoria);
 		
-				print '</select>
-	
-				<input name="cambiar_categoria" style="margin-top:20px;" type="submit"/>
-		
-				</form>
-
-			</div>
 
 		</div>
-	</div>
-	
-</div>	
-	
-	
+					</div>
+				';
+
+}
 
 
-';
-				
-		}
 
-print '</div>';
+
 
   if ($_GET['image_id'] > 1 || $_GET['image_id'] < $ultima_imagen) {
 	  

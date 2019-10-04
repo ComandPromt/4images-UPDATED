@@ -16,7 +16,7 @@ function categoria_link(){
 
 	if($cat>0){
 		
-		print '	<a title="Links" href="details.php?image_id=462">
+		print '	<a title="Links" href="details.php?image_id=1326">
 					
 			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/url.png"/>
 		</a>';
@@ -694,27 +694,26 @@ function consecutivos(array $array){
 
 function logueado($ruta=""){
 	
-	$respuesta=false;
+$respuesta=false;
 
 	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
 		
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-		or die("No se pudo conectar a la base de datos");
-		
-		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_password FROM ' .
+		$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
+			
+		$consulta = $mysqli->query( 'SELECT user_password FROM ' .
 		$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
 	
-		$resultado = mysqli_fetch_row($consulta);
+		$resultado = $consulta->fetch_row();
 		
 		if($resultado[0]==$_COOKIE['pass']){
 			$respuesta=true;
 		}
 		
-		mysqli_close($GLOBALS['conexion']);
+		$mysqli->close();
 	}
 
 	return $respuesta;
+	
 }
 
 function comprobar_cookie($ruta=""){
@@ -1441,23 +1440,25 @@ function crear_carpetas(){
 
 function ver_dato($accion,$idioma){
 	
-	$dato="";
+		$dato="";
 	
 	comprobar_config();
 
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-		or die("No se pudo conectar a la base de datos");
+	$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
 	
-	mysqli_set_charset($GLOBALS['conexion'],"utf8");
-
-	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
-    
-	$fila = mysqli_fetch_row($consulta);
+	if (!$mysqli->connect_error) {
+				
+		$mysqli->set_charset("utf8");
 	
-	$dato=$fila[0];
+		$consulta = $mysqli->query(	
+		'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
+		
+		$fila = $consulta->fetch_row();
 	
-	mysqli_close($GLOBALS['conexion']);
+		$dato=$fila[0];
+		
+		$mysqli->close();
+	}
 	
 	return $dato;
 }
@@ -2043,7 +2044,6 @@ function track(){
 }
 
 function menu_lateral($ruta = ""){
-	
 	track();
 	
 	if(isset($_COOKIE['4images_userid'])){
@@ -2078,6 +2078,7 @@ function menu_lateral($ruta = ""){
 		print '<a title="'.ver_dato('home', $GLOBALS['idioma']).'" href="'.$ruta.'index.php">
 					<img alt="inicio" class="icono" style="margin-top:20px;" src="'.$ruta.'img/home.png" >
 				</a>
+				
 				<hr class="separador"/>';
 	}
 	
@@ -2103,7 +2104,8 @@ function menu_lateral($ruta = ""){
 
 		  <hr class="separador"/>
 		  
-	  <div class="flotar_izquierda">
+	 <div class="flotar_izquierda">
+	  
 		<a title="'.ver_dato('register',$GLOBALS['idioma']).'" style="font-size:1em;"
 		href="'.$ruta.'register.php">
 
@@ -2116,30 +2118,29 @@ function menu_lateral($ruta = ""){
 			  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" 
 			  class="icono espacio_arriba" src="'.$ruta.'img/forgot_password.png"/>
 		 </a>
-		 </div>';
+		 
+	</div>';
+	
 	}
 	
 	else{
 		
 		$imagen_usuario=$ruta.'img/nofoto.png';
 		
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-		or die("No se pudo conectar a la base de datos");
+		$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
 		
-		$consulta = mysqli_query($GLOBALS['conexion'],
-		
-		'SELECT user_name FROM '.$GLOBALS['table_prefix']."users 
+		$consulta = $mysqli->query('SELECT user_name FROM '.$GLOBALS['table_prefix']."users 
 		WHERE user_id='".$_COOKIE['4images_userid']."'");
 
-		$fila = mysqli_fetch_row($consulta);
+		$fila = $consulta->fetch_row();
 		
-		$consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
-		$recuento = mysqli_fetch_row($consulta);
+		$consulta = $mysqli->query("SELECT COUNT(id) FROM mensajes WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."' AND leido=0");
 		
-		$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM '.$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
+		$recuento = $consulta->fetch_row();
+		
+		$consulta = $mysqli->query( 'SELECT avatar FROM '.$GLOBALS['table_prefix'] . "users WHERE user_id='".$_COOKIE['4images_userid']."'");
 	
-		$avatar = mysqli_fetch_row($consulta);
+		$avatar = $consulta->fetch_row();
 	
 		$avatar=trim($avatar[0]);
 		
@@ -2148,7 +2149,7 @@ function menu_lateral($ruta = ""){
 			$imagen_usuario=$ruta.'avatars/'.$avatar;
 		}
 		
-		mysqli_close($GLOBALS['conexion']);
+		$mysqli->close();
 
 		if($recuento[0]>0){
 		
@@ -2301,18 +2302,15 @@ if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
 
 	$administrators=array();
 	
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    
-	$GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
+	$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
 	
-	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
+	$consulta = $mysqli->query('SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 	 
-	while ($administradores = mysqli_fetch_array($consulta)){
+	while ($administradores = $consulta->fetch_row()){
 		$administrators[]=$administradores[0];
 	}
 	
-	mysqli_close($GLOBALS['conexion']);
+	$mysqli->close();
 	 
 	if(in_array($_COOKIE['4images_userid'], $administrators)){
 
@@ -2446,7 +2444,7 @@ function poner_menu($ruta = ""){
 				<div class="transparente">
 					<div id="dl-menu" class="dl-menuwrapper transparente flotar_derecha">
 						<button class="dl-trigger"></button>
-						<ul id="menu_aside" class="dl-menu transparente">
+						<ul id="menu_aside" class="dl-menu " style="background-color: rgba(255, 255, 255, 0);" >
 						';		
 			$id_categorias=array();
 
