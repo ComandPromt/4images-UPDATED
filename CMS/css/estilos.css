@@ -103,7 +103,7 @@
 
 #menu_categorias{
     margin-left:30%;
-    margin-top:-45px;
+    margin-top:-20px;
     position:fixed;
     z-index:1;
 }
@@ -302,7 +302,6 @@ hr.comentario:before {
 
 .menu_categorias{
 	background-color:#ffffff;
-
 }
 
 #contenido {

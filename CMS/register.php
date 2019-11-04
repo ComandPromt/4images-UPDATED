@@ -8,9 +8,12 @@ if(!file_exists ("avatars")) {
 		mkdir("avatars");
 }
 
+$_SESSION['track'] = true;
+
 include ('config.php');
 
 include ('includes/funciones.php');
+
 
 cabecera();
 

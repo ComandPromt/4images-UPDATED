@@ -635,12 +635,21 @@ print '
 				
 					if($fila[0]==0){
 						
-						$_SESSION['subida']=true;	
+						$_SESSION['subida']=true;
+						
 						mysqli_query($GLOBALS['conexion'], '
 					
 						INSERT INTO '.$GLOBALS['table_prefix']."images
-						(cat_id, user_id,image_name,image_description,image_keywords,image_date,image_active,image_media_file,image_allow_comments,image_comments,image_downloads,image_votes,image_rating,image_hits,sha256)
-						VALUES('".$_SESSION['categoria']."','".$_COOKIE['4images_userid']."','".$_SESSION['nombre']."',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd."',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".$shaimage."')");
+						(cat_id, user_id,image_name,image_description,
+						image_keywords,image_date,image_active,image_media_file,
+						image_allow_comments,image_comments,image_downloads,
+						image_votes,image_rating,image_hits,sha256,nivel_descarga,nivel_comentario)
+						
+						VALUES('".$_SESSION['categoria']."','".
+						$_COOKIE['4images_userid']."','".$_SESSION['nombre'].
+						"',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd.
+						"',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".
+						$shaimage."',DEFAULT,DEFAULT)");
 					}
 					
 					else{

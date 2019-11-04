@@ -19,7 +19,12 @@ function categoria_link(){
 		print '	<a title="Links" href="details.php?image_id=1326">
 					
 			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/url.png"/>
-		</a>';
+		</a>
+			<a title="Youtube Links" href="details.php?image_id=29210">
+					
+			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/Social/youtube.png"/>
+		</a>
+		';
 	}
 		
 }
@@ -27,11 +32,11 @@ function categoria_link(){
 function registrar(){
 	
 	print '
-	<h3>Please register for free to download images among others</h3>
+	<div style="padding-bottom:40px;margin-left:-60px;margin-top:-20px;" class="flotar_izquierda">
 	<a href="register.php">
 	
-			<img alt="registrar" class="icono2" src="img/reg-now.gif"/>
-		</a>';
+			<img alt="registrar" style="height:100px;width:150px;" src="img/reg-now.gif"/>
+		</a></div>';
 }
 
 function num_categorias(){
@@ -1500,6 +1505,7 @@ function track(){
 		
 		if(is_private_ip($i_direccionIp)){
 			$country ="home";
+			$region ="home";
 		}
 		
 		else{
@@ -2026,6 +2032,30 @@ function track(){
 				$country ="mozambique";
 				break;
 				
+				case "Malta":
+				$country ="malta";
+				break;
+				
+				case "Laos":
+				$country ="laos";
+				break;
+				
+				case "Jamaica":
+				$country ="jamaica";
+				break;
+				
+				case "Somalia":
+				$country ="somalia";
+				break;
+				
+				case "Iceland":
+				$country ="islandia";
+				break;
+				
+				case "Guinea":
+				$country ="guinea";
+				break;
+				
 				default:
 				$country ="unknow";
 				break;
@@ -2034,8 +2064,8 @@ function track(){
 		
 
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
-			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais) 
-			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country') ;");
+			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad) 
+			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region') ;");
 		}
 				
 		mysqli_close($GLOBALS['conexion']);

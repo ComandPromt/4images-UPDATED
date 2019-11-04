@@ -45,7 +45,7 @@ include('../config.php');
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 	
-mysqli_set_charset($GLOBALS['conexion'],"utf8");
+	mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
     $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 UNION 
 
