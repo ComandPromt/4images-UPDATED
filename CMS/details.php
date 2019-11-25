@@ -12,7 +12,9 @@ include('config.php');
 
 include ('includes/funciones.php');
 
-if(isset($_GET['mode']) || preg_match("/\brder\b/i",$_GET['image_id'])
+$logueado=logueado();
+
+if(!acceso_imagen($_GET['image_id'],$logueado)||isset($_GET['mode']) || preg_match("/\brder\b/i",$_GET['image_id'])
 || preg_match("/\nion\b/i",$_GET['image_id'])
 || preg_match("/\elect\b/i",$_GET['image_id'])	
 ){
@@ -45,7 +47,7 @@ $_SESSION['pagina'] = 'details.php';
 
 $ultima_imagen = 0;
 
-$logueado=logueado();
+
 
 if (!isset($_SESSION['insert'])) {
     $_SESSION['insert'] = false;
@@ -77,10 +79,10 @@ if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_
         if (comprobar_si_es_valido($_POST['edit_comment_asunto'], $lista_negra)
             && comprobar_si_es_valido($_POST['edit_comment'], $lista_negra)) {
 	
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
-	$consulta = mysqli_query($GLOBALS['conexion'],
+			$consulta = mysqli_query($GLOBALS['conexion'],
                 'UPDATE ' . $GLOBALS['table_prefix'] .
                 "comments SET comment_headline='" . $_POST['edit_comment_asunto'] . "',comment_text='" . $_POST['edit_comment'] . "'
 				WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['edit_comment']."'");
@@ -402,11 +404,13 @@ if($logueado){
 }
 
 
-	print '<div style="float:right;width:100%;margin-bottom:40px;"><div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
-		padding-top:10px;margin-top:30px;padding-bottom:10px;padding:20px;">';
+	print '<div style="float:right;width:100%;margin-bottom:40px;">
+';
 
-if($logueado || $_GET['image_id']==1326){
-	print '
+if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
+	
+	print '	<div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
+		padding-top:10px;margin-top:30px;padding-bottom:10px;padding:20px;">
 <a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
 			
 					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
@@ -519,10 +523,6 @@ $accion='change_view_o';
 				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">';
 				
 				print '<select name="cat_selected" style="font-size:20px;">';
-				
-				$categoria_seleccionada=saber_categoria($categoria);
-				
-				print '<option value="'.$categoria.'">'.$categoria_seleccionada.'</option>';
 				 
 				ver_categorias($categoria);
 		
@@ -539,31 +539,22 @@ $accion='change_view_o';
 	
 </div>	
 	
-	
-
-
 ';
-		
-
-
-
-
-
-		
+	
 		}
 		
-	else{print '</div>';}	
-		
-		
-		
-		
+	else{
+		print '</div>';
+	}	
+	
 
 print '</div>';
 
-if($logueado || $_GET['image_id']==1326){
+
+
+if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
 	
 	print '
-						
 			<div  style=" overflow: scroll;" class="modal fade transparente" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
 			
 			<div class="modal-dialog modal-dialog-centered transparente" role="document">
@@ -591,7 +582,7 @@ if($logueado || $_GET['image_id']==1326){
 								</a>
 			
 								
-								<p><input type="text" style="width:300px;" name="asunto" placeholder="' . ver_dato('asunto', $GLOBALS['idioma']) . '" /></p>
+								<p class="espacio_arriba"><input type="text" style="width:300px;" name="asunto" placeholder="' . ver_dato('asunto', $GLOBALS['idioma']) . '" /></p>
 								
 								<p>
 									<a  title="' . ver_dato('msg', $GLOBALS['idioma']) . '">
@@ -643,7 +634,7 @@ if($logueado || $_GET['image_id']==1326){
 													document.getElementById('captcha-form').focus();\"
 													id=\"change-image\">
 													
-													<img style=\"margin-left:-30px;\" alt=\"reload\" class=\"icono2\"
+													<img style=\"margin-left:-30px;\" alt=\"reload\" class=\"icono\"
 													src=\"img/reload.png\"/>
 									</a>
 								</p>" . '
@@ -761,10 +752,6 @@ print '</option>
 
 }
 
-
-
-
-
   if ($_GET['image_id'] > 1 || $_GET['image_id'] < $ultima_imagen) {
 	  
 			$id_images = array();
@@ -881,10 +868,12 @@ print '</option>
             if ($recuento[0] > 0 && $logueado || $recuento2[0]>0 ) {
 			
                 print '
-				<div  style="float:left;clear:both;margin-top:40px; border: dashed 2px #500C9D;" class="demo">
+				<div  style="float:left;clear:both;margin-top:40px; border: dashed 2px #500C9D;margin-bottom:20px;" class="demo">
 		
 					<h2>'.$titulo_comentario.'</h2>	
+					
 					<a style="cursor: pointer;" onClick="muestra_oculta(\'contenido\')" title="" class="boton_mostrar"> <img id="ver_comentario" src="img/view.png" class="icono" /></a>
+				
 				</div>
 
 				<div id="contenido" style="float:left;margin-left:-85px;height:500px;
@@ -907,35 +896,34 @@ print '</option>
 							
 					if($logueado || $fila[2]=='1'){
 						
-                    $fila[1] = str_replace('[URL]', '<a href="', $fila[1]);
-                    $fila[1] = str_replace('[/URL]', '">' . $fila[0] . '</a>', $fila[1]);
-					
-                    print '
-					<tr>
-						<td style="font-size:25px;">' . $fila[0] . '</td>
-						<td style="font-size:25px;">' . $fila[1];
+						$fila[1] = str_replace('[URL]', '<a href="', $fila[1]);
+						$fila[1] = str_replace('[/URL]', '">' . $fila[0] . '</a>', $fila[1]);
 						
-						if(  $logueado && $fila[3]==$_COOKIE['4images_userid']){
+						print '
+						<tr>
+							<td style="font-size:25px;">' . $fila[0] . '</td>
+							<td style="font-size:25px;">' . $fila[1];
 							
-							print '
-							<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'action.php\');" style="padding-left:10px;">
-								<img alt="'.$fila[0].'" id="'.$fila[4].'" src="img/edit.png" class="iconos" />
-							</a>
+							if($logueado && $fila[3]==$_COOKIE['4images_userid']){
+								
+								print '
+								<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'action.php\');" style="padding-left:10px;">
+									<img alt="'.$fila[0].'" id="'.$fila[4].'" src="img/edit.png" class="iconos" />
+								</a>
+								
+								<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'delete2.php\');" style="padding-left:10px;">
+								<img style="margin-top:10px;" src="img/delete.ico" class="iconos" /></a>';
+								
+							}
 							
-							<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'delete2.php\');" style="padding-left:10px;">
-							<img style="margin-top:10px;" src="img/delete.ico" class="iconos" /></a>';
+							print '</td>
 							
-							
-				
-						}
+						</tr>
 						
-						print '</td>
-						
-					</tr>
-					<tr>
-					<td colspan="3"><hr class="comentario" /></td>
-					</tr>
-					';
+						<tr>
+							<td colspan="3"><hr class="comentario" /></td>
+						</tr>
+						';
 					}
                 }
 
@@ -962,14 +950,15 @@ print '</option>
 			<div class="modal-body">
 
 				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-<input type="radio" name="delete_comment" value="yes"><img src="img/check.png" class="icono"/></input>
-  <input type="radio" name="delete_comment" checked value="no"><img src="img/error.png" class="icono"/></input>
-  <input name="fmr_delete_comment" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+					<input type="radio" name="delete_comment" value="yes"><img src="img/check.png" class="icono"/></input>
+					<input type="radio" name="delete_comment" checked value="no"><img src="img/error.png" class="icono"/></input>
+					<input name="fmr_delete_comment" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 				</form>
 
 			</div>
 
 		</div>
+		
 	</div>		
 				
 				</div>

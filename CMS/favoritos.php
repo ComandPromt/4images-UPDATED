@@ -4,9 +4,18 @@ session_start();
 
 $_SESSION['track']=true;
 
-include_once('config.php');
+include('config.php');
 
 include('includes/funciones.php');
+
+function base64_encode_image ($filename=string,$filetype=string) {
+
+    if ($filename) {
+	
+        $imgbinary = fread(fopen($filename, "r"), filesize($filename));
+        return base64_encode($imgbinary);
+    }
+}
 
 cabecera();
 
@@ -33,43 +42,9 @@ print '<div class="flotar_derecha">
 
 ver_categoria('*','WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix'].'lightboxes WHERE user_id='.$_COOKIE['4images_userid'].' ORDER BY orden DESC)',true);
 
-//print '<h1>Test</h1>'.var_dump($_SESSION['array_imagenes']);
+print count($_SESSION['array_imagenes']);
 
-
-
-?>
-
-<script>
-
-function descargar(){
-	
-	var zip = new JSZip();
-	
-	var img = zip.folder("favourites");
-	
-	<?php
-	
-	for($x=0;$x<count($_SESSION['array_imagenes']);$x++){
-
-	$base64=base64_encode_image('data/media/'.$_SESSION['categorias'][$x].'/'.$_SESSION['array_imagenes'][$x]);
-	
-	print "img.file('".$_SESSION['array_imagenes'][$x]."',
-	'".$base64."', {base64: true});";
-
-	}
-		
-	?>
-	
-	zip.generateAsync({type:"blob"})
-	.then(function(content) {
-		saveAs(content, "example.zip");
-	});
-
-}
-
-</script>
-
-<?php
+descargar();
 
 restablecer_pass();
 

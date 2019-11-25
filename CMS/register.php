@@ -179,24 +179,24 @@ if (!$terminado && (isset($_POST['envio']))) {
 					
 						<img alt="user password" class="icono"	src="img/idiomas.png"/>
 						
-						<select>
-							<option name="pais" value="spanish"  checked="checked"/>Espa&ntilde;ol</option>
-							<option name="pais" value="aleman" />Deutsch</option>
-							<option name="pais" value="ingles" />English</option>
-							<option name="pais" value="frances" />Francais</option>
-							<option name="pais" value="ruso" />русский</option>
-							<option name="pais" value="italiano" />Italiano</option>
-							<option name="pais" value="portuges" />Portugues</option>
-							<option name="pais" value="chino" />中國</option>
-							<option name="pais" value="hindu" />हिन्दू</option>
-							<option name="pais" value="japones" />日本人</option>
-							<option name="pais" value="catalan" />Catalá</option>
-							<option name="pais" value="bengali" />বাঙালি</option>
-							<option name="pais" value="arabe" />العربية</option>
-							<option name="pais" value="euskera" />Euskal</option>
-							<option name="pais" value="coreano" />한국인</option>
-							<option name="pais" value="vietnamita" />Việt nam</option>
-							<option name="pais" value="polaco" >Polski</option>
+						<select name="pais">
+							<option name="spanish" value="spanish"  checked="checked"/>Espa&ntilde;ol</option>
+							<option name="aleman" value="aleman" />Deutsch</option>
+							<option name="ingles" value="ingles" />English</option>
+							<option name="frances" value="frances" />Francais</option>
+							<option name="ruso" value="ruso" />русский</option>
+							<option name="italiano" value="" />Italiano</option>
+							<option name="portuges" value="portuges" />Portugues</option>
+							<option name="chino" value="chino" />中國</option>
+							<option name="hindu" value="hindu" />हिन्दू</option>
+							<option name="japones" value="japones" />日本人</option>
+							<option name="catalan" value="catalan" />Catalá</option>
+							<option name="bengali" value="bengali" />বাঙালি</option>
+							<option name="arabe" value="arabe" />العربية</option>
+							<option name="euskera" value="euskera" />Euskal</option>
+							<option name="coreano" value="coreano" />한국인</option>
+							<option name="vietnamita" value="vietnamita" />Việt nam</option>
+							<option name="polaco" value="polaco" >Polski</option>
 						</select>
 	
 			 
@@ -238,9 +238,8 @@ echo '<input style="margin-top:40px;" type="text" title="captcha" required  id="
 
 				<input style="margin-top:40px;"  title="submit" name="submit" type="submit" value="' .
 				ver_dato('register', $GLOBALS['idioma']) . '"/>
-	
-				<input style="margin-top:50px;margin-bottom:30px;" title="reset" type="reset" value="' . ver_dato('reset',$GLOBALS['idioma']) . '"/> 
-	        </form>';
+				
+		        </form>';
 }
 
 if (!$terminado && $SESSION['licencia']) {

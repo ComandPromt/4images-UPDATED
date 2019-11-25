@@ -25,10 +25,9 @@ if (file_exists('config.php')) {
 
     cabecera();
 
-$mysqli = new mysqli($db_host, $db_user, $db_password, 'mysql');
+	$mysqli = new mysqli($db_host, $db_user, $db_password, 'mysql');
 	
-$mysqli->set_charset("utf8");
-
+	$mysqli->set_charset("utf8");
 
     $consulta = $mysqli->query( "SHOW DATABASES");
 
@@ -112,20 +111,6 @@ if(!logueado()){
 		
 		// Si existe categoria Links mostrar
 	
-}
-
-else{
-
-	print '		
-				
-		<a title="' . ver_dato('upload', $GLOBALS['idioma']) . '" href="comments.php">
-			<img style="margin-top:20px;" alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/coment.png"/>
-		</a>
-		
-		<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="search.php">
-			<img style="margin-top:20px;" alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono" src="img/search.png"/>
-		</a>
-		';
 }
 		
 		if(file_exists('forum')){

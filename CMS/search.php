@@ -1,8 +1,10 @@
 <?php
 
 session_start();
+
 $_SESSION['categoria']=$_GET['cat_id'];
-$_SESSION['track']=true;
+
+$_SESSION['track']=false;
 
 include_once('config.php');
 
@@ -24,8 +26,8 @@ if(isset($_POST['busqueda'])){
 if(isset($_GET['filtro']) && $_GET['filtro']!=""){
 	$_SESSION['filtro']=$_GET['filtro'];
 }
-	
-	
+
+$_SESSION['track']=true;
 	
 print '<div style="float:left;padding-top:100px;">
 			<h1 style="font-size:2em;padding-left:40px">' . date('d') . '/' . date('m') . '/' . date('y') . '</h1>

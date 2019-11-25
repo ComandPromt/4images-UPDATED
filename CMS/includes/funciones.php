@@ -2,7 +2,109 @@
  
 date_default_timezone_set('Europe/Madrid');
 
+function descargar(){
+	
+	$comprobacion=count($_SESSION['array_imagenes']);
+	
+	print '
+
+<script>
+
+function descargar(){
+	
+	var zip = new JSZip();
+	
+	var img = zip.folder("Favourites");';
+	
+	if($comprobacion>100){
+		$longitud=99;
+	}
+	
+	else{
+		$longitud=count($_SESSION['array_imagenes']);
+	}
+	
+	for($x=0;$x<$longitud;$x++){
+
+	$base64=base64_encode_image($_SESSION['rutas'][$x]);
+	
+	print "img.file('".$_SESSION['array_imagenes'][$x]."',
+	'".$base64."', {base64: true});";
+
+	}
+		
+	print '	
+	zip.generateAsync({type:"blob"})
+	.then(function(content) {
+		saveAs(content, "Favourites - '.date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'.zip");
+	});
+
+}
+
+</script>';
+
+	if($comprobacion>100){
+		unset($_SESSION['rutas']);
+		unset($_SESSION['array_imagenes']);
+	}
+	
+}
+
+function acceso_imagen($imagen,$logueado){
+	
+	$respuesta=false;
+	
+	if(!empty($imagen) && $imagen!=null){
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+		$cat_consulta = mysqli_query($GLOBALS['conexion'],
+		'SELECT C.visibilidad FROM '.$GLOBALS['table_prefix']."images I JOIN  4images_categories C ON I.cat_id=C.cat_id WHERE image_id='".$imagen."'");
+		 
+		$visibilidad = mysqli_fetch_row($cat_consulta);
+
+		if($visibilidad[0]==1 || ($logueado && $visibilidad[0]==2)){
+			$respuesta=true;
+		}
+	
+		mysqli_close();
+		
+	}
+		
+	return $respuesta;
+	
+}
+
+function acceso($categoria,$logueado){
+	
+	$respuesta=false;
+	
+	if(!empty($categoria) && $categoria!=null){
+		
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+		$cat_consulta = mysqli_query($GLOBALS['conexion'],
+		'SELECT visibilidad FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$categoria."'");
+		 
+		$cat = mysqli_fetch_row($cat_consulta);
+
+		if($cat[0]==1 || ($logueado && $cat[0]==2)){
+			$respuesta=true;
+		}
+	
+		mysqli_close();
+		
+	}
+		
+	return $respuesta;
+	
+}
+
 function categoria_link(){
+	
+	$logueado=logueado();
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
@@ -15,18 +117,69 @@ function categoria_link(){
 	$cat=(int)$cat[0];
 
 	if($cat>0){
+
+		 $cat_consulta = mysqli_query($GLOBALS['conexion'],
+		'SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix']."categories where cat_parent_id= '".$cat."'");
 		
-		print '	<a title="Links" href="details.php?image_id=1326">
+		$num_hijos = mysqli_fetch_row($cat_consulta);
+	
+		$num_hijos=(int)$num_hijos[0];
+	
+		if($num_hijos==0){
+		
+		$imagenes_links = mysqli_query($GLOBALS['conexion'],
+		'SELECT I.image_id,I.image_name,I.cat_id,I.image_media_file,I.visibilidad, COUNT(C.comment_id)
+FROM '.$GLOBALS['table_prefix'].'comments C JOIN '.$GLOBALS['table_prefix'].'images I ON C.image_id=I.image_id GROUP BY image_id ORDER BY COUNT(C.comment_id) DESC LIMIT 3');
+		
+		print '<div class="flotar_izquierda espacio_derecha">';
+		
+			while($datos_categoria = mysqli_fetch_row($imagenes_links)){
+				
+				if( $datos_categoria[4]==1 || ($logueado && $datos_categoria[4]==2) ){
 					
-			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/url.png"/>
-		</a>
-			<a title="Youtube Links" href="details.php?image_id=29210">
+					print '	<a title="'.$datos_categoria[1].'" href="details.php?image_id='.$datos_categoria[0].'">
+						
+					<img style="margin-top:20px;" alt="Imagen llamada '.$datos_categoria[1].'" class="rounded icono" src="data/media/'.$datos_categoria[2].'/'.$datos_categoria[3].'"/>
+					</a>';
+				}
+				
+			}
+			
+print '</div>';
+
+		}
+		
+		else{
+			
+			$id_categorias_hijas=array();
+		
+			$categorias_hijas=array();
+		
+			$visibilidad=array();
+		
+			$cat_consulta = mysqli_query($GLOBALS['conexion'],
+			'SELECT cat_id,cat_name,visibilidad FROM '.$GLOBALS['table_prefix']."categories WHERE cat_parent_id= '".$cat."'");
+		
+			while($datos_categoria = mysqli_fetch_row($cat_consulta)){
+			
+				$id_categorias_hijas[]=$datos_categoria[0];
+			
+				$categorias_hijas[]=$datos_categoria[1];
+			
+				$visibilidad[]=$datos_categoria[2];
+			}
+
+			for($i=0;$i<$num_hijos;$i++){
+				
+				if( $visibilidad[$i]==1 || ($logueado && $visibilidad[$i]==2) ){
 					
-			<img style="margin-top:20px;" alt="Enlaces" class="icono" src="img/Social/youtube.png"/>
-		</a>
-		';
+					print '	<a title="'.$categorias_hijas[$i].'" href="categories.php?cat_id="'.$id_categorias_hijas[$i].'>'.$categorias_hijas[$i].'</a>';
+				}
+			}
+		}
 	}
-		
+	
+	mysqli_close();
 }
 
 function registrar(){
@@ -100,8 +253,8 @@ function nevar(){
 	
 	if(!is_private_ip($i_direccionIp)){
 		
-	$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$_SERVER['REMOTE_ADDR']));
-	$geo->lat=(int)$geo->lat;
+		$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$_SERVER['REMOTE_ADDR']));
+		$geo->lat=(int)$geo->lat;
 			
 	if($geo->lat>0){
 		
@@ -455,8 +608,10 @@ print '
 	<link rel="icon" type="image/ico" href="'.$ruta.'img/favicon.ico">
 
 	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
- 
-	<title>Web</title>
+	<script  src="'.$ruta.'js/jszip.min.js"></script>
+	<script  src="'.$ruta.'js/FileSaver.js"></script>
+	
+	<title>'.$GLOBALS['site_name']. '</title>
 	
 	<script>
 		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
@@ -997,6 +1152,7 @@ function is_ani($filename) {
 
 function redireccionar($ruta){
 	 echo '<script>location.href="'.$ruta.'";</script>';
+	 header('Location: '.$ruta);
 }
 
 function deliver_response($status){
@@ -1137,6 +1293,7 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 	else{
 
 		$CantidadMostrar=9;
+		
 		$consulta='SELECT
 				distinct(I.image_id),
 				I.cat_id,
@@ -1186,6 +1343,11 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 			$imagenes=array();
 			
 			while ($lista=$consulta->fetch_row()) {
+				
+				if(!in_array($lista[3], $_SESSION['array_imagenes'])){
+					$_SESSION['rutas'][]='data/media/'.$lista[1].'/'.$lista[3];
+					$_SESSION['array_imagenes'][]=$lista[3];	
+				}
 				
 				$ids[]=$lista[0];
 				$categorias[]=$lista[1];
@@ -2062,10 +2224,19 @@ function track(){
 			}
 		}
 		
+		$usuario=-1;
+		
+		if(!isset($_COOKIE['4images_userid']) ){
+			$usuario=-1;
+		}
+		
+		else{
+			$usuario=$_COOKIE['4images_userid'];
+		}
 
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
-			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad) 
-			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region') ;");
+			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad,usuario) 
+			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region','".$usuario."')");
 		}
 				
 		mysqli_close($GLOBALS['conexion']);
@@ -2074,6 +2245,7 @@ function track(){
 }
 
 function menu_lateral($ruta = ""){
+	
 	track();
 	
 	if(isset($_COOKIE['4images_userid'])){
@@ -2455,6 +2627,8 @@ function random_string($length, $letters_only = false) {
 }
 
 function poner_menu($ruta = ""){
+	
+$logueado=logueado();
 
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -2475,7 +2649,8 @@ function poner_menu($ruta = ""){
 					<div id="dl-menu" class="dl-menuwrapper transparente flotar_derecha">
 						<button class="dl-trigger"></button>
 						<ul id="menu_aside" class="dl-menu " style="background-color: rgba(255, 255, 255, 0);" >
-						';		
+						';	
+	
 			$id_categorias=array();
 
 			$consulta = mysqli_query($GLOBALS['conexion'], '
@@ -2486,15 +2661,16 @@ function poner_menu($ruta = ""){
 			}
 
 			for($x=0;$x<count($id_categorias);$x++){
-				
-				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
+
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id,visibilidad FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_id='.$id_categorias[$x]);
 				$fila = mysqli_fetch_row($consulta);
-			
+				
+			if($fila[2]==1 || $logueado && $fila[2]==2){
 				print '
 				<li style="background-color: rgba(255, 255, 255, 0);padding-top:20px;" class="menu_categorias">
 				<a style="color:#ffffff;background-color:#9D37BE;font-size:0.7em;font-weight:bold;" href="#">'.$fila[0].'</a>';
 			
-				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x].' ORDER BY cat_name');
+				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT cat_name,cat_id,visibilidad FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id='.$id_categorias[$x].' ORDER BY cat_name');
 			
 				$y=1;
 				
@@ -2502,16 +2678,19 @@ function poner_menu($ruta = ""){
 						
 				while ($subcategorias = mysqli_fetch_array($consulta)){
 					
+					if($subcategorias[2]==1 || $logueado && $subcategorias[2]==2){
+						
 						print '<li style="background-color: rgba(255, 255, 255, 0);" >
 						<a style="margin-left:-20px;margin-top:20px;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$subcategorias[1].'">'.$subcategorias[0].'</a>
 						</li>';
-									
+					}
+					
 					$y++;		
 				}
 				
 				print '</ul>
 				</li>';	
-				
+			}
 			}
 
 			$consulta = mysqli_query($GLOBALS['conexion'], 
@@ -2632,7 +2811,8 @@ function redimensionarJPG($max_ancho, $max_alto, $ruta) {
             } else {
                 $ancho_final = ceil($y_ratio * $ancho);
                 $alto_final = $max_alto;
-            }
+			}
+			
             $tmp = imagecreatetruecolor($ancho_final, $alto_final);
             imagecopyresampled($tmp, $img_original, 0, 0, 0, 0, $ancho_final, $alto_final, $ancho, $alto);
             imagedestroy($img_original);

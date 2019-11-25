@@ -4,6 +4,8 @@ session_start();
 
 $_SESSION['pagina']="my_uploads.php";
 
+$_SESSION['track']=true;
+
 include_once('config.php');
 
 include('includes/funciones.php');

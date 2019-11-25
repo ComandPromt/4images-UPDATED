@@ -49,7 +49,10 @@ $("#"+cerrar).hide();
 
 function muestra_oculta(id){
 if (document.getElementById){ //se obtiene el id
-var el = document.getElementById(id); //se define la variable "el" igual a nuestro div
+
+var el = document.getElementById(id);
+if(el!=null){
+ //se define la variable "el" igual a nuestro div
 el.style.display = (el.style.display == 'none') ? 'block' : 'none' ; //damos un atributo display:none que oculta el div
 if(el.style.display =='none' ){
 	document.getElementById('ver_comentario').src = "img/hide.png";
@@ -57,6 +60,8 @@ if(el.style.display =='none' ){
 else{
 	document.getElementById('ver_comentario').src = "img/view.png";
 }
+}
+
 }
 }
 window.onload = function(){/*hace que se cargue la función lo que predetermina que div estará oculto hasta llamar a la función nuevamente*/

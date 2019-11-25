@@ -30,7 +30,9 @@ echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 echo '<rss version="2.0">';
 
 echo "<channel>";
+
 echo '<title>'.$GLOBALS['site_name'].'</title>';
+
 echo '<description>'.$GLOBALS['site_name'].'</description>';
 
 while ($registro = mysqli_fetch_array($result)){
@@ -45,7 +47,6 @@ while ($registro = mysqli_fetch_array($result)){
 
 	<description>'.$registro[0].'</description>
   
-
    <enclosure url="http://'.obtener_direccion().'/data/media/'.$registro[1].'/'.$registro[2].'" length="48537" type="image/jpeg"/>
    <guid isPermaLink="false">http://'.obtener_direccion().'/details.php?image_id='.$registro[3].'</guid>
    </item>';

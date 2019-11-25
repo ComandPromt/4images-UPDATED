@@ -19,21 +19,35 @@ if(!isset($_SESSION['respuesta'])){
 		$add="uploads/$file_name";
 	
 		if(move_uploaded_file ($_FILES[uploadedfile][tmp_name], $add)){
+			
+			$extension=substr($file_name,-3);
 
-			rename($add,'uploads/test.'.substr($file_name,-3));
+			rename($add,'uploads/test.'.$extension);
 		
-			if(file_exists('test.png')){
+		switch($extension){
+			
+			case "png":
+			
 				png_a_jpg('test.png');
-			}
+				
+				unlink('uploads/test.png');
+			break;
+			
+			case "jpg":
+			break;
+			
+			default:
+				unlink('uploads/test.'.$extension);
+			break;
+		}
 		
 			$url='uploads/test.jpg';
-		
+					
 			if(file_exists($url)){
 			
 				if(count(getColorPallet($url))==0){
 					
 					$_SESSION['respuesta']=true;
-				
 				}
 		
 				else{
@@ -43,7 +57,7 @@ if(!isset($_SESSION['respuesta'])){
 				}
 				
 				unlink($url);
-				
+						
 				echo '<script>location.href="resultado.php?respuesta='.$_SESSION['respuesta'].'";</script>';
 				
 			}

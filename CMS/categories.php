@@ -10,7 +10,7 @@ include('includes/funciones.php');
 
 $logueado=logueado();
 
-if(!$logueado && isset($GLOBALS['ver_categorias']) && !$GLOBALS['ver_categorias']){
+if(!acceso($_GET['cat_id'],$logueado) || !$logueado && isset($GLOBALS['ver_categorias']) && !$GLOBALS['ver_categorias']){
 	redireccionar('register.php');
 }
 

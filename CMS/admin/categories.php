@@ -39,10 +39,9 @@ if(isset($_POST['enviar'])){
 	$recuento = mysqli_fetch_row($consulta);
 	
 	if($recuento[0]==0){
-		
 		mysqli_query($GLOBALS['conexion'], '
-		INSERT INTO '.$GLOBALS['table_prefix']."categories (cat_name,cat_description,cat_parent_id,cat_hits,auth_download,auth_upload,auth_vote,auth_sendpostcard,visibilidad,permitir_gif)
-		VALUES ('".$_POST['nombre']."','".$_POST['descripcion']."','".$_POST['categoria']."','0','1','1','1','1','2','1')");
+		INSERT INTO '.$GLOBALS['table_prefix']."categories (cat_name,cat_description,cat_parent_id,cat_hits,auth_viewcat,auth_viewimage,auth_download,auth_upload,auth_vote,auth_sendpostcard,auth_readcomment,auth_postcomment)
+		VALUES ('".$_POST['nombre']."','".$_POST['descripcion']."','".$_POST['categoria']."','0','0','0','0','0','0','0','0','0')");
 	
 	}
 		

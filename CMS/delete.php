@@ -40,6 +40,9 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
 		$consulta=mysqli_query($GLOBALS['conexion'],
+		"DELETE FROM descargas WHERE imagen='".$_GET['image_id']."'");
+
+		$consulta=mysqli_query($GLOBALS['conexion'],
 		'DELETE FROM '.$GLOBALS['table_prefix']."images WHERE image_id='".$_GET['image_id']."' AND
 		user_id='".$_COOKIE['4images_userid']."'");
 	
