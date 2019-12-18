@@ -13,14 +13,14 @@ comprobar_cookie('../');
 if(isset($_POST['respuesta'])){
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-$GLOBALS['db_password'], $GLOBALS['db_name'])
-or die("No se pudo conectar a la base de datos");
+	$GLOBALS['db_password'], $GLOBALS['db_name'])
+	or die("No se pudo conectar a la base de datos");
+		
+	mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes 
 	
-mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes 
-
-(remitente,destinatario,asunto,mensaje,leido,oculto)
-
-VALUES( '".$_COOKIE['4images_userid']."','".$_GET['destinatario']."','RE - ".$_GET['asunto']."','".$_POST['msg_reply']."','0','0')");
+	(remitente,destinatario,asunto,mensaje,leido,oculto,dt_fechaEnvio,dt_fechaVista,hora_envio,hora_vista)
+	
+	VALUES( '".$_COOKIE['4images_userid']."','".$_GET['destinatario']."','RE - ".$_GET['asunto']."','".$_POST['msg_reply']."','0','0',CURDATE(),CURDATE(),CURTIME(),CURTIME())");
 	
 	mysqli_close($GLOBALS['conexion']);
 	
@@ -43,7 +43,7 @@ menu_mensajes();
 	$GLOBALS['db_password'], $GLOBALS['db_name'])
 	or die("No se pudo conectar a la base de datos");
 
-mysqli_query($GLOBALS['conexion'], "UPDATE mensajes SET leido=1 WHERE destinatario='".$_COOKIE['4images_userid']."'");
+mysqli_query($GLOBALS['conexion'], "UPDATE mensajes SET leido=1,dt_fechaVista=CURDATE(),hora_vista=CURTIME() WHERE destinatario='".$_COOKIE['4images_userid']."'");
 	
 $consulta = mysqli_query($GLOBALS['conexion'],"SELECT COUNT(id) FROM mensajes WHERE oculto!='".$_COOKIE['4images_userid']."' AND destinatario='".$_COOKIE['4images_userid']."'");
 	$fila = mysqli_fetch_row($consulta);

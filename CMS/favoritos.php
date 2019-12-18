@@ -4,6 +4,8 @@ session_start();
 
 $_SESSION['track']=true;
 
+$_SESSION['pagina']='favoritos.php';
+
 include('config.php');
 
 include('includes/funciones.php');
@@ -41,8 +43,6 @@ print '<div class="flotar_derecha">
 		</div>';
 
 ver_categoria('*','WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix'].'lightboxes WHERE user_id='.$_COOKIE['4images_userid'].' ORDER BY orden DESC)',true);
-
-print count($_SESSION['array_imagenes']);
 
 descargar();
 

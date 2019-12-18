@@ -64,7 +64,11 @@ if(isset($_POST['fmr_delete_comment'])){
                 'DELETE FROM ' . $GLOBALS['table_prefix'] .
                 "comments WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['del_comment']."'");
 
-				mysqli_close($GLOBALS['conexion']);
+		mysqli_query($GLOBALS['conexion'],
+            'UPDATE '.$GLOBALS['table_prefix'] .
+            "SET user_comments= user_comments-1 WHERE user_id='".$_COOKIE['4images_userid']."'");
+			
+		mysqli_close($GLOBALS['conexion']);
 				
 	}
 	
@@ -150,6 +154,10 @@ $_GET['image_id']=(int)$_GET['image_id'];
             "comments (image_id,user_id,comment_headline,comment_text,comment_ip,comment_date,visible)
 			VALUES('" . $_GET['image_id'] . "','" . $_COOKIE['4images_userid'] . "','" . $_POST['asunto'] . "','" .
             $_POST['mensaje'] . "','" . $_SERVER['REMOTE_ADDR'] . "','" . date('Y') . '/' . date('m') . '/' . date('d') ."','".$_POST['visibilidad']."')");
+
+			mysqli_query($GLOBALS['conexion'],
+            'UPDATE '.$GLOBALS['table_prefix'] .
+            "SET user_comments= user_comments+1 WHERE user_id='".$_COOKIE['4images_userid']."'");
 
 			if($usuario!=""){
 				

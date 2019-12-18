@@ -117,8 +117,8 @@ if (isset($_POST['submit'])) {
 					$fila = mysqli_fetch_row($consulta);
 				
 					mysqli_query($GLOBALS['conexion'], "INSERT INTO mensajes (remitente,destinatario,asunto,mensaje,leido) 	   
-					VALUES('1','". $fila[0]. "','".ver_dato('welcome', $GLOBALS['idioma'])."','".
-					ver_dato('msg_welcome', $GLOBALS['idioma']) . "','0')");
+					VALUES('1','". $fila[0]. "','".ver_dato('welcome', $_POST['pais'])."','".
+					ver_dato('msg_welcome', $_POST['pais']) . "','0')");
 				
 					mysqli_close($GLOBALS['conexion']); 
 				

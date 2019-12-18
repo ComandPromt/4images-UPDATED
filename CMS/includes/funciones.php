@@ -127,11 +127,11 @@ function categoria_link(){
 	
 		if($num_hijos==0){
 		
-		$imagenes_links = mysqli_query($GLOBALS['conexion'],
-		'SELECT I.image_id,I.image_name,I.cat_id,I.image_media_file,I.visibilidad, COUNT(C.comment_id)
-FROM '.$GLOBALS['table_prefix'].'comments C JOIN '.$GLOBALS['table_prefix'].'images I ON C.image_id=I.image_id GROUP BY image_id ORDER BY COUNT(C.comment_id) DESC LIMIT 3');
+			$imagenes_links = mysqli_query($GLOBALS['conexion'],
+			'SELECT I.image_id,I.image_name,I.cat_id,I.image_media_file,I.visibilidad, COUNT(C.comment_id)
+			FROM '.$GLOBALS['table_prefix'].'comments C JOIN '.$GLOBALS['table_prefix'].'images I ON C.image_id=I.image_id GROUP BY image_id ORDER BY COUNT(C.comment_id) DESC LIMIT 3');
 		
-		print '<div class="flotar_izquierda espacio_derecha">';
+			print '<div class="flotar_izquierda espacio_derecha">';
 		
 			while($datos_categoria = mysqli_fetch_row($imagenes_links)){
 				
@@ -145,7 +145,7 @@ FROM '.$GLOBALS['table_prefix'].'comments C JOIN '.$GLOBALS['table_prefix'].'ima
 				
 			}
 			
-print '</div>';
+			print '</div>';
 
 		}
 		
@@ -517,7 +517,7 @@ function ver_os($os,$final=""){
 	
 	mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
-	$sql="SELECT count(id_tracking) FROM tbl_tracking WHERE tx_navegador like '%".$os."%'";
+	$sql="SELECT count(id_tracking) FROM tbl_tracking WHERE pais!='home' AND tx_navegador like '%".$os."%'";
 	
 	if($final!=""){
 		$sql.=" AND tx_navegador NOT LIKE '%".$final."%'";
@@ -538,21 +538,24 @@ function ver_hits($pais){
 	
 	$dato=0;
 	
-	comprobar_config();
-
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
-		or die("No se pudo conectar a la base de datos");
+	if($pais!='home'){
+		
+		comprobar_config();
 	
-	mysqli_set_charset($GLOBALS['conexion'],"utf8");
-
-	$consulta=mysqli_query($GLOBALS['conexion'],"SELECT count(id_tracking) FROM tbl_tracking where pais='".$pais."'");
-    
-	$fila = mysqli_fetch_row($consulta);
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			$GLOBALS['db_password'], $GLOBALS['db_name'])
+			or die("No se pudo conectar a la base de datos");
+		
+		mysqli_set_charset($GLOBALS['conexion'],"utf8");
 	
-	$dato=$fila[0];
-	
-	mysqli_close($GLOBALS['conexion']);
+		$consulta=mysqli_query($GLOBALS['conexion'],"SELECT count(id_tracking) FROM tbl_tracking where pais='".$pais."'");
+		
+		$fila = mysqli_fetch_row($consulta);
+		
+		$dato=$fila[0];
+		
+		mysqli_close($GLOBALS['conexion']);
+	}
 	
 	return $dato;
 }
@@ -952,8 +955,8 @@ function menu_mensajes(){
 		</li>
 		
 		<li class="espacio_arriba_3">
-			<a data-toggle="modal" data-target="#clear" title="'.ver_dato('outbox',$GLOBALS['idioma']).'" href="outbox.php">
-				<img title="'.ver_dato('outbox',$GLOBALS['idioma']).'" class="icono" src="../img/Recycle_Bin_Full_2.png"/>
+			<a data-toggle="modal" data-target="#clear" title="'.ver_dato('reset',$GLOBALS['idioma']).'" href="outbox.php">
+				<img title="'.ver_dato('reset',$GLOBALS['idioma']).'" class="icono" src="../img/Recycle_Bin_Full_2.png"/>
 			</a>
 		</li>
 
@@ -1311,7 +1314,8 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 			WHERE image_id IN ( SELECT lightbox_image_id FROM '.$GLOBALS['table_prefix']."lightboxes  WHERE user_id='".$_COOKIE['4images_userid']."' order by orden desc)";
 			$orden=' ORDER BY F.orden DESC LIMIT ';
 		}
-				
+		
+		
 		$compag         =(int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
 		$TotalReg       =$conexion->query($consulta);
 
@@ -1674,8 +1678,6 @@ function track(){
 			
 			$geo = json_decode(file_get_contents('http://extreme-ip-lookup.com/json/'.$i_direccionIp));
 			
-			$region=$geo->city;
-			
 			switch($geo->country){
 			
 				case "Spain":
@@ -1688,6 +1690,10 @@ function track(){
 				
 				case "Germany":
 				$country ="de";
+				break;
+				
+				case "Tanzania":
+				$country ="tanzania";
 				break;
 				
 				case "United States":
@@ -2222,6 +2228,8 @@ function track(){
 				$country ="unknow";
 				break;
 			}
+					
+			$region=$geo->city;
 		}
 		
 		$usuario=-1;
@@ -2235,8 +2243,8 @@ function track(){
 		}
 
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
-			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad,usuario) 
-			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region','".$usuario."')");
+			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad,usuario,hora) 
+			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region','".$usuario."',CURTIME())");
 		}
 				
 		mysqli_close($GLOBALS['conexion']);
@@ -2717,14 +2725,21 @@ function imagen_aleatoria(){
 	
 	$resultado="";
 	
+	$final_sentencia="";
+	
+	if(!logueado()){
+		$final_sentencia="AND cat_id IN (
+		SELECT cat_id FROM 4images_categories WHERE visibilidad='1')";
+	}
+	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
-	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT image_id FROM '.$GLOBALS['table_prefix']."images WHERE image_active='1'");
+	  $consulta = mysqli_query($GLOBALS['conexion'],'SELECT image_id FROM '.$GLOBALS['table_prefix']."images WHERE image_active='1' AND visibilidad='1' ".$final_sentencia);
 
 	if(mysqli_affected_rows($GLOBALS['conexion'])>0){
 	 
-	 $id_imagenes=array();
+		$id_imagenes=array();
 	 
 		while($num_imagenes = mysqli_fetch_array($consulta)){
 			$id_imagenes[]=$num_imagenes[0];

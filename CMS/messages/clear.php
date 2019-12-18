@@ -10,7 +10,7 @@ include('../includes/funciones.php');
 
 comprobar_cookie('../');
 
-if(isset($_GET['delete']) && (int)$_GET['delete']==1 ||  (int)$_GET['delete']==2){
+if(isset($_GET['delete']) && ( (int)$_GET['delete']==1 ||  (int)$_GET['delete']==2) ){
 	
 	if($_GET['delete']==1){
 		$final_sentencia="WHERE destinatario='".$_COOKIE['4images_userid']."'";
@@ -24,13 +24,17 @@ if(isset($_GET['delete']) && (int)$_GET['delete']==1 ||  (int)$_GET['delete']==2
 	$GLOBALS['db_password'], $GLOBALS['db_name'])
 	or die("No se pudo conectar a la base de datos");
 
-	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT id FROM  mensajes where oculto!=0');
+	$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT id,oculto FROM  mensajes where oculto!=0');
 
 	while($fila = mysqli_fetch_row($consulta)){
-		mysqli_query($GLOBALS['conexion'], "DELETE FROM mensajes WHERE id='".$fila[0]."'");
+		
+		if($fila[1]!=$_COOKIE['4images_userid']){
+			mysqli_query($GLOBALS['conexion'], "DELETE FROM mensajes WHERE id='".$fila[0]."'");
+		}
+
 	}
 
-	mysqli_query($GLOBALS['conexion'], "UPDATE mensajes SET oculto='1' ".$final_sentencia);
+	mysqli_query($GLOBALS['conexion'], "UPDATE mensajes SET oculto='".$_COOKIE['4images_userid']."' ".$final_sentencia);
 
 	mysqli_close($GLOBALS['conexion']);
 

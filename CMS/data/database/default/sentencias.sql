@@ -13,6 +13,7 @@ dt_fechaVisita date NOT NULL,
 pais varchar(25) NOT NULL,
 ciudad varchar(30) NOT NULL,
 usuario int(11),
+hora TIME NOT NULL,
 FOREIGN KEY (usuario) REFERENCES 4images_users (user_id)
 ) DEFAULT CHARSET=utf8;
 
@@ -118,6 +119,18 @@ accion varchar(40) NOT NULL UNIQUE,
 texto text NOT NULL
 ) DEFAULT CHARSET=utf8;
 
+CREATE TABLE 4images_config (
+contactar_con_admin TINYINT(1),
+guardar_imagenes_aleatorias TINYINT(1),
+nivel_contacto_admin TINYINT(1),
+nivel_miniaturas_imagenes TINYINT(1),
+nivel_menu_categorias TINYINT(1),
+nivel_busquedas TINYINT(1),
+nivel_figure TINYINT(1),
+nivel_imagen_aleatoria TINYINT(1),
+nivel_categoria_link TINYINT(1)
+)DEFAULT CHARSET=utf8;
+
 CREATE TABLE 4images_users (
 user_id int(11) PRIMARY KEY AUTO_INCREMENT,
 user_level int(11) NOT NULL DEFAULT '1',
@@ -129,41 +142,6 @@ user_invisible tinyint(1) NOT NULL DEFAULT '0',
 user_comments int(11) NOT NULL DEFAULT '0',
 nacionalidad varchar(15) DEFAULT 'spanish' NOT NULL,
 avatar varchar(255) DEFAULT 'nofoto.jpg' NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE mensajes (
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-remitente int(11),
-destinatario  int(11),
-asunto varchar(30),
-mensaje text,
-leido tinyint(1) DEFAULT '0' NOT NULL,
-oculto tinyint(1) DEFAULT '0' NOT NULL,
-FOREIGN KEY (remitente) REFERENCES 4images_users (user_id),
-FOREIGN KEY (destinatario) REFERENCES 4images_users (user_id)
-);
-
-CREATE TABLE 4images_lightboxes (
-user_id int(11),
-lightbox_image_id int(11),
-orden int(11),
-PRIMARY KEY (user_id ,lightbox_image_id),
-FOREIGN KEY (user_id) REFERENCES 4images_users (user_id),
-FOREIGN KEY (user_id) REFERENCES 4images_users (user_id)
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE 4images_categories (
-cat_id int(11) PRIMARY KEY AUTO_INCREMENT,
-cat_name varchar(255) NOT NULL UNIQUE,
-cat_description text NOT NULL,
-cat_parent_id int(11) NOT NULL DEFAULT '0',
-cat_hits int(11) NOT NULL DEFAULT '0',
-auth_download tinyint(1) NOT NULL DEFAULT '1',
-auth_upload tinyint(1) NOT NULL DEFAULT '1',
-auth_vote tinyint(1) NOT NULL DEFAULT '1',
-auth_sendpostcard tinyint(1) NOT NULL DEFAULT '1',
-visibilidad TINYINT NOT NULL DEFAULT '1',
-permitir_gif TINYINT NOT NULL DEFAULT '1'
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_images (
@@ -189,6 +167,52 @@ nivel_comentario tinyint(1) NOT NULL DEFAULT '2',
 visibilidad TINYINT NOT NULL DEFAULT '1',
 FOREIGN KEY (cat_id) REFERENCES 4images_categories (cat_id),
 FOREIGN KEY (user_id) REFERENCES 4images_users (user_id)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE 4images_usersraters(
+Usuario int(11),
+Imagen int(11),
+FOREIGN KEY (Usuario) REFERENCES 4images_users (user_id),
+FOREIGN KEY (Imagen) REFERENCES 4images_images (image_id),
+PRIMARY KEY (Usuario,Imagen)
+)DEFAULT CHARSET=utf8;
+
+CREATE TABLE mensajes (
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+remitente int(11),
+destinatario  int(11),
+asunto varchar(30),
+mensaje text,
+leido tinyint(1) DEFAULT '0' NOT NULL,
+oculto tinyint(1) DEFAULT '0' NOT NULL,
+dt_fechaEnvio date NOT NULL,
+dt_fechaVista date NOT NULL,
+hora_envio TIME NOT NULL,
+hora_vista TIME NOT NULL,
+FOREIGN KEY (remitente) REFERENCES 4images_users (user_id),
+FOREIGN KEY (destinatario) REFERENCES 4images_users (user_id)
+);
+
+CREATE TABLE 4images_lightboxes (
+user_id int(11),
+lightbox_image_id int(11),
+orden int(11),
+PRIMARY KEY (user_id ,lightbox_image_id),
+FOREIGN KEY (user_id) REFERENCES 4images_users (user_id)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE 4images_categories (
+cat_id int(11) PRIMARY KEY AUTO_INCREMENT,
+cat_name varchar(255) NOT NULL UNIQUE,
+cat_description text NOT NULL,
+cat_parent_id int(11) NOT NULL DEFAULT '0',
+cat_hits int(11) NOT NULL DEFAULT '0',
+auth_download tinyint(1) NOT NULL DEFAULT '1',
+auth_upload tinyint(1) NOT NULL DEFAULT '1',
+auth_vote tinyint(1) NOT NULL DEFAULT '1',
+auth_sendpostcard tinyint(1) NOT NULL DEFAULT '1',
+visibilidad TINYINT NOT NULL DEFAULT '1',
+permitir_gif TINYINT NOT NULL DEFAULT '1'
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_comments (

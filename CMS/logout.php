@@ -10,6 +10,10 @@ if(!isset($_SESSION['pagina'])||$_SESSION['pagina']==""){
 
 setcookie("4images_userid","-1");
 
+if($_SESSION['pagina']=="rss"){
+	$_SESSION['pagina']="index.php";
+}
+
 redireccionar($_SESSION['pagina']);
 
 ?>

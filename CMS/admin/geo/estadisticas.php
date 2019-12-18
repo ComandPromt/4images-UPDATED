@@ -58,7 +58,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$consulta=mysqli_query($GLOBALS['conexion'],"SELECT count(id_tracking) FROM tbl_tracking 
 	
 	where pais!='rusia' AND pais!='us'  AND pais!='fr'  AND pais!='de'  AND pais!='brasil'
-	 AND pais!='italia'  AND pais!='india'
+	 AND pais!='italia'  AND pais!='india' AND pais!='home'
 	");
     
 	$fila = mysqli_fetch_row($consulta);
