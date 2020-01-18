@@ -1,123 +1,20 @@
+
 CREATE TABLE bots (
 id int(11) AUTO_INCREMENT PRIMARY KEY,
 IP varchar(64) NOT NULL UNIQUE
 ) DEFAULT CHARSET=utf8;
 
-CREATE TABLE tbl_tracking (
-id_tracking int(11) PRIMARY KEY AUTO_INCREMENT,
-tx_pagina varchar(70) NOT NULL DEFAULT '',
-tx_paginaOrigen varchar(200) NOT NULL DEFAULT '',
-tx_ipRemota varchar(15) NOT NULL DEFAULT '',
-tx_navegador varchar(255) NOT NULL DEFAULT '',
-dt_fechaVisita date NOT NULL,
-pais varchar(25) NOT NULL,
-ciudad varchar(30) NOT NULL,
-usuario int(11),
-hora TIME NOT NULL,
-FOREIGN KEY (usuario) REFERENCES 4images_users (user_id)
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE polaco(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE coreano(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE vietnamita (
-id int(11)PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-)DEFAULT CHARSET=utf8;
-
-CREATE TABLE aleman(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE ingles(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40 )NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE spanish(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE frances(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE portuges(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE italiano(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE hindu(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE chino(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE japones(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE arabe(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE bengali(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE catalan(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE euskera(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
-
-CREATE TABLE ruso(
-id int(11) PRIMARY KEY AUTO_INCREMENT,
-accion varchar(40) NOT NULL UNIQUE,
-texto text NOT NULL
-) DEFAULT CHARSET=utf8;
+CREATE TABLE sitios_descarga(
+Id INT(11) PRIMARY KEY,
+Url VARCHAR(255) UNIQUE,
+Tipo_descarga VARCHAR(255),
+Nombre_tabla  VARCHAR(255),
+Nombre_td  VARCHAR(255),
+Nombre_div  VARCHAR(255),
+Clase_div  VARCHAR(255),
+Descripcion TEXT,
+Favorita TINYINT(1)
+);
 
 CREATE TABLE 4images_config (
 contactar_con_admin TINYINT(1),
@@ -168,6 +65,35 @@ visibilidad TINYINT NOT NULL DEFAULT '1',
 FOREIGN KEY (cat_id) REFERENCES 4images_categories (cat_id),
 FOREIGN KEY (user_id) REFERENCES 4images_users (user_id)
 ) DEFAULT CHARSET=utf8;
+
+CREATE TABLE tbl_tracking (
+id_tracking int(11) PRIMARY KEY AUTO_INCREMENT,
+tx_pagina varchar(70) NOT NULL DEFAULT '',
+tx_paginaOrigen varchar(200) NOT NULL DEFAULT '',
+tx_ipRemota varchar(15) NOT NULL DEFAULT '',
+tx_navegador varchar(255) NOT NULL DEFAULT '',
+dt_fechaVisita date NOT NULL,
+pais varchar(25) NOT NULL,
+ciudad varchar(30) NOT NULL,
+usuario int(11),
+hora TIME NOT NULL,
+FOREIGN KEY (usuario) REFERENCES 4images_users (user_id)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE 4images_img_url (
+Id int(11) PRIMARY KEY,
+Url varchar(255) NOT NULL,
+Imagen int(11),
+FOREIGN KEY (Imagen) REFERENCES 4images_images (image_id)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE 4images_metadatos(
+Id int(11) PRIMARY KEY,
+Imagen int(11),
+Tipo varchar(30),
+Valor varchar(255),
+FOREIGN KEY (Imagen) REFERENCES 4images_images (image_id)
+)DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_usersraters(
 Usuario int(11),
@@ -291,7 +217,9 @@ CREATE TABLE 4images_video (
 video_id int(11) PRIMARY KEY,
 nombre varchar(30) NOT NULL,
 ruta varchar(50) NOT NULL,
-visibilidad tinyint(1) NOT NULL
+visibilidad tinyint(1) NOT NULL,
+Categoria int(11),
+FOREIGN KEY (Categoria) REFERENCES 4images_categories (cat_id)
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_imv (
@@ -338,6 +266,108 @@ PRIMARY KEY (usuario,imagen)
 CREATE OR REPLACE VIEW ver_bots AS SELECT distinct(tx_ipRemota) FROM tbl_tracking where tx_navegador like '%crawler%' OR tx_navegador like '%Bot%' AND tx_ipRemota!='127.0.0.1';
 
 CREATE OR REPLACE VIEW pais_desconocido AS SELECT distinct(tx_ipRemota) from tbl_tracking where pais='unknow';
+
+CREATE TABLE polaco(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE coreano(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE vietnamita (
+id int(11)PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+)DEFAULT CHARSET=utf8;
+
+CREATE TABLE aleman(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE ingles(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40 )NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE spanish(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE frances(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE portuges(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE italiano(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE hindu(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE chino(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE japones(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE arabe(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE bengali(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE catalan(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE euskera(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE ruso(
+id int(11) PRIMARY KEY AUTO_INCREMENT,
+accion varchar(40) NOT NULL UNIQUE,
+texto text NOT NULL
+) DEFAULT CHARSET=utf8;
 
 INSERT INTO polaco (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Użytkownik został pomyślnie aktywowany'),

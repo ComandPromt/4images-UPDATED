@@ -84,7 +84,9 @@ function get_timezone_by_offset($offset){
 if (file_exists('config.php')) {
     unlink('config.php');
     header('Location:install.php');
-} else {
+} 
+
+else {
     if (!isset($HTTP_GET_VARS)) {
         $HTTP_GET_VARS = $_GET;
         $_POST = $_POST;
@@ -158,14 +160,6 @@ if (file_exists('config.php')) {
     $selected_timezone = (isset($_POST['timezone_select'])) ? trim($_POST['timezone_select']) : '1';
     $selected_timezone = get_timezone_by_offset($selected_timezone);
 
-    if ($action == 'downloadconfig') {
-        header('Content-Type: text/x-delimtext; name="config.php"');
-        header('Content-disposition: attachment; filename=config.php');
-        $config_file = stripslashes(trim($_POST['config_file']));
-        echo $config_file;
-        exit;
-    }
-
     if (isset($_POST['submit'])) {
 
         $_POST['site'] = eliminar_espacios($_POST['site']);
@@ -183,11 +177,25 @@ if (file_exists('config.php')) {
         $_POST['github'] = eliminar_espacios($_POST['github']);
         $_POST['debianart'] = eliminar_espacios($_POST['debianart']);
         $_POST['slideshare'] = eliminar_espacios($_POST['slideshare']);
-		
-        if ($_POST['timezone_select'] == '1.5') {
-            $selected_timezone = 'Europe/Madrid';
+        
+        $target_path = "avatars/" . basename($avatar);
+
+        switch($_POST['timezone_select']){
+            
+            case "1":
+                $selected_timezone = 'Africa/Algiers';
+            break;
+
+            case "1.5":
+                $selected_timezone = 'Europe/Madrid';
+            break;
+
+            default:
+                $selected_timezone = 'Europe/Madrid';
+            break;
+
         }
-		
+
         if (file_exists('config.php')) {
             unlink('config.php');
         }
@@ -195,40 +203,7 @@ if (file_exists('config.php')) {
 		$miArchivo = fopen('.htaccess', 'w') or die('No se puede abrir/crear el archivo!');
         $php ='ErrorDocument 404 '.substr($_SERVER["REQUEST_URI"],0,strripos($_SERVER["REQUEST_URI"],"/")+1).'404.php';
 
-		fwrite($miArchivo, $php);
-        fclose($miArchivo);
-        chmod('.htaccess', 0777);
-
-        $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
-
-        $php = '<?php
-        error_reporting(0);
-	    date_default_timezone_set("' . $selected_timezone . '");
-	    $site_name = "' . $_POST['site'] . '";
-	    $db_host = "' . $_POST['db_host'] . '";
-	    $db_name = "' . $_POST['db_name'] . '";
-	    $db_user = "' . $_POST['db_user'] . '";
-	    $db_password = "' . $_POST['db_password'] . '";
-	    $table_prefix = "' . $_POST['table_prefix'] . '";
-	    $admin_email = "' . $_POST['admin_email'] . '";
-	    $protocolo = "' . $_POST['protocolo'] . '";
-	    $facebook="' . $_POST['facebook'] . '";
-	    $instagram="' . $_POST['instagram'] . '";
-	    $twitter="' . $_POST['twitter'] . '";
-	    $youtube="' . $_POST['youtube'] . '";
-	    $github="' . $_POST['github'] . '";
-	    $debianart="' . $_POST['debianart'] . '";
-	    $slideshare="' . $_POST['slideshare'] . '";
-        $idioma="' . $_POST['idioma'] . '";
-	    $conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name) or die("No se pudo conectar a la base de datos");
-        mysqli_set_charset($conexion,"utf8");
-	    ?>';
-
-        fwrite($miArchivo, $php);
-        fclose($miArchivo);
-        chmod('config.php', 0777);
-
-        $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
+		$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
 
         if ($dwes->set_charset('utf8')) {
             $dwes->query('DROP DATABASE ' . $_POST['db_name']);
@@ -247,10 +222,71 @@ if (file_exists('config.php')) {
             }
         }
 
+        $extension= substr($_FILES['avatar']['name'], -4);
+
+        $avatar=obtener_nombre($extension);
+
+        $target_path = "avatars/" . basename($avatar);
+
+        if(move_uploaded_file($_FILES['avatar']['tmp_name'], $target_path)){
+            rename('avatars/'.$_FILES['uploadedfile']['name'],'avatars/'.$avatar);
+            $dwes->query("UPDATE 4images_users SET avatar='".$avatar."' WHERE user_id='1' ");
+        }
+
         $dwes->close();
+
+        $extension= substr($_FILES['logo']['name'], -4);
+
+        $target_path = 'logo/' . $_FILES['logo']['name'];
+
+        $logo='logo'.$extension;
+
+        if(move_uploaded_file($_FILES['logo']['tmp_name'], $target_path)){
+            rename('logo/'.$_FILES['logo']['name'],'logo/'.$logo);
+        }
 
         $current_time = time();
         $admin_pass_hashed = salted_hash($admin_password);
+
+        fwrite($miArchivo, $php);
+        fclose($miArchivo);
+        chmod('.htaccess', 0777);
+
+        $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
+
+        $php = '<?php
+
+        date_default_timezone_set("' . $selected_timezone . '");
+        $logo ="'.$logo.'";
+	    $site_name = "' . $_POST['site'] . '";
+	    $db_host = "' . $_POST['db_host'] . '";
+	    $db_name = "' . $_POST['db_name'] . '";
+	    $db_user = "' . $_POST['db_user'] . '";
+        $db_password = "' . $_POST['db_password'] . '";
+        $port = "' . $_POST['port'] . '";
+	    $table_prefix = "' . $_POST['table_prefix'] . '";
+	    $admin_email = "' . $_POST['admin_email'] . '";
+	    $protocolo = "' . $_POST['protocolo'] . '";
+	    $facebook="' . $_POST['facebook'] . '";
+	    $instagram="' . $_POST['instagram'] . '";
+	    $twitter="' . $_POST['twitter'] . '";
+	    $youtube="' . $_POST['youtube'] . '";
+	    $github="' . $_POST['github'] . '";
+	    $debianart="' . $_POST['debianart'] . '";
+	    $slideshare="' . $_POST['slideshare'] . '";
+        $idioma="' . $_POST['idioma'] . '";
+
+	    $conexion = mysqli_connect($db_host, $db_user, $db_password, $db_name,$port) or die("No se pudo conectar a la base de datos");
+        mysqli_set_charset($conexion,"utf8");
+        
+        ?>';
+
+        fwrite($miArchivo, $php);
+        
+        fclose($miArchivo);
+        
+        chmod('config.php', 0777);
+
     }
 
     if ($action == 'startinstall') {
@@ -295,11 +331,16 @@ if (file_exists('config.php')) {
             if (empty($error_log)) {
 
                 $dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], $_POST['db_name']);
+                
                 $dwes->set_charset('utf8');
-                $dwes->query(
-                    "UPDATE users
-                    SET user_name = '$admin_user', user_password = '" . $admin_pass_hashed . "', user_joindate = $current_time, user_lastaction = $current_time, user_lastvisit = $current_time
-                     WHERE user_name = 'admin'");
+
+                $dwes->query("UPDATE users SET user_name = '$admin_user',
+                nacionalidad='".$_POST['pais']."',
+                user_password = '" . $admin_pass_hashed . "', 
+                user_joindate = $current_time, 
+                user_lastaction = $current_time,
+                user_lastvisit = $current_time
+                WHERE user_name = 'admin'");
 
                 if ($table_prefix != '4images_') {
                     $dwes->query('RENAME TABLE 4images_users TO ' . $table_prefix . 'users');
@@ -314,9 +355,12 @@ if (file_exists('config.php')) {
                 }
 
                 $dwes->close();
+
                 echo '<script>location.href="index.php";</script>';
 
-            } else {
+            } 
+            
+            else {
 
                 $msg = $lang['database_error'];
                 $error_msg .= '<ol>';
@@ -334,7 +378,9 @@ if (file_exists('config.php')) {
                 echo '<input title="enviar" type="submit" value="' . $lang['config_download'] . '" class="button" name="submit">
 		        <hr/>';
             }
+
         }
+
     }
 
 ?>
@@ -344,6 +390,7 @@ if (file_exists('config.php')) {
 <html lang="es">
 
 <head>
+
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="description" content="<?php print $db_name;?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -582,22 +629,24 @@ if (file_exists('config.php')) {
 	    </div>
 
 <?php
-	
+
     if ($action == 'intro') {
 		
         if (!empty($error)) {
             $lang['start_install_desc'] = $lang['start_install_desc'] . sprintf('<br /><br /><span class="marktext">%s *</span>', $lang['lostfield_error']);
         }
 		
-        print '
-            <div class="flotar_izquierda clear " >
+        print '<div class="flotar_izquierda clear">
+
             <form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
-              <h2>' . $lang['protocolo'] . '</h2>
-				<select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
-				<option>http</option>
-				<option>https</option>
-				</select>
-              <h2>' . $lang['db_host'] . '</h2>
+
+                <h2>' . $lang['protocolo'] . '</h2>
+				    <select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
+				    <option>http</option>
+				    <option>https</option>
+				    </select>
+                <h2>' . $lang['db_host'] . '</h2>
+
               <p>
                 <input title="db_host" type="text" name="db_host" value="localhost" required/>
               </p>
@@ -613,6 +662,10 @@ if (file_exists('config.php')) {
               <p>
                 <input title="db_password" type="password"  name="db_password" required/>
               </p>
+              <h2>' . $lang['puerto'] . '</h2>
+			  <p>
+                <input title="db port" type="text" value="3306" name="port" required/>
+              </p>
               <h2>' . $lang['table_prefix'] . '</h2>
 			  <p>
                 <input title="table_prefix" type="text" value="4images_" name="table_prefix" required/>
@@ -626,9 +679,15 @@ if (file_exists('config.php')) {
 		        <input title="site" type="text"  name="site" required/>
             </p>
 
-			  <hr class="espacio_arriba" />
-             <h2 id="zonahoraria">' . $lang['timezone_select'] . '</h2>
-              <p>
+            <h2 id="email">' . $lang['favicon'] . '</h2>
+
+            <p><input style="font-size:25px;" name="favicon" type="file"/></p>
+
+            <hr class="espacio_arriba" />
+            
+            <h2 id="zonahoraria">' . $lang['timezone_select'] . '</h2>
+
+            <p>
                 <select title="timezone_select" name="timezone_select">
                     <option value="-12">Baker Island Time (UTC-12)</option>
                     <option value="-11">Niue Time, Samoa Standard Time (UTC-11)</option>
@@ -672,58 +731,166 @@ if (file_exists('config.php')) {
                     <option value="13">Tonga Time, Phoenix Islands Time (UTC+13)</option>
                     <option value="14">Line Island Time (UTC+14)</option>
                 </select>
-				</p>
+			</p>
 
-				<hr class="espacio_arriba"/>
-				<h2 id="admin">' . $lang['admin_user'] . '</h2>
-				<p><img class="imagen" alt="admin" class="imagen" src="img/director.png"/><br/><br/>
+            <hr class="espacio_arriba"/>
+            
+            <h2 id="admin">' . $lang['admin_user'] . '</h2>
+            
+            <p>
+                <img class="imagen" alt="admin" class="imagen" src="img/director.png"/><br/><br/>
 					<input title="admin_user" type="text"  placeholder="admin" name="admin_user" required/>
-				</p>
-				<br/>
-				<h2>' . $lang['admin_password'] . '</h2>
-				<p><img class="imagen" alt="pass admin" class="imagen" src="img/user_pass.png"/><br/><br/>
-					<input title="admin_password" type="password" placeholder="password" name="admin_password" required/>
-				</p>
-				<h2>' . $lang['admin_password2'] . '</h2>
-				<p>
-					<input title="admin_password2" type="password"  name="admin_password2" required/>
-        </p>
-        <br/>
-				<hr/>
-              <h2 id="email">' . $lang['des_email'] . '
-        </h2>
-					<img class="imagen" alt="email admin" class="install" src="img/emaill.png"/> <br/><br/><input  style="font-size:25px;margin:auto;"  title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
+            </p>
+            
+            <br/>
+            
+            <h2>' . $lang['admin_password'] . '</h2>
+            
+            <p>
+                <img class="imagen" alt="pass admin" class="imagen" src="img/user_pass.png"/>
+                <br/><br/>
+				<input title="admin_password" type="password" placeholder="password" name="admin_password" required/>
+            </p>
+            
+            <h2>' . $lang['admin_password2'] . '</h2>
+            
+			<p>
+				<input title="admin_password2" type="password"  name="admin_password2" required/>
+            </p>
 
-				<br/>
-				<hr/>
-			  <h2 id="socials" stlye="font-size:20px;">' . $lang['nota'] . '</h2>
-				<p>
-					<img class="imagen" alt="facebook" class="install" src="img/Social/facebook.png"/> <br/> <br/> <input title="facebook" type="text" placeholder="facebook" name="facebook">
-        </p>
-				<p>
+            <h2 id="email">' . $lang['avatar'] . '</h2>
+
+            <p>
+                <input style="font-size:25px;" name="avatar" type="file"/>
+            </p>
+                
+            <h2 style="padding-top:20px;" id="email">' . $lang['des_email'] . '</h2>
+
+			<img class="imagen" alt="email admin" class="install" src="img/emaill.png"/> <br/><br/><input  style="font-size:25px;margin:auto;"  title="email" type="email" name="admin_email" placeholder="email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"/>
+                   
+            <h2 id="langadm">
+                <img class="icono2" src="img/idiomas.png"/>
+            </h2>
+			                
+            <p style="padding-bottom:20px;padding-top:20px;">
+                
+                <input name="pais" value="spanish" type="radio" checked="checked">
+                    <img src="images/icons/1.png"/>
+                </input>
+
+                <input name="pais" value="aleman" type="radio">
+                <img src="images/icons/2.png"/>
+                </input>
+
+                <input name="pais" value="ingles" type="radio">
+                <img src="images/icons/3.png"/>
+                </input>
+
+                <input name="pais" value="frances" type="radio">
+                <img src="images/icons/4.png"/>
+                </input>
+
+                <input name="pais" value="ruso" type="radio">
+                <img src="images/icons/5.png"/>
+                </input>
+
+                <input name="pais" value="italiano" type="radio">
+                <img src="images/icons/6.png"/><br/><br/>
+                </input>
+
+                <input name="pais" value="portuges" type="radio">
+                <img src="images/icons/7.png"/>
+                </input>
+
+                <input name="pais" value="chino" type="radio">
+                <img src="images/icons/8.png"/>
+                </input>
+
+                <input name="pais" value="hindu" type="radio">
+                <img src="images/icons/9.png"/>
+                </input>
+
+                <input name="pais" value="japones" type="radio">
+                <img src="images/icons/10.png"/>
+                </input>
+
+                <input name="pais" value="catalan" type="radio">
+                <img src="images/icons/11.png"/>
+                </input>
+
+                <input name="pais" value="bengali" type="radio">
+                <img src="images/icons/12.png"/><br/><br/>
+                </input>
+
+                <input name="pais" value="arabe" type="radio">
+                <img src="images/icons/13.png"/>
+                </input>
+
+                <input name="pais" value="euskera" type="radio">
+                <img src="images/icons/14.png"/>
+                </input>
+
+                <input name="pais" value="coreano" type="radio">
+                <img src="images/icons/15.png"/>
+                </input>
+
+                <input name="pais" value="vietnamita" type="radio">
+                <img src="images/icons/16.png"/>
+                </input>
+
+                <input name="pais" value="polaco" type="radio">
+                <img src="images/icons/17.png"/>
+                </input>
+
+                <br/>
+
+            </p>
+              
+            <hr/>
+            
+            <h2 id="socials" stlye="font-size:20px;">' . $lang['nota'] . '</h2>
+            
+			<p>
+				<img class="imagen" alt="facebook" class="install" src="img/Social/facebook.png"/> <br/> <br/> <input title="facebook" type="text" placeholder="facebook" name="facebook">
+            </p>
+
+			<p>
 					<img class="imagen" alt="instagram" class="install" src="img/Social/instagram.png"/> <br/><br/>  <input title="instagram" type="text" placeholder="instagram" name="instagram" >
-        </p>
-				<p>
-					<img class="imagen" alt="twitter" class="install" src="img/Social/twitter.png"/><br/><br/>   <input title="twitter" type="text" placeholder="twitter" name="twitter" >
-        </p>
-				<p>
-					<img class="imagen" alt="youtube" class="install" src="img/Social/youtube.png"/><br/><br/>  <input title="youtube" type="text" placeholder="youtube" name="youtube" >
-        </p>
-				<p>
-					<img class="imagen" alt="github" class="install" src="img/Social/github.png"/><br/><br/>   <input title="github" type="text" placeholder="github" name="github" >
-        </p>
-				<p>
-					<img class="imagen" alt="debianart" class="install" src="img/Social/debianart.png"/> <br/><br/>  <input title="debianart" type="text" placeholder="debianart" name="debianart" >
-        </p>
-				<p>
-					<img class="imagen" alt="slideshare" class="install" src="img/Social/slideshare.png"/><br/><br/>   <input title="slideshare" type="text" placeholder="slideshare" name="slideshare" >
-        </p>
-				<input title="startinstall" type="hidden" name="action" value="startinstall"/>
-        <input title="install_lang" type="hidden" name="install_lang" value="<?php echo $install_lang; ?>"/>
-        <br/>
-				<input name="idioma" value="' . $_GET['install_lang'] . '" type="hidden"></input>
-        <input title="enviar" type="submit" value="' . $lang['start_install'] . '" class="button" name="submit"/>
-				<br/><br/></form>
+            </p>
+
+			    <p>
+				    <img class="imagen" alt="twitter" class="install" src="img/Social/twitter.png"/><br/><br/>   <input title="twitter" type="text" placeholder="twitter" name="twitter" >
+                </p>
+
+			    <p>
+				    <img class="imagen" alt="youtube" class="install" src="img/Social/youtube.png"/><br/><br/>  <input title="youtube" type="text" placeholder="youtube" name="youtube" >
+                </p>
+
+			    <p>
+				    <img class="imagen" alt="github" class="install" src="img/Social/github.png"/><br/><br/>   <input title="github" type="text" placeholder="github" name="github" >
+                </p>
+
+			    <p>
+				    <img class="imagen" alt="debianart" class="install" src="img/Social/debianart.png"/> <br/><br/>  <input title="debianart" type="text" placeholder="debianart" name="debianart" >
+                </p>
+
+			    <p>
+				    <img class="imagen" alt="slideshare" class="install" src="img/Social/slideshare.png"/><br/><br/>   <input title="slideshare" type="text" placeholder="slideshare" name="slideshare" >
+                </p>
+
+			    <input title="startinstall" type="hidden" name="action" value="startinstall"/>
+           
+                <input title="install_lang" type="hidden" name="install_lang" value="<?php echo $install_lang; ?>"/>
+            
+                <br/>
+
+			    <input name="idioma" value="' . $_GET['install_lang'] . '" type="hidden"></input>
+            
+                <input title="enviar" type="submit" value="' . $lang['start_install'] . '" class="button" name="submit"/>
+            
+                <br/><br/>
+            </form>
+
 		</div>';
     }
 }

@@ -20,7 +20,6 @@ poner_menu_conf();
 
 print '<div class="content">';
 
-
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$GLOBALS['db_password'], $GLOBALS['db_name'])
 	or die("No se pudo conectar a la base de datos");
@@ -63,12 +62,9 @@ if(!in_array($extension, $ext_validas)){
 }
 
 if($avatar!="nofoto.jpg"){
-	
-	$nombre = date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s');
-	
-	$extension=strtolower($extension);
-	
-	$avatar=$nombre.$extension; 
+
+	$avatar=obtener_nombre($extension);
+
 }
 	
 $target_path = "avatars/" . basename($avatar);

@@ -1,24 +1,4 @@
 <?php
-/**************************************************************************
- *                                                                        *
- *    4images - A Web Based Image Gallery Management System               *
- *    ----------------------------------------------------------------    *
- *                                                                        *
- *             File: install.php                                          *
- *        Copyright: (C) 2002-2016 4homepages.de                          *
- *            Email: 4images@4homepages.de                                * 
- *              Web: http://www.4homepages.de                             * 
- *    Scriptversion: 1.8                                                  *
- *                                                                        *
- **************************************************************************
- *                                                                        *
- *    Dieses Script ist KEINE Freeware. Bitte lesen Sie die Lizenz-       *
- *    bedingungen (Lizenz.txt) für weitere Informationen.                 *
- *    ---------------------------------------------------------------     *
- *    This script is NOT freeware! Please read the Copyright Notice       *
- *    (Licence.txt) for further information.                              *
- *                                                                        *
- *************************************************************************/
 
 $lang['start_install'] = 'Installation starten';
 $lang['start_install_desc'] = 'Tragen Sie hier Ihre Zugangsdaten für Ihren Datenbank Server ein und wählen Sie einen Usernamen und ein Passwort für den Administrator.';
@@ -35,7 +15,6 @@ $lang['table_prefix'] = 'Präfix für die Tabellen';
 $lang['admin_user'] = 'Administrator Username';
 $lang['admin_password'] = 'Administrator Passwort';
 $lang['admin_password2'] = 'Administrator Passwort (Bestätigung)';
-
 $lang['database_error'] = 'Es sind Fehler bei der Erstellung der Datenbankeinträge aufgetreten';
 $lang['install_success'] = 'Die Installation war erfolgreich!';
 $lang['install_success_login'] = 'Ihr Administor Benutzername und Passwort wurde erstellt. Die Basis Konfiguration ist nun beendet. Sie können Sich jetzt in Ihren Administrationsbereich einloggen und weitere Einstellungen vornehmen.<br /><b>&raquo; <a href="'.ROOT_PATH.'admin/index.php">Zum Adminstrationsbereich</a></b>';
@@ -46,4 +25,7 @@ $lang['site'] = 'Name der Site';
 $lang['nota'] = '*Sie müssen nur den Benutzernamen eingeben';
 $lang['des_email'] = 'Administrator-E-Mail';
 $lang['protocolo'] = 'Protokoll';
+$lang['puerto'] = 'Hafen';
+$lang['favicon'] = 'Favicon';
+$lang['avatar'] = 'Benutzerbild';
 ?>

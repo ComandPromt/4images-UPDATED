@@ -26,4 +26,7 @@ $lang['site'] = 'Name of the site';
 $lang['nota'] = '*You must enter only the username';
 $lang['des_email'] = 'Administrator email';
 $lang['protocolo'] = 'Protocol';
+$lang['puerto'] = 'Port';
+$lang['favicon'] = 'Favicon';
+$lang['avatar'] = 'Avatar';
 ?>

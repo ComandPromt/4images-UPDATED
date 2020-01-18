@@ -25,4 +25,7 @@ $lang['timezone_select'] = 'Por favor seleccione su zona horaria';
 $lang['site'] = 'Nombre del sitio';
 $lang['des_email'] = 'Email del administrador';
 $lang['protocolo'] = 'Protocolo';
+$lang['puerto'] = 'Puerto';
+$lang['favicon'] = 'Favicon';
+$lang['avatar'] = 'Avatar';
 ?>

@@ -4,7 +4,7 @@ sudo apt update
 
 sudo apt install apache2
 
-sudo apt install mysql-server php mysql-client
+sudo apt install mariadb-server-10.0 mariadb-client-10.0 php 
 
 sudo apt install php libapache2-mod-php php-mysql php-cli
 
