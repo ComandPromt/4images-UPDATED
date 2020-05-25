@@ -161,7 +161,7 @@ if (file_exists('config.php') && logueado()) {
           src="data/media/' . $fila[0] . '/' . $fila[1] . '"/></a></figure>';
         }
 		
-	    $mysqli->close();
+	   $mysqli->close();
 	
 		print '<h1 style="background-color: rgba(255, 255, 255, 0);">' . ver_dato('welcome', $GLOBALS['idioma']) . '</h1>';
 

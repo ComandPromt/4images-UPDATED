@@ -1,4 +1,4 @@
 <?php
 include('includes/funciones.php');
-redireccionar('../register.php');
+redireccionar('register.php');
 ?>

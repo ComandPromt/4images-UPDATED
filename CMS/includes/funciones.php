@@ -2,15 +2,6 @@
  
 date_default_timezone_set('Europe/Madrid');
 
-function obtener_nombre($extension){
-
-	$nombre = date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s');
-	
-	$extension=strtolower($extension);
-	
-	return $nombre.$extension; 
-}
-
 function descargar(){
 	
 	$comprobacion=count($_SESSION['array_imagenes']);
@@ -1616,11 +1607,6 @@ function crear_carpetas(){
 	if(!file_exists('avatars')){
 			mkdir('avatars', 0777, true);
 	}
-
-	if(!file_exists('logo')){
-		mkdir('logo', 0777, true);
-}
-
 }
 
 function ver_dato($accion,$idioma){
@@ -2238,6 +2224,26 @@ function track(){
 				$country ="guinea";
 				break;
 				
+				case "Yemen":
+				$country ="yemen";
+				break;
+				
+				case "Jordan":
+				$country ="jordania";
+				break;
+				
+				case "Haiti":
+				$country ="haiti";
+				break;
+				
+				case "Burkina Faso":
+				$country ="burkina";
+				break;
+					
+				case "Suriname":
+				$country ="surinam";
+				break;				
+									
 				default:
 				$country ="unknow";
 				break;
