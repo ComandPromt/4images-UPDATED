@@ -47,8 +47,6 @@ $_SESSION['pagina'] = 'details.php';
 
 $ultima_imagen = 0;
 
-
-
 if (!isset($_SESSION['insert'])) {
     $_SESSION['insert'] = false;
 }
@@ -96,12 +94,13 @@ if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_
 			}
 }
 
-
 if (isset($_GET['image_id']) ) {
-	
-$_GET['image_id']=(int)$_GET['image_id'];
 
-	if($_GET['image_id']>0 && visible($_GET['image_id']) == 1){
+	$subida_por_mi=subida_por_mi($_GET['image_id']);
+
+	$_GET['image_id']=(int)$_GET['image_id'];
+
+	if($subida_por_mi && visible($_GET['image_id'])==0 || ($_GET['image_id']>0 && visible($_GET['image_id'])) == 1){
 
 		if (isset($_COOKIE['4images_userid'])) {
 
@@ -425,9 +424,8 @@ if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['ima
 				
 			</a>';
 }
-if($logueado && subida_por_mi($_GET['image_id']) || admin($_COOKIE['4images_userid'])){
-	
 
+if($logueado && $subida_por_mi || admin($_COOKIE['4images_userid'])){
 	
 $icono2='hide.png';
 
@@ -1007,7 +1005,7 @@ print '</option>
 		
 		<p><textarea name="edit_comment" type="text" >'.$id_comentario[0].'</textarea></p>
 
-<input name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+		<input name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 
 				</form>
 
@@ -1043,7 +1041,9 @@ print '</option>
 			print "<script>$('#edit_comment').modal('show');</script>";
 		}
 
-    } else {
+	} 
+	
+	else {
         $_SESSION['pagina'] = "details.php?image_id=" . $ultima_imagen;
         redireccionar('details.php?image_id=' . $ultima_imagen);
     }

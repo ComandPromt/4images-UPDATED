@@ -63,7 +63,9 @@ function acceso_imagen($imagen,$logueado){
 		'SELECT C.visibilidad FROM '.$GLOBALS['table_prefix']."images I JOIN  4images_categories C ON I.cat_id=C.cat_id WHERE image_id='".$imagen."'");
 		 
 		$visibilidad = mysqli_fetch_row($cat_consulta);
-
+		
+		$visibilidad[0]=(int)$visibilidad[0];
+		
 		if($visibilidad[0]==1 || ($logueado && $visibilidad[0]==2)){
 			$respuesta=true;
 		}
@@ -885,7 +887,6 @@ function comprobar_cookie($ruta=""){
 
 	if(isset($_COOKIE['pass']) && isset($_COOKIE['4images_userid']) && (int)$_COOKIE['4images_userid']>0 && !empty($_COOKIE['pass'])){
 				
-			$pass=saber_pass($_COOKIE['4images_userid']);
 	}
 	
 	else{
@@ -2260,6 +2261,7 @@ function track(){
 		
 		else{
 			$usuario=$_COOKIE['4images_userid'];
+
 		}
 
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
@@ -2342,14 +2344,18 @@ function menu_lateral($ruta = ""){
 			<img alt="registar" class="icono" src="'.$ruta.'img/registrar.png">
 		</a>
 
-		<a title="'.ver_dato('recordar',$GLOBALS['idioma']).'" data-toggle="modal" 
-		data-target="#exampleModal">
+		</div>
+
+		<div class="flotar_izquierda espacio_izquierda">
+
+			<a title="'.ver_dato('recordar',$GLOBALS['idioma']).'" data-toggle="modal" 
+			data-target="#exampleModal">
 
 			  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" 
-			  class="icono espacio_arriba" src="'.$ruta.'img/forgot_password.png"/>
-		 </a>
+			  class="icono" src="'.$ruta.'img/forgot_password.png"/>
+		 	</a>
 		 
-	</div>';
+		</div>';
 	
 	}
 	
@@ -2444,7 +2450,7 @@ function menu_lateral($ruta = ""){
 		
 		<div class="flotar_izquierda espacios_3">
 	   <a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
-		<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/fav_2.ico"/>
+		<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono espacio_izquierda" src="'.$ruta.'img/fav_2.ico"/>
 		</a></div>
 		
 		<div class="flotar_izquierda espacios_3">
@@ -2569,26 +2575,16 @@ print '
 		
 	}
 	
-	if(logueado()){
-
-		print '<div class="flotar_izquierda" > 
-
-			<a title="buscador" href="'.$ruta.'search.php">
-
-				<img class="icono espacio_arriba_2" src="'.$ruta.'img/search.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
-			</a>
-
-		</div>';
-	}
-	
-	print '<div style="float:left;padding-top:20px;"> 
+	print '<div style="float:left;"> 
 
 				<a title="rss" href="'.$ruta.'rss.php">
 					<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
 				</a>
 
 			</div>
+
 		</div>
+
 </nav>';
 
 }

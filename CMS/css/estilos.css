@@ -110,7 +110,7 @@
 
 #estilo_usuario{
     margin-left:-15px;
-    font-size:1.5em;
+    font-size:1.2em;
     font-weight:bold;
 	color:#FFC151;
 	background-color:#0B7C92;
@@ -169,15 +169,11 @@
 }
 
 .espacio_izquierda{
-    margin-left:5px;
+    margin-left:20px;
 }
 
 .espacio_izquierda_2{
     margin-left:40px;
-}
-
-#espacio_izquierda_3{
-    margin-left:20px;
 }
 
 .espacio_derecha{

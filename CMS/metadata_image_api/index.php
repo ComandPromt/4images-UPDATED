@@ -16,9 +16,17 @@
 		function png_a_jpg($imagen) {
 		
 			if(substr($imagen, -3)=="png" && file_exists($imagen)){
+				
 				$jpg = substr($imagen, 0, -3) . "jpg";
+				
 				$image = imagecreatefrompng($imagen);
+				
 				imagejpeg($image, $jpg, 100);
+				
+				if(!file_exists($jpg)){
+					rename($imagen,$jpg);
+				}
+				
 				unlink($imagen);
 			}
 		}
@@ -36,7 +44,7 @@
 			if(move_uploaded_file ($_FILES[uploadedfile][tmp_name], $add)){
 				
 				$extension=substr($file_name,-3);
-	
+
 				rename($add,'uploads/test.'.$extension);
 	
 				chmod('uploads/test.'.$extension,0777);
@@ -128,6 +136,7 @@
 				}
 		
 				else{
+
 					echo '<script>location.href="resultado.php";</script>';
 				}
 				
@@ -159,4 +168,5 @@
 		?>
 		
     </body>
+	
 </html>

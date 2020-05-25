@@ -1,6 +1,7 @@
 <?php
 
 include('../includes/funciones.php');
+
 include('../config.php');
 
 $_SESSION['track']=false;
@@ -8,6 +9,7 @@ $_SESSION['track']=false;
 comprobar_cookie('../');
 
 if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
+
 	if(!file_exists('../data/media/'.$_POST['categoria'])){
 			mkdir('../data/media/'.$_POST['categoria'], 0777, true);
 		}
@@ -15,10 +17,17 @@ if(isset($_POST['categoria']) && !empty($_POST['categoria'])){
 	
 session_start();
 
+
+if(isset($_GET['periquito'])){
+	$_SESSION['periquito']=$_GET['periquito'];
+}
+
 ?>
 
 <!DOCTYPE html>
+
 <html lang="es" class="js">
+
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Drag and Drop File Uploading</title>
@@ -26,14 +35,14 @@ session_start();
 		<link rel="stylesheet" href="../css/bootstrap.min.css">
 		<link rel="stylesheet" href="../css/estilos.css">
 		<link rel="icon" type="image/ico" href="../img/favicon.ico">
-<?php
-print '		
+	
 		<script>
 		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
-		var tgs = new Array( \'div\',\'td\',\'tr\');
+		var tgs = new Array( 'div','td','tr');
 		
 		//Indicar el nombre de los diferentes tamaños de fuente:
-		var szs = new Array( \'xx-small\',\'x-small\',\'small\',\'medium\',\'large\',\'x-large\',\'xx-large\' );
+		var szs = new Array( 'xx-small','x-small','small','medium','large','x-large','xx-large' );
+
 		var startSz = 2;
 		
 		function ts( trgt,inc ) {
@@ -59,17 +68,18 @@ print '
 		}
 		
 		var captcha_reload_count = 0;
+		
 		var captcha_image_url = "./captcha.php";
 		
 		function new_captcha_image() {
-			if (captcha_image_url.indexOf(\'?\') == -1) {
-				document.getElementById(\'captcha_image\').src= captcha_image_url+\'?c=\'+captcha_reload_count;
+			if (captcha_image_url.indexOf('?') == -1) {
+				document.getElementById('captcha_image').src= captcha_image_url+'?c='+captcha_reload_count;
 				} else {
-				document.getElementById(\'captcha_image\').src= captcha_image_url+\'&c=\'+captcha_reload_count;
+				document.getElementById('captcha_image').src= captcha_image_url+'&c='+captcha_reload_count;
 				}
 		
-			document.getElementById(\'captcha_input\').value="";
-			document.getElementById(\'captcha_input\').focus();
+			document.getElementById('captcha_input').value="";
+			document.getElementById('captcha_input').focus();
 			captcha_reload_count++;
 		}
 				
@@ -81,8 +91,10 @@ print '
 			document.onmousedown = right;
 		}
 		
-		var txt = "'.$GLOBALS['site_name'].'";
-			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
+		<?php print'var txt = "'.$GLOBALS['site_name'].'";'; ?>
+
+			document.oncontextmenu = new Function("alert('© Copyright by "+txt+"');return false");
+
 			txt=txt.toUpperCase();
 			txt=" "+txt+"  ";
 			var espera=600;
@@ -96,54 +108,45 @@ print '
 			
 			rotulo_title();
 	
-	</script>';
+	</script>
 	
-	?>
-		
-		<style>
-			html
-			{
-			}
-				body
-				{
+	<style>
+				body{
 					font-family: Roboto, sans-serif;
 					color: #0f3c4b;
 					background-color: #e5edf1;
 					padding: 5rem 1.25rem; /* 80 20 */
 				}
 	
-				.container
-				{
+				.container{
 					width: 100%;
 					max-width: 680px; /* 800 */
 					text-align: center;
 					margin: 0 auto;
 				}
 	
-					.container h1
-					{
-						font-size: 42px;
-						font-weight: 300;
-						color: #0f3c4b;
-						margin-bottom: 40px;
-					}
-					.container h1 a:hover,
-					.container h1 a:focus
-					{
+				.container h1{
+					font-size: 42px;
+					font-weight: 300;
+					color: #0f3c4b;
+					margin-bottom: 40px;
+				}
+
+				.container h1 a:hover,
+				.container h1 a:focus{
 						color: #39bfd3;
-					}
+				}
 	
-					.container nav
-					{
-						margin-bottom: 40px;
-					}
-						.container nav a
-						{
-							border-bottom: 2px solid #c8dadf;
-							display: inline-block;
-							padding: 4px 8px;
-							margin: 0 5px;
-						}
+				.container nav{
+					margin-bottom: 40px;
+				}
+
+				.container nav a{
+					border-bottom: 2px solid #c8dadf;
+					display: inline-block;
+					padding: 4px 8px;
+					margin: 0 5px;
+				}
 						.container nav a.is-selected
 						{
 							font-weight: 700;
@@ -298,8 +301,7 @@ print '
 							outline: 1px dotted #000;
 							outline: -webkit-focus-ring-color auto 5px;
 						}
-							.js .box__file + label *
-							{
+							.js .box__file + label *{
 								/* pointer-events: none; */ /* in case of FastClick lib use */
 							}
 	
@@ -500,6 +502,8 @@ print '
 							ajax.onload = function()
 							{
 								form.classList.remove( 'is-uploading' );
+
+								
 								if( ajax.status >= 200 && ajax.status < 400 )
 								{
 									var data = JSON.parse( ajax.responseText );
@@ -507,13 +511,7 @@ print '
 									if( !data.success ) errorMsg.textContent = data.error;
 									
 								}
-								else alert( 'Error. Please, contact the webmaster!' );
-							};
-		
-							ajax.onerror = function()
-							{
-								form.classList.remove( 'is-uploading' );
-								alert( 'Error. Please, try again!' );
+							
 							};
 		
 							ajax.send( ajaxData );
@@ -590,7 +588,7 @@ print '
 		}
 		
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
 		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT user_id
 		FROM '.$GLOBALS['table_prefix']."users WHERE user_name='".$_POST['usuario']."'");
@@ -620,14 +618,24 @@ print '
 				if($extension=='jpg' || $extension=='png'|| $extension=='gif'){
 					
 					$fichTemporal = $_FILES['upload']['tmp_name'][$y];
+
+					$shaimage=hash_file('sha256',$fichTemporal);
 					
-					$nombre_imagen_bd=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
-			
+					$nombre_fecha=date('Y').'_'.date('m').'_'.date('j').'_'.date('G').'-'.date('i').'-'.date('s').'_'.$i.'.'.$extension;
+					
+					if(isset($_SESSION['periquito']) && $_SESSION['periquito']=="si"){
+								
+						$nombre_imagen_bd=basename($_FILES['upload']['name'][$y]);
+					}
+					
+					else{
+						$nombre_imagen_bd=$nombre_fecha;
+					}
+						
 					$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
+					
 					move_uploaded_file($fichTemporal, $destino);
-										
-					$shaimage=hash_file('sha256','../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd);
-										
+					
 					$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) 
 					FROM '.$GLOBALS['table_prefix']."images WHERE sha256='".$shaimage."'");
 				
@@ -636,6 +644,16 @@ print '
 					if($fila[0]==0){
 						
 						$_SESSION['subida']=true;
+											
+						$consulta=mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(image_id) FROM '.$GLOBALS['table_prefix']."images WHERE image_media_file='$nombre_imagen_bd'");
+					
+						$comprobacion = mysqli_fetch_row($consulta);
+						
+						$comprobacion[0]=(int)$comprobacion[0];
+						
+						if($comprobacion[0]==1){
+							$nombre_imagen_bd=$nombre_fecha;
+						}
 						
 						mysqli_query($GLOBALS['conexion'], '
 					
@@ -650,6 +668,7 @@ print '
 						"',NULL,NULL,'".$fecha."','1','".$nombre_imagen_bd.
 						"',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT,'".
 						$shaimage."',DEFAULT,DEFAULT)");
+						
 					}
 					
 					else{
@@ -674,4 +693,5 @@ print '
 		?>
 		
 	</body>
+	
 </html>
