@@ -1,8 +1,72 @@
 
+var date=new Date();
+			
 function fullwin(id){
 	
    window.open("showphoto.php?photo_id="+id, 'popup_name','height=' + screen.height + ',width=' + screen.width + ',resizable=yes,scrollbars=yes,toolbar=yes,menubar=yes,location=yes')
 }
+
+$(document).ready(function () {
+
+	$("#idiomas").on('change', function () {  
+
+		var idioma = $(this).val();
+
+		if(idioma.lastIndexOf(".")==-1){
+
+			var clave = obtenerCookie("idioma");
+
+			if (clave!="") {
+				document.cookie = "idioma="+idioma;
+			}
+
+			else{
+				createCookie("idioma", idioma, "1");
+			}
+		
+			location.reload();
+
+		}
+
+	});
+	
+});
+
+function removeCookie(nombre) {
+	document.cookie = nombre+"=; max-age=0";
+}
+
+function obtenerCookie(clave) {
+
+	var name = clave + "=";
+	
+	var ca = document.cookie.split(';');
+	
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+	}
+	
+    return "";
+}
+
+function createCookie(name, value, days) {
+
+	 var expires; 
+
+	 if (days) { 
+		 var date = new Date(); date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		 expires = "; expires=" + date.toGMTString();
+	} 
+
+	else { 
+		expires = ""; 
+	} 
+
+	document.cookie = escape(name) + "=" + escape(value) +"; max-age="+ expires + "; path=/"; 
+
+} 
 
 function startTime(){
 
@@ -16,7 +80,7 @@ function startTime(){
 
 	m=checkTime(m);
 
-	s=checkTime(s);
+	
 	
 	if(document.getElementById('reloj')!=null){
 		document.getElementById('reloj').innerHTML=h+":"+m+":"+s;
@@ -172,14 +236,21 @@ function ocultar() {
 				});
 			});
 
-        var idIntervalo=setInterval(function(){
+        var idIntervalo=function(){
+
             intervaloReloj()
-        },500);
+        };
+        
         function intervaloReloj(){
+			
 			if ( $("#reloj")[0] ) {
-		        var d=new Date();
-				var t=d.toLocaleTimeString();
+		        
+		        
+				
+				var t=date.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})
+								
 				document.getElementById("reloj").innerHTML=t;
+		
 			}
 
         }

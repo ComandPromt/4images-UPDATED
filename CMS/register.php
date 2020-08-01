@@ -14,8 +14,11 @@ include ('config.php');
 
 include ('includes/funciones.php');
 
+if(logueado()){
+	redireccionar('index.php');
+}
 
-cabecera();
+cabecera("",true,true);
 
 if(isset($_COOKIE['4images_userid'])){
 	

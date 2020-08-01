@@ -2,6 +2,8 @@
 
 session_start();
 
+$_SESSION['track']=true;
+
 $_SESSION['pagina']="categories.php";
 
 include_once('config.php');
@@ -19,6 +21,8 @@ if(!in_array($_GET['cat_id'], num_categorias())||isset($_GET['page']) || preg_ma
 || strpos($_GET['pag'], "/")){
 	redireccionar('register.php');
 }
+
+track();
 
 if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria']) ){
 	

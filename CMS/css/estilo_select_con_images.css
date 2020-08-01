@@ -1,0 +1,273 @@
+.tr {
+	background-image:url(countries/0.png);
+	width:45px;
+	height:23px;
+}
+
+.es {
+	background-image:url(countries/1.png);
+	width:45px;
+	height:23px;
+}
+	
+.de {
+	background-image:url(countries/2.png);
+	width:45px;
+	height:23px;
+}
+	
+.en {
+	background-image:url(countries/3.png);
+	width:45px;
+	height:23px;
+}
+	
+.fr {
+	background-image:url(countries/4.png);
+	width:45px;
+	height:23px;
+}
+
+.rs {
+	background-image:url(countries/5.png);
+	width:45px;
+	height:23px;
+}
+	
+.it {
+	background-image:url(countries/6.png);
+	width:45px;
+	height:23px;
+}
+	
+.pt {
+	background-image:url(countries/7.png);
+	width:45px;
+	height:23px;
+}
+	
+.cn {
+	background-image:url(countries/8.png);
+	width:45px;
+	height:23px;
+}
+	
+.in {
+	background-image:url(countries/9.png);
+	width:45px;
+	height:23px;
+}
+	
+.jp {
+	background-image:url(countries/10.png);
+	width:45px;
+	height:23px;
+}
+	
+.ct {
+	background-image:url(countries/11.png);
+	width:45px;
+	height:23px;
+}
+	
+.bn {
+	background-image:url(countries/12.png);
+	width:45px;
+	height:23px;
+}
+
+.ar {
+	background-image:url(countries/13.png);
+	width:45px;
+	height:23px;
+}
+	
+.eu {
+	background-image:url(countries/14.png);
+	width:45px;
+	height:23px;
+}
+	
+.ko {
+	background-image:url(countries/15.png);
+	width:45px;
+	height:23px;
+}
+
+.vi {
+	background-image:url(countries/16.png);
+	width:45px;
+	height:23px;
+}
+	
+.pl {
+	background-image:url(countries/17.png);
+	width:45px;
+	height:23px;
+}
+	
+.bootstrap-select > .dropdown-toggle {
+	color:#fff;
+	border-radius: 0px;
+	font-size: 2em;
+	background: url(dropdown.png) no-repeat right #243746;
+	border: 1px solid #192535;	
+	z-index:10;
+	padding: 25px 5px;
+}
+
+button.btn.dropdown-toggle.btn-default {
+	background-color: #243746;
+}
+	
+	
+.bootstrap-select.btn-group .filter-option {
+	background: url(dropdown.png) no-repeat right #243746;
+	color:#fff;
+}
+	
+.bootstrap-select > .dropdown-menu {
+	background-color: #243746;
+	color:#fff !important;
+	border-radius: 0px;
+}
+
+
+.dropdown-menu>li>a {
+	background-color: #243746;
+	color:#fff;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+	background-color: #243746;
+	color:#fff;
+	text-decoration: none;
+}
+
+.btn .dropdown-toggle .btn-default {
+	background-color: #243746;
+	color:#fff;
+	text-decoration: none;
+}
+
+.conv-wrap {
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+}
+
+.conv-cont {
+	padding: 10px;
+	float: left;
+	width: 100%;
+	border: 1px solid #afafaf;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 0 0 6px -1px #919191;
+	-webkit-box-shadow: 0 0 6px -1px #919191;
+	box-shadow: 0 0 6px -1px #919191;
+}
+
+.conv-cont .cov-frm {
+	float: left;
+	width: 100%;
+}
+
+.conv-cont .cov-frm .selectpicker {
+	font-size: 18px !important;
+	font-weight: bold !important;
+	text-decoration: none !important;
+	margin: 0px;
+	padding: 23px;
+	float: left;
+	width: 100%;
+	outline: none !important;
+}
+
+
+
+.conv-cont .cov-frm .cov-frm-label {
+	font-size: 14px;
+	color: #333333;
+	text-decoration: none;
+	margin: 0px;
+	float: left;
+	width: 100%;
+	padding: 5px;
+}
+
+.conv-cont .cov-frm .cov-frm-labeli {
+	font-size: 14px;
+	color: #a9a9a9;
+	text-decoration: none;
+	margin: 0px;
+	float: left;
+	width: 100%;
+	padding: 5px;
+	background-color: #FFF;
+}
+
+.cov-inp-bx div.col-md-8 , .cov-inp-bx div.col-md-4   {
+	padding: 0px;
+	margin: 0px;
+}
+
+.conv-cont .cov-frm .cov-inp-bx {
+	padding: 0px;
+	float: left;
+	width: 100%;
+	border: 1px solid #c2c2c2;
+	border-radius: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.conv-cont .cov-frm .cov-frm-input {
+	font-size: 24px;
+	font-weight: bold;
+	color: #009cff;
+	text-decoration: none;
+	margin: 0px;
+	padding: 9px;
+	float: left;
+	width: 100%;
+	border: none;
+	outline: none;
+}
+
+.conv-cont .cov-frm .cov-frm-sbtm {
+	font-size: 20px;
+	font-weight: bold;
+	color: #FFF;
+	text-decoration: none;
+	background-color: #243746;
+	text-align: center;
+	margin: 0px;
+	float: left;
+	width: 100%;
+	padding-top: 13px;
+	padding-bottom: 13px;
+	border:none;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+}
+
+.conv-cont .cov-frm .cov-frm-sbtm:hover {
+	background: #980000;
+}
+
+.cov-spni {
+	font-size: 13px;
+	font-weight: normal;
+	color: #424242;
+	text-decoration: none;
+	line-height:50px;
+}
+
+.cov-spnii {
+	color: #333;
+}

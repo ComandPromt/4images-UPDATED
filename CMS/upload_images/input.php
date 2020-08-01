@@ -606,6 +606,8 @@ if(isset($_GET['periquito'])){
 			
 			$y=0;
 			
+			$nombresImagenes=array();
+			
 			for($i=1; $i<=count($_FILES['upload']['name']); $i++) {
 							
 				$extension=strtolower(substr($_FILES['upload']['name'][$y],-3));
@@ -631,7 +633,9 @@ if(isset($_GET['periquito'])){
 					else{
 						$nombre_imagen_bd=$nombre_fecha;
 					}
-						
+				
+					$nombresImagenes[]=$nombre_imagen_bd;
+
 					$destino = '../data/media/'.$_SESSION['categoria'].'/'.$nombre_imagen_bd;
 					
 					move_uploaded_file($fichTemporal, $destino);
@@ -680,9 +684,21 @@ if(isset($_GET['periquito'])){
 					$y++;
 				
 			}
-				
-			mysqli_close($GLOBALS['conexion']);
+					
+			$nombreImagenBd="";
 			
+			for($i=0;$i<count($nombresImagenes);$i++){
+				
+				$nombreImagenBd=$nombresImagenes[$i];
+				
+				if(!file_exists('../data/media/'.$_SESSION['categoria'].'/'.$nombreImagenBd)){
+					mysqli_query($GLOBALS['conexion'], 'DELETE FROM '.$GLOBALS['table_prefix']."images WHERE image_media_file='".$nombreImagenBd."'");
+				}
+				
+			}
+			
+			mysqli_close($GLOBALS['conexion']);
+									
 			if($_SESSION['subida']){
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);
 				mensaje(ver_dato('upload_success', $GLOBALS['idioma']));

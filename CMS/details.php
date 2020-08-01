@@ -2,7 +2,9 @@
 
 session_start();
 
-$_SESSION['track'] = true;
+$_SESSION['track']=true;
+
+$_SESSION['pagina'] = 'details.php';
 
 if(!isset($_SESSION['contar'])){
 	$_SESSION['contar']=true;
@@ -15,11 +17,12 @@ include ('includes/funciones.php');
 $logueado=logueado();
 
 if(!acceso_imagen($_GET['image_id'],$logueado)||isset($_GET['mode']) || preg_match("/\brder\b/i",$_GET['image_id'])
-|| preg_match("/\nion\b/i",$_GET['image_id'])
-|| preg_match("/\elect\b/i",$_GET['image_id'])	
+|| preg_match("/\nion\b/i",$_GET['image_id'])|| preg_match("/\elect\b/i",$_GET['image_id'])	
 ){
 	redireccionar('register.php');
 }
+
+track();
 
 if(isset($_POST['cambiar_categoria'])){
 	

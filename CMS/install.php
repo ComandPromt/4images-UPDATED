@@ -1,10 +1,18 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once ('includes/funciones.php');
 
 crear_carpetas();
 
-if ($_GET['install_lang'] == '' && !isset($_POST['submit'])) {
+$install_lang="spanish";
+
+$_GET['install_lang']=$install_lang;
+
+if (isset($_GET['install_lang']) && $_GET['install_lang'] == '' && !isset($_POST['submit'])) {
     header('Location:install.php?install_lang=spanish');
 }
 
@@ -87,6 +95,7 @@ if (file_exists('config.php')) {
 } 
 
 else {
+	
     if (!isset($HTTP_GET_VARS)) {
         $HTTP_GET_VARS = $_GET;
         $_POST = $_POST;
@@ -104,13 +113,17 @@ else {
 
     if (file_exists('config.php')) {
         include ('config.php');
-    } else {
+    }
+    
+     else {
         date_default_timezone_set('Europe/Madrid');
     }
 
     if (isset($HTTP_GET_VARS['action']) || isset($_POST['action'])) {
         $action = (isset($HTTP_GET_VARS['action'])) ? stripslashes(trim($HTTP_GET_VARS['action'])) : stripslashes(trim($_POST['action']));
-    } else {
+    } 
+    
+    else {
         $action = '';
     }
 
@@ -119,13 +132,17 @@ else {
     }
 
     $lang_select = '';
+    
     $folderlist = array();
+    
     $handle = opendir(ROOT_PATH . 'lang');
 
     while ($folder = @readdir($handle)) {
+		
         if (@is_dir(ROOT_PATH . "lang/$folder") && $folder != '.' && $folder != '..') {
             $folderlist[] = $folder;
         }
+        
     }
 
     sort($folderlist);
@@ -136,8 +153,8 @@ else {
 
     closedir($handle);
 
-    if (isset($HTTP_GET_VARS['install_lang']) || isset($_POST['install_lang'])) {
-        $install_lang = (isset($HTTP_GET_VARS['install_lang'])) ? trim($HTTP_GET_VARS['install_lang']) : trim($_POST['install_lang']);
+    if (isset($_POST['install_lang']) || isset($_POST['install_lang'])) {
+        $install_lang = (isset($_POST['install_lang'])) ? trim($_POST['install_lang']) : trim($_POST['install_lang']);
     }
 
     if (isset($_POST['submit'])) {
@@ -178,7 +195,9 @@ else {
         $_POST['debianart'] = eliminar_espacios($_POST['debianart']);
         $_POST['slideshare'] = eliminar_espacios($_POST['slideshare']);
         
-        $target_path = "avatars/" . basename($avatar);
+        if(!empty($avatar)){
+			$target_path = "avatars/" . basename($avatar);
+		}
 
         switch($_POST['timezone_select']){
             
@@ -199,13 +218,15 @@ else {
         if (file_exists('config.php')) {
             unlink('config.php');
         }
-		
+
 		$miArchivo = fopen('.htaccess', 'w') or die('No se puede abrir/crear el archivo!');
+		
         $php ='ErrorDocument 404 '.substr($_SERVER["REQUEST_URI"],0,strripos($_SERVER["REQUEST_URI"],"/")+1).'404.php';
 
 		$dwes = new mysqli($_POST['db_host'], $_POST['db_user'], $_POST['db_password'], 'mysql');
 
         if ($dwes->set_charset('utf8')) {
+
             $dwes->query('DROP DATABASE ' . $_POST['db_name']);
             $dwes->query('CREATE DATABASE ' . $_POST['db_name']);
             $dwes->query('use ' . $_POST['db_name']);
@@ -214,42 +235,60 @@ else {
         $nombre = 'data/database/default/sentencias.sql';
 
         if (file_exists($nombre)) {
+			
+			print " entro : ".$nombre;
+			
             $texto = file_get_contents($nombre);
+            
             $sentencia = explode(";", $texto);
+            
             for ($i = 0; $i < (count($sentencia) - 1); $i++) {
+				
                 $sentencia[$i] .= ";";
+                
                 $dwes->query($sentencia[$i]);
+                
             }
+            
         }
 
-        $extension= substr($_FILES['avatar']['name'], -4);
+		if(!empty($_FILES['avatar']['name'])){
+		
+			$extension= substr($_FILES['avatar']['name'], -4);
 
-        $avatar=obtener_nombre($extension);
+			$avatar=obtener_nombre($extension);
 
-        $target_path = "avatars/" . basename($avatar);
+			$target_path = "avatars/" . basename($avatar);
 
-        if(move_uploaded_file($_FILES['avatar']['tmp_name'], $target_path)){
-            rename('avatars/'.$_FILES['uploadedfile']['name'],'avatars/'.$avatar);
-            $dwes->query("UPDATE 4images_users SET avatar='".$avatar."' WHERE user_id='1' ");
-        }
+			if(move_uploaded_file($_FILES['avatar']['tmp_name'], $target_path)){
+				rename('avatars/'.$_FILES['uploadedfile']['name'],'avatars/'.$avatar);
+				$dwes->query("UPDATE 4images_users SET avatar='".$avatar."' WHERE user_id='1' ");
+			}
+        
+		}
 
         $dwes->close();
 
-        $extension= substr($_FILES['logo']['name'], -4);
+        $extension= substr($_FILES['favicon']['name'], -4);
 
-        $target_path = 'logo/' . $_FILES['logo']['name'];
+        $target_path = 'logo/' . $_FILES['favicon']['name'];
 
         $logo='logo'.$extension;
 
-        if(move_uploaded_file($_FILES['logo']['tmp_name'], $target_path)){
-            rename('logo/'.$_FILES['logo']['name'],'logo/'.$logo);
+        if(move_uploaded_file($_FILES['favicon']['tmp_name'], $target_path)){
+			
+            rename('logo/'.$_FILES['favicon']['name'],'logo/'.$logo);
+            
         }
 
         $current_time = time();
+        
         $admin_pass_hashed = salted_hash($admin_password);
 
         fwrite($miArchivo, $php);
+        
         fclose($miArchivo);
+        
         chmod('.htaccess', 0777);
 
         $miArchivo = fopen('config.php', 'w') or die('No se puede abrir/crear el archivo!');
@@ -326,7 +365,9 @@ else {
 
             $action = 'intro';
 
-        } else {
+        }
+        
+        else {
          
             if (empty($error_log)) {
 
@@ -356,7 +397,7 @@ else {
 
                 $dwes->close();
 
-                echo '<script>location.href="index.php";</script>';
+               echo '<script>location.href="index.php";</script>';
 
             } 
             
@@ -372,8 +413,10 @@ else {
                 $error_msg .= '</ol>';
             }
 
-            echo '<p>' . $msg . $error_msg . '</p>';
-
+			if(!empty($msg) && !empty($error_msg)){
+				echo '<p>' . $msg . $error_msg . '</p>';
+			}
+			
             if (isset($cant_write_config)) {
                 echo '<input title="enviar" type="submit" value="' . $lang['config_download'] . '" class="button" name="submit">
 		        <hr/>';
@@ -638,7 +681,7 @@ else {
 		
         print '<div class="flotar_izquierda clear">
 
-            <form action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
+            <form enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '" name="form" method="post">
 
                 <h2>' . $lang['protocolo'] . '</h2>
 				    <select style="font-weight:bold;margin:auto;font-size:25px;" name="protocolo">
@@ -681,7 +724,9 @@ else {
 
             <h2 id="email">' . $lang['favicon'] . '</h2>
 
-            <p><input style="font-size:25px;" name="favicon" type="file"/></p>
+            <p>
+				<input style="font-size:25px;" name="favicon" type="file"/>
+			</p>
 
             <hr class="espacio_arriba" />
             
@@ -886,9 +931,10 @@ else {
 
 			    <input name="idioma" value="' . $_GET['install_lang'] . '" type="hidden"></input>
             
-                <input title="enviar" type="submit" value="' . $lang['start_install'] . '" class="button" name="submit"/>
+                <input id="submit" title="enviar" type="submit" value="' . $lang['start_install'] . '" class="button" name="submit"/>
             
                 <br/><br/>
+                
             </form>
 
 		</div>';
