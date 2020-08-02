@@ -718,6 +718,20 @@ function cabecera($ruta="",$mostrarRegistro=false,$mostrarImagenAleatoria=false)
 
 date_default_timezone_set('Europe/Madrid');
 
+$favicon='img/favicon.ico';
+
+$logo=listar_archivos("logo");
+
+if(count($logo)==1){
+	
+	$extension=substr($logo[0],-3);
+	
+	if($extension=="jpg" ||$extension=="png" ||$extension=="ico"){
+		$favicon='logo/'.$logo[0];
+	}
+	
+}
+
 print '
 
 <!DOCTYPE html>
@@ -742,7 +756,7 @@ print '
 	<link rel="stylesheet" href="'.$ruta.'css/bootstrap.min.css">
     <link rel="stylesheet" href="'.$ruta.'css/jquery.scrollbar.css" />
 	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="dist/css/bootstrap-select.css">
+	<link rel="stylesheet" href="'.$ruta.'css/bootstrap-select.css">
 	<link rel="stylesheet" href="'.$ruta.'css/css.css">
 	<link rel="stylesheet" href="'.$ruta.'css/main.css">
 	<link rel="stylesheet" href="'.$ruta.'css/style.css">
@@ -756,7 +770,7 @@ print '
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/scrollbar.css" />
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/tablas.css" />
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/estilo_select_con_images.css" />
-	<link rel="icon" type="image/ico" href="'.$ruta.'img/favicon.ico">
+	<link rel="icon" type="image/ico" href="'.$ruta.$favicon.'">
 
 	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
 	<script  src="'.$ruta.'js/jszip.min.js"></script>
@@ -1331,7 +1345,6 @@ function footer($ruta=""){
 			</div>";
 
 print '			<script src="'.$ruta.'js/jquery.min.js"></script>
-				<script src="'.$ruta.'js/popper.min.js"></script>
 				<script src="'.$ruta.'js/bootstrap.min.js"></script>
 				<script src="'.$ruta.'js/prettify.js"></script>
 				<script src="'.$ruta.'js/jquery.scrollbar.js"></script>
@@ -1849,6 +1862,37 @@ function rmDir_rf($carpeta){
 	
 }
 
+function listar_archivos($carpeta){
+
+	$archivos=array();
+
+	if(!file_exists($carpeta)){
+		mkdir($carpeta, 0777, true);
+	}
+	
+	if(file_exists($carpeta)){
+
+		$lista=scandir($carpeta);
+
+		if(count($lista)>0){
+		
+			for($i=0;$i<count($lista);$i++){
+				
+				if($lista[$i]!="." && $lista[$i]!=".."){
+					
+					$archivos[]=$lista[$i];
+					
+					}
+					
+			}
+	
+		}
+	}
+
+	return  $archivos;
+ 
+}
+
 function mensaje($mensaje){
 	
 	if(!empty($mensaje)){
@@ -1953,11 +1997,7 @@ function crear_carpetas(){
 function ver_dato($accion,$idioma){
 	
 	$dato="";
-
-	if($idioma=='selection'){
-		$idioma='spanish';
-	}
-
+	
 	if(!empty($idioma)){
 	
 		comprobar_config();
@@ -1967,7 +2007,7 @@ function ver_dato($accion,$idioma){
 		if (!$mysqli->connect_error) {
 					
 			$mysqli->set_charset("utf8");
-
+		
 			$consulta = $mysqli->query(	
 			'SELECT texto FROM '.$idioma." WHERE accion='".$accion."'");
 			
@@ -1980,7 +2020,7 @@ function ver_dato($accion,$idioma){
 		}
 	
 	}
-
+		
 	return $dato;
 	
 }
@@ -2734,7 +2774,7 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 	 
 				<input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput"/>
 	
-				<input id="login" style="margin-top:30px;margin-left:-10px;width:150px;font-size:1.2em;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'"/>
+				<input id="login" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button"/>
    
 			</form>
 			
@@ -2898,10 +2938,15 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 		
 		$image_thumb=substr($image_thumb,0,strpos($image_thumb,"*"));
 
-		if(!$registro || $imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
+		if(!$registro && $imagen_aleatoria!="vacio" || $imagen_aleatoria!="vacio" && file_exists($ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb)){
 	
 			print '<div style="float:left;width:100%;"><hr class="separador"/>
-			<a title="'.ver_dato('img_random', $GLOBALS['idioma']).'" ><img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/></a>
+
+				<a title="'.ver_dato('img_random', $GLOBALS['idioma']).'" >
+
+					<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
+				</a>
+
 			</div>';
 
 			$image_id=substr($imagen_aleatoria,strpos($imagen_aleatoria,"*")+1,strpos($imagen_aleatoria,"#"));
@@ -3093,19 +3138,21 @@ function random_string($length, $letters_only = false) {
 
 function poner_menu($ruta = ""){
 	
+	if(isset($_POST['frm_idioma'])){
+		print 'TEST '.$_POST['seleccion_idioma'];
+	}
+
 	$logueado=logueado();
 
-	$idioma="Cambiar idioma";
+	$idioma="Languague";
 
-	if(!empty($GLOBALS['idioma']) && $GLOBALS['idioma']!='selection'){
+	if(!empty($GLOBALS['idioma'])){
 		$idioma=ver_dato('cambiar_idioma', $GLOBALS['idioma']);
-		
 	}
 
 	if(!$logueado){
 
-		print '<div style="margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="transparente container">
-		
+		print '<div style="margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="container">
 		<div style="margin-top:80px;" class="transparente flotar_derecha row">
 		
 		<div class="transparente flotar_derecha" style="width:40px;" >
@@ -3113,27 +3160,26 @@ function poner_menu($ruta = ""){
 		<form  method="post" id="cambio_idioma" name="cambio_idioma" class="cov-frm" action="'.$_SERVER['PHP_SELF'].'" >
 			
 				<div  style="height:100px;width:200px;font-size:8px;">
-			
-					<select style="width:40px;font-size:9px" id="idiomas" class="selectpicker">
 					
-						<option selected id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="tr" >'.$idioma.'</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="es" >es</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="aleman" data-icon="de" >de</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="ingles" data-icon="en" >en</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="frances" data-icon="fr" >fr</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="ruso" data-icon="rs" >rs</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="italiano" data-icon="it" >it</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="portuges" data-icon="pt" >pt</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="chino" data-icon="cn" >zh</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="hindu" data-icon="in" >hi</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="japones" data-icon="jp" >ja</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="catalan" data-icon="ct" >ca</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="bengali" data-icon="bn" >bn</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="arabe" data-icon="ar" >ar</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="euskera" data-icon="eu" >eu</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="coreano" data-icon="ko" >ko</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="vietnamita" data-icon="vi" >vi</option>
-						<option id="seleccion_idioma" style="margin-top:10px;margin-bottom:10px;" value="polaco" data-icon="pl" >pl</option>
+					<select style="width:40px;font-size:9px" id="idiomas" class="selectpicker">
+						<option id="seleccion_idioma" style="margin-top:10px;;" value="'.$idioma.'.">'.$idioma.'</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="es" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="aleman" data-icon="de" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="ingles" data-icon="en" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="frances" data-icon="fr" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="ruso" data-icon="rs" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="italiano" data-icon="it" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="portuges" data-icon="pt" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="chino" data-icon="cn" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="hindu" data-icon="in" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="japones" data-icon="jp" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="catalan" data-icon="ct" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="bengali" data-icon="bn" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="arabe" data-icon="ar" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="euskera" data-icon="eu" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="coreano" data-icon="ko" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="vietnamita" data-icon="vi" ></option>
+						<option id="seleccion_idioma" style="margin-top:10px;margin-bottom:10px;" value="polaco" data-icon="pl" ></option>
 
 					</select>
 				
@@ -3171,7 +3217,7 @@ function poner_menu($ruta = ""){
 			$id_categorias=array();
 
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 ORDER BY cat_name');
+			SELECT DISTINCT(cat_parent_id),cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 ORDER BY cat_name');
 
 			while ($recuento = mysqli_fetch_row($consulta)){
 				$id_categorias[]=$recuento[0];

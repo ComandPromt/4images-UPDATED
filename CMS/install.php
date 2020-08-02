@@ -236,8 +236,6 @@ else {
 
         if (file_exists($nombre)) {
 			
-			print " entro : ".$nombre;
-			
             $texto = file_get_contents($nombre);
             
             $sentencia = explode(";", $texto);
@@ -251,17 +249,14 @@ else {
             }
             
         }
-
-		if(!empty($_FILES['avatar']['name'])){
 		
-			$extension= substr($_FILES['avatar']['name'], -4);
+		$avatar=$_FILES['avatar']['name'];
+		
+		if(!empty($avatar)){
 
-			$avatar=obtener_nombre($extension);
-
-			$target_path = "avatars/" . basename($avatar);
+			$target_path = "avatars/" . $avatar;
 
 			if(move_uploaded_file($_FILES['avatar']['tmp_name'], $target_path)){
-				rename('avatars/'.$_FILES['uploadedfile']['name'],'avatars/'.$avatar);
 				$dwes->query("UPDATE 4images_users SET avatar='".$avatar."' WHERE user_id='1' ");
 			}
         
@@ -269,16 +264,14 @@ else {
 
         $dwes->close();
 
-        $extension= substr($_FILES['favicon']['name'], -4);
+        $logo=$_FILES['favicon']['name'];
 
-        $target_path = 'logo/' . $_FILES['favicon']['name'];
+        if(!empty($logo)){
 
-        $logo='logo'.$extension;
+            $target_path = 'logo/' . $logo;
 
-        if(move_uploaded_file($_FILES['favicon']['tmp_name'], $target_path)){
-			
-            rename('logo/'.$_FILES['favicon']['name'],'logo/'.$logo);
-            
+            move_uploaded_file($_FILES['favicon']['tmp_name'], $target_path);
+
         }
 
         $current_time = time();

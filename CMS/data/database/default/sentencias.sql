@@ -127,7 +127,7 @@ PRIMARY KEY (Usuario,Imagen)
 )DEFAULT CHARSET=utf8;
 
 CREATE TABLE 4images_metadatos(
-Id int(11) PRIMARY KEY,
+Id int(11) PRIMARY KEY AUTO_INCREMENT,
 Imagen int(11),
 Tipo varchar(30),
 Valor varchar(255),
