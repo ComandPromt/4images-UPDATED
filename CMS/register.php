@@ -239,7 +239,7 @@ echo '<input style="margin-top:40px;" type="text" title="captcha" required  id="
     
 				<input title="register" type="hidden" name="action" value="register" />
 
-				<input style="margin-top:40px;"  title="submit" name="submit" type="submit" value="' .
+				<input class="negrita" style="margin-top:40px;"  title="submit" name="submit" type="submit" value="' .
 				ver_dato('register', $GLOBALS['idioma']) . '"/>
 				
 		        </form>';
@@ -266,7 +266,7 @@ if (!$terminado && $SESSION['licencia']) {
 
     echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
 
-    echo '<input style="margin-top:25px;" title="submit" name="envio" value="'.
+    echo '<input style="margin-top:25px;" class="negrita" title="submit" name="envio" value="'.
     ver_dato('ok', $GLOBALS['idioma']) . '" type="submit"/>';
 
     echo '</form>

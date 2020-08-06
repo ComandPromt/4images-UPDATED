@@ -85,10 +85,11 @@ cat_name varchar(255) NOT NULL UNIQUE,
 cat_description text NOT NULL,
 cat_parent_id int(11) NOT NULL DEFAULT '0',
 cat_hits int(11) NOT NULL DEFAULT '0',
+auth_viewimage tinyint(1) NOT NULL DEFAULT '1',
 auth_download tinyint(1) NOT NULL DEFAULT '1',
 auth_upload tinyint(1) NOT NULL DEFAULT '1',
-auth_vote tinyint(1) NOT NULL DEFAULT '1',
-auth_sendpostcard tinyint(1) NOT NULL DEFAULT '1',
+auth_readcomment tinyint(1) NOT NULL DEFAULT '1',
+auth_postcomment tinyint(1) NOT NULL DEFAULT '1',
 visibilidad TINYINT NOT NULL DEFAULT '1',
 permitir_gif TINYINT NOT NULL DEFAULT '1'
 ) DEFAULT CHARSET=utf8;
@@ -473,17 +474,19 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('101','del_sure','Czy na pewno chcesz usunąć obraz?'),
 ('102','change_cat','Zmiana kategorii'),
 ('103','img_random','Losowy obraz'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','Komentarz'),
+('105','reload_captcha','Załaduj ponownie captcha'),
+('106','del_img','Usuń obraz'),
+('107','change_view_v','Pokaż obraz'),
+('108','download','pobrać'),
+('109','full_screen','Pełny ekran'),
+('110','like','lubię to'),
+('111','back_img','Poprzedni obraz'),
+('112','next_img','Obraz z tyłu'),
+('113','change_view_o','Ukryj obraz'),
+('114','txt_url','Wprowadź adres URL'),
+('115','public','Publiczny'),
+('116','private','Prywatny');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -589,17 +592,19 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('101','del_sure','이미지를 삭제 하시겠습니까?'),
 ('102','change_cat','카테고리 변경'),
 ('103','img_random','임의의 이미지'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','논평'),
+('105','reload_captcha','보안 문자 새로 고침'),
+('106','del_img','이미지 삭제'),
+('107','change_view_v','이미지 표시'),
+('108','download','다운로드'),
+('109','full_screen','전체 화면'),
+('110','like','나는 그것을 좋아한다'),
+('111','back_img','이전 이미지'),
+('112','next_img','뒷면 이미지'),
+('113','change_view_o','이미지 숨기기'),
+('114','txt_url','URL을 입력하십시오'),
+('115','public','공공의'),
+('116','private','은밀한');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -705,17 +710,19 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('101','del_sure','Bạn có chắc chắn để xóa hình ảnh?'),
 ('102','change_cat','Thay đổi danh mục'),
 ('103','img_random','Hình ảnh ngẫu nhiên'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','Bình luận'),
+('105','reload_captcha','Tải lại hình ảnh xác thực'),
+('106','del_img','Xóa ảnh'),
+('107','change_view_v','Hiển thị hình ảnh'),
+('108','download','Tải về'),
+('109','full_screen','Toàn màn hình'),
+('110','like','tôi thích nó'),
+('111','back_img','Hình ảnh trước đó'),
+('112','next_img','Hình ảnh trở lại'),
+('113','change_view_o','Ẩn hình ảnh'),
+('114','txt_url','Nhập URL'),
+('115','public','Công cộng'),
+('116','private','Riêng tư');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -821,17 +828,19 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('101','del_sure','Möchten Sie das Bild wirklich löschen?'),
 ('102','change_cat','Kategoriewechsel'),
 ('103','img_random','Zufälliges Bild'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','Kommentar'),
+('105','reload_captcha','Captcha neu laden'),
+('106','del_img','Lösche Bild'),
+('107','change_view_v','Bild anzeigen'),
+('108','download','Herunterladen'),
+('109','full_screen','Ganzer Bildschirm'),
+('110','like','Ich mag das'),
+('111','back_img','Vorheriges Bild'),
+('112','next_img','Hinteres Bild'),
+('113','change_view_o','Bild ausblenden'),
+('114','txt_url','Geben Sie die URL ein'),
+('115','public','Öffentlichkeit'),
+('116','private','Privat');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -937,17 +946,19 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('101','del_sure','هل أنت متأكد من حذف الصورة؟'),
 ('102','change_cat','تغيير الفئة'),
 ('103','img_random','صورة عشوائية'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','تعليق'),
+('105','reload_captcha','إعادة تحميل كلمة التحقق'),
+('106','del_img','حذف صورة'),
+('107','change_view_v','إظهار الصورة'),
+('108','download','للتحميل'),
+('109','full_screen','تكبير الشاشة'),
+('110','like','احب ذلك'),
+('111','back_img','الصورة السابقة'),
+('112','next_img','الصورة الخلفية'),
+('113','change_view_o','إخفاء الصورة'),
+('114','txt_url','أدخل الرابط'),
+('115','public','عامة'),
+('116','private','نشر');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -1053,17 +1064,19 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('101','del_sure','আপনি কি ছবিটি মুছে ফেলার বিষয়ে নিশ্চিত?'),
 ('102','change_cat','বিভাগ পরিবর্তন'),
 ('103','img_random','এলোমেলো চিত্র'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','মন্তব্য'),
+('105','reload_captcha','ক্যাপচা পুনরায় লোড করুন'),
+('106','del_img','চিত্র মুছুন'),
+('107','change_view_v','চিত্র দেখান'),
+('108','download','ডাউনলোড করতে'),
+('109','full_screen','পূর্ণ পর্দা'),
+('110','like','আমি এটা পছন্দ করি'),
+('111','back_img','পূর্ববর্তী চিত্র'),
+('112','next_img','পিছনে ছবি'),
+('113','change_view_o','চিত্রটি লুকান'),
+('114','txt_url','URL লিখুন'),
+('115','public','প্রকাশ্য'),
+('116','private','ব্যক্তিগত');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -1170,16 +1183,18 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('102','change_cat','Canvi de categoria'),
 ('103','img_random','Imatge aleatòria'),
 ('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('105','reload_captcha','Recarregar captcha'),
+('106','del_img','Esborrar imatge'),
+('107','change_view_v','Mostra imatge'),
+('108','download','Descarregar'),
+('109','full_screen','pantalla completa'),
+('110','like','Me agrada'),
+('111','back_img','Imatge anterior'),
+('112','next_img','Imatge posterior'),
+('113','change_view_o','Amaga imatge'),
+('114','txt_url','Introdueix la URL'),
+('115','public','Públic'),
+('116','private','Privat');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1285,17 +1300,19 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('101','del_sure','您確定要刪除圖片嗎？'),
 ('102','change_cat','類別變更'),
 ('103','img_random','隨機圖像'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','評論'),
+('105','reload_captcha','重新加載驗證碼'),
+('106','del_img','刪除圖片'),
+('107','change_view_v','顯示圖片'),
+('108','download','去下載'),
+('109','full_screen','全屏'),
+('110','like','我喜歡'),
+('111','back_img','上一張圖片'),
+('112','next_img','背影'),
+('113','change_view_o','隱藏圖片'),
+('114','txt_url','輸入網址'),
+('115','public','上市'),
+('116','private','私人的');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1401,17 +1418,19 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('101','del_sure','Ziur irudia ezabatuko duzula?'),
 ('102','change_cat','Kategoria aldaketa'),
 ('103','img_random','Ausazko irudia'),
-('104','comentar','Comentar'),
-('105','reload_captcha','Recargar captcha'),
-('106','del_img','Borrar imagen'),
-('107','change_view_v','Mostrar imagen'),
-('108','download','Descargar'),
-('109','full_screen','Pantalla completa'),
-('110','like','Me gusta'),
-('111','back_img','Imagen anterior'),
-('112','next_img','Imagen posterior'),
-('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
+('104','comentar','Iruzkina'),
+('105','reload_captcha','Kargatu captcha'),
+('106','del_img','Ezabatu irudia'),
+('107','change_view_v','Erakutsi irudia'),
+('108','download','Deskargatzeko'),
+('109','full_screen','Pantaila osoa'),
+('110','like','Gogoko dut'),
+('111','back_img','Aurreko irudia'),
+('112','next_img','Atzeko irudia'),
+('113','change_view_o','Ezkutatu irudia'),
+('114','txt_url','Sartu URLa'),
+('115','public','Publiko'),
+('116','private','Pribatua');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1527,7 +1546,9 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('111','back_img','Image précédente'),
 ('112','next_img','Image arrière'),
 ('113','change_view_o','Masquer la image'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','Introduce la URL'),
+('115','public','Publique'),
+('116','private','Privé');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1643,7 +1664,9 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('111','back_img','पिछली छवि'),
 ('112','next_img','पीछे की छवि'),
 ('113','change_view_o','छवि छिपाएँ'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','URL दर्ज करें'),
+('115','public','जनता'),
+('116','private','निजी');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1668,7 +1691,7 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('20', 'cambiar_pass', 'Change Password'),
 ('21', 'cambio_pass_exitoso', 'The password has been changed correctly'),
 ('22', 'comments', 'Comments'),
-('23', 'already_voted', 'Sorry, you\'ve already rated for this image once recently'),
+('23', 'already_voted', 'Sorry, you have already rated for this image once recently'),
 ('24', 'no_comments', 'There are no comments for this image'),
 ('25', 'comments_deactivated', 'Comment deactivated!'),
 ('26', 'post_comment', 'Post comment'),
@@ -1759,7 +1782,9 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('111','back_img','Back image'),
 ('112','next_img','Next image'),
 ('113','change_view_o','Hide image'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','Enter the URL'),
+('115','public','Public'),
+('116','private','Private');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1875,7 +1900,9 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('111','back_img','Immagine precedente'),
 ('112','next_img','Immagine posteriore'),
 ('113','change_view_o','Nascondi immagine'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','Inserisci la URL'),
+('115','public','Pubblico'),
+('116','private','Privato');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -1991,7 +2018,9 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('111','back_img','前の画像'),
 ('112','next_img','バック画像'),
 ('113','change_view_o','画像を隠す'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','URLを入力してください'),
+('115','public','公衆'),
+('116','private','民間');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -2107,7 +2136,9 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('111','back_img','Imagem anterior'),
 ('112','next_img','Voltar imagem'),
 ('113','change_view_o','Ocultar imagem'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','Digite o URL'),
+('115','public','Público'),
+('116','private','Privado');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -2223,7 +2254,9 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('111','back_img','Предыдущее изображение'),
 ('112','next_img','Вернуться изображение'),
 ('113','change_view_o','Скрыть изображение'),
-('114','txt_url','Introduce la URL');
+('114','txt_url','Введите URL'),
+('115','public','общественности'),
+('116','private','частный');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -2339,8 +2372,9 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('111','back_img','Imagen anterior'),
 ('112','next_img','Imagen posterior'),
 ('113','change_view_o','Ocultar imagen'),
-('114','txt_url','Introduce la URL');
-
+('114','txt_url','Introduce la URL'),
+('115','public','Público'),
+('116','private','Privado');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 

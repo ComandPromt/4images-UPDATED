@@ -72,7 +72,7 @@ function acceso_imagen($imagen,$logueado){
 			$respuesta=true;
 		}
 	
-		mysqli_close();
+		mysqli_close($GLOBALS['conexion']);
 		
 	}
 		
@@ -1344,7 +1344,8 @@ function footer($ruta=""){
 	print "
 			</div>";
 
-print '			<script src="'.$ruta.'js/jquery.min.js"></script>
+print '			<script src="'.$ruta.'js/popper.min.js"></script>
+				<script src="'.$ruta.'js/jquery.min.js"></script>
 				<script src="'.$ruta.'js/bootstrap.min.js"></script>
 				<script src="'.$ruta.'js/prettify.js"></script>
 				<script src="'.$ruta.'js/jquery.scrollbar.js"></script>
@@ -2774,7 +2775,7 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 	 
 				<input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput"/>
 	
-				<input id="login" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button"/>
+				<input id="login" class="negrita" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button"/>
    
 			</form>
 			
@@ -3138,21 +3139,32 @@ function random_string($length, $letters_only = false) {
 
 function poner_menu($ruta = ""){
 	
-	if(isset($_POST['frm_idioma'])){
-		print 'TEST '.$_POST['seleccion_idioma'];
-	}
-
 	$logueado=logueado();
 
-	$idioma="Languague";
+	$idioma="Cambiar idioma";
 
-	if(!empty($GLOBALS['idioma'])){
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name'])
+	or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'],
+	'SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix'].'categories');
+
+	$recuento = mysqli_fetch_row($consulta);
+
+	if($recuento[0]>0){
+
+	mysqli_close($GLOBALS['conexion']);
+
+	if(!empty($GLOBALS['idioma']) && $GLOBALS['idioma']!='selection'){
 		$idioma=ver_dato('cambiar_idioma', $GLOBALS['idioma']);
+		
 	}
 
 	if(!$logueado){
 
-		print '<div style="margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="container">
+		print '<div style="margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="transparente container">
+		
 		<div style="margin-top:80px;" class="transparente flotar_derecha row">
 		
 		<div class="transparente flotar_derecha" style="width:40px;" >
@@ -3160,26 +3172,27 @@ function poner_menu($ruta = ""){
 		<form  method="post" id="cambio_idioma" name="cambio_idioma" class="cov-frm" action="'.$_SERVER['PHP_SELF'].'" >
 			
 				<div  style="height:100px;width:200px;font-size:8px;">
-					
+			
 					<select style="width:40px;font-size:9px" id="idiomas" class="selectpicker">
-						<option id="seleccion_idioma" style="margin-top:10px;;" value="'.$idioma.'.">'.$idioma.'</option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="es" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="aleman" data-icon="de" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="ingles" data-icon="en" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="frances" data-icon="fr" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="ruso" data-icon="rs" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="italiano" data-icon="it" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="portuges" data-icon="pt" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="chino" data-icon="cn" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="hindu" data-icon="in" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="japones" data-icon="jp" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="catalan" data-icon="ct" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="bengali" data-icon="bn" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="arabe" data-icon="ar" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="euskera" data-icon="eu" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="coreano" data-icon="ko" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;" value="vietnamita" data-icon="vi" ></option>
-						<option id="seleccion_idioma" style="margin-top:10px;margin-bottom:10px;" value="polaco" data-icon="pl" ></option>
+					
+						<option selected id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="tr" >'.$idioma.'</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="spanish" data-icon="es" >es</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="aleman" data-icon="de" >de</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="ingles" data-icon="en" >en</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="frances" data-icon="fr" >fr</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="ruso" data-icon="rs" >rs</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="italiano" data-icon="it" >it</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="portuges" data-icon="pt" >pt</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="chino" data-icon="cn" >zh</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="hindu" data-icon="in" >hi</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="japones" data-icon="jp" >ja</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="catalan" data-icon="ct" >ca</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="bengali" data-icon="bn" >bn</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="arabe" data-icon="ar" >ar</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="euskera" data-icon="eu" >eu</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="coreano" data-icon="ko" >ko</option>
+						<option id="seleccion_idioma" style="margin-top:10px;" value="vietnamita" data-icon="vi" >vi</option>
+						<option id="seleccion_idioma" style="margin-top:10px;margin-bottom:10px;" value="polaco" data-icon="pl" >pl</option>
 
 					</select>
 				
@@ -3199,12 +3212,6 @@ function poner_menu($ruta = ""){
 	
 	if(file_exists($ruta.'config.php')){
 
-		$consulta = mysqli_query($GLOBALS['conexion'],
-		'SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix'].'categories');
-
-		$recuento = mysqli_fetch_row($consulta);
-	
-		if($recuento[0]>0){
 
 			print '<aside class="transparente flotar_derecha" id="menu_categorias">
 			<div class="transparente">
@@ -3217,7 +3224,7 @@ function poner_menu($ruta = ""){
 			$id_categorias=array();
 
 			$consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT DISTINCT(cat_parent_id),cat_name FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 ORDER BY cat_name');
+			SELECT DISTINCT(cat_parent_id) FROM '.$GLOBALS['table_prefix'].'categories WHERE cat_parent_id>0 ORDER BY cat_name');
 
 			while ($recuento = mysqli_fetch_row($consulta)){
 				$id_categorias[]=$recuento[0];
@@ -3275,9 +3282,10 @@ function poner_menu($ruta = ""){
 				</div>
 			</aside>';
 			
+		
 		}
 
-		
+		mysqli_close($GLOBALS['conexion']);
 	}
 
 }

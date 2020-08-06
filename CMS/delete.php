@@ -50,7 +50,12 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 		
 		if(isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && !empty($_GET['file'])){
 			
-			unlink('data/media/'.$_GET['cat_id'].'/'.$_GET['file']);
+			$ruta='data/media/'.$_GET['cat_id'].'/'.$_GET['file'];
+
+			if(file_exists($ruta)){
+				unlink($ruta);
+			}
+			
 		}
 		
 		if(isset($_GET['pag']) && (int)$_GET['pag']>0){
@@ -106,7 +111,7 @@ if( isset($_GET['cat_id']) && (int)$_GET['cat_id']>0 && isset($_GET['file']) && 
 	<img class="icono" src="img/error.png"/>
 	</div>
 
-	<input name="eliminar_img" style="margin-top:50px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+	<input class="negrita" name="eliminar_img" style="margin-top:50px;" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 
 	</form>
 ';

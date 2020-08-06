@@ -40,7 +40,7 @@ if(isset($_POST['enviar'])){
 	
 	if($recuento[0]==0){
 		mysqli_query($GLOBALS['conexion'], '
-		INSERT INTO '.$GLOBALS['table_prefix']."categories (cat_name,cat_description,cat_parent_id,cat_hits,auth_viewcat,auth_viewimage,auth_download,auth_upload,auth_vote,auth_sendpostcard,auth_readcomment,auth_postcomment)
+		INSERT INTO '.$GLOBALS['table_prefix']."categories (cat_name,cat_description,cat_parent_id,cat_hits,auth_viewimage,auth_download,auth_upload,auth_readcomment,auth_postcomment,visibilidad,permitir_gif)
 		VALUES ('".$_POST['nombre']."','".$_POST['descripcion']."','".$_POST['categoria']."','0','0','0','0','0','0','0','0','0')");
 	
 	}
@@ -55,41 +55,89 @@ poner_menu('../');
 poner_menu_geo('../');
 
 print '
-<form method="post" action="'.$_SERVER['PHP_SELF'].'">
-<p><input type="text" name="nombre" placeholder="'. ver_dato('name', $GLOBALS['idioma']).'"/></p>
-<p><input type="text" name="descripcion" placeholder="'. ver_dato('desc', $GLOBALS['idioma']).'"/></p>
-<p><span>'. ver_dato('tipe', $GLOBALS['idioma']).'</span><select style="margin-top:20px;" name="categoria">';
+<div style="width:90%;" class="flotar_izquierda" >
 
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-	
-	$consulta = mysqli_query($GLOBALS['conexion'], '
-	SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix']."categories");
-	
-	$recuento = mysqli_fetch_row($consulta);
-	
-	if($recuento[0]==0){
-		print '<option value="0">Categoria principal</option>';
-	
-	}
-	
-	else{
+	<form method="post" action="'.$_SERVER['PHP_SELF'].'">
+
+		<p>
+			<input type="text" name="nombre" placeholder="'. ver_dato('name', $GLOBALS['idioma']).'"/>
+		</p>
+
+		<p>
+			<input type="text" name="descripcion" placeholder="'. ver_dato('desc', $GLOBALS['idioma']).'"/>
+		</p>
+
+		<p>
+			<span>'. ver_dato('tipe', $GLOBALS['idioma']).'</span>
 		
-		print '<option value="0">Categoria principal</option>';
-		
-		$consulta = mysqli_query($GLOBALS['conexion'], '
-		SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix']."categories");
+			<select style="margin-top:20px;" name="categoria">';
+
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
-		while($recuento = mysqli_fetch_row($consulta)){
-			print '<option value="'.$recuento[0].'">'.$recuento[1].'</option>';
-		}
-	}
+			$consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT COUNT(cat_id) FROM '.$GLOBALS['table_prefix']."categories");
+	
+			$recuento = mysqli_fetch_row($consulta);
+	
+			if($recuento[0]==0){
+
+				print '<option value="0">Categoria principal</option>';
+	
+			}
+	
+			else{
+		
+				print '<option value="0">Categoria principal</option>';
+		
+				$consulta = mysqli_query($GLOBALS['conexion'], '
+				SELECT cat_id,cat_name FROM '.$GLOBALS['table_prefix']."categories");
+	
+				while($recuento = mysqli_fetch_row($consulta)){
+					print '<option value="'.$recuento[0].'">'.$recuento[1].'</option>';
+				}
+
+			}
 	
 mysqli_close($GLOBALS['conexion']);
  
-print '</select></p>
-	<p style="padding-top:20px;"><input value="'.ver_dato('submit', $GLOBALS['idioma']).'" name="enviar" style="font-size:20px;" type="submit"/></p>
-</form>';
+print '</select>
+
+</p>
+
+<div style="clear:both;">
+
+	<h2>
+		<span>'. ver_dato('visibilidad', $GLOBALS['idioma']).'</span>
+	</h2>
+
+	<div style="margin-left:30%;padding-right:20px;" class="flotar_izquierda" >
+
+		<label>
+			<input type="radio" id="aut_descarga" name="gender" value="male"> '.ver_dato('public', $GLOBALS['idioma']).'</input>
+		</label>
+
+	</div>
+
+	<div class="flotar_izquierda" >
+
+		<label>
+			<input type="radio" id="aut_descarga" name="gender" value="female"> '.ver_dato('private', $GLOBALS['idioma']).'</input>
+		</label>
+
+	</div>
+
+</div>
+
+<div style="clear:both;">
+
+		<input value="'.ver_dato('submit', $GLOBALS['idioma']).'" name="enviar" style="font-size:20px;" type="submit"/>
+
+</div>
+
+</form>
+
+</div>';
 
 print '</div>';
 

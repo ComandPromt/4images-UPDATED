@@ -99,6 +99,21 @@ if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_
 
 if (isset($_GET['image_id']) ) {
 
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+
+	$consulta=mysqli_query($GLOBALS['conexion'],'SELECT visibilidad,user_id FROM '.$GLOBALS['table_prefix']."images
+	WHERE image_id='" . $_GET['image_id']."'");
+	
+	$visibilidad = mysqli_fetch_row($consulta);
+
+	mysqli_close($GLOBALS['conexion']);
+
+	if( !isset($_COOKIE['4images_userid']) || $visibilidad[0]==3 
+	&& $visibilidad[1]!=$_COOKIE['4images_userid'] || $visibilidad[0]==2 && !$logueado){
+			redireccionar('index.php');
+	}
+
 	$subida_por_mi=subida_por_mi($_GET['image_id']);
 
 	$_GET['image_id']=(int)$_GET['image_id'];
@@ -205,21 +220,32 @@ if (isset($_GET['image_id']) ) {
 
     $fila = mysqli_fetch_row($consulta);
 
-    $ultima_imagen = $fila[0];
+	$ultima_imagen = $fila[0];
+	
+	mysqli_close($GLOBALS['conexion']);
 
     if ($_GET['image_id'] <= $ultima_imagen) {
 
         poner_menu();
 
 	if(!isset($_SESSION['del_comment']) && !isset($_SESSION['edit_comment']) && $_SESSION['contar']){
-	
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
+        $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
+
         mysqli_query($GLOBALS['conexion'],
-        'UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id=' . $_GET['image_id']);
+		'UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id=' . $_GET['image_id']);
+		mysqli_close($GLOBALS['conexion']);
 	}
 	
-$_SESSION['contar']=true;
+	$_SESSION['contar']=true;
 
-$image_name="";
+	$image_name="";
+
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['db_password'], $GLOBALS['db_name'])
+	or die("No se pudo conectar a la base de datos");
 
         $consulta = mysqli_query($GLOBALS['conexion'], '
 
@@ -234,6 +260,9 @@ $image_name="";
 		<div style="margin:auto;">
 
 		<div style="float:left;margin:auto;">';
+	
+	    $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
 		
 			if($logueado){
 				
@@ -243,9 +272,6 @@ $image_name="";
 			href="upload_images/index.php?cat='.$categoria[0].'">
 	<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/>
 			</a>';
-
-    $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
-    or die("No se pudo conectar a la base de datos");
 	
 			}
 			
@@ -257,7 +283,6 @@ $image_name="";
 
 		<div style="float:left;width:100%;">';
 		
-
         $consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT image_name,cat_id,image_media_file,image_description,image_id FROM ' . $GLOBALS['table_prefix'] . 'images
 		WHERE image_id=' . $_GET['image_id']);
@@ -345,9 +370,7 @@ if($logueado){
 			';
 			
         }
-}
 
-if($logueado){
 	        print '
 		<div style="float:left;clear:both;border-style: dashed; border-color: blue;margin-left:100px;padding-top:20px;margin-top:20px;
 		padding-left:20px;padding-right:20px;
@@ -414,8 +437,7 @@ if($logueado){
 }
 
 
-	print '<div style="float:right;width:100%;margin-bottom:40px;">
-';
+	print '<div style="float:right;width:100%;margin-bottom:40px;">';
 
 if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
 	
@@ -477,14 +499,7 @@ $accion='change_view_o';
 					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/tag_2.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
 				
 			</a>
-			
-			
-			
-		
-		
-		
-	
-	
+						
 			<div class="modal fade transparente" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered transparente" role="document">
 			<div class="modal-content ">
@@ -504,7 +519,7 @@ $accion='change_view_o';
 
 					<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" value="'.$image_name.'" placeholder="' . ver_dato('new_name', $GLOBALS['idioma']) . '"/>
 
-					<input name="renombrar" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
+					<input name="renombrar" class="negrita" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
 
 				</form>
 
@@ -537,7 +552,7 @@ $accion='change_view_o';
 		
 				print '</select>
 	
-				<input name="cambiar_categoria" style="margin-top:20px;" type="submit"/>
+				<input class="negrita" name="cambiar_categoria" style="margin-top:20px;" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit"/>
 		
 				</form>
 
@@ -656,7 +671,7 @@ if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['ima
 								</p>
 
 <div style="float:left;padding-bottom:30px;">
-									<input style="width:300px;font-size:25px;margin-left:3px;" type="submit" title="' . ver_dato('comentar', $GLOBALS['idioma']) . '" name="comentario" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit" />
+									<input class="negrita" style="width:300px;font-size:25px;margin-left:3px;" type="submit" title="' . ver_dato('comentar', $GLOBALS['idioma']) . '" name="comentario" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit" />
 								</div>
 							
 							</form>
@@ -1008,7 +1023,7 @@ print '</option>
 		
 		<p><textarea name="edit_comment" type="text" >'.$id_comentario[0].'</textarea></p>
 
-		<input name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+		<input class="negrita" name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 
 				</form>
 

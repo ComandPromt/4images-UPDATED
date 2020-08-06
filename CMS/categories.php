@@ -84,9 +84,6 @@ if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria'])
 	
 	mysqli_close($GLOBALS['conexion']);
 	
-	if($fila[0]==0){
-		redireccionar('index.php');
-	}
 	
 }
 	

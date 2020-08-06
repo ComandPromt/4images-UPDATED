@@ -80,7 +80,7 @@ if($numero_categorias==0){
 print '			
 		</select>
 		</p>
-		<input value="'.ver_dato('submit', $GLOBALS['idioma']).'"  id="enviar" name="admin_upload" type="submit"/>
+		<input value="'.ver_dato('submit', $GLOBALS['idioma']).'"  id="enviar" class="negrita" name="admin_upload" type="submit"/>
 	</form>
 
 	</div>';

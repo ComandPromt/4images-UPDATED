@@ -21,7 +21,7 @@ $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     or die("No se pudo conectar a la base de datos");
 
 $result = mysqli_query($GLOBALS['conexion'],'SELECT image_name,cat_id,image_media_file,image_id FROM
- '.$GLOBALS['table_prefix'].'images ORDER BY image_id desc LIMIT 10');
+ '.$GLOBALS['table_prefix'].'images WHERE visibilidad=1 ORDER BY image_id desc LIMIT 10');
 
 header("Content-type: text/xml");
 
