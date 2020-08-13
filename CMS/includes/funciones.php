@@ -1,5 +1,5 @@
 <?php
- 
+
 date_default_timezone_set('Europe/Madrid');
 
 function descargar(){
@@ -250,11 +250,11 @@ function saber_categoria($cat){
 				SELECT cat_name FROM '.$GLOBALS['table_prefix']."categories
 				WHERE cat_id='".$cat."'");
 			
-	$categoria = mysqli_fetch_row($consulta);
+	$resultado = mysqli_fetch_row($consulta);
 	
 	mysqli_close($GLOBALS['conexion']);	
 	
-	return $categoria[0];
+	return $resultado[0];
 	
 }
 
@@ -748,8 +748,6 @@ print '
 	<meta name="revisit-after" content="10 days">
 	<meta name="robots" content="index, nofollow">
 
-	<script src="'.$ruta.'js/funciones.js"></script>
-
 	<link rel="stylesheet" href="'.$ruta.'css/dashboard.css"/>
 	<link rel="stylesheet" href="'.$ruta.'css/styles.css">
 	<link rel="stylesheet" href="'.$ruta.'css/w3.css">
@@ -772,10 +770,12 @@ print '
 	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/estilo_select_con_images.css" />
 	<link rel="icon" type="image/ico" href="'.$ruta.$favicon.'">
 
+	<script src="'.$ruta.'js/jquery.min.js"></script>
 	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
 	<script  src="'.$ruta.'js/jszip.min.js"></script>
 	<script  src="'.$ruta.'js/FileSaver.js"></script>
-	
+	<script  src="'.$ruta.'js/funciones.js"></script>
+		
 	<title>'.$GLOBALS['site_name']. '</title>
 	
 	<script>
@@ -1339,13 +1339,35 @@ function truncateFloat($number, $digitos){
 	
 }
 
+function saber_calificacion($usuario,$imagen){
+	
+	$respuesta='0';
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT Calificacion FROM '.$GLOBALS['table_prefix']."usersraters WHERE Usuario='".$usuario."' AND Imagen='".$imagen."'");
+
+	$resultado = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	if($respuesta!=null){
+		$respuesta=$resultado[0];
+	}
+	
+	return (int)$respuesta;
+
+}
+
 function footer($ruta=""){
 	
 	print "
 			</div>";
 
-print '			<script src="'.$ruta.'js/popper.min.js"></script>
-				<script src="'.$ruta.'js/jquery.min.js"></script>
+print '		
+				<script src="'.$ruta.'js/main.js" data-id="rating"></script>
+				<script src="'.$ruta.'js/popper.min.js"></script>
 				<script src="'.$ruta.'js/bootstrap.min.js"></script>
 				<script src="'.$ruta.'js/prettify.js"></script>
 				<script src="'.$ruta.'js/jquery.scrollbar.js"></script>
@@ -1353,8 +1375,9 @@ print '			<script src="'.$ruta.'js/popper.min.js"></script>
 				<script src="'.$ruta.'js/modernizr.custom.js"></script>
 				<script src="'.$ruta.'js/jquery.dlmenu.js"></script>
 				<script src="'.$ruta.'js/bootstrap-select.js"></script>
-				<script src="'.$ruta.'js/funciones_2.js"></script>
-				<script src="'.$ruta.'js/modificarEstiloInputFile.js"></script>';
+				<script src="'.$ruta.'js/modificarEstiloInputFile.js"></script>
+
+				';
 
 print "		<script>
 
@@ -1383,7 +1406,7 @@ print "		<script>
 				  
 			</script>";
 
-print '
+print '		
 		</body>
 
 	</html>';
@@ -3163,7 +3186,7 @@ function poner_menu($ruta = ""){
 
 	if(!$logueado){
 
-		print '<div style="margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="transparente container">
+		print '<div style="zoom:110%;calc(100% + 1em);margin-left:-30px;padding-bottom:20px;padding-left:40px;width:40px;z-index:1;" class="transparente container">
 		
 		<div style="margin-top:80px;" class="transparente flotar_derecha row">
 		

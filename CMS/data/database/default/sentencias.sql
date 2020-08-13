@@ -122,6 +122,7 @@ FOREIGN KEY (user_id) REFERENCES 4images_users (user_id)
 CREATE TABLE 4images_usersraters(
 Usuario int(11),
 Imagen int(11),
+Calificacion TINYINT(1),
 FOREIGN KEY (Usuario) REFERENCES 4images_users (user_id),
 FOREIGN KEY (Imagen) REFERENCES 4images_images (image_id),
 PRIMARY KEY (Usuario,Imagen)
@@ -486,7 +487,12 @@ INSERT INTO polaco (id, accion, texto) VALUES
 ('113','change_view_o','Ukryj obraz'),
 ('114','txt_url','Wprowadź adres URL'),
 ('115','public','Publiczny'),
-('116','private','Prywatny');
+('116','private','Prywatny'),
+('117','rate_1','Nie lubię'),
+('118','rate_2','Ulepszone'),
+('119','rate_3','w porządku'),
+('120','rate_4','Bardzo dobrze'),
+('121','rate_5','Kocham to');
 
 INSERT INTO coreano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '사용자가 성공적으로 활성화했습니다'),
@@ -604,7 +610,12 @@ INSERT INTO coreano (id, accion, texto) VALUES
 ('113','change_view_o','이미지 숨기기'),
 ('114','txt_url','URL을 입력하십시오'),
 ('115','public','공공의'),
-('116','private','은밀한');
+('116','private','은밀한'),
+('117','rate_1','나는 좋아하지 않는다'),
+('118','rate_2','개선 가능'),
+('119','rate_3','괜찮아'),
+('120','rate_4','아주 좋아'),
+('121','rate_5','나는 그것을 좋아한다');
 
 INSERT INTO vietnamita (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Người dùng đã kích hoạt thành công'),
@@ -722,7 +733,12 @@ INSERT INTO vietnamita (id, accion, texto) VALUES
 ('113','change_view_o','Ẩn hình ảnh'),
 ('114','txt_url','Nhập URL'),
 ('115','public','Công cộng'),
-('116','private','Riêng tư');
+('116','private','Riêng tư'),
+('117','rate_1','Tôi không thích'),
+('118','rate_2','Có thể cải thiện'),
+('119','rate_3','Được chứ'),
+('120','rate_4','Rất tốt'),
+('121','rate_5','Tôi thích nó');
 
 INSERT INTO aleman (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Der Benutzer wurde erfolgreich aktiviert'),
@@ -840,7 +856,12 @@ INSERT INTO aleman (id, accion, texto) VALUES
 ('113','change_view_o','Bild ausblenden'),
 ('114','txt_url','Geben Sie die URL ein'),
 ('115','public','Öffentlichkeit'),
-('116','private','Privat');
+('116','private','Privat'),
+('117','rate_1','Mag ich nicht'),
+('118','rate_2','Verbesserbar'),
+('119','rate_3','In Ordnung'),
+('120','rate_4','Sehr gut'),
+('121','rate_5','Ich liebe es');
 
 INSERT INTO arabe (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'تم تفعيل المستخدم بنجاح'),
@@ -958,7 +979,12 @@ INSERT INTO arabe (id, accion, texto) VALUES
 ('113','change_view_o','إخفاء الصورة'),
 ('114','txt_url','أدخل الرابط'),
 ('115','public','عامة'),
-('116','private','نشر');
+('116','private','نشر'),
+('117','rate_1','لا يعجبني'),
+('118','rate_2','غير قابل للتحسين'),
+('119','rate_3','جيد'),
+('120','rate_4','جيد جدا'),
+('121','rate_5','أحبه');
 
 INSERT INTO bengali (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ব্যবহারকারী সফলভাবে সক্রিয় করা হয়েছে'),
@@ -1076,7 +1102,12 @@ INSERT INTO bengali (id, accion, texto) VALUES
 ('113','change_view_o','চিত্রটি লুকান'),
 ('114','txt_url','URL লিখুন'),
 ('115','public','প্রকাশ্য'),
-('116','private','ব্যক্তিগত');
+('116','private','ব্যক্তিগত'),
+('117','rate_1','আমি পছন্দ করি না'),
+('118','rate_2','চাষের'),
+('119','rate_3','ঠিক আছে'),
+('120','rate_4','খুব ভালো'),
+('121','rate_5','আমি এটা ভালোবাসি');
 
 INSERT INTO catalan (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le usuari se ha activat correctament'),
@@ -1194,7 +1225,12 @@ INSERT INTO catalan (id, accion, texto) VALUES
 ('113','change_view_o','Amaga imatge'),
 ('114','txt_url','Introdueix la URL'),
 ('115','public','Públic'),
-('116','private','Privat');
+('116','private','Privat'),
+('117','rate_1','No me agrada'),
+('118','rate_2','Millorable'),
+('119','rate_3','Bé'),
+('120','rate_4','Molt bo'),
+('121','rate_5','Me encanta');
 
 INSERT INTO chino (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', '用戶已成功激活'),
@@ -1312,7 +1348,12 @@ INSERT INTO chino (id, accion, texto) VALUES
 ('113','change_view_o','隱藏圖片'),
 ('114','txt_url','輸入網址'),
 ('115','public','上市'),
-('116','private','私人的');
+('116','private','私人的'),
+('117','rate_1','我不喜歡'),
+('118','rate_2','可改善的'),
+('119','rate_3','好的'),
+('120','rate_4','很好'),
+('121','rate_5','我喜歡它');
 
 INSERT INTO euskera (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Erabiltzaileak behar bezala aktibatu du'),
@@ -1430,7 +1471,12 @@ INSERT INTO euskera (id, accion, texto) VALUES
 ('113','change_view_o','Ezkutatu irudia'),
 ('114','txt_url','Sartu URLa'),
 ('115','public','Publiko'),
-('116','private','Pribatua');
+('116','private','Pribatua'),
+('117','rate_1','Ez zait gustatzen'),
+('118','rate_2','Hobetu'),
+('119','rate_3','Ados'),
+('120','rate_4','Oso ondo'),
+('121','rate_5','Maite dut');
 
 INSERT INTO frances (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utilisateur a activé avec succès'),
@@ -1548,7 +1594,12 @@ INSERT INTO frances (id, accion, texto) VALUES
 ('113','change_view_o','Masquer la image'),
 ('114','txt_url','Introduce la URL'),
 ('115','public','Publique'),
-('116','private','Privé');
+('116','private','Privé'),
+('117','rate_1','Je ne aime pas'),
+('118','rate_2','Améliorable'),
+('119','rate_3','Bon'),
+('120','rate_4','Très bon'),
+('121','rate_5','Je aime');
 
 INSERT INTO hindu (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'उपयोगकर्ता सफलतापूर्वक सक्रिय हो गया है'),
@@ -1666,7 +1717,12 @@ INSERT INTO hindu (id, accion, texto) VALUES
 ('113','change_view_o','छवि छिपाएँ'),
 ('114','txt_url','URL दर्ज करें'),
 ('115','public','जनता'),
-('116','private','निजी');
+('116','private','निजी'),
+('117','rate_1','मुझे पसंद नहीं है'),
+('118','rate_2','सुधार'),
+('119','rate_3','ठीक है'),
+('120','rate_4','बहुत अच्छा'),
+('121','rate_5','मुझे यह पसंद है');
 
 INSERT INTO ingles (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'The user has successfully activated'),
@@ -1784,7 +1840,12 @@ INSERT INTO ingles (id, accion, texto) VALUES
 ('113','change_view_o','Hide image'),
 ('114','txt_url','Enter the URL'),
 ('115','public','Public'),
-('116','private','Private');
+('116','private','Private'),
+('117','rate_1','I do not like'),
+('118','rate_2','Improvable'),
+('119','rate_3','Good'),
+('120','rate_4','Very good'),
+('121','rate_5','I love it');
 
 INSERT INTO italiano (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Le utente si è attivato con successo'),
@@ -1902,7 +1963,12 @@ INSERT INTO italiano (id, accion, texto) VALUES
 ('113','change_view_o','Nascondi immagine'),
 ('114','txt_url','Inserisci la URL'),
 ('115','public','Pubblico'),
-('116','private','Privato');
+('116','private','Privato'),
+('117','rate_1','Non mi piace'),
+('118','rate_2','Migliorabile'),
+('119','rate_3','Bene'),
+('120','rate_4','Molto bene'),
+('121','rate_5','Lo adoro');
 
 INSERT INTO japones (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'ユーザーは正常にアクティブ化されました'),
@@ -2020,7 +2086,12 @@ INSERT INTO japones (id, accion, texto) VALUES
 ('113','change_view_o','画像を隠す'),
 ('114','txt_url','URLを入力してください'),
 ('115','public','公衆'),
-('116','private','民間');
+('116','private','民間'),
+('117','rate_1','好きではない'),
+('118','rate_2','改善可能'),
+('119','rate_3','はい'),
+('120','rate_4','とても良い'),
+('121','rate_5','大好きです');
 
 INSERT INTO portuges (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'O usuário foi ativado com sucesso'),
@@ -2138,7 +2209,12 @@ INSERT INTO portuges (id, accion, texto) VALUES
 ('113','change_view_o','Ocultar imagem'),
 ('114','txt_url','Digite o URL'),
 ('115','public','Público'),
-('116','private','Privado');
+('116','private','Privado'),
+('117','rate_1','Não gosto'),
+('118','rate_2','Improvável'),
+('119','rate_3','Bom'),
+('120','rate_4','Muito bom'),
+('121','rate_5','Me encanta');
 
 INSERT INTO ruso (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'Пользователь успешно активирован'),
@@ -2256,7 +2332,12 @@ INSERT INTO ruso (id, accion, texto) VALUES
 ('113','change_view_o','Скрыть изображение'),
 ('114','txt_url','Введите URL'),
 ('115','public','общественности'),
-('116','private','частный');
+('116','private','частный'),
+('117','rate_1','мне не нравится'),
+('118','rate_2','улучшаемый'),
+('119','rate_3','Ладно'),
+('120','rate_4','Очень хорошо'),
+('121','rate_5','я люблю это');
 
 INSERT INTO spanish (id, accion, texto) VALUES
 ('1', 'activacion_exitosa', 'El usuario se ha activado correctamente'),
@@ -2374,7 +2455,12 @@ INSERT INTO spanish (id, accion, texto) VALUES
 ('113','change_view_o','Ocultar imagen'),
 ('114','txt_url','Introduce la URL'),
 ('115','public','Público'),
-('116','private','Privado');
+('116','private','Privado'),
+('117','rate_1','No me gusta'),
+('118','rate_2','Mejorable'),
+('119','rate_3','Bueno'),
+('120','rate_4','Muy bueno'),
+('121','rate_5','Me encanta');
 
 INSERT INTO 4images_users VALUES('-1','-1','Guest','0493984f537120be0b8d96bc9b69cdd2','','0','1','0','spanish','nofoto.jpg');
 

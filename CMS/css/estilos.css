@@ -1,3 +1,41 @@
+
+.rating-wrapper ul {
+  margin: 0 0 0 0;
+  padding: 0;
+}
+
+.rating-wrapper ul li {
+  display: block;
+  float: left;
+  background: url(../img/stars_stripe.png);
+  background-position: 48px 192px;
+  width: 48px;
+  height: 48px;
+  transform: scale(0.5);
+  margin-right: -24px;
+  cursor: pointer;
+}
+
+.rating-wrapper ul li:first-child {
+  margin-left: -13px;
+}
+
+.fullstar {
+  background-position: 0 0 !important;
+}
+
+#rate-string {
+  display: block;
+  height: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.remitente{
+    color:#074E20;
+}
+
 .negrita{
     font-weight: bold;
 }

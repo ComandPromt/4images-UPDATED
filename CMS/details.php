@@ -6,6 +6,8 @@ $_SESSION['track']=true;
 
 $_SESSION['pagina'] = 'details.php';
 
+$_SESSION['imagen']= $_GET['image_id'];
+
 if(!isset($_SESSION['contar'])){
 	$_SESSION['contar']=true;
 }
@@ -290,7 +292,6 @@ if (isset($_GET['image_id']) ) {
         $recuento = mysqli_fetch_row($consulta);
 		$image_name=$recuento[0];
         $categoria = $recuento[1];
-        $imagen = $recuento[2];
 
         print '<h1 style="color:#116C5D;">' . $recuento[0] . '</h1>
 
@@ -314,20 +315,57 @@ if (isset($_GET['image_id']) ) {
 
 		</div>';
 
-        $consulta = mysqli_query($GLOBALS['conexion'], '
-			SELECT image_hits,image_downloads FROM ' . $GLOBALS['table_prefix'] . 'images
-			WHERE image_id=' . $_GET['image_id']);
 
-        $fila = mysqli_fetch_row($consulta);
+mysqli_close($GLOBALS['conexion']);	
 
         print '
 		<hr/><div class="float:left;">';
 		
 		
 if($logueado){
-			print '
+	
+	$estrellas=saber_calificacion($_COOKIE['4images_userid'],$_GET['image_id']);
 
-		
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
+	        $consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT image_hits,image_downloads FROM ' . $GLOBALS['table_prefix'] . 'images
+			WHERE image_id=' . $_GET['image_id']);
+
+        $fila = mysqli_fetch_row($consulta);
+	
+	if($estrellas==0){
+		$estrellas='';
+	}
+
+	print '			
+		<div style="float:left;margin-top:-20px;" class="rating-wrapper" id="rating">
+
+      <div style="float:left;">
+
+        <label  id="rate-string">'.$estrellas.'</label>
+
+        <ul>
+          <li class="r1 star"></li>
+          <li class="r2 star"></li>
+          <li class="r3 star"></li>
+          <li class="r4 star"></li>
+          <li class="r5 star"></li>
+        </ul>
+<h3 style="margin-bottom:10px;" id="calificacion" >'.$estrellas.'</h3>
+      </div>
+      
+<div style="clear:both;padding-bottom:10px;" class="flotar_izquierda" >
+
+    <button style="width:40px;height:40px;" onclick="limpiar_estrellas()"><img style="margin-left:-15px;width:30px;height:30px;"  src="img/clean.png"/></button>
+
+	<button style="margin-left:10px;width:40px;height:40px;" onclick="calificar()"><img style="margin-left:-15px;width:30px;height:30px;"  src="img/rate.png"/></button>
+
+</div>
+
+    </div>
+				
 					<img alt="hits" style="height:30px;width:30px;margin-top"  src="img/view.png"/>
 					<span style="font-size:14px;color:blue;padding-right:20px;">' . $fila[0] . '</span>
 				
@@ -365,8 +403,7 @@ if($logueado){
 				<a title="'.$fila[1]. '" >
 				<img alt="usuario" class="imgRedonda" style="margin-top:20px;padding-left:10px;width:40px;height:40px;" 
 				src="' . $imagen_usuario . '"/></a>
-				
-				<span style="font-size:20px;"> ' . $fila[1] . '</span>
+
 			';
 			
         }
@@ -437,12 +474,12 @@ if($logueado){
 }
 
 
-	print '<div style="float:right;width:100%;margin-bottom:40px;">';
+	print '<div style="float:right;margin-bottom:40px;margin-top:21px;">';
 
 if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
 	
 	print '	<div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
-		padding-top:10px;margin-top:30px;padding-bottom:10px;padding:20px;">
+		padding-bottom:10px;padding:20px;">
 <a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
 			
 					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
