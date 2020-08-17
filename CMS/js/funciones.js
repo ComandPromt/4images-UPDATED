@@ -38,28 +38,39 @@ function limpiar_emoji(nombre){
 
 }
 
-function mencionar(id){
+function mencionar(id,tipo){
 	
 	var texto="";
 	
 	var cerrar="";
 	
-	switch(id){
+	switch(tipo){
 		
 		case 1:
-		texto='[user]'+document.getElementById('mention_users').value+'[/user]';
-		cerrar='mencion';
+			texto='[user]'+document.getElementById('mention_users').value+'[/user]';
+			cerrar='mencion';
 		break;
 		
 		case 2:
-		texto='[URL]'+document.getElementById('ctr_url').value+'[/URL]';
-		cerrar='url';
+			texto='[URL]'+document.getElementById('ctr_url').value+'[/URL]';
+			cerrar='url';
 		break;
+		
+		case 3:
+			texto='[user]'+document.getElementById('mention_users_edit').value+'[/user]';
+			cerrar='mencion';
+		break;
+		
+		case 4:
+			texto='[URL]'+document.getElementById('ctr_url_edit').value+'[/URL]';
+			cerrar='url';
+		break;
+		
 	}
 	
-document.getElementById("mensaje").value+=' '+texto;
+	document.getElementById(id).value+=texto;
 
-$("#"+cerrar).hide();
+	$("#"+cerrar).hide();
 
 }
 

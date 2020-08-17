@@ -2,32 +2,31 @@
 
 session_start();
 
+include('config.php');
+
+include ('includes/funciones.php');
+
 $_SESSION['track']=true;
 
 $_SESSION['pagina'] = 'details.php';
 
 $_SESSION['imagen']= $_GET['image_id'];
 
+$logueado=logueado();
+
 if(!isset($_SESSION['contar'])){
 	$_SESSION['contar']=true;
 }
 
-include('config.php');
-
-include ('includes/funciones.php');
-
-$logueado=logueado();
-
 if(!acceso_imagen($_GET['image_id'],$logueado)||isset($_GET['mode']) || preg_match("/\brder\b/i",$_GET['image_id'])
-|| preg_match("/\nion\b/i",$_GET['image_id'])|| preg_match("/\elect\b/i",$_GET['image_id'])	
-){
+|| preg_match("/\nion\b/i",$_GET['image_id'])|| preg_match("/\elect\b/i",$_GET['image_id'])){
 	redireccionar('register.php');
 }
 
 track();
 
 if(isset($_POST['cambiar_categoria'])){
-	
+		
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
@@ -89,17 +88,18 @@ if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_
 			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 			$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
-			$consulta = mysqli_query($GLOBALS['conexion'],
-                'UPDATE ' . $GLOBALS['table_prefix'] .
+			$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE ' . $GLOBALS['table_prefix'] .
                 "comments SET comment_headline='" . $_POST['edit_comment_asunto'] . "',comment_text='" . $_POST['edit_comment'] . "'
 				WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['edit_comment']."'");
 
-				mysqli_close($GLOBALS['conexion']);
-				unset($_SESSION['edit_comment']);
-			}
+			mysqli_close($GLOBALS['conexion']);
+
+		}
 }
 
-if (isset($_GET['image_id']) ) {
+if (isset($_GET['image_id'])) {
+
+	$visibilidad_comentario=saber_visibilidad_comentario($_GET['image_id']);
 
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
@@ -142,7 +142,7 @@ if (isset($_GET['image_id']) ) {
 
 			if ($_COOKIE['4images_userid'] > 0) {
 				$GLOBALS['idioma'] = saber_idioma($_COOKIE['4images_userid']);
-			}
+			}	
     }
 
     if (isset($_POST['comentario']) && !empty($_POST['captcha']) && (trim(strtolower($_POST['captcha'])) == $_SESSION['captcha'])) {
@@ -178,7 +178,7 @@ if (isset($_GET['image_id']) ) {
             'UPDATE '.$GLOBALS['table_prefix'] .
             "SET user_comments= user_comments+1 WHERE user_id='".$_COOKIE['4images_userid']."'");
 
-			if($usuario!=""){
+			if($logueado && $usuario!=""){
 				
 				$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_id,nacionalidad FROM '. $GLOBALS['table_prefix'] .
 				"users WHERE user_name='". $usuario."'");
@@ -187,17 +187,17 @@ if (isset($_GET['image_id']) ) {
 						
 				if((int)$user_id[0]>0){
 				
-				$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
-				"users WHERE user_id='". $_COOKIE['4images_userid']."'");
-				
-				$remitente = mysqli_fetch_row($consulta2);
-				
-				mysqli_query($GLOBALS['conexion'],
-                "INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
-
-				VALUES( '".$_COOKIE['4images_userid']."','".$user_id[0]."','".ucwords($remitente[0]).' '.
-				ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
-				"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
+					$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
+					"users WHERE user_id='". $_COOKIE['4images_userid']."'");
+					
+					$remitente = mysqli_fetch_row($consulta2);
+					
+					mysqli_query($GLOBALS['conexion'],
+					"INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
+	
+					VALUES( '".$_COOKIE['4images_userid']."','".$user_id[0]."','".ucwords($remitente[0]).' '.
+					ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
+					"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
 	
 				}
 				
@@ -230,24 +230,28 @@ if (isset($_GET['image_id']) ) {
 
         poner_menu();
 
-	if(!isset($_SESSION['del_comment']) && !isset($_SESSION['edit_comment']) && $_SESSION['contar']){
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
-		or die("No se pudo conectar a la base de datos");
-		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
-        $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
-
-        mysqli_query($GLOBALS['conexion'],
-		'UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id=' . $_GET['image_id']);
-		mysqli_close($GLOBALS['conexion']);
-	}
+		if(!isset($_SESSION['del_comment']) && !isset($_SESSION['edit_comment']) && $_SESSION['contar']){
+		
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
+			or die("No se pudo conectar a la base de datos");
+			
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
+			$GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
 	
-	$_SESSION['contar']=true;
-
-	$image_name="";
-
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-	$GLOBALS['db_password'], $GLOBALS['db_name'])
-	or die("No se pudo conectar a la base de datos");
+			mysqli_query($GLOBALS['conexion'],
+			'UPDATE 4images_images SET image_hits=image_hits+1 WHERE image_id=' . $_GET['image_id']);
+			
+			mysqli_close($GLOBALS['conexion']);
+		
+		}
+	
+		$_SESSION['contar']=true;
+	
+		$image_name="";
+	
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
 
         $consulta = mysqli_query($GLOBALS['conexion'], '
 
@@ -271,14 +275,15 @@ if (isset($_GET['image_id']) ) {
 				print '
 				
 				<a style="padding-left:40px;float:right;font-weight:bold;font-size:10px;padding-bottom:30px;"
-			href="upload_images/index.php?cat='.$categoria[0].'">
-	<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/>
-			</a>';
+				href="upload_images/index.php?cat='.$categoria[0].'">
+	
+					<img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/>
+			
+				</a>';
 	
 			}
 			
-		print '
-			<a style="padding-left:140px;color:#562676;font-size:30px;font-weight:bold;"
+			print '<a style="padding-left:140px;color:#562676;font-size:30px;font-weight:bold;"
 			href="categories.php?cat_id=' . $categoria[0] . '">' . $categoria[1] . '</a>
 		
 		</div>
@@ -299,30 +304,33 @@ if (isset($_GET['image_id']) ) {
 
 			<img  class="img-fluid rounded"   alt="' . $recuento[0] . '" src="data/media/' . $recuento[1] . '/' . $recuento[2] . '" />
 
-			<div style="background-color: rgba(255, 255, 255, 0);
-			margin-bottom: -17px; margin-right: -17px; max-height: 505.75px;overflow: hidden;"
-			class="overlay scrollbar-vista ">';
+			<div style="background-color: rgba(255, 255, 255, 0);margin-bottom: -17px;
+			
+			margin-right: -17px; max-height: 505.75px;overflow: hidden;" class="overlay scrollbar-vista ">';
 
         if (!empty($recuento[3])) {
-            print '
-				<div style="height:350px;margin:auto;" class="transparente">
+			
+            print '<div style="height:350px;margin:auto;" class="transparente">
+			
 					<h2 style="width:70%;font-size:25px;margin:auto;padding-bottom:10px;
-					margin:auto;background-color:#ffffff;color:blue;" class="texto">' . $recuento[3] . '</h3></div>';
+					margin:auto;background-color:#ffffff;color:blue;" class="texto">'
+					 . $recuento[3] . '</h2>
+				
+				</div>';
         }
 
-        print '
-			</div>
+    print '
+		</div>
 
-		</div>';
+	</div>';
 
+	mysqli_close($GLOBALS['conexion']);	
 
-mysqli_close($GLOBALS['conexion']);	
-
-        print '
-		<hr/><div class="float:left;">';
+    print '<hr/>
+    
+    <div class="float:left;">';
 		
-		
-if($logueado){
+	if($logueado){
 	
 	$estrellas=saber_calificacion($_COOKIE['4images_userid'],$_GET['image_id']);
 
@@ -333,49 +341,74 @@ if($logueado){
 			SELECT image_hits,image_downloads FROM ' . $GLOBALS['table_prefix'] . 'images
 			WHERE image_id=' . $_GET['image_id']);
 
-        $fila = mysqli_fetch_row($consulta);
+    $fila = mysqli_fetch_row($consulta);
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+			SELECT CAST(AVG(Calificacion) AS DECIMAL(10,0)) AS Calificacion FROM ' . $GLOBALS['table_prefix'] . "usersraters WHERE Imagen='".$_GET['image_id']."'");
+	
+	$media = mysqli_fetch_row($consulta);
 	
 	if($estrellas==0){
 		$estrellas='';
 	}
 
-	print '			
-		<div style="float:left;margin-top:-20px;" class="rating-wrapper" id="rating">
+	print '<div style="float:left;margin-top:-20px;" class="rating-wrapper" id="rating">
 
-      <div style="float:left;">
-
-        <label  id="rate-string">'.$estrellas.'</label>
-
-        <ul>
-          <li class="r1 star"></li>
-          <li class="r2 star"></li>
-          <li class="r3 star"></li>
-          <li class="r4 star"></li>
-          <li class="r5 star"></li>
-        </ul>
-<h3 style="margin-bottom:10px;" id="calificacion" >'.$estrellas.'</h3>
-      </div>
-      
-<div style="clear:both;padding-bottom:10px;" class="flotar_izquierda" >
-
-    <button style="width:40px;height:40px;" onclick="limpiar_estrellas()"><img style="margin-left:-15px;width:30px;height:30px;"  src="img/clean.png"/></button>
-
-	<button style="margin-left:10px;width:40px;height:40px;" onclick="calificar()"><img style="margin-left:-15px;width:30px;height:30px;"  src="img/rate.png"/></button>
-
-</div>
-
-    </div>
+				<div class="flotar_izquierda">
+			
+					<label  id="rate-string">'.$estrellas.'</label>
+			
+					<ul>
+					<li class="r1 star"></li>
+					<li class="r2 star"></li>
+					<li class="r3 star"></li>
+					<li class="r4 star"></li>
+					<li class="r5 star"></li>
+					</ul>
+					
+				</div> 
 				
-					<img alt="hits" style="height:30px;width:30px;margin-top"  src="img/view.png"/>
+				<div class="flotar_izquierda">
+				
+						<h3 style="margin-left:25px;margin-top:42px;" id="calificacion" >'.$estrellas.'</h3>
+						
+				</div>
+            
+				<div style="clear:both;padding-bottom:10px;" class="flotar_izquierda" >
+
+					<button style="width:40px;height:40px;" onclick="pintar(0)">
+					
+						<img style="margin-left:-15px;width:30px;height:30px;"  src="img/clean.png"/>
+						
+					</button>
+
+					<button style="width:40px;height:40px;margin-left:10px;" onclick="limpiar_estrellas()">
+					
+						<img style="margin-left:-15px;width:30px;height:30px;"  src="img/reload.png"/>
+						
+					</button>
+
+					<button style="margin-left:10px;width:40px;height:40px;" onclick="calificar()">
+					
+						<img style="margin-left:-15px;width:30px;height:30px;"  src="img/rate.png"/>
+						
+					</button>
+
+				</div>
+
+			</div>
+				
+					<img alt="hits" style="height:30px;width:30px;margin-top"  src="img/view.png" />
+					
 					<span style="font-size:14px;color:blue;padding-right:20px;">' . $fila[0] . '</span>
-				
-
-					<img alt="top images" style="height:30px;width:30px;"  src="img/top.png"/>
-					<span style="font-size:14px;color:blue;padding-right:20px;">8.5</span>
+		
+					<img alt="top images" style="height:30px;width:30px;"  src="img/top.png" />
+					
+					<span id="media" style="font-size:14px;color:blue;padding-right:20px;">'.$media[0].'</span>
 				
 					<img alt="download" style="height:30px;width:30px;"  src="img/download.png"/>
-					<span id="descargas" style="font-size:14px;color:blue;padding-right:20px;">' . $fila[1] . '</span>
-				';
+					
+					<span id="descargas" style="font-size:14px;color:blue;padding-right:20px;">' . $fila[1] . '</span>';
 
         $consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT user_invisible,user_name FROM ' . $GLOBALS['table_prefix'] . 'users
@@ -394,47 +427,60 @@ if($logueado){
             if ($avatar != 'nofoto.jpg' && !empty($avatar)) {
 
                 $imagen_usuario = 'avatars/' . $avatar;
-            } else {
+            }
+            
+            else {
                 $imagen_usuario = 'img/nofoto.png';
             }
 			
-            print '
-			
-				<a title="'.$fila[1]. '" >
-				<img alt="usuario" class="imgRedonda" style="margin-top:20px;padding-left:10px;width:40px;height:40px;" 
-				src="' . $imagen_usuario . '"/></a>
-
-			';
+            print '<a title="'.$fila[1]. '" >
+            
+						<img alt="usuario" class="imgRedonda" style="margin-top:20px;padding-left:10px;width:40px;height:40px;" 
+						src="' . $imagen_usuario . '"/>
+				
+				</a>';
 			
         }
 
-	        print '
-		<div style="float:left;clear:both;border-style: dashed; border-color: blue;margin-left:100px;padding-top:20px;margin-top:20px;
-		padding-left:20px;padding-right:20px;
-		">';
+        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_media_file FROM ' . $GLOBALS['table_prefix'] . "images WHERE image_id='" . $_GET['image_id'] . "'");
+
+        $result = mysqli_fetch_row($consulta);
+         
+        $imagen=$result[0];  
+          
+		mysqli_close($GLOBALS['conexion']);
+
+	    print '<div style="float:left;clear:both;border-style: dashed; border-color: blue;margin-left:100px;padding-top:20px;margin-top:20px;
+		padding-left:20px;padding-right:20px;">
 		
-		
-		print '
-		<div style="float:left;">
-		<a title="'.ver_dato('full_screen', $GLOBALS['idioma']). '" onclick="fullwin(' . $_GET['image_id'] . ');">
-				<img style="margin-left:5px;" alt="full screen" class="iconos" src="img/full_screen.png">
-			</a>
-			</div>	
 			<div style="float:left;">
+			
+				<a title="'.ver_dato('full_screen', $GLOBALS['idioma']). '" onclick="fullwin(' . $_GET['image_id'] . ');">
+				
+					<img style="margin-left:5px;" alt="full screen" class="iconos" src="img/full_screen.png">
+				
+				</a>
+				
+			</div>
+				
+			<div style="float:left;">
+			
 				<form id="frmdownload" method="post">
-				<a onclick="descarga(' . $_GET['image_id'] . ')" href="data/media/' . $categoria . '/' . $imagen . '" download>
-				<img alt="download" style="height:40px;width:40px;margin-left:10px;" src="img/download.png"/></a>
-			</form>
-		</div>
-		
-		';
+			
+					<a onclick="descarga(' . $_GET['image_id'] . ')" href="data/media/' . $categoria . '/' . $imagen . '" download>
+					
+						<img alt="download" style="height:40px;width:40px;margin-left:10px;" src="img/download.png"/>
+					
+					</a>
+			
+				</form>
+				
+			</div>';
 
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
         $GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
-			
-			
-			
+
 			if(isset($_COOKIE['4images_userid']) && !empty($_COOKIE['4images_userid']) 
 				&& $_COOKIE['4images_userid'] > 0) {
 	
@@ -457,8 +503,7 @@ if($logueado){
 				else{
 					$titulo="like";
 				}
-	
-				
+					
 				print '<div style="float:left;">
 						<a title="'.ver_dato($titulo, $GLOBALS['idioma']). '" id="frmajax" 
 						onclick="favorito(' . $_GET['image_id'] . ')">
@@ -470,226 +515,299 @@ if($logueado){
 			}
 			
 			mysqli_close($GLOBALS['conexion']);
-				print '</div>';
-}
+			
+			print '</div>';
+	}
 
+
+	$visibilidad_comentario=saber_visibilidad_comentario($_GET['image_id']);
 
 	print '<div style="float:right;margin-bottom:40px;margin-top:21px;">';
 
-if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
+	if($logueado && $visibilidad_comentario<3 || $visibilidad_comentario==1){
 	
-	print '	<div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
+		print '	<div style="float:right;margin-left:10px;border-style: dashed; border-color: blue;
 		padding-bottom:10px;padding:20px;">
-<a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
+		
+			<a title="'. ver_dato('comment', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#commentModal">
 			
-					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
+				<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/coment.png" alt="' . ver_dato('comment', $GLOBALS['idioma']) . '"/>
 				
 			</a>';
-}
+	}
 
-if($logueado && $subida_por_mi || admin($_COOKIE['4images_userid'])){
+	if($logueado && $subida_por_mi || admin($_COOKIE['4images_userid'])){
 	
-$icono2='hide.png';
+		$icono2='hide.png';
 
-$accion='change_view_o';
+		$accion='change_view_o';
 	
-				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 				
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
-			$GLOBALS['table_prefix'] . "images WHERE image_id='".$_GET['image_id']."'" );
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
+		$GLOBALS['table_prefix'] . "images WHERE image_id='".$_GET['image_id']."'" );
 		
-			$fila = mysqli_fetch_row($consulta);
+		$fila = mysqli_fetch_row($consulta);
 		
-			if((int)$fila[0]==1){
-				$icono2="view.png";
-				$accion='change_view_v';
-			}
+		if((int)$fila[0]==1){
+			$icono2="view.png";
+			$accion='change_view_v';
+		}
 		
-			$cat_id=$fila[1];
-			
-			$file=$fila[2];
+		$cat_id=$fila[1];
 		
-			print '<a title="'. ver_dato($accion, $GLOBALS['idioma']) . '" id="frm_img_'.$_GET['image_id'].'"
-					onclick="ocultar_img('.$_GET['image_id'].')">
-						<img alt="'. ver_dato('change_view', $GLOBALS['idioma']) . '" 
-						alt="IMG_'.$_GET['image_id'].'"  id="IMG_'.$_GET['image_id'].'" class="iconos" src="img/'.$icono2.'"/>
-					</a>';
+		$file=$fila[2];
+		
+		print '<a title="'. ver_dato($accion, $GLOBALS['idioma']) . '" id="frm_img_'.$_GET['image_id'].'"
+				onclick="ocultar_img('.$_GET['image_id'].')">
+					<img alt="'. ver_dato('change_view', $GLOBALS['idioma']) . '" 
+					alt="IMG_'.$_GET['image_id'].'"  id="IMG_'.$_GET['image_id'].'" class="iconos" src="img/'.$icono2.'"/>
+				</a>';
 		
 		
-			mysqli_close($GLOBALS['conexion']);
+		mysqli_close($GLOBALS['conexion']);
 	
-	print '<a title="' . ver_dato('rename', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#renameModal">
+		print '<a title="' . ver_dato('rename', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#renameModal">
 			
-				<img class="iconos" style="margin-left:5px;" src="img/rename.png" alt="' . ver_dato('rename', $GLOBALS['idioma']) . '"/>
-			</a>
+					<img class="iconos" style="margin-left:5px;" src="img/rename.png" alt="' . ver_dato('rename', $GLOBALS['idioma']) . '"/>
+				
+				</a>
 			
-			<a title="'. ver_dato('del_img', $GLOBALS['idioma']) . '"  
+				<a title="'. ver_dato('del_img', $GLOBALS['idioma']) . '"  
 			
 				href="delete.php?image_id=' . $_GET['image_id'] . "&cat_id=" . $categoria . "&file=" . $imagen . '">
 				
-				<img class="iconos" style="margin-left:5px;" src="img/delete.ico" alt="' . ver_dato('del_img', $GLOBALS['idioma']) . '"/>
-			</a>
+					<img class="iconos" style="margin-left:5px;" src="img/delete.ico" alt="' . ver_dato('del_img', $GLOBALS['idioma']) . '"/>
+				
+				</a>
 			
-			<a title="'. ver_dato('change_cat', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#changecatModal">
+				<a title="'. ver_dato('change_cat', $GLOBALS['idioma']) . '" data-toggle="modal" data-target="#changecatModal">
 			
 					<img class="iconos" style="margin-left:5px;margin-right:10px;" src="img/tag_2.png" alt="' . ver_dato('change_cat', $GLOBALS['idioma']) . '"/>
 				
-			</a>
+				</a>
 						
 			<div class="modal fade transparente" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			
+				<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			
+					<div class="modal-content ">
+			
+						<div class="modal-header ">
+
+							<h2 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">'
+								. ver_dato('rename', $GLOBALS['idioma']) . 
+							 '</h2>
+
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							
+								<span aria-hidden="true">&times;</span>
+
+							</button>
+							
+						</div>
+
+					<div class="modal-body">
+
+						<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+
+							<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" value="'.$image_name.'" placeholder="' . ver_dato('new_name', $GLOBALS['idioma']) . '"/>
+
+							<input name="renombrar" class="negrita" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
+
+						</form>
+
+					</div>
+
+				</div>
+		</div>
+		
+	</div>
+
+	<div class="modal fade transparente" id="changecatModal" tabindex="-1" role="dialog" aria-labelledby="cat_changeModalLabel" aria-hidden="true">
+	
+		<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		
 			<div class="modal-content ">
-			<div class="modal-header ">
+			
+				<div class="modal-header ">
 
-			<h2 style="padding-right:10px;" class="modal-title" id="exampleModalLabel">' . ver_dato('rename', $GLOBALS['idioma']) . '</h2>
+					<h2 style="padding-right:10px;" class="modal-title" id="cat_changeModalLabel">'
+						. ver_dato('change_cat', $GLOBALS['idioma']) .
+					'</h2>
 
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 
-			</button>
-			</div>
+						<span aria-hidden="true">&times;</span>
 
-			<div class="modal-body">
+					</button>
+					
+				</div>
 
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+				<div class="modal-body">
 
-					<input name="nuevo_nombre" class="button" style="padding-top:12px;" type="text" value="'.$image_name.'" placeholder="' . ver_dato('new_name', $GLOBALS['idioma']) . '"/>
-
-					<input name="renombrar" class="negrita" style="margin-top:20px;" type="submit" value="' . ver_dato('rename', $GLOBALS['idioma']) . '" />
-
-				</form>
-
-			</div>
-
-		</div>
-	</div>
-</div>
-
-		<div class="modal fade transparente" id="changecatModal" tabindex="-1" role="dialog" aria-labelledby="cat_changeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-		<div class="modal-content ">
-			<div class="modal-header ">
-
-			<h2 style="padding-right:10px;" class="modal-title" id="cat_changeModalLabel">' . ver_dato('change_cat', $GLOBALS['idioma']) . '</h2>
-
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">';
+					<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">';
+					
+						print '<select name="cat_selected" style="font-size:20px;">';
+					
+						ver_categorias($categoria);
 				
-				print '<select name="cat_selected" style="font-size:20px;">';
-				 
-				ver_categorias($categoria);
-		
-				print '</select>
-	
-				<input class="negrita" name="cambiar_categoria" style="margin-top:20px;" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit"/>
-		
-				</form>
+						print '</select>
+			
+						<input class="negrita" name="cambiar_categoria" style="margin-top:20px;" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit"/>
+				
+					</form>
+
+				</div>
 
 			</div>
-
+		
 		</div>
-	</div>
 	
-</div>	
+	</div>';
 	
-';
-	
-		}
+	}
 		
 	else{
 		print '</div>';
 	}	
 	
 
-print '</div>';
+	print '</div>';
 
-
-
-if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['image_id']==29978){
+	if($logueado && $visibilidad_comentario<3 || $visibilidad_comentario==1){
 	
-	print '
+		print '
 			<div  style=" overflow: scroll;" class="modal fade transparente" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
 			
-			<div class="modal-dialog modal-dialog-centered transparente" role="document">
-			<div class="modal-content ">
+				<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		
+					<div class="modal-content ">
 			
-			<div class="modal-header ">
+						<div class="modal-header ">
 
-			<h2 style="padding-right:10px;" class="modal-title" id="commentModalLabel">' . ver_dato('comentar', $GLOBALS['idioma']) . '</h2>
+							<h2 style="padding-right:10px;" class="modal-title" id="commentModalLabel">'
+								. ver_dato('comentar', $GLOBALS['idioma']) .
+							'</h2>
 
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							
+								<span aria-hidden="true">&times;</span>
 
-			</button>
-			</div>
+							</button>
+							
+						</div>
 
-			<div class="modal-body">
-					
-					
+						<div class="modal-body">
+										
 							<form action="'.$_SERVER['PHP_SELF'].'?image_id='. $_GET['image_id'].'" method="post">
 							
 								<div style="float:left;margin:auto;" >
 								
-								<a  title="' . ver_dato('comment', $GLOBALS['idioma']) . '">
-								<img alt="asunto del comentario" style="height:100px;width:100px;margin:auto;" src="img/comment.png"/>
-								</a>
+									<a  title="' . ver_dato('comment', $GLOBALS['idioma']) . '">
+										<img alt="asunto del comentario" style="height:100px;width:100px;margin:auto;" src="img/comment.png"/>
+										
+									</a>
 			
 								
-								<p class="espacio_arriba"><input type="text" style="width:300px;" name="asunto" placeholder="' . ver_dato('asunto', $GLOBALS['idioma']) . '" /></p>
-								
-								<p>
-									<a  title="' . ver_dato('msg', $GLOBALS['idioma']) . '">
-										<img alt="comentario" style="height:100px;width:100px;" src="img/coment.png"/>
-									</a>
-								</p>
-								
-								<p>
-								
-								<div style="float:left;height:60px;padding-bottom:100px;">
-								
-									<a  title="' . ver_dato('mention', $GLOBALS['idioma']) . '" style="padding-left:10px;" data-toggle="modal" data-target="#mencion"><img class="icono"
-									src="img/mention.png" /></a>
+									<p class="espacio_arriba">
 									
-									<a title="URL" style="padding-left:10px;" data-toggle="modal" data-target="#url"><img class="icono"
-									src="img/url.png" /></a>
-									
-								</div>
+										<input type="text" style="width:300px;" name="asunto" placeholder="' . 
+											ver_dato('asunto', $GLOBALS['idioma']) .'" />
+											
+									</p>
 								
-								</p>
+									<p>
+									
+										<a  title="' . ver_dato('msg', $GLOBALS['idioma']) . '">
+										
+											<img alt="comentario" style="height:100px;width:100px;" src="img/coment.png"/>
+										</a>
+										
+									</p>
+								
+									<p>
+									
+										<div style="float:left;height:60px;padding-bottom:100px;">';
+										
+										if($logueado){
+											
+											print '
+												<a  title="' . ver_dato('mention', $GLOBALS['idioma']) . '" style="padding-left:10px;" data-toggle="modal" data-target="#mencion">
+													
+													<img class="icono" src="img/mention.png" />
+												
+												</a>';
+												
+										}
+											
+											print '<a title="URL" style="padding-left:10px;" data-toggle="modal" data-target="#url">
+												
+												<img class="icono" src="img/url.png" />
+												
+											</a>
+											
+											<a title="Emoji" style="padding-left:10px;" data-toggle="modal" data-target="#emojis">
+												
+												<img class="icono" src="img/emoji.png">
+												
+											</a>
+											
+											
+											<a title="Limpiar Comentario" style="padding-left:10px;padding-right:10px;" onclick="limpiar_emoji(\'mensaje\')" >
+												
+												<img class="icono" src="img/clean.png">
+												
+											</a>
+											
+										</div>
+									
+									</p>
 
-								<p>
-									<textarea style="width:300px;" id="mensaje" placeholder="' . ver_dato('msg', $GLOBALS['idioma']) . '"
-									name="mensaje"></textarea>
-								</p>
+									<p>
+	
+										<textarea style="width:300px;" id="mensaje"
+										name="mensaje">
+										
+										</textarea>
+										
+										<script>
+											document.getElementById("mensaje").textContent = "";
+										</script>
+										
+									</p>
 								
-								<p>
+									<p>
 								
-									<a title="' . ver_dato('visibilidad', $GLOBALS['idioma']) . '" >
-										<img alt="title="' . ver_dato('visibilidad', $GLOBALS['idioma']) . '"" src="img/view.png" class="icono" />
-									</a> 
+										<a title="' . ver_dato('visibilidad', $GLOBALS['idioma']) . '" >
+											<img alt="title="' . ver_dato('visibilidad', $GLOBALS['idioma']) . '"" src="img/view.png" class="icono" />
+										</a> 
+										
+										<h2>'.ver_dato('visibilidad', $GLOBALS['idioma']).'</h2>
+										
+										<select style="font-size:25px;width:300px;" name="visibilidad">';
+											
+											if($logueado){
+												print '<option value="0" selected>'.ver_dato('solo_users', $GLOBALS['idioma']).'</option>';
+											}
+											
+											else{
+												print '<option value="1" >'.ver_dato('publica', $GLOBALS['idioma']).'</option>';	
+											}
+										
+										print '</select>
 									
-									<h2>'.ver_dato('visibilidad', $GLOBALS['idioma']).'</h2>
-									
-									<select style="font-size:25px;width:300px;" name="visibilidad">
-										<option value="0" selected>'.ver_dato('solo_users', $GLOBALS['idioma']).'</option>
-										<option value="1" >'.ver_dato('publica', $GLOBALS['idioma']).'</option>
-									</select>
-									
-								</p>
+									</p>
 								
-								<p>
-									<a title="' . ver_dato('captcha', $GLOBALS['idioma']) . '" ><img class="rounded" alt="captcha" src="captcha/captcha.php" id="captcha" />
-								</a>
-									<a  title="' . ver_dato('reload_captcha', $GLOBALS['idioma']) . '"
-									class="texto nota" href="#" onclick="' . "
+									<p>
+									
+										<a title="' . ver_dato('captcha', $GLOBALS['idioma']) . '" >
+											<img class="rounded" alt="captcha" src="captcha/captcha.php" id="captcha" />
+										</a>
+									
+										<a title="' . ver_dato('reload_captcha', $GLOBALS['idioma']) . '"
+										class="texto nota" href="#" onclick="' . "
 													document.getElementById('captcha').src='captcha/captcha.php?'+
 													Math.random();
 													document.getElementById('captcha-form').focus();\"
@@ -697,119 +815,198 @@ if($logueado || $_GET['image_id']==1326 || $_GET['image_id']==29210|| $_GET['ima
 													
 													<img style=\"margin-left:-30px;\" alt=\"reload\" class=\"icono\"
 													src=\"img/reload.png\"/>
-									</a>
-								</p>" . '
+										</a>
+									
+									</p>" . '
 								
-								<p>
+									<p>
 
-									<input style="width:300px;" type="text" title="captcha" required  id="validcaptcha"
+										<input style="width:300px;" type="text" title="captcha" required  id="validcaptcha"
 										name="captcha" size="30" value="" class="input" id="captcha_input"
 										placeholder="' . ver_dato('captcha', $GLOBALS['idioma']) . '"/>
-								</p>
+										
+									</p>
 
-<div style="float:left;padding-bottom:30px;">
-									<input class="negrita" style="width:300px;font-size:25px;margin-left:3px;" type="submit" title="' . ver_dato('comentar', $GLOBALS['idioma']) . '" name="comentario" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit" />
-								</div>
+									<div style="float:left;padding-bottom:30px;">
+
+										<input class="negrita" style="width:300px;font-size:25px;margin-left:3px;" type="submit" title="' . ver_dato('comentar', $GLOBALS['idioma']) . '" name="comentario" value="' . ver_dato('submit', $GLOBALS['idioma']) . '" type="submit" />
+								
+									</div>
 							
 							</form>
 			
-		</div>
-	</div>
-</div>
-	
-	
-	</div>
-	
-	</div>
-	
-
-<div class="modal fade transparente" id="url" tabindex="-1" role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
-	
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-	
-		<div class="modal-content ">
+						</div>
 		
-			<div class="modal-header ">
-
-			<h2 style="padding-right:10px;" class="modal-title" id="urlModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
-
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-
-	<p><input id="ctr_url" type="text"></input>
-</p>
-
-<button style="width:300px;" onclick="mencionar(2);" type="button" data-dismiss="modal"><span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span></button>
-
-				</form>
-
-			</div>
-
-		</div>
-	</div>
-
-			</div>
-
-	<div class="modal fade transparente" id="mencion" tabindex="-1" role="dialog" aria-labelledby="mencionModalLabel" aria-hidden="true">
-	
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-	
-		<div class="modal-content ">
-		
-			<div class="modal-header ">
-
-			<h2 style="padding-right:10px;" class="modal-title" id="mencionModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
-
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-						
-					<h2>' . ver_dato('txt_mencion', $GLOBALS['idioma']) . '</h2>';
-					
-print '<p><select id="mention_users" style="font-size:20px;font-weight:bold;margin-top:40px;" name="usuarios">';
-	
-$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
-
-$consulta = $mysqli->query('SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id>0 
-
-and user_id!='".$_COOKIE['4images_userid']."' ");
-	
-while($fila = $consulta->fetch_row()){
-		print '<option value="'.$fila[0].'">'.$fila[0].'</option>';
-}
-	
-$mysqli->close();
-
-print '</option>
-	</select>
-</p>
-
-<button style="width:300px;" onclick="mencionar(1)" type="button" data-dismiss="modal"><span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span></button>
-
-				</form>
-
-			</div>
-
-		</div>
-	</div>
-		
-
-		</div>
 					</div>
-				';
+	
+				</div>
+
+			</div>
+	
+		</div>
+	
+	<div class="modal fade transparente" id="emojis"  role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
+	
+		<div class="modal-dialog modal-dialog-centered transparente" role="document">
+	
+			<div  class="modal-content ">
+		
+				<div class="modal-header ">
+				
+					<img class="icono" alt="Emoticono" src="img/emoji.png" />
+					
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+				</div>
+
+				<div class="modal-body">
+	
+					<button value="§128512;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128512;</button>
+					<button value="§128563;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128563;</button>
+					<button value="§128564;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128564;</button>
+					<button value="§128518;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128518;</button>
+					<button value="§128515;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128515;</button>
+					<button value="§128541;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128541;</button>
+					<button value="§128522;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128522;</button>
+					<button value="§128525;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128525;</button>
+					<button value="§128536;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128536;</button>
+					<button value="§128537;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128537;</button>
+					<button value="§128538;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128538;</button>
+					<button value="§128539;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128539;</button>
+					<button value="§128540;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128540;</button>
+					<button value="§128514;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128514;</button>
+					<button value="§128545;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128545;</button>
+					<button value="§128517;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128517;</button>
+					<button value="§128554;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128554;</button>
+					<button value="§128546;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128546;</button>
+					<button value="§128531;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128531;</button>
+					<button value="§128560;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128560;</button>
+					<button value="§128557;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128557;</button>
+					<button value="§128526;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128526;</button>
+					<button value="§128519;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128519;</button>
+					<button value="§128520;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128520;</button>
+					<button value="§128558;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128558;</button>
+					<button value="§128561;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128561;</button>
+					<button value="§128562;"  style="margin:5px;" onclick="emoji(this.value,\'mensaje\')">&#128562;</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="modal fade transparente" id="url" tabindex="-1" role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
+		
+		<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		
+			<div class="modal-content ">
+			
+				<div class="modal-header ">
+	
+				<h2 style="padding-right:10px;" class="modal-title" id="urlModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
+	
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+	
+				</button>
+				</div>
+	
+				<div class="modal-body">
+	
+					<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+	
+						<p>
+		
+							<input id="ctr_url" type="text" placeholder="'.ver_dato('txt_url', $GLOBALS['idioma']).'"></input>
+		
+						</p>
+	
+						<button style="width:300px;" onclick="mencionar(\'mensaje\',2);" type="button" data-dismiss="modal">
+					
+							<span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span>
+						
+						</button>
+	
+					</form>
+	
+				</div>
+	
+			</div>
+			
+		</div>
+	
+	</div>';
+	
+	if($logueado){
+	
+		print '
+		<div class="modal fade transparente" id="mencion" tabindex="-1" role="dialog" aria-labelledby="mencionModalLabel" aria-hidden="true">
+			
+			<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			
+				<div class="modal-content ">
+				
+					<div class="modal-header ">
+		
+					<h2 style="padding-right:10px;" class="modal-title" id="mencionModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
+		
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					
+						<span aria-hidden="true">&times;</span>
+		
+					</button>
+					
+					</div>
+		
+					<div class="modal-body">
+		
+						<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+								
+							<h2>' . ver_dato('txt_mencion', $GLOBALS['idioma']) . '</h2>';
+							
+							print '<p> 
+										<select id="mention_users" style="font-size:20px;font-weight:bold;margin-top:40px;" name="usuarios">';
+								
+							$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
+							
+							$consulta = $mysqli->query('SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id>0 
+							
+							and user_id!='".$_COOKIE['4images_userid']."' ");
+								
+							while($fila = $consulta->fetch_row()){
+									print '<option value="'.$fila[0].'">'.$fila[0].'</option>';
+							}
+								
+							$mysqli->close();
+							
+							print '</option>
+							
+								</select>
+								
+							</p>
+							
+							<button style="width:300px;" onclick="mencionar(\'mensaje\',1)" type="button" data-dismiss="modal">
+							
+								<span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span>
+								
+							</button>
+		
+							</form>
+		
+						</div>
+		
+					</div>
+				
+				</div>
+				
+			</div>';
+	}
+
+	print '</div>';
 
 }
 
@@ -818,7 +1015,7 @@ print '</option>
 			$id_images = array();
 
             $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-                $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+            $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 
             $consulta = mysqli_query($GLOBALS['conexion'], '
 			SELECT image_id FROM ' . $GLOBALS['table_prefix'] . "images
@@ -827,6 +1024,7 @@ print '</option>
             while ($recuento = mysqli_fetch_row($consulta)) {
                 $id_images[] = $recuento[0];
             }
+            
 	}
 	
        if ($_GET['image_id'] > 1) {
@@ -845,8 +1043,7 @@ print '</option>
 
                 print '<div style="float:right;margin-top:40px;margin-left:-20px;padding-bottom:30px;">';
 
-                print '
-								
+                print '					
 					<a title="'.ver_dato('back_img', $GLOBALS['idioma']). '" style="text-decoration:none;"
 					href="details.php?image_id=' . $id_images[$imagen_anterior] . '" >
 					
@@ -858,6 +1055,7 @@ print '</option>
 						}
 						
 					print '</a>';
+					
             }
 
         }
@@ -944,14 +1142,16 @@ print '</option>
 					<table style="margin:auto;text-align:center;padding-right:20px;" class="table table-responsive-xs">
 					
 						<tr style="font-size:25px;">
+						
 							<th></th>
+							
 							<th></th>
+							
 						</tr>';
 
                 $consulta = mysqli_query($GLOBALS['conexion'], '
 				SELECT comment_headline,comment_text,visible,user_id,comment_id FROM ' . $GLOBALS['table_prefix'] . "comments
 				WHERE image_id='" . $_GET['image_id'] . "' order by comment_id desc");
-
 
                 while ($fila = mysqli_fetch_row($consulta)) {
 							
@@ -962,10 +1162,12 @@ print '</option>
 						
 						print '
 						<tr>
+						
 							<td style="font-size:25px;">' . $fila[0] . '</td>
+							
 							<td style="font-size:25px;">' . $fila[1];
 							
-							if($logueado && $fila[3]==$_COOKIE['4images_userid']){
+							if($fila[3]==$_COOKIE['4images_userid']){
 								
 								print '
 								<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'action.php\');" style="padding-left:10px;">
@@ -973,7 +1175,10 @@ print '</option>
 								</a>
 								
 								<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'delete2.php\');" style="padding-left:10px;">
-								<img style="margin-top:10px;" src="img/delete.ico" class="iconos" /></a>';
+								
+									<img style="margin-top:10px;" src="img/delete.ico" class="iconos" />
+								
+								</a>';
 								
 							}
 							
@@ -994,98 +1199,305 @@ print '</option>
 				
 				<div class="modal fade transparente" id="del_comment" tabindex="-1" role="dialog" aria-labelledby="del_commentModalLabel" aria-hidden="true">
 	
-				<div class="modal-dialog modal-dialog-centered transparente" role="document">
+					<div class="modal-dialog modal-dialog-centered transparente" role="document">
+	
+						<div class="modal-content ">
+		
+							<div class="modal-header ">
+			
+								<img src="img/Recycle_Bin_Full.png" class="icono"/>
+
+									<button onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
+										
+										<span onclick="redireciconar_accion('.$_GET['image_id'].',false);" aria-hidden="false">×</span>
+
+									</button>
+									
+							</div>
+
+						<div class="modal-body">
+
+						<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+						
+							<input type="radio" name="delete_comment" value="yes"><img src="img/check.png" class="icono"/></input>
+							
+							<input type="radio" name="delete_comment" checked value="no"><img src="img/error.png" class="icono"/></input>
+							
+							<input class="negrita" name="fmr_delete_comment" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
+						
+						</form>
+		
+					</div>
+
+				</div>
+		
+			</div>		
+				
+		</div>
+				
+		<div class="modal fade transparente" id="edit_comment" tabindex="-1" role="dialog" aria-labelledby="edit_commentModalLabel" aria-hidden="true">
+	
+			<div class="modal-dialog modal-dialog-centered transparente" role="document">
 	
 				<div class="modal-content ">
 		
-				<div class="modal-header ">
+					<div class="modal-header ">
 			
-				<img src="img/Recycle_Bin_Full.png" class="icono"/>
+						<h2>'.ver_dato('comment', $GLOBALS['idioma']).'</h2>
+			
+						<img style="padding-right:10px;" src="img/edit.png" class="icono" />
 
-				<button onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span onclick="redireciconar_accion('.$_GET['image_id'].',false);" aria-hidden="false">×</span>
+						<button  onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
+			
+							<span onclick="redireciconar_accion('.$_GET['image_id'].',true);" aria-hidden="true">&times;</span>
 
-				</button>
-				</div>
+						</button>
+			
+					</div>
 
-			<div class="modal-body">
+				<div class="modal-body">';
 
-				<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-					<input type="radio" name="delete_comment" value="yes"><img src="img/check.png" class="icono"/></input>
-					<input type="radio" name="delete_comment" checked value="no"><img src="img/error.png" class="icono"/></input>
-					<input name="fmr_delete_comment" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
-				</form>
-
-			</div>
-
-		</div>
-		
-	</div>		
+					$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+					$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+					
+					$consulta = mysqli_query($GLOBALS['conexion'], '
+								SELECT comment_text,comment_headline FROM '.$GLOBALS['table_prefix']."comments
+								WHERE comment_id='".$_SESSION['edit_comment']."'");
+							
+					$id_comentario = mysqli_fetch_row($consulta);
+					
+					mysqli_close($GLOBALS['conexion']);	
+						
+					print '	<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+					
+								<p style="padding-top:20px;">
+								
+									<input name="edit_comment_asunto" type="text" value="'.$id_comentario[1].'"></input>
+								
+								</p>';
+								
+								if($logueado){
+									
+									print '
+									<a  title="' . ver_dato('mention', $GLOBALS['idioma']) . '" style="padding-left:10px;" data-toggle="modal" data-target="#mencion_edit">
+													
+										<img class="icono" src="img/mention.png" />
+												
+									</a>';
+									
+								}
+								
+							print '
+								<a title="URL" style="padding-left:10px;" data-toggle="modal" data-target="#urledit">
+												
+												<img class="icono" src="img/url.png" />
+												
+								</a>
+					
+								<a  title="Emoji" data-toggle="modal" data-target="#emojis2">
+									<img style="margin-top:-40px;" class="icono" src="img/emoji.png">
+								</a>
+								
+								<a title="Limpiar Comentario"  onclick="limpiar_emoji(\'edit_comentario\')" >
+									<img style="margin-top:-40px;" class="icono" src="img/clean.png">
+								</a>
+										
+								<p style="margin-top:20px;" >
+									<textarea id="edit_comentario" name="edit_comment" type="text" >'.$id_comentario[0].'</textarea>
+								</p>
 				
-				</div>
+								<input style="margin-top:-20px;" class="negrita" name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
 				
-						<div class="modal fade transparente" id="edit_comment" tabindex="-1" role="dialog" aria-labelledby="edit_commentModalLabel" aria-hidden="true">
-	
-	<div class="modal-dialog modal-dialog-centered transparente" role="document">
-	
-		<div class="modal-content ">
-		
-			<div class="modal-header ">
-			
-<img src="img/edit.png" class="icono" />
+							</form>
+					
+						</div>
 
-			<button  onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span onclick="redireciconar_accion('.$_GET['image_id'].',true);" aria-hidden="true">&times;</span>
-
-			</button>
-			</div>
-
-			<div class="modal-body">
-';
-
-	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-	
-	$consulta = mysqli_query($GLOBALS['conexion'], '
-				SELECT comment_text,comment_headline FROM '.$GLOBALS['table_prefix']."comments
-				WHERE comment_id='".$_SESSION['edit_comment']."'");
-			
-	$id_comentario = mysqli_fetch_row($consulta);
-	
-	mysqli_close($GLOBALS['conexion']);	
-		
-	print '	<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
-	
-		<p><input name="edit_comment_asunto" type="text" value="'.$id_comentario[1].'"></input></p>
-		
-		<p><textarea name="edit_comment" type="text" >'.$id_comentario[0].'</textarea></p>
-
-		<input class="negrita" name="comentar" type="submit" value="'.ver_dato('submit', $GLOBALS['idioma']).'"/>
-
-				</form>
-
-			</div>
-
-		</div>
-	';
+					</div>';
 	
             }
 				
-					if(!$logueado){
+		if(!$logueado){
 						
-						print '<div style="float:left;margin-top:40px;padding-bottom:40px;">
-							<a href="register.php">
-								<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
-							</a>
-						</div>';
+			print '<div style="float:left;margin-top:40px;padding-bottom:40px;">
+						
+						<a href="register.php">
+										
+							<img alt="registrar" style="height:110px;width:240px;" src="img/reg-now.gif"/>
+										
+						</a>
+										
+					</div>';
 
-				}
+		}
 			
-        }
+       }
 		
+		
+		print '</div>
+		
+		</div>';
+		
+			if($logueado){
+	
+		print '
+		<div class="modal fade transparente" id="mencion_edit" tabindex="-1" role="dialog" aria-labelledby="mencionModalLabel_edit" aria-hidden="true">
+			
+			<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			
+				<div class="modal-content ">
+				
+					<div class="modal-header ">
+		
+					<h2 style="padding-right:10px;" class="modal-title" id="mencionModalLabel_edit">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
+		
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					
+						<span aria-hidden="true">&times;</span>
+		
+					</button>
+					
+					</div>
+		
+					<div class="modal-body">
+		
+						<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+								
+							<h2>' . ver_dato('txt_mencion', $GLOBALS['idioma']) . '</h2>';
+							
+							print '<p> 
+										<select id="mention_users_edit" style="font-size:20px;font-weight:bold;margin-top:40px;" name="usuarios">';
+								
+							$mysqli = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name']);
+							
+							$consulta = $mysqli->query('SELECT user_name FROM '.$GLOBALS['table_prefix']."users WHERE user_id>0 
+							
+							and user_id!='".$_COOKIE['4images_userid']."' ");
+								
+							while($fila = $consulta->fetch_row()){
+									print '<option value="'.$fila[0].'">'.$fila[0].'</option>';
+							}
+								
+							$mysqli->close();
+							
+							print '</option>
+							
+								</select>
+								
+							</p>
+							
+							<button style="width:300px;" onclick="mencionar(\'edit_comentario\',3)" type="button" data-dismiss="modal">
+							
+								<span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span>
+								
+							</button>
+		
+							</form>
+		
+						</div>
+		
+					</div>
+				
+				</div>
+				
+			</div>';
+	}
+		
+		print '<div class="modal fade transparente" id="urledit" tabindex="-1" role="dialog" aria-labelledby="urlEditModalLabel" aria-hidden="true">
+		
+		<div class="modal-dialog modal-dialog-centered transparente" role="document">
+		
+			<div class="modal-content ">
+			
+				<div class="modal-header ">
+	
+				<h2 style="padding-right:10px;" class="modal-title" id="urlEditModalLabel">' . ver_dato('mention', $GLOBALS['idioma']) . '</h2>
+	
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+	
+				</button>
+				</div>
+	
+				<div class="modal-body">
+	
+					<form action="' . $_SERVER['PHP_SELF'] . '?image_id=' . $_GET['image_id'] . '" method="post">
+	
+						<p>
+		
+							<input id="ctr_url_edit" type="text" placeholder="'.ver_dato('txt_url', $GLOBALS['idioma']).'"></input>
+		
+						</p>
+	
+						<button style="width:300px;" onclick="mencionar(\'edit_comentario\',4);" type="button" data-dismiss="modal">
+					
+							<span style="font-size:25px;" >'.ver_dato('submit', $GLOBALS['idioma']).'</span>
+						
+						</button>
+	
+					</form>
+	
+				</div>
+	
+			</div>
+			
+		</div>
+	
+	</div>
+			
+		<div class="modal fade transparente" id="emojis2"  role="dialog" aria-labelledby="urlModalLabel" aria-hidden="true">
+	
+			<div class="modal-dialog modal-dialog-centered transparente" role="document">
+			
+				<div  class="modal-content ">
+				
+					<div class="modal-header ">
+						<img class="icono" alt="Emoticono" src="img/emoji.png" />
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+			
+					</div>
+			
+					<div class="modal-body">
+			
+					<button value="§128512;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128512;</button>
+					<button value="§128563;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128563;</button>
+					<button value="§128564;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128564;</button>
+					<button value="§128518;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128518;</button>
+					<button value="§128515;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128515;</button>
+					<button value="§128541;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128541;</button>
+					<button value="§128522;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128522;</button>
+					<button value="§128525;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128525;</button>
+					<button value="§128536;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128536;</button>
+					<button value="§128537;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128537;</button>
+					<button value="§128538;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128538;</button>
+					<button value="§128539;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128539;</button>
+					<button value="§128540;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128540;</button>
+					<button value="§128514;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128514;</button>
+					<button value="§128545;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128545;</button>
+					<button value="§128517;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128517;</button>
+					<button value="§128554;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128554;</button>
+					<button value="§128546;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128546;</button>
+					<button value="§128531;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128531;</button>
+					<button value="§128560;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128560;</button>
+					<button value="§128557;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128557;</button>
+					<button value="§128526;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128526;</button>
+					<button value="§128519;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128519;</button>
+					<button value="§128520;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128520;</button>
+					<button value="§128558;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128558;</button>
+					<button value="§128561;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128561;</button>
+					<button value="§128562;"  style="margin:5px;" onclick="emoji(this.value,\'edit_comentario\')">&#128562;</button>
+			
+					</div>
+			
+				</div>
+			
+			</div>
+			
+		</div>';
+			
         footer();
 		
-
 		if(isset($_SESSION['del_comment']) ){
 	
 			print "<script>$('#del_comment').modal('show');</script>";
@@ -1098,19 +1510,23 @@ print '</option>
 
 	} 
 	
-	else {
-        $_SESSION['pagina'] = "details.php?image_id=" . $ultima_imagen;
-        redireccionar('details.php?image_id=' . $ultima_imagen);
-    }
+		else {
+		
+			$_SESSION['pagina'] = "details.php?image_id=" . $ultima_imagen;
+        
+			redireccionar('details.php?image_id=' . $ultima_imagen);
+		}
 	
-	restablecer_pass();
-}
+		restablecer_pass();
+	}
+
+	else {
+		redireccionar('index.php');
+	}
+
+} 
 
 else {
-    redireccionar('index.php');
-}
-
-} else {
     redireccionar('index.php');
 }
 

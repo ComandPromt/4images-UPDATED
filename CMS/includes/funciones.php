@@ -242,13 +242,30 @@ function ver_categorias($categoria){
 	mysqli_close($GLOBALS['conexion']);
 }
 
+function saber_visibilidad_comentario($imagen){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT image_allow_comments FROM '.$GLOBALS['table_prefix']."images
+		WHERE image_id='".$imagen."'");
+			
+	$resultado = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return $resultado[0];
+	
+}
+
 function saber_categoria($cat){
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
     $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	$consulta = mysqli_query($GLOBALS['conexion'], '
-				SELECT cat_name FROM '.$GLOBALS['table_prefix']."categories
-				WHERE cat_id='".$cat."'");
+		SELECT cat_name FROM '.$GLOBALS['table_prefix']."categories
+		WHERE cat_id='".$cat."'");
 			
 	$resultado = mysqli_fetch_row($consulta);
 	
@@ -661,6 +678,7 @@ function ver_os($os,$final=""){
 	$sql="SELECT count(id_tracking) FROM tbl_tracking WHERE pais!='home' AND tx_navegador like '%".$os."%'";
 	
 	if($final!=""){
+		
 		$sql.=" AND tx_navegador NOT LIKE '%".$final."%'";
 	}
 	
@@ -704,10 +722,12 @@ function ver_hits($pais){
 function is_private_ip($ip){
 
 	if($ip=='127.0.0.1'){
+		
 		$resultado=true;
 	}
 	
 	else{
+
 		$resultado=!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);
 	}
 	
@@ -716,204 +736,204 @@ function is_private_ip($ip){
 
 function cabecera($ruta="",$mostrarRegistro=false,$mostrarImagenAleatoria=false){
 
-date_default_timezone_set('Europe/Madrid');
-
-$favicon='img/favicon.ico';
-
-$logo=listar_archivos("logo");
-
-if(count($logo)==1){
+	date_default_timezone_set('Europe/Madrid');
 	
-	$extension=substr($logo[0],-3);
+	$favicon='img/favicon.ico';
 	
-	if($extension=="jpg" ||$extension=="png" ||$extension=="ico"){
-		$favicon='logo/'.$logo[0];
+	$logo=listar_archivos("logo");
+	
+	if(count($logo)==1){
+		
+		$extension=substr($logo[0],-3);
+		
+		if($extension=="jpg" ||$extension=="png" ||$extension=="ico"){
+			$favicon='logo/'.$logo[0];
+		}
+		
 	}
 	
-}
-
-print '
-
-<!DOCTYPE html>
-
-<html lang="es">
-
-<head>
-
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="keywords" content="">
-	<meta name="robots" content="index,follow">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="revisit-after" content="10 days">
-	<meta name="robots" content="index, nofollow">
-
-	<link rel="stylesheet" href="'.$ruta.'css/dashboard.css"/>
-	<link rel="stylesheet" href="'.$ruta.'css/styles.css">
-	<link rel="stylesheet" href="'.$ruta.'css/w3.css">
-	<link rel="stylesheet" href="'.$ruta.'css/bootstrap.min.css">
-    <link rel="stylesheet" href="'.$ruta.'css/jquery.scrollbar.css" />
-	<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="'.$ruta.'css/bootstrap-select.css">
-	<link rel="stylesheet" href="'.$ruta.'css/css.css">
-	<link rel="stylesheet" href="'.$ruta.'css/main.css">
-	<link rel="stylesheet" href="'.$ruta.'css/style.css">
-	<link rel="stylesheet" href="'.$ruta.'css/estilos.css">
-    <link rel="stylesheet" href="'.$ruta.'css/scroll.css" />
-    <link rel="stylesheet" href="'.$ruta.'css/prettify.css" />
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/default.css" />
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/component.css" />
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estiloDelEjemplo.css">
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estilo.css">
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/scrollbar.css" />
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/tablas.css" />
-	<link rel="stylesheet" type="text/css" href="'.$ruta.'css/estilo_select_con_images.css" />
-	<link rel="icon" type="image/ico" href="'.$ruta.$favicon.'">
-
-	<script src="'.$ruta.'js/jquery.min.js"></script>
-	<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
-	<script  src="'.$ruta.'js/jszip.min.js"></script>
-	<script  src="'.$ruta.'js/FileSaver.js"></script>
-	<script  src="'.$ruta.'js/funciones.js"></script>
-		
-	<title>'.$GLOBALS['site_name']. '</title>
+	print '
 	
-	<script>
+	<!DOCTYPE html>
 	
-		//Especificar a que elementos afectará, añadiendo o quitando de la lista:
+	<html lang="es">
+	
+	<head>
+	
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="keywords" content="">
+		<meta name="robots" content="index,follow">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta name="revisit-after" content="10 days">
+		<meta name="robots" content="index, nofollow">
+	
+		<link rel="stylesheet" href="'.$ruta.'css/dashboard.css"/>
+		<link rel="stylesheet" href="'.$ruta.'css/styles.css">
+		<link rel="stylesheet" href="'.$ruta.'css/w3.css">
+		<link rel="stylesheet" href="'.$ruta.'css/bootstrap.min.css">
+		<link rel="stylesheet" href="'.$ruta.'css/jquery.scrollbar.css" />
+		<link rel="stylesheet prefetch" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="'.$ruta.'css/bootstrap-select.css">
+		<link rel="stylesheet" href="'.$ruta.'css/css.css">
+		<link rel="stylesheet" href="'.$ruta.'css/main.css">
+		<link rel="stylesheet" href="'.$ruta.'css/style.css">
+		<link rel="stylesheet" href="'.$ruta.'css/estilos.css">
+		<link rel="stylesheet" href="'.$ruta.'css/scroll.css" />
+		<link rel="stylesheet" href="'.$ruta.'css/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'css/default.css" />
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'css/component.css" />
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estiloDelEjemplo.css">
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'tooltip/css/estilo.css">
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'css/scrollbar.css" />
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'css/tablas.css" />
+		<link rel="stylesheet" type="text/css" href="'.$ruta.'css/estilo_select_con_images.css" />
+		<link rel="icon" type="image/ico" href="'.$ruta.$favicon.'">
+	
+		<script src="'.$ruta.'js/jquery.min.js"></script>
+		<script  src="'.$ruta.'tooltip/js/tooltip.js"></script>
+		<script  src="'.$ruta.'js/jszip.min.js"></script>
+		<script  src="'.$ruta.'js/FileSaver.js"></script>
+		<script  src="'.$ruta.'js/funciones.js"></script>
+			
+		<title>'.$GLOBALS['site_name']. '</title>
 		
-		var tgs = new Array( \'div\',\'td\',\'tr\');
+		<script>
 		
-		//Indicar el nombre de los diferentes tamaños de fuente:
-		
-		var szs = new Array( \'xx-small\',\'x-small\',\'small\',\'medium\',\'large\',\'x-large\',\'xx-large\' );
-		
-		var startSz = 2;
-		
-		function ts( trgt,inc ) {
+			//Especificar a que elementos afectará, añadiendo o quitando de la lista:
 			
-			if (!document.getElementById) return
+			var tgs = new Array( \'div\',\'td\',\'tr\');
 			
-			var d = document,cEl = null,sz = startSz,i,j,cTags;
+			//Indicar el nombre de los diferentes tamaños de fuente:
 			
-			sz += inc;
+			var szs = new Array( \'xx-small\',\'x-small\',\'small\',\'medium\',\'large\',\'x-large\',\'xx-large\' );
 			
-			if ( sz < 0 ) sz = 0;
+			var startSz = 2;
 			
-			if ( sz > 6 ) sz = 6;
-			
-			startSz = sz;
-			
-			if ( !( cEl = d.getElementById( trgt ) ) ) cEl = d.getElementsByTagName( trgt )[ 0 ];
-			
-			cEl.style.fontSize = szs[ sz ];
-			
-			for ( i = 0 ; i < tgs.length ; i++ ) {
-				cTags = cEl.getElementsByTagName( tgs[ i ] );
-				for ( j = 0 ; j < cTags.length ; j++ ) cTags[ j ].style.fontSize = szs[ sz ];
-			}
-		}
-		
-		var captcha_reload_count = 0;
-		
-		var captcha_image_url = "./captcha.php";
-		
-		function new_captcha_image() {
-			
-			if (captcha_image_url.indexOf(\'?\') == -1) {
-				document.getElementById(\'captcha_image\').src= captcha_image_url+\'?c=\'+captcha_reload_count;
-			}
+			function ts( trgt,inc ) {
 				
-			else {
-				document.getElementById(\'captcha_image\').src= captcha_image_url+\'&c=\'+captcha_reload_count;
-			}
-		
-			document.getElementById(\'captcha_input\').value="";
-			
-			document.getElementById(\'captcha_input\').focus();
-			
-			captcha_reload_count++;
-		
-		}
-	
-		var txt = " '.$GLOBALS['site_name']. ' ";
-	
-		var espera=600;
-	
-		var refresco=null;
-	
-		function rotulo_title() {
-			document.title=txt;
-			txt=txt.substring(1,txt.length)+txt.charAt(0);
-			refresco=setTimeout("rotulo_title()",espera);
-		}
-		
-		rotulo_title();
-	
-	</script>';
-	
-	if(!logueado()){
-		
-		if(isset($_COOKIE['idioma'])){
-			$GLOBALS['idioma']=$_COOKIE['idioma'];
-		}
-
-		print '<script>
-		
-			if (document.layers){
-				document.captureEvents(Event.MOUSEDOWN);
-				document.onmousedown = right;
+				if (!document.getElementById) return
+				
+				var d = document,cEl = null,sz = startSz,i,j,cTags;
+				
+				sz += inc;
+				
+				if ( sz < 0 ) sz = 0;
+				
+				if ( sz > 6 ) sz = 6;
+				
+				startSz = sz;
+				
+				if ( !( cEl = d.getElementById( trgt ) ) ) cEl = d.getElementsByTagName( trgt )[ 0 ];
+				
+				cEl.style.fontSize = szs[ sz ];
+				
+				for ( i = 0 ; i < tgs.length ; i++ ) {
+					cTags = cEl.getElementsByTagName( tgs[ i ] );
+					for ( j = 0 ; j < cTags.length ; j++ ) cTags[ j ].style.fontSize = szs[ sz ];
+				}
 			}
 			
-			else if (document.all && !document.getElementById){
-				document.onmousedown = right;
+			var captcha_reload_count = 0;
+			
+			var captcha_image_url = "./captcha.php";
+			
+			function new_captcha_image() {
+				
+				if (captcha_image_url.indexOf(\'?\') == -1) {
+					document.getElementById(\'captcha_image\').src= captcha_image_url+\'?c=\'+captcha_reload_count;
+				}
+					
+				else {
+					document.getElementById(\'captcha_image\').src= captcha_image_url+\'&c=\'+captcha_reload_count;
+				}
+			
+				document.getElementById(\'captcha_input\').value="";
+				
+				document.getElementById(\'captcha_input\').focus();
+				
+				captcha_reload_count++;
+			
+			}
+		
+			var txt = " '.$GLOBALS['site_name']. ' ";
+		
+			var espera=600;
+		
+			var refresco=null;
+		
+			function rotulo_title() {
+				document.title=txt;
+				txt=txt.substring(1,txt.length)+txt.charAt(0);
+				refresco=setTimeout("rotulo_title()",espera);
 			}
 			
-			var txt = "'.$GLOBALS['site_name'].'";
-			
-			document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
-			
-			txt=txt.toUpperCase();
-			
-			txt=" "+txt+"  ";
-			
+			rotulo_title();
+		
 		</script>';
 		
-	}
+		if(!logueado()){
+			
+			if(isset($_COOKIE['idioma'])){
+				$GLOBALS['idioma']=$_COOKIE['idioma'];
+			}
 	
-	print '<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
-
-	</head>
+			print '<script>
+			
+				if (document.layers){
+					document.captureEvents(Event.MOUSEDOWN);
+					document.onmousedown = right;
+				}
+				
+				else if (document.all && !document.getElementById){
+					document.onmousedown = right;
+				}
+				
+				var txt = "'.$GLOBALS['site_name'].'";
+				
+				document.oncontextmenu = new Function("alert(\'© Copyright by "+txt+"\');return false");
+				
+				txt=txt.toUpperCase();
+				
+				txt=" "+txt+"  ";
+				
+			</script>';
+			
+		}
+		
+		print '<link rel="alternate" type="application/rss+xml" title="RSS Feed: '.$GLOBALS['site_name'].'" href="'.$ruta.'rss.php">
 	
-<body>
-
-	'.nevar().'
+		</head>
+		
+	<body>
 	
-	<div id="navega"> 
-	
-		<div id="menu"> 
-	
-			<div id="fijo">
-	
-				<a  id="menu_usuario" onclick="w3_open();">
-					<i class="flotar_izquierda fa fa-bars"></i>
-				</a>
-	
+		'.nevar().'
+		
+		<div id="navega"> 
+		
+			<div id="menu"> 
+		
+				<div id="fijo">
+		
+					<a  id="menu_usuario" onclick="w3_open();">
+						<i class="flotar_izquierda fa fa-bars"></i>
+					</a>
+		
+				</div>
+		
 			</div>
+		
+		</div>';
+	
+	menu_lateral($ruta,$mostrarRegistro,$mostrarImagenAleatoria);
+	
+	print '		</div>
 	
 		</div>
 	
-	</div>';
-
-menu_lateral($ruta,$mostrarRegistro,$mostrarImagenAleatoria);
-
-print '		</div>
-
 	</div>
-
-</div>
-
-<div id="div_arriba_principio">';
+	
+	<div id="div_arriba_principio">';
 
 }
 
@@ -939,57 +959,59 @@ function poner_menu_geo($ruta=""){
 	
 	print '<div class="container" id="contenedor">';
 
-	print '<nav>
-
-    	<ul>
+		print '<nav>
 	
-			<li class="espacio_arriba_3">
-			
-				<a href="'.$ruta3.'categories.php">
-					<img class="icono" src="'.$ruta.'img/tag.png"/>
-				</a>
-			
-			</li>
-
-			<li class="espacio_arriba_3">
-			
-				<a href="'.$ruta2.'index.php">
-					<img class="icono" src="'.$ruta.'img/geo.png"/>
-				</a>
-			
-			</li>
-
-			<li class="espacio_arriba_3">
-			
-				<a href="'.$ruta2.'estadisticas.php">
-					<img class="icono" src="'.$ruta.'img/statics.png"/>
-				</a>
-			
-			</li>
-
-			<li class="espacio_arriba_3">
-			
-				<a href="'.$ruta3.'imagenes_repetidas.php">
-					<img class="icono" src="'.$ruta.'img/repeat.gif"/>
-				</a>
-			
-			</li>
-
-			<br style="clear:both;" />
-
-    	</ul>
-
-	</nav>';
+			<ul>
+		
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta3.'categories.php">
+						<img class="icono" src="'.$ruta.'img/tag.png"/>
+					</a>
+				
+				</li>
+	
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'index.php">
+						<img class="icono" src="'.$ruta.'img/geo.png"/>
+					</a>
+				
+				</li>
+	
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'estadisticas.php">
+						<img class="icono" src="'.$ruta.'img/statics.png"/>
+					</a>
+				
+				</li>
+	
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta3.'imagenes_repetidas.php">
+						<img class="icono" src="'.$ruta.'img/repeat.gif"/>
+					</a>
+				
+				</li>
+	
+				<br style="clear:both;" />
+	
+			</ul>
+	
+		</nav>';
 
 }
 
 function poner_menu_conf(){
 	
 	if(file_exists('../config.php')){
+		
 		include('../config.php');
 	}
 
 	if(file_exists('config.php')){
+		
 		include('config.php');
 	}	
 	
@@ -998,36 +1020,38 @@ function poner_menu_conf(){
 		$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
 	
 		if($_COOKIE['4images_userid']>0){
+		
 			$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 		}
+		
 	}
 	
 	print '<div class="container" id="menu_conf">';
 
-	print '<nav>
-
-    	<ul>
-		
-			<li class="espacio_arriba_3">
-				<a href="cambiar_pass.php">
-				'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'</a>
-			</li>
-
-			<li class="espacio_arriba_3">
-				<a href="cambiar_idioma.php">
-				'.ver_dato('cambiar_idioma', $GLOBALS['idioma']).'</a>
-			</li>
-
-			<li class="espacio_arriba_3">
-				<a href="cambiar_avatar.php">
-				'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'</a>
-			</li>
-
-			<br style="clear:both;" />
+		print '<nav>
+	
+			<ul>
 			
-    	</ul>
-
-	</nav>';
+				<li class="espacio_arriba_3">
+					<a href="cambiar_pass.php">
+					'.ver_dato('cambiar_pass', $GLOBALS['idioma']).'</a>
+				</li>
+	
+				<li class="espacio_arriba_3">
+					<a href="cambiar_idioma.php">
+					'.ver_dato('cambiar_idioma', $GLOBALS['idioma']).'</a>
+				</li>
+	
+				<li class="espacio_arriba_3">
+					<a href="cambiar_avatar.php">
+					'.ver_dato('cambiar_avatar', $GLOBALS['idioma']).'</a>
+				</li>
+	
+				<br style="clear:both;" />
+				
+			</ul>
+	
+		</nav>';
 }
 
 function consecutivos(array $array){
@@ -1113,7 +1137,9 @@ function saber_pass($id){
 }
 
 function safe_htmlspecialchars($chars) {
+  
   // Translate all non-unicode entities
+  
   $chars = preg_replace(
     '/&(?!(#[0-9]+|[a-z]+);)/si',
     '&amp;',
@@ -1365,7 +1391,7 @@ function footer($ruta=""){
 	print "
 			</div>";
 
-print '		
+	print '		
 				<script src="'.$ruta.'js/main.js" data-id="rating"></script>
 				<script src="'.$ruta.'js/popper.min.js"></script>
 				<script src="'.$ruta.'js/bootstrap.min.js"></script>
@@ -1375,34 +1401,39 @@ print '
 				<script src="'.$ruta.'js/modernizr.custom.js"></script>
 				<script src="'.$ruta.'js/jquery.dlmenu.js"></script>
 				<script src="'.$ruta.'js/bootstrap-select.js"></script>
-				<script src="'.$ruta.'js/modificarEstiloInputFile.js"></script>
+				<script src="'.$ruta.'js/modificarEstiloInputFile.js"></script>';
 
-				';
+	print "		<script>
 
-print "		<script>
-
-  				$(document).ready(function () {
-   					 var mySelect = $('#first-disabled2');
-	
-    				$('#special').on('click', function () {
+					$(document).ready(function () {
+						
+						var mySelect = $('#first-disabled2');
+		
+						$('#special').on('click', function () {
+						
+							mySelect.find('option:selected').prop('disabled', true);
+						
+							mySelect.selectpicker('refresh');
+						
+						});
+		
+						$('#special2').on('click', function () {
+						
+							mySelect.find('option:disabled').prop('disabled', false);
+						
+							mySelect.selectpicker('refresh');
+						
+						});
+		
+						$('#basic2').selectpicker({
+						
+							liveSearch: true,
+						
+							maxOptions: 1
+						
+						});
 					
-					  mySelect.find('option:selected').prop('disabled', true);
-					
-      				mySelect.selectpicker('refresh');
-    			});
-
-   				$('#special2').on('click', function () {
-				
-      				mySelect.find('option:disabled').prop('disabled', false);
-      				mySelect.selectpicker('refresh');
-    			});
-
-    			$('#basic2').selectpicker({
-      				liveSearch: true,
-      				maxOptions: 1
-				});
-				
-				  });
+					});
 				  
 			</script>";
 
@@ -1428,6 +1459,7 @@ function obtener_lista_negra($sql="SELECT Nombre FROM antispam"){
 	$lista_negra=array();
 		
 	while($fila = mysqli_fetch_row($consulta)){
+		
 		$lista_negra[]=$fila[0];
 	}
 		
@@ -1441,13 +1473,17 @@ function is_ani($filename) {
 	
     if(!($fh = @fopen($filename, 'rb')))
         return false;
+    
     $count = 0;
 
     while(!feof($fh) && $count < 2) {
-        $chunk = fread($fh, 1024 * 100); //read 100kb at a time
-        $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', $chunk, $matches);
-   }
     
+        $chunk = fread($fh, 1024 * 100); //read 100kb at a time
+    
+        $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00(\x2C|\x21)#s', $chunk, $matches);
+   
+   }
+       
     fclose($fh);
 	
     return $count > 1;
@@ -1494,14 +1530,15 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 		}
 
 		mysqli_close($GLOBALS['conexion']);
-		
-		
+			
 	}
 	
 	$relleno="";
 	
 	if($colspan){
+	
 		$relleno='colspan=3';
+	
 	}
 	
 	print '<td '.$relleno.' id="relleno">
@@ -1510,59 +1547,60 @@ function vercampo($nombre,$categoria,$imagen,$image_id,$mis_cargas=false,$ruta="
 				<img class="img-fluid" alt="Imagen '.$image_id.'" src="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'"/>
 			</a>
 		
-		<div class="flotar_derecha clear">';
+			<div class="flotar_derecha clear">';
 		
-			if($_COOKIE['4images_userid']>0){
-			print '
-
-				<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
-					<img alt="fav" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono.'" id="'.$image_id.'"/>
-				</a>
-		<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
-					<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
-				</a>
-			';
-		}
+				if($_COOKIE['4images_userid']>0){
 				
-		if($mis_cargas || admin($_COOKIE['4images_userid'])){
-					
-			if($mis_cargas){
-				$final_sentencia="AND user_id='".$_COOKIE['4images_userid']."'";
-			}
-					
-			$icono2='hide.png';
-				
-			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-			$GLOBALS['db_password'], $GLOBALS['db_name'])
-			or die("No se pudo conectar a la base de datos");
+					print '
+		
+						<a id="frmajax_img_'.$image_id.'" onclick="favorito('.$image_id.')">
+							<img alt="fav" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono.'" id="'.$image_id.'"/>
+						</a>
 			
-			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
-			$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' ".$final_sentencia );
-	
-			$fila = mysqli_fetch_row($consulta);
-	
-			if((int)$fila[0]==1){
-				$icono2="view.png";
-			}
-	
-			$cat_id=$fila[1];
-		
-			$file=$fila[2];
-
-			mysqli_close($GLOBALS['conexion']);
-		
-			print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id."&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
-					<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/delete.ico"/>
-				</a>';
+						<a href="'.$ruta.'data/media/'.$categoria.'/'.$imagen.'" download>
+							<img alt="download" style="padding-left:20px;height:1em;width:2em;" src="'.$ruta.'img/download.png"/>
+						</a>';
+				
+				}
+				
+	if($mis_cargas || admin($_COOKIE['4images_userid'])){
 					
-			print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
-					<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono2.'"/>
-				</a>';
-				
+		if($mis_cargas){
+			$final_sentencia="AND user_id='".$_COOKIE['4images_userid']."'";
 		}
+					
+		$icono2='hide.png';
+			
+		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+		$GLOBALS['db_password'], $GLOBALS['db_name'])
+		or die("No se pudo conectar a la base de datos");
+		
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_active,cat_id,image_media_file FROM ' .
+		$GLOBALS['table_prefix'] . "images WHERE image_id='".$image_id."' ".$final_sentencia );
+		
+		$fila = mysqli_fetch_row($consulta);
+		
+		if((int)$fila[0]==1){
+			$icono2="view.png";
+		}
+		
+		$cat_id=$fila[1];
+		
+		$file=$fila[2];
+		
+		mysqli_close($GLOBALS['conexion']);
+		
+		print "<a id=\"frm_img_del_".$image_id.'" href="'.$ruta.'delete.php?image_id='.$image_id."&cat_id=".$cat_id."&file=".$file."&pag=".$_GET['pag']."\">
+				<img alt=\"delete image ".$image_id.'" id="IMG_delete_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/delete.ico"/>
+			</a>';
 				
-		print '	
-	
+		print '<a id="frm_img_'.$image_id.'" onclick="ocultar_img('.$image_id.')">
+				<img alt="IMG_'.$image_id.'" id="IMG_'.$image_id.'" style="height:1em;width:1em;" src="'.$ruta.'img/'.$icono2.'"/>
+			</a>';
+			
+	}
+				
+	print '	
 		</div>
 		
 	</td>';
@@ -1573,6 +1611,7 @@ function ver_categoria($cat_id,$final_sentencia="WHERE image_active=1 ",$favorit
 $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT ",$comentario=false){
 
 	if($cat_id=='*' && $final_sentencia=="" && $ruta==""){
+		
 		$final_sentencia='WHERE image_active=1 ';
 	}
 
@@ -1594,6 +1633,7 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 	if($comentario){
 		
 		if(logueado()){
+			
 			$final_sentencia='JOIN '.$GLOBALS['table_prefix']."comments C ON C.image_id=I.image_id
 			WHERE image_active='1' OR C.user_id='".$_COOKIE['4images_userid']."'";
 		}
@@ -1609,6 +1649,7 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 	include($ruta.'config.php');
 	
 	if ($conexion->connect_errno) {
+		
 		echo 'Fallo al conectar a MySQL: (' . $conexion->connect_errno . ') ' . $conexion->connect_error;
 	}
 	
@@ -1636,15 +1677,18 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 		}
 
 		$compag         = (int)(!isset($_GET['pag'])) ? 1 : $_GET['pag']; 
+		
 		$TotalReg       = $conexion->query($consulta);
 
 		$TotalRegistro  = ceil($TotalReg->num_rows/$CantidadMostrar);
 		
 		if(isset($_GET['pag'])){
+			
 			$_GET['pag']=(int) trim($_GET['pag']);	
 		}
 		
 		else{
+			
 			$_GET['pag']=1;
 		}
 		
@@ -1668,23 +1712,31 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 			while ($lista=$consulta->fetch_row()) {
 				
 				if(!in_array($lista[3], $_SESSION['array_imagenes'])){
+					
 					$_SESSION['rutas'][]='data/media/'.$lista[1].'/'.$lista[3];
+					
 					$_SESSION['array_imagenes'][]=$lista[3];	
 				}
 				
 				$ids[]=$lista[0];
+				
 				$categorias[]=$lista[1];
+				
 				$nombres[]=$lista[2];
+				
 				$imagenes[]=$lista[3];	 
 			}
 			
 			$y=-1;
+			
 			$z=0;
 			
 			$recuento=count($nombres);
 
 			$primera_reja="";
+			
 			$segunda_reja="";
+			
 			$tercera_reja="";
 			
 			if($recuento>1){
@@ -1762,8 +1814,10 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 					print '</tr>';
 	
 					print '<tr style="border:none;">
-						<td style="border:none;" colspan=3><hr/>
-						</td>
+					
+							<td style="border:none;" colspan=3>
+								<hr/>
+							</td>
 					</tr>';
 											
 				}
@@ -1820,13 +1874,19 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 			if($_GET['pag']>2){
 								
 				echo '<li class="btn">
+				
 						<a href="'.$ruta.'?cat_id='.$_GET['cat_id'].'&pag=1"><<</a>
+						
 					</li>
 				
 				<li class="btn">
+				
 					<a href='.$ruta.'"?cat_id='.$_SESSION['categoria'].'&pag='.$DecrementNum.'">
+					
 						<img alt="go back" style="width:3em;height:3em;" src="'.$ruta.'img/back.png"/>
+						
 					</a>
+					
 				</li>';
 
 			}
@@ -1844,11 +1904,23 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 				if($i<=$TotalRegistro){
 			
 					if($i==$compag){
-						echo "<li class=\"active\"><a href=\"".$ruta."?cat_id=".$cat_id."&pag=".$i."\">".$i."</a></li>";
+						
+						echo "<li class=\"active\">
+						
+							<a href=\"".$ruta."?cat_id=".$cat_id."&pag=".$i."\">".$i."</a>
+							
+						</li>";
+						
 					}
 					
 					else {
-						echo "<li><a href=\"".$ruta."?cat_id=".$cat_id."&pag=".$i."\">".$i."</a></li>";
+						
+						echo "<li>
+						
+							<a href=\"".$ruta."?cat_id=".$cat_id."&pag=".$i."\">".$i."</a>
+							
+						</li>";
+						
 					}
 					
 				}
@@ -1859,12 +1931,17 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 				echo '<li class="btn"><a href="'.$ruta.'?cat_id='.$cat_id.'&pag='.$IncrimentNum.'"><img alt="go next" style="width:3em;height:3em;" src="'.$ruta.'img/next.png"/></a></li>';
 				
 				if($IncrimentNum<$TotalRegistro){
+				
 					echo '<li style="margin-left:10px;" class="btn"><a href="'.$ruta.'?cat_id='.$cat_id.'&pag='.$TotalRegistro.'">>></a></li></ul></div>';
+				
 				}
+				
 			}
+			
 		}
 		
 		print '</ul>';
+		
 	}
 }
 
@@ -1873,10 +1950,12 @@ function rmDir_rf($carpeta){
     foreach(glob($carpeta . "/*") as $archivos_carpeta){
 		  
         if (is_dir($archivos_carpeta)){
+			
           rmDir_rf($archivos_carpeta);
         }
 
 		else {
+			
 			unlink($archivos_carpeta);
         }
 		
@@ -1891,6 +1970,7 @@ function listar_archivos($carpeta){
 	$archivos=array();
 
 	if(!file_exists($carpeta)){
+		
 		mkdir($carpeta, 0777, true);
 	}
 	
@@ -1906,7 +1986,7 @@ function listar_archivos($carpeta){
 					
 					$archivos[]=$lista[$i];
 					
-					}
+				}
 					
 			}
 	
@@ -1920,24 +2000,31 @@ function listar_archivos($carpeta){
 function mensaje($mensaje){
 	
 	if(!empty($mensaje)){
+		
 		echo '<script>alert("'.$mensaje.'");</script>';
+		
 	}
 }
 
 function obtener_direccion(){
 	
 	if(strlen($_SERVER['SERVER_NAME'])>9){
+		
 		$adicional="";
 
 		if(!empty($_SERVER["REQUEST_URI"])){
+			
 			$adicional=$_SERVER["REQUEST_URI"];
+			
 			$adicional=substr($adicional,0,strripos($adicional,'/'));
+			
 		}
 		
 		return $_SERVER['SERVER_NAME'].$adicional;
 	}
 	
 	else{
+		
 		return 'localhost';
 	}
 	
@@ -1945,77 +2032,83 @@ function obtener_direccion(){
 
 function restablecer_pass($ruta = ""){
 	
-echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
-
-			<div class="modal-dialog modal-dialog-centered" role="document">
-			
-				<div class="modal-content">
-				
-					<div class="modal-header">
-					
-						<span style="font-size:20px;"><img class="icono" src="img/user_pass.png"/>' . ver_dato('cambiar_pass',$GLOBALS['idioma']). '</span>
-						
-						<button style="margin-left:30px;float:right;" type="button" class="close"
-						data-dismiss="modal">
-						
-							<span>&times;</span>
-							
-						</button>
-						
-					</div>
-					
-				<div class="modal-body">
-				
-					<form method="post" action="restablecer_pass.php">
-
-						<div class="form-group">
-						
-							<img alt="usuario para registrar" class="icono" src="'.$ruta.'img/user.png" />
-							
-							<label style="font-size:2em;" for="nombre_usuario">' . ver_dato('user_name',$GLOBALS['idioma']). '</label>
+	echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
 	
-							<input style="margin:auto;width:80%;" id="nombre_usuario" name="nombre_usuario" placeholder="' . ver_dato('user_name',
-							$GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
+				<div class="modal-dialog modal-dialog-centered" role="document">
+				
+					<div class="modal-content">
 					
-							<br/>
+						<div class="modal-header">
+						
+							<span style="font-size:20px;"><img class="icono" src="img/user_pass.png"/>' .
+								ver_dato('cambiar_pass',$GLOBALS['idioma']).'
+							</span>
 							
-							<img alt="correo de restablecimiento" class="icono" src="'.$ruta.'img/email.png"/>
+							<button style="margin-left:30px;float:right;" type="button" class="close"
+							data-dismiss="modal">
+							
+								<span>&times;</span>
+								
+							</button>
+							
+						</div>
+						
+						<div class="modal-body">
 					
-							<label style="font-size:2em;" for="correo_restablecimiento">' . ver_dato('email',
-							$GLOBALS['idioma']) . '</label>
+							<form method="post" action="restablecer_pass.php">
+	
+								<div class="form-group">
+								
+									<img alt="usuario para registrar" class="icono" src="'.$ruta.'img/user.png" />
+									
+									<label style="font-size:2em;" for="nombre_usuario">' . ver_dato('user_name',$GLOBALS['idioma']). '</label>
 			
-							<input style="margin:auto;width:80%;" id="correo_restablecimiento" name="correo_restablecimiento" placeholder="' .ver_dato('email', $GLOBALS['idioma']) . '"
-							type="text" class="form-control" />
-		
-							<br/>
-		
+									<input style="margin:auto;width:80%;" id="nombre_usuario" name="nombre_usuario" placeholder="' . ver_dato('user_name',
+									$GLOBALS['idioma']) . '" type="text" class="form-control" id="recipient-name"/>
+							
+									<br/>
+									
+									<img alt="correo de restablecimiento" class="icono" src="'.$ruta.'img/email.png"/>
+							
+									<label style="font-size:2em;" for="correo_restablecimiento">' . ver_dato('email',
+									$GLOBALS['idioma']) . '</label>
+					
+									<input style="margin:auto;width:80%;" id="correo_restablecimiento" name="correo_restablecimiento" placeholder="' .ver_dato('email', $GLOBALS['idioma']) . '"
+									type="text" class="form-control" />
+				
+									<br/>
+				
+								</div>
+				
+								<div style="clear:both;">
+								
+									<input style="margin:auto;" name="restablecer_pass" type="submit" value="' .
+										ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
+										
+								</div>
+												
+							</form>
+						
 						</div>
 			
-						<br/>
-			
-						<br/>	
-			
-						<input style="margin:auto;" name="restablecer_pass" type="submit" value="' .
-						ver_dato('cambiar_pass', $GLOBALS['idioma']) . '" />
-						
-					</form>
-		</div>
+					</div>
 		
-	</div>
-	
-</div>';
+				</div>';
 
 }
 
 function crear_carpetas(){
 	
 	if(!file_exists('data/media')){
+			
 			mkdir('data/media', 0777, true);
 	}
 	
 	if(!file_exists('avatars')){
+			
 			mkdir('avatars', 0777, true);
 	}
+	
 }
 
 function ver_dato($accion,$idioma){
@@ -2051,7 +2144,9 @@ function ver_dato($accion,$idioma){
 
 function track(){
 	
-		if(!isset($_SESSION['track']) || $_SESSION['track']){
+	$i_direccionIp="";
+	
+	if(!isset($_SESSION['track']) || $_SESSION['track']){
 			
 			$lista_negra=obtener_lista_negra('SELECT IP FROM bots');
 		
@@ -2066,25 +2161,20 @@ function track(){
 				mysqli_query($GLOBALS['conexion'],"INSERT INTO bots (IP) VALUES('".$bots[0]."');");
 
 				$lista_negra[]=$bots[0];
+			
 			}
 			
 			mysqli_query($GLOBALS['conexion'],"DELETE FROM tbl_tracking where tx_navegador like '%crawler%' OR tx_navegador like '%Bot%' AND tx_ipRemota!='127.0.0.1';");
 
 			$i_direccionIp      = $_SERVER['REMOTE_ADDR'];   
-				
+
 			if(comprobar_si_es_valido($i_direccionIp,$lista_negra)){
 			
 				$tx_pagina              = $_SERVER['REQUEST_URI']; 
 				$tx_paginaOrigen        = $_SERVER['HTTP_REFERER'];
 				$tx_paginaActual        =   $_SERVER['PHP_SELF']; 
 				$tx_navegador       =   $_SERVER['HTTP_USER_AGENT']; 
-			
-				if(strlen($i_direccionIp)<12){
 					
-					$i_direccionIp='127.0.0.1';
-					$country ="home";
-				}
-		
 				if(is_private_ip($i_direccionIp)){
 					
 					$country ="home";
@@ -2098,622 +2188,623 @@ function track(){
 					switch($geo->country){
 					
 						case "Spain":
-						$country ="es";
+							$country ="es";
 						break;
 					
 						case "France":
 						case "New Caledonia":
-						$country ="fr";
+							$country ="fr";
 						break;
 						
 						case "Germany":
-						$country ="de";
+							$country ="de";
 						break;
 						
 						case "Tanzania":
-						$country ="tanzania";
+							$country ="tanzania";
 						break;
 						
 						case "United States":
-						$country ="us";
+							$country ="us";
 						break;
 						
 						case "Norway":
-						$country ="no";
+							$country ="no";
 						break;
 						
 						case "Belgium":
-						$country ="be";
+							$country ="be";
 						break;
 						
 						case "Ukraine":
-						$country ="ukr";
+							$country ="ukr";
 						break;
 						
 						case "Canada":
-						$country ="ca";
+							$country ="ca";
 						break;
 		
 						case "United Kingdom":
-						$country ="uk";
+							$country ="uk";
 						break;
 						
 						case "India":
-						$country ="india";
+							$country ="india";
 						break;
 						
 						case "Chile":
-						$country ="chile";
+							$country ="chile";
 						break;
 						
 						case "Brazil":
-						$country ="brasil";
+							$country ="brasil";
 						break;
 						
 						case "Thailand":
-						$country ="tai";
+							$country ="tai";
 						break;
 						
 						case "Turkey":
-						$country ="turkia";
+							$country ="turkia";
 						break;
 						
 						case "Pakistan":
-						$country ="pakistan";
+							$country ="pakistan";
 						break;
 						
 						case "Vietnam":
-						$country ="vietnam";
+							$country ="vietnam";
 						break;
 						
 						case "Peru":
-						$country ="peru";
+							$country ="peru";
 						break;
 						
 						case "Poland":
-						$country ="polonia";
+							$country ="polonia";
 						break;
 						
 						case "Indonesia":
-						$country ="indonesia";
+							$country ="indonesia";
 						break;
 						
 						case "Ireland":
-						$country ="ireland";
+							$country ="ireland";
 						break;
 						
 						case "South Korea":
-						$country ="corea";
+							$country ="corea";
 						break;
 						
 						case "Greece":
-						$country ="grecia";
+							$country ="grecia";
 						break;
 							
 						case "Italy":
-						$country ="italia";
+							$country ="italia";
 						break;
 						
 						case "Netherlands":
-						$country ="holanda";
+							$country ="holanda";
 						break;
 						
 						case "Czechia":
-						$country ="chequia";
+							$country ="chequia";
 						break;
 						
 						case "Finland":
-						$country ="finlandia";
+							$country ="finlandia";
 						break;
 						
 						case "Iran":
-						$country ="iran";
+							$country ="iran";
 						break;
 						
 						case "Portugal":
-						$country ="portugal";
+							$country ="portugal";
 						break;
 						
 						case "China":
-						$country ="china";
+							$country ="china";
 						break;
 						
 						case "Israel":
-						$country ="israel";
+							$country ="israel";
 						break;
 						
 						case "Romania":
-						$country ="romania";
+							$country ="romania";
 						break;
 						
 						case "Russia":
-						$country ="rusia";
+							$country ="rusia";
 						break;
 						
 						case "Armenia":
-						$country ="armenia";
+							$country ="armenia";
 						break;
 						
 						case "Mauritius":
-						$country ="mauricio";
+							$country ="mauricio";
 						break;
 						
 						case "Iraq":
-						$country ="iraq";
+							$country ="iraq";
 						break;
 						
 						case "Malaysia":
-						$country ="malasia";
+							$country ="malasia";
 						break;
 							
 						case "Philippines":
-						$country ="filipinas";
+							$country ="filipinas";
 						break;
 						
 						case "Bangladesh":
-						$country ="bangladesh";
+							$country ="bangladesh";
 						break;	
 						
 						case "Colombia":
-						$country ="colombia";
+							$country ="colombia";
 						break;
 						
 						case "Reunion":
-						$country ="reunion";
+							$country ="reunion";
 						break;
 						
 						case "Hong Kong":
-						$country ="hongkong";
+							$country ="hongkong";
 						break;
 						
 						case "Cambodia":
-						$country ="camboya";
+							$country ="camboya";
 						break;
 						
 						case "United Arab Emirates":
-						$country ="emiratos";
+							$country ="emiratos";
 						break;
 						
 						case "South Africa":
-						$country ="sudafrica";
+							$country ="sudafrica";
 						break;
 						
 						case "Mexico":
-						$country ="mexico";
+							$country ="mexico";
 						break;
 						
 						case "Estonia":
-						$country ="estonia";
+							$country ="estonia";
 						break;
 						
 						case "Austria":
-						$country ="austria";
+							$country ="austria";
 						break;
 						
 						case "Argentina":
-						$country ="argentina";
+							$country ="argentina";
 						break;
 						
 						case "Japan":
-						$country ="japon";
+							$country ="japon";
 						break;
 						
 						case "Palestinian Territory":
-						$country ="palestina";
+							$country ="palestina";
 						break;
 						
 						case "Bolivia":
-						$country ="bolivia";
+							$country ="bolivia";
 						break;
 						
 						case "Switzerland":
-						$country ="suiza";
+							$country ="suiza";
 						break;
 						
 						case "Sweden":
-						$country ="suecia";
+							$country ="suecia";
 						break;
 						
 						case "Morocco":
-						$country ="marruecos";
+							$country ="marruecos";
 						break;
 						
 						case "Venezuela":
-						$country ="venezuela";
+							$country ="venezuela";
 						break;
 							
 						case "Republic of the Congo":
 						case "Democratic Republic of the Congo":
-						$country ="congo";
+							$country ="congo";
 						break;
 						
 						case "Botswana":
-						$country ="botswana";
+							$country ="botswana";
 						break;
 						
 						case "Singapore":
-						$country ="singapur";
+							$country ="singapur";
 						break;
 						
 						case "Moldova":
-						$country ="moldavia";
+							$country ="moldavia";
 						break;
 						
 						case "Honduras":
-						$country ="honduras";
+							$country ="honduras";
 						break;
 						
 						case "Ecuador":
-						$country ="ecuador";
+							$country ="ecuador";
 						break;
 						
 						case "Mongolia":
-						$country ="mongolia";
+							$country ="mongolia";
 						break;
 						
 						case "Nigeria":
-						$country ="nigeria";
+							$country ="nigeria";
 						break;
 						
 						case "Egypt":
-						$country ="egipto";
+							$country ="egipto";
 						break;
 						
 						case "Latvia":
-						$country ="letonia";
+							$country ="letonia";
 						break;
 						
 						case "Croatia":
-						$country ="croacia";
+							$country ="croacia";
 						break;
 						
 						case "Slovakia":
-						$country ="eslovaquia";
+							$country ="eslovaquia";
 						break;
 						
 						case "Nepal":
-						$country ="nepal";
+							$country ="nepal";
 						break;
 						
 						case "Angola":
-						$country ="angola";
+							$country ="angola";
 						break;
 						
 						case "Kenya":
-						$country ="kenia";
+							$country ="kenia";
 						break;
 						
 						case "Australia":
-						$country ="australia";
+							$country ="australia";
 						break;
 						
 						case "Hungary":
-						$country ="hungria";
+							$country ="hungria";
 						break;
 						
 						case "Kazakhstan":
-						$country ="kazajistan";
+							$country ="kazajistan";
 						break;
 						
 						case "Denmark":
-						$country ="dinamarca";
+							$country ="dinamarca";
 						break;
 						
 						case "Tunisia":
-						$country ="tunez";
+							$country ="tunez";
 						break;
 						
 						case "Bulgaria":
-						$country ="bulgaria";
+							$country ="bulgaria";
 						break;
 						
 						case "Timor Leste":
-						$country ="timor-oriental";
+							$country ="timor-oriental";
 						break;
 						
 						case "Serbia":
-						$country ="serbia";
+							$country ="serbia";
 						break;
 						
 						case "Lithuania":
-						$country ="lituania";
+							$country ="lituania";
 						break;
 						
 						case "Nicaragua":
-						$country ="nicaragua";
+							$country ="nicaragua";
 						break;
 						
 						case "Panama":
-						$country ="panama";
+							$country ="panama";
 						break;
 						
 						case "Saudi Arabia":
-						$country ="arabia-saudi";
+							$country ="arabia-saudi";
 						break;
 						
 						case "Georgia":
-						$country ="georgia";
+							$country ="georgia";
 						break;
 						
 						case "Taiwan":
-						$country ="taiwan";
+							$country ="taiwan";
 						break;
 						
 						case "Paraguay":
-						$country ="paraguay";
+							$country ="paraguay";
 						break;
 						
 						case "New Zealand":
-						$country ="nueva_zelanda";
+							$country ="nueva_zelanda";
 						break;
 						
 						case "Albania":
-						$country ="albania";
+							$country ="albania";
 						break;
 						
 						case "Guam":
-						$country ="guam";
+							$country ="guam";
 						break;
 						
 						case "Slovenia":
-						$country ="eslovenia";
+							$country ="eslovenia";
 						break;
 						
 						case "Malawi":
-						$country ="malaui";
+							$country ="malaui";
 						break;
 						
 						case "Zimbabwe":
-						$country ="zimbabue";
+							$country ="zimbabue";
 						break;
 						
 						case "Uganda":
-						$country ="uganda";
+							$country ="uganda";
 						break;
 						
 						case "Madagascar":
-						$country ="madagascar";
+							$country ="madagascar";
 						break;
 						
 						case "Mali":
-						$country ="mali";
+							$country ="mali";
 						break;
 						
 						case "Sri Lanka":
-						$country ="sri_lanka";
+							$country ="sri_lanka";
 						break;
 						
 						case "Kosovo":
-						$country ="kosovo";
+							$country ="kosovo";
 						break;
 						
 						case "Bosnia and Herzegovina":
-						$country ="bosnia";
+							$country ="bosnia";
 						break;
 						
 						case "Cyprus":
-						$country ="chipre";
+							$country ="chipre";
 						break;
 						
 						case "Costa Rica":
-						$country ="costa_rica";
+							$country ="costa_rica";
 						break;
 						
 						case "Belarus":
-						$country ="bielorrusia";
+							$country ="bielorrusia";
 						break;
 						
 						case "Lebanon":
-						$country ="libano";
+							$country ="libano";
 						break;
 						
 						case "Cameroon":
-						$country ="camerun";
+							$country ="camerun";
 						break;
 						
 						case "Sierra Leone":
-						$country ="sierra_leona";
+							$country ="sierra_leona";
 						break;
 						
 						case "Macedonia":
-						$country ="macedonia";
+							$country ="macedonia";
 						break;
 						
 						case "Sudan":
-						$country ="sudan";
+							$country ="sudan";
 						break;
 						
 						case "Kyrgyzstan":
-						$country ="kirguistan";
+							$country ="kirguistan";
 						break;
 						
 						case "Ghana":
-						$country ="ghana";
+							$country ="ghana";
 						break;
 						
 						case "Uruguay":
-						$country ="uruguay";
+							$country ="uruguay";
 						break;
 						
 						case "Myanmar":
-						$country ="birmania";
+							$country ="birmania";
 						break;
 						
 						case "Qatar":
-						$country ="qatar";
+							$country ="qatar";
 						break;
 						
 						case "South Sudan":
-						$country ="sudan_sur";
+							$country ="sudan_sur";
 						break;
 						
 						case "Guatemala":
-						$country ="guatemala";
+							$country ="guatemala";
 						break;
 						
 						case "Dominican Republic":
-						$country ="republica_dominicana";
+							$country ="republica_dominicana";
 						break;
 						
 						case "Luxembourg":
-						$country ="luxemburgo";
+							$country ="luxemburgo";
 						break;
 						
 						case "Puerto Rico":
-						$country ="puerto_rico";
+							$country ="puerto_rico";
 						break;
 						
 						case "Namibia":
-						$country ="namibia";
+							$country ="namibia";
 						break;
 						
 						case "Uzbekistan":
-						$country ="uzbekistan";
+							$country ="uzbekistan";
 						break;
 						
 						case "Turkmenistan":
-						$country ="turkmenistan";
+							$country ="turkmenistan";
 						break;
 						
 						case 'Syria':
-						$country ="siria";
+							$country ="siria";
 						break;
 						
 						case "Algeria":
-						$country ='argelia';
+							$country ='argelia';
 						break;
 						
 						case "Oman":
-						$country ='oman';
+							$country ='oman';
 						break;
 						
 						case "Tajikistan":
-						$country ='tayikistan';
+							$country ='tayikistan';
 						break;
 						
 						case "Montenegro":
-						$country ='montenegro';
+							$country ='montenegro';
 						break;
 						
 						case "Azerbaijan":
-						$country ='azerbaiyan';
+							$country ='azerbaiyan';
 						break;
 						
 						case "Swaziland":
-						$country ='esuatini';
+							$country ='esuatini';
 						break;
 						
 						case "Libya":
-						$country ='libia';
+							$country ='libia';
 						break;
 						
 						case "Zambia":
-						$country ="zambia";
+							$country ="zambia";
 						break;
 						
 						case "Benin":
-						$country ="benin";
+							$country ="benin";
 						break;
 						
 						case "Mozambique":
-						$country ="mozambique";
+							$country ="mozambique";
 						break;
 						
 						case "Malta":
-						$country ="malta";
+							$country ="malta";
 						break;
 						
 						case "Laos":
-						$country ="laos";
+							$country ="laos";
 						break;
 						
 						case "Jamaica":
-						$country ="jamaica";
+							$country ="jamaica";
 						break;
 						
 						case "Somalia":
-						$country ="somalia";
+							$country ="somalia";
 						break;
 						
 						case "Iceland":
-						$country ="islandia";
+							$country ="islandia";
 						break;
 						
 						case "Guinea":
-						$country ="guinea";
+							$country ="guinea";
 						break;
 						
 						case "Yemen":
-						$country ="yemen";
+							$country ="yemen";
 						break;
 						
 						case "Jordan":
-						$country ="jordania";
+							$country ="jordania";
 						break;
 						
 						case "Haiti":
-						$country ="haiti";
+							$country ="haiti";
 						break;
 						
 						case "Burkina Faso":
-						$country ="burkina";
+							$country ="burkina";
 						break;
 							
 						case "Suriname":
-						$country ="surinam";
+							$country ="surinam";
 						break;
 							
 						case "Lesotho":
-						$country ="lesotho";
+							$country ="lesotho";
 						break;	
 							
 						case "Maldives":
-						$country ="maldives";
+							$country ="maldives";
 						break;	
 							
 						case "Afghanistan":
-						$country ="afghanistan";
+							$country ="afghanistan";
 						break;	
 							
 						case "Seychelles":
-						$country ="seychelles";
+							$country ="seychelles";
 						break;	
 						
 						case "Cape Verde":
-						$country ="cabo_verde";
+							$country ="cabo_verde";
 						break;
 							
 						case "Senegal":
-						$country ="senegal";
+							$country ="senegal";
 						break;
 							
 						case "Gabon":
-						$country ="gabon";
+							$country ="gabon";
 						break;
 							
 						case "Kuwait":
-						$country ="kuwait";
+							$country ="kuwait";
 						break;
 							
 						case "Trinidad and Tobago":
-						$country ="trinidad";
+							$country ="trinidad";
 						break;	
 							
 						case "Ethiopia":
-						$country ="ethiopia";
+							$country ="ethiopia";
 						break;
 							
 						case "Papua New Guinea":
-						$country ="papua";
+							$country ="papua";
 						break;	
 												
 						default:
-						$country ="unknow";
+							$country ="unknow";
 						break;
 							
 					}
 							
 					$region=$geo->city;
+					
 				}
 		
 		$usuario=-1;
@@ -2723,14 +2814,20 @@ function track(){
 		}
 		
 		else{
+			
 			$usuario=$_COOKIE['4images_userid'];
 
 		}
 
+		if ($i_direccionIp!='127.0.0.1') {
+			
 			mysqli_query ($GLOBALS['conexion'], "INSERT INTO 
 			tbl_tracking (tx_pagina,tx_paginaOrigen,tx_ipRemota,tx_navegador,dt_fechaVisita,pais,ciudad,usuario,hora) 
 			VALUES('$tx_pagina','$tx_paginaOrigen','$i_direccionIp','$tx_navegador',now(),'$country','$region','".$usuario."',CURTIME())");
+
 		}
+		
+	}
 				
 		mysqli_close($GLOBALS['conexion']);
 	
@@ -2745,11 +2842,13 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 			$_COOKIE['4images_userid']=(int)$_COOKIE['4images_userid'];
 	
 			if($_COOKIE['4images_userid']>0){
+				
 				$GLOBALS['idioma']=saber_idioma($_COOKIE['4images_userid']);	
 			}
 		}
 		
 	if($ruta=='todos'){
+		
 		$ruta='';
 	}
 
@@ -2757,19 +2856,20 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="padding-left:70px;padding-right:20px;width:13em;overflow-x: hidden;z-index:2;" id="mySidebar"><br>
  
-<div  class="w3-container">
-
-    <a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"></a>
-   
-</div>
-
-<div style="margin-left:-50px;" class="w3-bar-block">
+	<div  class="w3-container">
+	
+		<a  onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey fa fa-remove" title="close menu"></a>
+	
+	</div>
+	
+	<div style="margin-left:-50px;" class="w3-bar-block">
   
 <?php
 
     if(strpos("index.php",$_SERVER['PHP_SELF'])>=0){
 
 		print '<a title="'.ver_dato('home', $GLOBALS['idioma']).'" href="'.$ruta.'index.php">
+		
 					<img alt="inicio" class="icono" style="margin-top:20px;" src="'.$ruta.'img/home.png" >
 				</a>
 				
@@ -2782,36 +2882,39 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 			
 			print '<form method="post" action="'.$ruta.'login.php" >
 			
-				<a title="'.ver_dato('user_name',$GLOBALS['idioma']).'">
-					<img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png"/>
-				</a>
- 
-				<label for="user_name"  style="font-size:2em;">'.ver_dato('user_name',$GLOBALS['idioma']).'</label>
-	 
-				<input id="user_name" style="height:40px;font-size:2em;" type="text" name="user_name" class="logininput"/>
-	 
-				<a title="'.ver_dato('password',$GLOBALS['idioma']).'">
-					<img alt="clave de acceso" class="icono" style="margin:auto;margin-top:30px;" src="'.$ruta.'img/user_pass.png"/>
-				</a>
- 
-				<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
-	 
-				<input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput"/>
-	
-				<input id="login" class="negrita" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button"/>
-   
-			</form>
+				 
+						<a title="'.ver_dato('user_name',$GLOBALS['idioma']).'">
+						
+							<img alt="nombre de usuario" class="icono" style="margin:auto;padding-left:8px;" src="'.$ruta.'img/user.png"/>
+						</a>
+		
+						<label for="user_name"  style="font-size:2em;">'.ver_dato('user_name',$GLOBALS['idioma']).'</label>
 			
-			<div class="flotar_izquierda espacio_izquierda">
-
-			<a title="'.ver_dato('recordar',$GLOBALS['idioma']).'" data-toggle="modal" 
-			data-target="#exampleModal">
-
-			  <img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" 
-			  class="icono" src="'.$ruta.'img/forgot_password.png"/>
-		 	</a>
+						<input id="user_name" style="height:40px;font-size:2em;" type="text" name="user_name" class="logininput"/>
+			
+						<a title="'.ver_dato('password',$GLOBALS['idioma']).'">
+							<img alt="clave de acceso" class="icono" style="margin:auto;margin-top:30px;" src="'.$ruta.'img/user_pass.png"/>
+						</a>
+		
+						<label for="user_password" style="font-size:2em;">'.ver_dato('password',$GLOBALS['idioma']).'</label>
+			
+						<input id="user_password" title="user password" style="font-size:2em;margin-right:10px;" type="password" size="10" name="user_password" class="logininput"/>
+			
+						<input id="login" class="negrita" style="margin-top:30px;margin-left:-3px;" title="login" name="login" type="submit" value="'.ver_dato('login',$GLOBALS['idioma']).'" class="button"/>
+   
+					</form>
+			
+					<div class="flotar_izquierda espacio_izquierda">
+		
+						<a title="'.ver_dato('recordar',$GLOBALS['idioma']).'" data-toggle="modal" 
+						data-target="#exampleModal">
+			
+							<img alt="'.ver_dato('recordar',$GLOBALS['idioma']).'" 
+							class="icono" src="'.$ruta.'img/forgot_password.png"/>
+						
+						</a>
 		 
-		</div>';
+					</div>';
 
 		}
 
@@ -2856,16 +2959,22 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 			}
 
 			print '<div style="float:left;">
+			
 				<a title="'.ver_dato('new_msg', $GLOBALS['idioma']).'" href="'.$enlace.'inbox.php">
+			
 					<span style="font-size:2em;">'.$recuento[0].'</span>
+			
 				</a>
+			
 			</div>';
 		}
 		
 		print '<div style="float:left;padding-left:10px;">
 				
 				<a title="'.ver_dato('msg', $GLOBALS['idioma']).'" href="'.$ruta.'messages/index.php">
-					<img alt="'.ver_dato('msg', $GLOBALS['idioma']).'" style="height:3.4em;width:3.4em;" src="'.$ruta.'img/email.png"/>
+			
+					<img class="icono" alt="'.ver_dato('msg', $GLOBALS['idioma']).'" src="'.$ruta.'img/email.png"/>
+			
 				</a>
 
 			</div>
@@ -2877,6 +2986,7 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 
 					<img alt="'.ver_dato('user_name', $GLOBALS['idioma']).'" 
 					class="icono imgRedonda" src="'.$imagen_usuario.'"/>
+			
 				</a>
 				
 			</div>
@@ -2889,68 +2999,71 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 		
 			<div class="flotar_izquierda clear">
 
-			<div class="flotar_izquierda espacios_3">
-			
-				<a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
 				
-				<img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/settings.png">
-		
-				</a>
-				
-			</div>
-
-			<div class="flotar_izquierda espacios_3">
-			
-				<a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
+					<a title="'.ver_dato('config', $GLOBALS['idioma']).'" href="'.$ruta.'member.php">
 					
-					<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono espacio_izquierda" src="'.$ruta.'img/upload.png"/>
-				
-				</a>
-			</div>
-
-			<div class="flotar_izquierda espacios_3">
-		
-				<a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
+					<img alt="'.ver_dato('config', $GLOBALS['idioma']).'" class="panel_icono espacio_izquierda" src="'.$ruta.'img/settings.png">
 			
-					<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/my_uploads.ico"/>
-				</a>
-			</div>
-		
-			<div class="flotar_izquierda espacios_3">
-	  
-				<a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
-					<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="icono espacio_izquierda" src="'.$ruta.'img/fav_2.ico"/>
-				</a>
-				
-			</div>
-		
-			<div class="flotar_izquierda espacios_3">
-	  
-				<a title="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
-					<img alt="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" class="icono" src="'.$ruta.'img/coment.png"/>
-				</a>
-				
-			</div>
-		
-			<div class="flotar_izquierda espacios_3">
+					</a>
+					
+				</div>
+
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
 			
-				<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
-					<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="icono espacio_izquierda" src="'.$ruta.'img/search.png"/>
-				</a>
-				
-			</div>
+					<a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'upload_images/index.php">
 
-		<div class="flotar_izquierda">
+						<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="panel_icono espacio_izquierda" src="'.$ruta.'img/upload.png"/>
+					
+					</a>
+			
+				</div>
 
-			<hr/>
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
 		
-	  		<a  title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" >
-				<img alt="'.ver_dato('logout', $GLOBALS['idioma']).'"  class="icono" src="'.$ruta.'img/logout.png"/>
-			</a>
+					<a title="'.ver_dato('img_upload', $GLOBALS['idioma']).'" href="'.$ruta.'my_uploads.php">
+			
+						<img alt="'.ver_dato('img_upload', $GLOBALS['idioma']).'" class="panel_icono espacio_izquierda" src="'.$ruta.'img/my_uploads.ico"/>
+					
+					</a>
+					
+				</div>
+		
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
+		
+					<a title="'.ver_dato('img_fav', $GLOBALS['idioma']).'" href="'.$ruta.'favoritos.php">
+						<img alt="'.ver_dato('img_fav', $GLOBALS['idioma']).'" class="panel_icono espacio_izquierda" src="'.$ruta.'img/fav_2.ico"/>
+					</a>
+					
+				</div>
+			
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
+		
+					<a title="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" href="'.$ruta.'comments.php">
+						<img alt="' . ver_dato('comentarios', $GLOBALS['idioma']) . '" class="panel_icono espacio_izquierda" src="'.$ruta.'img/coment.png"/>
+					</a>
+					
+				</div>
+			
+				<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
+				
+					<a title="' . ver_dato('search', $GLOBALS['idioma']) . '" href="'.$ruta.'search.php">
+						<img alt="' . ver_dato('search', $GLOBALS['idioma']) . '" class="panel_icono espacio_izquierda" src="'.$ruta.'img/search.png"/>
+					</a>
+					
+				</div>
 
-		</div>
+				<div style="clear:both;" class="flotar_izquierda espacios_3">
+				
+					<hr class="separador" />
+				
+						<a  title="'.ver_dato('logout', $GLOBALS['idioma']).'" href="'.$ruta.'logout.php" >
+							<img alt="'.ver_dato('logout', $GLOBALS['idioma']).'"  class="panel_icono" src="'.$ruta.'img/logout.png"/>
+						</a>
+		
+				</div>
 
-	</div>';
+			</div>';
 
 	}
 
@@ -2966,10 +3079,11 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 	
 			print '<div style="float:left;width:100%;"><hr class="separador"/>
 
-				<a title="'.ver_dato('img_random', $GLOBALS['idioma']).'" >
+						<a title="'.ver_dato('img_random', $GLOBALS['idioma']).'" >
 
-					<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
-				</a>
+							<img alt="aleatorio" style="height:5em;width:5em;" src="'.$ruta.'img/aleatorio.png"/>
+										
+						</a>
 
 			</div>';
 
@@ -2979,10 +3093,16 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 
 			print '
 			<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;">
-			<a title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" href="'.$ruta.'details.php?image_id='.$image_id.'">
-			<img style="height:7.5em;width:7.5em;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" /></a>
+			
+				<a title="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" href="'.$ruta.'details.php?image_id='.$image_id.'">
+			
+					<img style="height:7.5em;width:7.5em;"  src="'.$ruta.'data/media/'.substr($imagen_aleatoria,0,strpos($imagen_aleatoria,"-")).'/'.$image_thumb.'" alt="'.substr($imagen_aleatoria,strpos($imagen_aleatoria,"#")+1).'" />
+					
+				</a>
 
-			<hr class="separador" /></div>';
+				<hr class="separador" />
+			
+			</div>';
 
 		}
 		
@@ -2991,36 +3111,46 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 	$redes_sociales='';
 	
 	if(gettype($GLOBALS['facebook'])=='string' && $GLOBALS['facebook']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="facebook" target="_blank" href="https://www.facebook.com/'.$GLOBALS['facebook'].'"><img alt="Facebook" class="social" src="'.$ruta.'img/Social/facebook.png"/></a></div>';  
 	}
 	
 	if(gettype($GLOBALS['instagram'])=='string' && $GLOBALS['instagram']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"> <a  title="instagram" target="_blank" href="https://www.instagram.com/'.$GLOBALS['instagram'].'/"><img alt="Instagram" class="social" src="'.$ruta.'img/Social/instagram.png"/></a></div>';  
 	}
 	
 	if(gettype($GLOBALS['twitter'])=='string' && $GLOBALS['twitter']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="twitter" target="_blank" href="https://twitter.com/'.$GLOBALS['twitter'].'"><img alt="Twitter" class="social" src="'.$ruta.'img/Social/twitter.png"/></a></div>';  
 	}
 	
 	if(gettype($GLOBALS['youtube'])=='string' && $GLOBALS['youtube']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="youtube" target="_blank" href="https://www.youtube.com/user/'.$GLOBALS['youtube'].'"><img alt="Youtube" class="social" src="'.$ruta.'img/Social/youtube.png"/></a></div>';   
 	}
 	
 	if(gettype($GLOBALS['debianart'])=='string' && $GLOBALS['debianart']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a  title="debianart" target="_blank" href="https://www.deviantart.com/'.$GLOBALS['debianart'].'/gallery/?catpath=scraps"><img alt="Debianart" class="social" src="'.$ruta.'img/Social/debianart.png"/></a></div>';   
 	}
 	
 	if(gettype($GLOBALS['slideshare'])=='string' && $GLOBALS['slideshare']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;"><a title="slideshare" target="_blank" href="https://es.slideshare.net/'.$GLOBALS['slideshare'].'"><img class="social" alt="Slideshare" src="'.$ruta.'img/Social/slideshare.png"/></a></div>';  
 	}
 	
 	if(gettype($GLOBALS['github'])=='string' && $GLOBALS['github']!=""){
+		
 		$redes_sociales.='<div style="float:left;padding-top:20px;margin:auto;padding-left:20px;padding-bottom:20px;"><a title="github" target="_blank" href="https://github.com/'.$GLOBALS['github'].'"><img class="social" alt="Github" src="'.$ruta.'img/Social/github.png"/></a></div>';    
 	}
 	
 	if(!empty($redes_sociales)){
+		
 		print '<div style="float:left;-moz-transform: scale(1.3,1.3);margin-top:35px;">';
+		
 		print $redes_sociales.'</div>';
+		
 	}        	     
 	
 	if(isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>=0 ){
@@ -3034,6 +3164,7 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 		$consulta = $mysqli->query('SELECT user_id FROM '.$GLOBALS['table_prefix'].'users WHERE user_level=9');
 		
 		while ($administradores = $consulta->fetch_row()){
+			
 			$administrators[]=$administradores[0];
 		}
 		
@@ -3041,15 +3172,15 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 		
 		if(in_array($_COOKIE['4images_userid'], $administrators)){
 	
-		$admin='
-				<div style="float:left;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php">
-					<img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png" / >
-				</a><hr/></div>
-			';
-
-		print '<div class="flotar_izquierda" id="panel_admin">
-  
-		<hr/>'.$admin.'</div>';
+			$admin='
+					<div style="float:left;"><a title="'.ver_dato('adm', $GLOBALS['idioma']).'" href="'.$ruta.'admin/index.php">
+						<img alt="'.ver_dato('adm', $GLOBALS['idioma']).'" class="icono" src="'.$ruta.'img/admin.png" / >
+					</a></div>
+				';
+	
+			print '<div class="flotar_izquierda" id="panel_admin">
+	
+			<hr class="separador"/>'.$admin.'</div>';
 
 		}
 			
@@ -3058,15 +3189,19 @@ function menu_lateral($ruta = "",$registro=false,$verImagenAleatoria=false){
 	if(file_exists($ruta.'forum')){
 			
 		print '<div class="flotar_izquierda">	
+		
 			<a title="foro" target="_blank" href="'.$ruta.'forum">
 				<img  class="icono espacio_arriba_2" src="'.$ruta.'img/forum.png" alt="Ir al foro" />
 			</a>
+			
 		</div>';	
 		
 	}
 	
-	print '<div style="float:left;padding-bottom:40px;"> 
-	<hr/>
+	print '<div style="clear:both;float:left;padding-bottom:40px;"> 
+
+				<hr class="separador"/>
+
 				<a title="rss" href="'.$ruta.'rss.php">
 					<img style="margin-top:20px;" class="icono" src="'.$ruta.'img/rss.png" alt="RSS Feed: '.$GLOBALS['site_name'].'" />
 				</a>
@@ -3145,12 +3280,16 @@ function random_string($length, $letters_only = false) {
     switch (mt_rand(1, 2)) {
 		
       case 1:
-        $str .= chr(mt_rand(65, 90));
-        break;
+      
+		$str .= chr(mt_rand(65, 90));
+        
+       break;
 		
       case 2:
-        $str .= chr(mt_rand(97, 122));
-        break;
+      
+		$str .= chr(mt_rand(97, 122));
+        
+       break;
 		
     }
 	
@@ -3180,6 +3319,7 @@ function poner_menu($ruta = ""){
 	mysqli_close($GLOBALS['conexion']);
 
 	if(!empty($GLOBALS['idioma']) && $GLOBALS['idioma']!='selection'){
+		
 		$idioma=ver_dato('cambiar_idioma', $GLOBALS['idioma']);
 		
 	}
@@ -3235,14 +3375,17 @@ function poner_menu($ruta = ""){
 	
 	if(file_exists($ruta.'config.php')){
 
-
 			print '<aside class="transparente flotar_derecha" id="menu_categorias">
-			<div class="transparente">
-				<div class="transparente">
-					<div id="dl-menu" class="dl-menuwrapper transparente flotar_derecha">
-						<button class="dl-trigger"></button>
-						<ul id="menu_aside" class="dl-menu " style="background-color: rgba(255, 255, 255, 0);" >
-						';	
+			
+						<div class="transparente">
+						
+							<div class="transparente">
+				
+								<div id="dl-menu" class="dl-menuwrapper transparente flotar_derecha">
+						
+									<button class="dl-trigger"></button>
+						
+										<ul id="menu_aside" class="dl-menu " style="background-color: rgba(255, 255, 255, 0);" >';	
 	
 			$id_categorias=array();
 
@@ -3296,19 +3439,24 @@ function poner_menu($ruta = ""){
 
 				print '
 				<li style="padding-top:20px;background-color: rgba(255, 255, 255, 0);" class="menu_categorias menu ">
-				<a style="color:#ffffff;background-color:#4952C2;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a></li>';
+					<a style="color:#ffffff;background-color:#4952C2;font-size:0.7em;font-weight:bold;" href="'.$ruta.'categories.php?cat_id='.$fila[1].'">'.$fila[0].'</a>
+				</li>';
 			}
 		
 			print '			</ul>
-						</div>
-					</div>
-				</div>
-			</aside>';
 			
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</aside>';
 		
 		}
 
 		mysqli_close($GLOBALS['conexion']);
+		
 	}
 
 }
@@ -3368,6 +3516,7 @@ function comprobar_si_es_valido($cadena,array $lista_negra){
 		}
 		
 		else{
+			
 			if($numero>=0){
 				
 				$valido=false;	
@@ -3403,6 +3552,7 @@ function png_a_jpg($imagen) {
        unlink($imagen);
 	
 	}
+	
 }
 
 function redimensionarJPG($max_ancho, $max_alto, $ruta) {

@@ -7,7 +7,7 @@ var estrellas=0;
 
 function calificar(){
 	
-	if(num!=estrellas){
+	if( (num==0 && estrellas==0) || num!=estrellas){
 	
 		fetch(host+'/rater.php?&id='+num).catch(function(error) {
 			//
@@ -18,27 +18,45 @@ function calificar(){
 		})
 		
 		.then(function(result) {
+			
 			document.getElementById("rate-string").textContent = '';
+			document.getElementById("media").textContent = result;
+
 		})
 		
-		document.getElementById('calificacion').textContent= num;
-	
+		if(num>0){
+			document.getElementById('calificacion').textContent= num;
+		}
+		
+		else{
+			document.getElementById('calificacion').textContent= '';
+		}
+		
 	}
 	
 }
 
 function pintar(numero){
 	
+	for(var i =1;i<=5;i++){
+		document.getElementsByClassName('r'+i)[0].classList.remove("fullstar");
+	}
+	
 	if(numero>0){
 	
 		for(var i=1;i<=numero;i++){
 	
-		document.getElementsByClassName('r'+i)[0].classList.add("fullstar");
+			document.getElementsByClassName('r'+i)[0].classList.add("fullstar");
 	
 		}
 	
 	}
 	
+	else{
+			num=0;
+			estrellas=0;
+	}
+		
 }
 
 function limpiar_estrellas(){
