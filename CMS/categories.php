@@ -10,25 +10,11 @@ include_once('config.php');
 
 include('includes/funciones.php');
 
-$logueado=logueado();
-
-if(!acceso($_GET['cat_id'],$logueado) || !$logueado && isset($GLOBALS['ver_categorias']) && !$GLOBALS['ver_categorias']){
-	redireccionar('register.php');
-}
-
-if(!in_array($_GET['cat_id'], num_categorias())||isset($_GET['page']) || preg_match("/\bhttp\b/i",$_GET['cat_id'])
-|| preg_match("/\bwww\b/i",$_GET['cat_id'])
-|| strpos($_GET['pag'], "/")){
-	redireccionar('register.php');
-}
-
 track();
 
 if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria']) ){
 	
-	cabecera();
-		
-	if( !isset($_GET['cat_id'])&& isset($_SESSION['categoria'])){
+		if( !isset($_GET['cat_id'])&& isset($_SESSION['categoria'])){
 
 		$categoria=$_SESSION['categoria'];
 	}
@@ -45,6 +31,17 @@ if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria'])
 	
 	}
 		
+	$logueado=logueado();
+
+	$visibilidad=saber_visibilidad_categoria($categoria);
+	
+	if( (!$logueado && $visibilidad==2) || !in_array($categoria, num_categorias())||isset($_GET['page']) || preg_match("/\bhttp\b/i",)
+	|| preg_match("/\bwww\b/i",$_GET['cat_id']) || strpos($_GET['pag'], "/")){
+		redireccionar('register.php');
+	}
+		
+	cabecera("",false,true);
+				
 	poner_menu();
 	
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
@@ -63,22 +60,25 @@ if( isset($_GET['cat_id']) && $_GET['cat_id']>0 || isset($_SESSION['categoria'])
 		
 		print '<div style="margin:auto;padding-top:50px;"><h1>'.$fila[0].'</h1>';
 		
-	if($logueado){
-		print '<a style="float:right;padding-bottom:20px;" href="upload_images/index.php?cat='.$categoria.'"><img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/></a>';
-	}
-	
-	else{
-		registrar();
-	}
-	
-	print '</div>';
-	
-		ver_categoria($categoria,"");
+		if($logueado){
+			
+			print '<a style="float:right;padding-bottom:20px;" href="upload_images/index.php?cat='.$categoria.'"><img alt="' . ver_dato('upload', $GLOBALS['idioma']) . '" class="icono" src="img/upload.png"/></a>';
+		}
 		
-	if(!$logueado){
-
-		print '<div style="float:left;">'.registrar().'</div>';
-	}
+		else{
+			
+			registrar();
+		}
+		
+		print '</div>';
+		
+			ver_categoria($categoria,"");
+			
+		if(!$logueado){
+	
+			print '<div style="float:left;">'.registrar().'</div>';
+		}
+		
 		restablecer_pass();
 	}
 	

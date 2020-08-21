@@ -1,5 +1,5 @@
 
-function redireciconar_accion(id,accion){
+function redireccionar_accion(id,accion){
 	location.href="action.php?image_id="+id+"&del="+accion;
 }
 
@@ -11,9 +11,6 @@ function accion(img_id,id,pagina){
       type: 'get',
       dataType : "text",
       async: true,
-      error: function(X){
-            alert("Error");            
-        },
       success: function(respuesta){ 
 	  	  
       location.href="details.php?image_id="+id;

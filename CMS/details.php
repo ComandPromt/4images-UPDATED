@@ -62,13 +62,12 @@ if(isset($_POST['fmr_delete_comment'])){
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 	
-		$consulta = mysqli_query($GLOBALS['conexion'],
-                'DELETE FROM ' . $GLOBALS['table_prefix'] .
-                "comments WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['del_comment']."'");
+		$consulta = mysqli_query($GLOBALS['conexion'],'DELETE FROM ' . $GLOBALS['table_prefix'] .
+		"comments WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid'].
+		"' AND comment_id='".$_SESSION['del_comment']."'");
 
-		mysqli_query($GLOBALS['conexion'],
-            'UPDATE '.$GLOBALS['table_prefix'] .
-            "SET user_comments= user_comments-1 WHERE user_id='".$_COOKIE['4images_userid']."'");
+		mysqli_query($GLOBALS['conexion'],'UPDATE '.$GLOBALS['table_prefix'] .
+		"SET user_comments= user_comments-1 WHERE user_id='".$_COOKIE['4images_userid']."'");
 			
 		mysqli_close($GLOBALS['conexion']);
 				
@@ -79,22 +78,62 @@ if(isset($_POST['fmr_delete_comment'])){
 
 if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_POST['edit_comment']) 
 	&& !empty($_POST['edit_comment_asunto']) && !empty($_POST['edit_comment'])){
-		
-		$lista_negra = obtener_lista_negra();
 
-        if (comprobar_si_es_valido($_POST['edit_comment_asunto'], $lista_negra)
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+			
+		$consulta = mysqli_query($GLOBALS['conexion'],'SELECT comment_headline,comment_text FROM ' . $GLOBALS['table_prefix'] ."comments WHERE image_id='".$_GET['image_id']."'");
+		
+		$resultado = mysqli_fetch_row($consulta);
+		
+		mysqli_close($GLOBALS['conexion']);
+
+        if ( ($resultado[0]!=$_POST['edit_comment_asunto'] || $resultado[1]!= $_POST['edit_comment'] ) &&
+			comprobar_si_es_valido($_POST['edit_comment_asunto'], $lista_negra)
             && comprobar_si_es_valido($_POST['edit_comment'], $lista_negra)) {
 	
-			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-			$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-	
-			$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE ' . $GLOBALS['table_prefix'] .
-                "comments SET comment_headline='" . $_POST['edit_comment_asunto'] . "',comment_text='" . $_POST['edit_comment'] . "'
-				WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['edit_comment']."'");
+				$usuarios=sacar_usuarios($_POST['edit_comment']);
+			
+				$size_usuarios=count($usuarios);
 
+				$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+				$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+			
+				$consulta = mysqli_query($GLOBALS['conexion'],'UPDATE ' . $GLOBALS['table_prefix'] .
+                "comments SET comment_headline='" . $_POST['edit_comment_asunto'] . "',comment_text='" . $_POST['edit_comment'] . "'
+					WHERE image_id='" . $_GET['image_id'] . "' AND user_id='".$_COOKIE['4images_userid']."' AND comment_id='".$_SESSION['edit_comment']."'");
+
+					for($i=0;$i<$size_usuarios;$i++){
+
+						$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_id,nacionalidad FROM '. $GLOBALS['table_prefix'] .
+						"users WHERE user_name='". $usuarios[$i]."'");
+	
+						$user_id = mysqli_fetch_row($consulta);
+	
+						if((int)$user_id[0]>0){
+						
+							$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
+							"users WHERE user_id='". $_COOKIE['4images_userid']."'");
+							
+							$remitente = mysqli_fetch_row($consulta2);
+							
+							mysqli_query($GLOBALS['conexion'],
+							"INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
+			
+							VALUES( '0','".$user_id[0]."','".ucwords($remitente[0]).' '.
+							ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
+							"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
+			
+						}
+				
+					}
+				
 			mysqli_close($GLOBALS['conexion']);
+			
+			print '<script>location.href="action.php?image_id=\''.$_GET['image_id'].'\'&del=\'false\'";</script>';
 
 		}
+	
 }
 
 if (isset($_GET['image_id'])) {
@@ -152,17 +191,17 @@ if (isset($_GET['image_id'])) {
         if (comprobar_si_es_valido($_POST['mensaje'], $lista_negra)
             && comprobar_si_es_valido($_POST['asunto'], $lista_negra)) {
 
-			$usuario="";
-
-			if(strpos($_POST['mensaje'],"[user]")>=0 && strpos($_POST['mensaje'],"[/user]")>0){
-				
-				$usuario=substr($_POST['mensaje'],strpos($_POST['mensaje'],"[user]")+6,strpos($_POST['mensaje'],"[/user]")-6);
+			$usuarios=sacar_usuarios($_POST['mensaje']);
 			
+			$size_usuarios=count($usuarios);
+	
+			if($size_usuarios>0){
+							
 				$_POST['mensaje']=str_replace("[user]","@",$_POST['mensaje']);
 		
 				$_POST['mensaje']=str_replace("[/user]","",$_POST['mensaje']);
-	
-			}		
+				
+			}
 
             $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
             $GLOBALS['db_password'], $GLOBALS['db_name'])
@@ -178,29 +217,33 @@ if (isset($_GET['image_id'])) {
             'UPDATE '.$GLOBALS['table_prefix'] .
             "SET user_comments= user_comments+1 WHERE user_id='".$_COOKIE['4images_userid']."'");
 
-			if($logueado && $usuario!=""){
+			if($logueado){
 				
-				$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_id,nacionalidad FROM '. $GLOBALS['table_prefix'] .
-				"users WHERE user_name='". $usuario."'");
-				
-				$user_id = mysqli_fetch_row($consulta);
+				for($i=0;$i<$size_usuarios;$i++){
+					
+					$consulta=mysqli_query($GLOBALS['conexion'],'SELECT user_id,nacionalidad FROM '. $GLOBALS['table_prefix'] .
+					"users WHERE user_name='". $usuarios[$i]."'");
+
+					$user_id = mysqli_fetch_row($consulta);
+							
+					if((int)$user_id[0]>0){
+					
+						$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
+						"users WHERE user_id='". $_COOKIE['4images_userid']."'");
 						
-				if((int)$user_id[0]>0){
+						$remitente = mysqli_fetch_row($consulta2);
+						
+						mysqli_query($GLOBALS['conexion'],
+						"INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
+		
+						VALUES( '0','".$user_id[0]."','".ucwords($remitente[0]).' '.
+						ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
+						"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
+		
+					}
 				
-					$consulta2=mysqli_query($GLOBALS['conexion'],'SELECT user_name FROM '. $GLOBALS['table_prefix'] .
-					"users WHERE user_id='". $_COOKIE['4images_userid']."'");
-					
-					$remitente = mysqli_fetch_row($consulta2);
-					
-					mysqli_query($GLOBALS['conexion'],
-					"INSERT INTO mensajes(remitente,destinatario,asunto,mensaje,leido,oculto)
-	
-					VALUES( '".$_COOKIE['4images_userid']."','".$user_id[0]."','".ucwords($remitente[0]).' '.
-					ver_dato('mencion', $user_id[1])."','<a href=\"../details.php?image_id=".$_GET['image_id'].
-					"\"><img class=\"icono\" src=\"../img/view.png\" /></a>','0','0')");
-	
 				}
-				
+								
 			}
 
             mysqli_close($GLOBALS['conexion']);
@@ -212,13 +255,13 @@ if (isset($_GET['image_id'])) {
 
     $_SESSION['pagina'] = "details.php?image_id=" . $_GET['image_id'];
 
-    cabecera();
+    cabecera("",false,true);
 
     $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_password'], $GLOBALS['db_name'])
     or die("No se pudo conectar a la base de datos");
 
     $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_id FROM ' .
-        $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
+    $GLOBALS['table_prefix'] . "images ORDER BY image_id DESC LIMIT 1");
 
     $fila = mysqli_fetch_row($consulta);
 
@@ -410,43 +453,42 @@ if (isset($_GET['image_id'])) {
 					
 					<span id="descargas" style="font-size:14px;color:blue;padding-right:20px;">' . $fila[1] . '</span>';
 
-        $consulta = mysqli_query($GLOBALS['conexion'], '
+       $consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT user_invisible,user_name FROM ' . $GLOBALS['table_prefix'] . 'users
 		WHERE user_id=(SELECT user_id FROM ' . $GLOBALS['table_prefix'] . 'images WHERE image_id=' . $_GET['image_id'] . ')');
 
-        $fila = mysqli_fetch_row($consulta);
+       $fila = mysqli_fetch_row($consulta);
+		
+		if ($fila[0] == 0) {
 
-        if ($fila[0] == 0) {
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM ' . $GLOBALS['table_prefix'] . "users WHERE user_name='" . $fila[1] . "'");
+		
+			$avatar = mysqli_fetch_row($consulta);
 			
-            $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT avatar FROM ' . $GLOBALS['table_prefix'] . "users WHERE user_name='" . $fila[1] . "'");
-
-            $avatar = mysqli_fetch_row($consulta);
-
-            $avatar = trim($avatar[0]);
-
-            if ($avatar != 'nofoto.jpg' && !empty($avatar)) {
-
-                $imagen_usuario = 'avatars/' . $avatar;
-            }
-            
-            else {
-                $imagen_usuario = 'img/nofoto.png';
-            }
+			$avatar = trim($avatar[0]);
+		
+			if ($avatar != 'nofoto.jpg' && !empty($avatar)) {
+				$imagen_usuario = 'avatars/' . $avatar;
+			}
+           
+			else {
+				$imagen_usuario = 'img/nofoto.png';
+           }
+		
+           print '<a title="'.$fila[1]. '" >
+           
+					<img alt="usuario" class="imgRedonda" style="margin-top:20px;padding-left:10px;width:40px;height:40px;" 
+					src="' . $imagen_usuario . '"/>
 			
-            print '<a title="'.$fila[1]. '" >
-            
-						<img alt="usuario" class="imgRedonda" style="margin-top:20px;padding-left:10px;width:40px;height:40px;" 
-						src="' . $imagen_usuario . '"/>
-				
-				</a>';
-			
-        }
-
-        $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_media_file FROM ' . $GLOBALS['table_prefix'] . "images WHERE image_id='" . $_GET['image_id'] . "'");
-
-        $result = mysqli_fetch_row($consulta);
-         
-        $imagen=$result[0];  
+			</a>';
+		
+       }
+		
+       $consulta = mysqli_query($GLOBALS['conexion'], 'SELECT image_media_file FROM ' . $GLOBALS['table_prefix'] . "images WHERE image_id='" . $_GET['image_id'] . "'");
+		
+       $result = mysqli_fetch_row($consulta);
+        
+       $imagen=$result[0];  
           
 		mysqli_close($GLOBALS['conexion']);
 
@@ -478,45 +520,45 @@ if (isset($_GET['image_id'])) {
 			</div>';
 
 		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-        $GLOBALS['db_password'], $GLOBALS['db_name'])
+		$GLOBALS['db_password'], $GLOBALS['db_name'])
 		or die("No se pudo conectar a la base de datos");
 
-			if(isset($_COOKIE['4images_userid']) && !empty($_COOKIE['4images_userid']) 
-				&& $_COOKIE['4images_userid'] > 0) {
-	
-				$icono = "fav.ico";
-	
-				$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) FROM ' .
-				$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id=" . $_GET['image_id'] . "
-				AND user_id=" . $_COOKIE['4images_userid']);
-	
-				$fila = mysqli_fetch_row($consulta);
-	
-				if ($fila[0] == 1) {
-					$icono = "fav_2.ico";
-				}
-	
-				if($icono=="fav_2.ico"){
-					$titulo="img_fav";
-				}
-				
-				else{
-					$titulo="like";
-				}
-					
-				print '<div style="float:left;">
-						<a title="'.ver_dato($titulo, $GLOBALS['idioma']). '" id="frmajax" 
-						onclick="favorito(' . $_GET['image_id'] . ')">
-						
-							<img style="margin-left:10px;" id="' . $_GET['image_id'] . '" 
-							alt="favorite" class="iconos" src="img/' . $icono . '" />
-						</a></div>';
-	
+		if(isset($_COOKIE['4images_userid']) && !empty($_COOKIE['4images_userid']) 
+			&& $_COOKIE['4images_userid'] > 0) {
+		
+			$icono = "fav.ico";
+		
+			$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT COUNT(lightbox_image_id) FROM ' .
+			$GLOBALS['table_prefix'] . "lightboxes WHERE lightbox_image_id=" . $_GET['image_id'] . "
+			AND user_id=" . $_COOKIE['4images_userid']);
+		
+			$fila = mysqli_fetch_row($consulta);
+		
+			if ($fila[0] == 1) {
+				$icono = "fav_2.ico";
+			}
+		
+			if($icono=="fav_2.ico"){
+				$titulo="img_fav";
 			}
 			
-			mysqli_close($GLOBALS['conexion']);
+			else{
+				$titulo="like";
+			}
+				
+			print '<div style="float:left;">
+					<a title="'.ver_dato($titulo, $GLOBALS['idioma']). '" id="frmajax" 
+					onclick="favorito(' . $_GET['image_id'] . ')">
+					
+						<img style="margin-left:10px;" id="' . $_GET['image_id'] . '" 
+						alt="favorite" class="iconos" src="img/' . $icono . '" />
+					</a></div>';
+		
+		}
+		
+		mysqli_close($GLOBALS['conexion']);
 			
-			print '</div>';
+		print '</div>';
 	}
 
 
@@ -1207,9 +1249,9 @@ if (isset($_GET['image_id'])) {
 			
 								<img src="img/Recycle_Bin_Full.png" class="icono"/>
 
-									<button onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<button  type="button" class="close" data-dismiss="modal" aria-label="Close">
 										
-										<span onclick="redireciconar_accion('.$_GET['image_id'].',false);" aria-hidden="false">×</span>
+										<span aria-hidden="false">×</span>
 
 									</button>
 									
@@ -1247,9 +1289,9 @@ if (isset($_GET['image_id'])) {
 			
 						<img style="padding-right:10px;" src="img/edit.png" class="icono" />
 
-						<button  onclick="redireciconar_accion('.$_GET['image_id'].',false);" type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<button   type="button" class="close" data-dismiss="modal" aria-label="Close">
 			
-							<span onclick="redireciconar_accion('.$_GET['image_id'].',true);" aria-hidden="true">&times;</span>
+							<span aria-hidden="true">&times;</span>
 
 						</button>
 			

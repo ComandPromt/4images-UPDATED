@@ -2,6 +2,58 @@
 
 date_default_timezone_set('Europe/Madrid');
 
+function sacar_usuarios($cadena){
+	
+	$usuarios=array();
+	
+	$primer_usuario=substr($cadena, strpos($cadena,"[user]")+6, strpos($cadena,"[/user]") );
+	
+	$primer_usuario=substr($cadena,strpos($cadena,"[user]"),strpos($cadena,"[/user]"));
+	
+	$primer_usuario=str_replace("[user]","",$primer_usuario);
+	
+	$primer_usuario=str_replace("[/user][","",$primer_usuario);
+	
+	$primer_usuario=str_replace("[/user]","",$primer_usuario);
+	
+	$primer_usuario=str_replace("[/user","",$primer_usuario);
+	
+	$primer_usuario=str_replace("[/","",$primer_usuario);
+	
+	$usuarios[]= $primer_usuario;
+	
+	$pos=strpos($cadena,"[/user]");
+	
+	$primera_pos=$pos;
+	
+	while($pos>0){
+			
+		$cadena=substr($cadena,$pos+7,strlen($cadena));
+	
+		$pos=(int)strpos($cadena,"[/user]");
+	
+		if($pos>0){
+			
+			$usuario=substr($cadena, strpos($cadena,"[user]")+6, $pos-6);
+			
+			$buscar=strpos($usuario,"[");
+			
+			if($buscar>0 && $buscar!=strlen($usuario)-1){
+					$usuario=substr($usuario,0,strpos($usuario,"[/user]"));
+				}
+		
+			$usuario=str_replace("[","",$usuario);
+	
+			$usuarios[]= $usuario;
+			
+		}
+	
+	}
+
+	return $usuarios;
+
+}
+
 function descargar(){
 	
 	$comprobacion=count($_SESSION['array_imagenes']);
@@ -73,32 +125,6 @@ function acceso_imagen($imagen,$logueado){
 		}
 	
 		mysqli_close($GLOBALS['conexion']);
-		
-	}
-		
-	return $respuesta;
-	
-}
-
-function acceso($categoria,$logueado){
-	
-	$respuesta=false;
-	
-	if(!empty($categoria) && $categoria!=null){
-		
-		$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-		$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
-
-		$cat_consulta = mysqli_query($GLOBALS['conexion'],
-		'SELECT visibilidad FROM '.$GLOBALS['table_prefix']."categories WHERE cat_id='".$categoria."'");
-		 
-		$cat = mysqli_fetch_row($cat_consulta);
-
-		if($cat[0]==1 || ($logueado && $cat[0]==2)){
-			$respuesta=true;
-		}
-	
-		mysqli_close();
 		
 	}
 		
@@ -250,6 +276,22 @@ function saber_visibilidad_comentario($imagen){
 	$consulta = mysqli_query($GLOBALS['conexion'], '
 		SELECT image_allow_comments FROM '.$GLOBALS['table_prefix']."images
 		WHERE image_id='".$imagen."'");
+			
+	$resultado = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return $resultado[0];
+	
+}
+
+function saber_visibilidad_categoria($cat){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT visibilidad FROM '.$GLOBALS['table_prefix']."categories
+		WHERE cat_id='".$cat."'");
 			
 	$resultado = mysqli_fetch_row($consulta);
 	
@@ -1103,6 +1145,7 @@ function logueado($ruta=""){
 		$resultado = $consulta->fetch_row();
 		
 		if($resultado[0]==$_COOKIE['pass']){
+
 			$respuesta=true;
 		}
 		
@@ -1491,10 +1534,10 @@ function is_ani($filename) {
 }
 
 function redireccionar($ruta){
-	
-	 echo '<script>location.href="'.$ruta.'";</script>';
+
+	echo '<script>location.href="'.$ruta.'";</script>';
 	 
-	 header('Location: '.$ruta);
+	header('Location: '.$ruta);
 	 
 }
 
