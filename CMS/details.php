@@ -79,18 +79,26 @@ if(isset($_POST['fmr_delete_comment'])){
 if(isset($_POST['comentar']) && isset($_POST['edit_comment_asunto']) && isset($_POST['edit_comment']) 
 	&& !empty($_POST['edit_comment_asunto']) && !empty($_POST['edit_comment'])){
 
+    $lista_negra = obtener_lista_negra();
+        
 	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
 	$GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
 			
-		$consulta = mysqli_query($GLOBALS['conexion'],'SELECT comment_headline,comment_text FROM ' . $GLOBALS['table_prefix'] ."comments WHERE image_id='".$_GET['image_id']."'");
+	$consulta = mysqli_query($GLOBALS['conexion'],'SELECT comment_headline,comment_text FROM ' . $GLOBALS['table_prefix'] ."comments WHERE image_id='".$_GET['image_id']."'");
 		
-		$resultado = mysqli_fetch_row($consulta);
+	$resultado = mysqli_fetch_row($consulta);
 		
-		mysqli_close($GLOBALS['conexion']);
+	mysqli_close($GLOBALS['conexion']);
+	
+	$_POST['edit_comment_asunto']=trim($_POST['edit_comment_asunto']);
+	
+	$_POST['edit_comment']=trim($_POST['edit_comment']);
+	
+	$_POST['edit_comment']= wordwrap($_POST['edit_comment'], 22, "<br/>" ,true);
 
-        if ( ($resultado[0]!=$_POST['edit_comment_asunto'] || $resultado[1]!= $_POST['edit_comment'] ) &&
-			comprobar_si_es_valido($_POST['edit_comment_asunto'], $lista_negra)
-            && comprobar_si_es_valido($_POST['edit_comment'], $lista_negra)) {
+    if ( ($resultado[0]!=$_POST['edit_comment_asunto'] || $resultado[1]!= $_POST['edit_comment'] ) &&
+		comprobar_si_es_valido($_POST['edit_comment_asunto'], $lista_negra)
+        && comprobar_si_es_valido($_POST['edit_comment'], $lista_negra)) {
 	
 				$usuarios=sacar_usuarios($_POST['edit_comment']);
 			
@@ -150,8 +158,7 @@ if (isset($_GET['image_id'])) {
 
 	mysqli_close($GLOBALS['conexion']);
 
-	if( !isset($_COOKIE['4images_userid']) || $visibilidad[0]==3 
-	&& $visibilidad[1]!=$_COOKIE['4images_userid'] || $visibilidad[0]==2 && !$logueado){
+	if( $visibilidad[0]==3 || $visibilidad[0]==2 && !$logueado){
 			redireccionar('index.php');
 	}
 
@@ -184,7 +191,15 @@ if (isset($_GET['image_id'])) {
 			}	
     }
 
-    if (isset($_POST['comentario']) && !empty($_POST['captcha']) && (trim(strtolower($_POST['captcha'])) == $_SESSION['captcha'])) {
+	if (isset($_POST['comentario']) && isset($_COOKIE['4images_userid']) && $_COOKIE['4images_userid']>0){
+	
+		$_POST['mensaje']=trim($_POST['mensaje']);
+		
+		$_POST['asunto']=trim($_POST['asunto']);
+
+		if(!empty($_POST['mensaje']) && !empty($_POST['asunto']) && 
+		strlen($_POST['mensaje'])>0 && strlen($_POST['asunto'])>0 &&
+		!empty($_POST['captcha']) && (trim(strtolower($_POST['captcha'])) == $_SESSION['captcha'])) {
 
         $lista_negra = obtener_lista_negra();
 
@@ -203,8 +218,10 @@ if (isset($_GET['image_id'])) {
 				
 			}
 
-            $GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
-            $GLOBALS['db_password'], $GLOBALS['db_name'])
+			$_POST['mensaje']= wordwrap($_POST['mensaje'], 22, "<br/>" ,true);
+
+			$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+			$GLOBALS['db_password'], $GLOBALS['db_name'])
             or die("No se pudo conectar a la base de datos");
 
             mysqli_query($GLOBALS['conexion'],
@@ -250,6 +267,8 @@ if (isset($_GET['image_id'])) {
         }
 
     }
+    
+}
 
     unset($_SESSION['captcha']);
 
@@ -445,9 +464,9 @@ if (isset($_GET['image_id'])) {
 					
 					<span style="font-size:14px;color:blue;padding-right:20px;">' . $fila[0] . '</span>
 		
-					<img alt="top images" style="height:30px;width:30px;"  src="img/top.png" />
+					<img alt="top images" style="height:30px;width:30px;" src="img/top.png" />
 					
-					<span id="media" style="font-size:14px;color:blue;padding-right:20px;">'.$media[0].'</span>
+					<span id="media" style="font-size:14px;color:blue;padding-right:20px;">'.(float)$media[0].'</span>
 				
 					<img alt="download" style="height:30px;width:30px;"  src="img/download.png"/>
 					
@@ -559,8 +578,8 @@ if (isset($_GET['image_id'])) {
 		mysqli_close($GLOBALS['conexion']);
 			
 		print '</div>';
+		
 	}
-
 
 	$visibilidad_comentario=saber_visibilidad_comentario($_GET['image_id']);
 
@@ -1177,20 +1196,26 @@ if (isset($_GET['image_id'])) {
 				
 				</div>
 
-				<div id="contenido" style="float:left;margin-left:-85px;height:500px;
+				<div id="contenido" style="float:left;margin-left:-60px;
 				
-				margin-top:30px;border-style: none!important;width:120%;"  >
-				
-					<table style="margin:auto;text-align:center;padding-right:20px;" class="table table-responsive-xs">
+				margin-top:20px;border-style: none!important;width:115%;"  >
+
+					<table class="table table-responsive-xs" style="margin:auto;text-align:center;padding-right:20px;margin-bottom:20px;" >
 					
 						<tr style="font-size:25px;">
 						
-							<th></th>
+							<th class="centrar" >'.ver_dato('asunto', $GLOBALS['idioma']).'</th>
 							
-							<th></th>
+							<th class="centrar" >'.ver_dato('comment',$GLOBALS['idioma']).'</th>
 							
 						</tr>';
 
+	            $query_user_level = mysqli_query($GLOBALS['conexion'], '
+				SELECT user_level FROM ' . $GLOBALS['table_prefix'] . "users
+				WHERE user_id='" . $_COOKIE['4images_userid'] . "'");
+
+               $user_level = mysqli_fetch_row($query_user_level);
+	
                 $consulta = mysqli_query($GLOBALS['conexion'], '
 				SELECT comment_headline,comment_text,visible,user_id,comment_id FROM ' . $GLOBALS['table_prefix'] . "comments
 				WHERE image_id='" . $_GET['image_id'] . "' order by comment_id desc");
@@ -1209,7 +1234,7 @@ if (isset($_GET['image_id'])) {
 							
 							<td style="font-size:25px;">' . $fila[1];
 							
-							if($fila[3]==$_COOKIE['4images_userid']){
+							if($fila[3]==$_COOKIE['4images_userid'] || $user_level[0]==6 || $user_level[0]==9){
 								
 								print '
 								<a onclick="accion('.$fila[4].",".$_GET['image_id'].',\'action.php\');" style="padding-left:10px;">
@@ -1229,7 +1254,7 @@ if (isset($_GET['image_id'])) {
 						</tr>
 						
 						<tr>
-							<td colspan="3"><hr class="comentario" /></td>
+							<td colspan="3"></td>
 						</tr>
 						';
 					}

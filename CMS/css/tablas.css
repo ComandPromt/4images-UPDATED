@@ -1,6 +1,9 @@
 	table{
 		width: 450px;
+		border: solid 1px #7E7C7C;
+      	border-collapse: collapse;
 	}
+		
 	table th{
 		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e5799+0,2989d8+50,7db9e8+100 */
 background: rgb(30,87,153); /* Old browsers */
@@ -39,12 +42,13 @@ height: 30px;
 		 text-align: center;
 
       }
-      table{
-      	border: solid 1px #7E7C7C;
-      	border-collapse: collapse;
-      }
+
 td , th{
       	border: solid 1px #7E7C7C;
       	padding: 2px;
       	text-align: center;
       }
+
+	tr:nth-child(even) {
+  background-color: blue;
+}

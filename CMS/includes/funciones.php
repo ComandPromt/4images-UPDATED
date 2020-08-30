@@ -2,6 +2,23 @@
 
 date_default_timezone_set('Europe/Madrid');
 
+function saber_nivel($usuario){
+	
+	$GLOBALS['conexion'] = mysqli_connect($GLOBALS['db_host'], $GLOBALS['db_user'],
+    $GLOBALS['db_password'], $GLOBALS['db_name']) or die("No se pudo conectar a la base de datos");
+	
+	$consulta = mysqli_query($GLOBALS['conexion'], '
+		SELECT user_level FROM '.$GLOBALS['table_prefix']."users
+		WHERE user_id='".$usuario."'");
+			
+	$resultado = mysqli_fetch_row($consulta);
+	
+	mysqli_close($GLOBALS['conexion']);	
+	
+	return (int)$resultado[0];
+	
+}
+
 function sacar_usuarios($cadena){
 	
 	$usuarios=array();
@@ -1012,7 +1029,22 @@ function poner_menu_geo($ruta=""){
 					</a>
 				
 				</li>
+	';
 	
+	$user_level=saber_nivel($_COOKIE['4images_userid']);
+
+	if($user_level==9){
+			
+			print '
+			
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'index.php">
+						Gestionar usuarios
+					</a>
+				
+				</li>
+			
 				<li class="espacio_arriba_3">
 				
 					<a href="'.$ruta2.'index.php">
@@ -1027,9 +1059,11 @@ function poner_menu_geo($ruta=""){
 						<img class="icono" src="'.$ruta.'img/statics.png"/>
 					</a>
 				
-				</li>
+				</li>';
+				
+	}
 	
-				<li class="espacio_arriba_3">
+	print '			<li class="espacio_arriba_3">
 				
 					<a href="'.$ruta3.'imagenes_repetidas.php">
 						<img class="icono" src="'.$ruta.'img/repeat.gif"/>
@@ -1677,14 +1711,14 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 		
 		if(logueado()){
 			
-			$final_sentencia='JOIN '.$GLOBALS['table_prefix']."comments C ON C.image_id=I.image_id
-			WHERE image_active='1' OR C.user_id='".$_COOKIE['4images_userid']."'";
+$final_sentencia='JOIN '.$GLOBALS['table_prefix']."comments C ON C.image_id=I.image_id
+			WHERE image_active='1' AND C.visible>=0";
 		}
 		
 		else{
 			
 			$final_sentencia='JOIN '.$GLOBALS['table_prefix']."comments C ON C.image_id=I.image_id
-			WHERE image_active='1'";
+			WHERE image_active='1' AND C.visible=1";
 		}
 
 	}
@@ -1784,12 +1818,12 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 			
 			if($recuento>1){
 
-				for($x=0;$x<$recuento-1;$x++){
+				for($x=0;$x<=$recuento;$x++){
 					
 					$z=$y;
 					
 					if($y+3<count($nombres)){
-						
+				
 						$primera_reja=$nombres[++$y];
 						
 						$segunda_reja=$nombres[++$y];
@@ -1798,36 +1832,47 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 						
 					}
 					
-					else{
+					++$x;
+	
+					if($x==count($nombres)){
+												
+						$primera_reja=$nombres[++$y];
 						
-						if($y+2<count($nombres)){
-											
-							$primera_reja=$nombres[++$y];
-						
-							$segunda_reja=$nombres[++$y];
-							
-							$tercera_reja="";			
-						}
-						
-						else{
-
-							if($y+1<count($nombres)){
-		
-								$primera_reja=$nombres[++$y];
 							
 								$segunda_reja="";
 							
-								$tercera_reja="";				
-							}
-						
-						}
-						
+								$tercera_reja="";	
 					}
+				
+					--$x;
+					
+					$x+=2;
+	
+					if($x==count($nombres)){
+				
+						$primera_reja=$nombres[++$y];
+						
+							
+						$segunda_reja=$nombres[++$y];
+							
+						$tercera_reja="";	
+					}
+					
+					$x-=2;
 
 					$y=$z;
 					
 					$y+=3;
+
+					$reja=true;
+
+					if($x>=$recuento){
+						
+						$reja=false;
+					}
 					
+					if($x<$recuento){
+						
 					print '<tr style="border:none;">
 							<td style="border:none;font-size:1.8em;font-weight:bold;">'.$primera_reja.'</td>
 							<td style="font-size:1.8em;border:none;font-weight:bold;">'.$segunda_reja.'</td>
@@ -1835,35 +1880,41 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 						</tr>';
 							
 					print '<tr style="border:none;">';
+											
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 					
-					vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
-						
+					}
+							
 					++$x;
 						
-					if(!empty($imagenes[$x])){
-							
+					if($x<$recuento){
 						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
 					}
-						
+							
 					++$x;
-					
-					if(count($nombres)>2){
 						
-						if(!empty($imagenes[$x])){
-							vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
-						}
-					}	
-					
+					if($x<$recuento){
+						vercampo($nombres[$x],$categorias[$x],$imagenes[$x],$ids[$x],$mis_cargas,$ruta);
+					}
+
 					print '</tr>';
-	
-					print '<tr style="border:none;">
+					
+					if($reja){
+					
+						print '<tr style="border:none;">
 					
 							<td style="border:none;" colspan=3>
+							
 								<hr/>
+								
 							</td>
-					</tr>';
-											
+							
+						</tr>';
+						
+					}
+								
 				}
+				
 			}
 		
 			else{
@@ -1872,9 +1923,12 @@ $mis_cargas=false,$filtro=false,$ruta="",$orden=" ORDER BY image_id DESC LIMIT "
 				
 					vercampo($nombres[0],$categorias[0],$imagenes[0],$ids[0],$mis_cargas,$ruta,true);	
 				}
+				
 			}
 		
-			echo "</table></div>";
+			echo "</table>
+			
+			</div>";
 			
 			$DecrementNum=0;
 			

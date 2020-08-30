@@ -27,9 +27,9 @@ poner_menu();
 $consulta="";
 
 print '<div style="padding-top:100px;margin:auto;padding-left:40px;"><img src="img/coment.png" class="icono"/><h1>'.ver_dato('comentarios', $GLOBALS['idioma']).'</h1></div>';
-
-ver_categoria('*','WHERE image_active=1 AND image_id IN ( SELECT distinct(image_id) FROM '.$GLOBALS['table_prefix'].'comments C order by comment_id desc)'
-,false,false,false,""," GROUP BY C.comment_id ORDER BY C.comment_id DESC LIMIT ",true);
+	
+	ver_categoria('*','WHERE image_active=1 AND image_id IN ( SELECT distinct(image_id) FROM '.$GLOBALS['table_prefix'].'comments C order by comment_id desc)'
+	,false,false,false,""," GROUP BY C.comment_id ORDER BY C.comment_id DESC LIMIT ",true);	
 	
 restablecer_pass();
 

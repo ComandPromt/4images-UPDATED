@@ -114,7 +114,7 @@ print '</select>
 	<div style="margin-left:30%;padding-right:20px;" class="flotar_izquierda" >
 
 		<label>
-			<input type="radio" id="aut_descarga" name="gender" value="male"> '.ver_dato('public', $GLOBALS['idioma']).'</input>
+			<input type="radio" id="aut_descarga" checked="selected" name="gender" value="male"> '.ver_dato('public', $GLOBALS['idioma']).'</input>
 		</label>
 
 	</div>

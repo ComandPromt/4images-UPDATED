@@ -8,6 +8,12 @@ include_once('../../config.php');
 
 include_once('../../includes/funciones.php');
 
+$user_level=saber_nivel($_COOKIE['4images_userid']);
+
+if($user_level!=9){
+	redireccionar('../../index.php');
+}
+
 cabecera('../../');
 
 zona_privada('../../');
