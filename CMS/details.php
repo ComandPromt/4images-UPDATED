@@ -158,8 +158,12 @@ if (isset($_GET['image_id'])) {
 
 	mysqli_close($GLOBALS['conexion']);
 
-	if( $visibilidad[0]==3 || $visibilidad[0]==2 && !$logueado){
-			redireccionar('index.php');
+	if( $visibilidad[0]==3 ){
+		redireccionar('index.php');
+	}
+	
+	if($visibilidad[0]==2 && !$logueado){
+		redireccionar('register.php');
 	}
 
 	$subida_por_mi=subida_por_mi($_GET['image_id']);

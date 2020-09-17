@@ -6,32 +6,32 @@ include('includes/funciones.php');
 
 include('config.php');
 
-  function deliver_rating($id) {
+function deliver_rating($id) {
   
 	switch($id){
 		
 		case 1:
-		$calificacion='1';
+			$calificacion='1';
 		break;
 		
 		case 2:
-		$calificacion='2';
+			$calificacion='2';
 		break;
 		
 		case 3:
-		$calificacion='3';
+			$calificacion='3';
 		break;
 		
 		case 4:
-		$calificacion='4';
+			$calificacion='4';
 		break;
 		
 		case 5:
-		$calificacion='5';
+			$calificacion='5';
 		break;
 		
 		default:
-		 $calificacion='';
+			$calificacion='0';
 		break;
 		
 	}
@@ -53,28 +53,36 @@ include('config.php');
 		$resultado=$fila[0];
 	
 		if($resultado!=null && $resultado>0){
+			
 			mysqli_query($GLOBALS['conexion'], 'UPDATE '.$GLOBALS['table_prefix']."usersraters SET Calificacion='". $calificacion."' WHERE Imagen='".$imagen."' AND Usuario='".$_COOKIE['4images_userid']."'");
 		}
 		
 		else{
+			
 			mysqli_query($GLOBALS['conexion'], 'INSERT INTO '.$GLOBALS['table_prefix']."usersraters VALUES('".$_COOKIE['4images_userid']."','".$imagen."','".$calificacion."')");
 		
-			}
+		}
+	
+		$consulta = mysqli_query($GLOBALS['conexion'], 'SELECT CAST(AVG(Calificacion) AS DECIMAL(10,0)) AS Calificacion FROM ' . $GLOBALS['table_prefix'] . "usersraters WHERE Imagen='".$imagen."'");
+
+		$fila = mysqli_fetch_row($consulta);
+	
+		$calificacion=$fila[0];
 	
 		mysqli_close($GLOBALS['conexion']);
 	
 	}
 
-	echo  json_encode($calificacion);
+	echo  json_encode((int)$calificacion);
         
-  }
+ }
 
-  if(isset($_GET['id'])) {
+if(isset($_GET['id'])) {
 	  
-    $id = htmlspecialchars($_GET['id']);
+	$id = htmlspecialchars($_GET['id']);
     
-    deliver_rating($id);
+	deliver_rating($id);
     
-  }
+}
 
 ?>

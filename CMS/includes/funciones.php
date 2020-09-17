@@ -1048,6 +1048,30 @@ function poner_menu_geo($ruta=""){
 				<li class="espacio_arriba_3">
 				
 					<a href="'.$ruta2.'index.php">
+						Administrar tabla antispam
+					</a>
+				
+				</li>
+			
+							<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'index.php">
+						% de votos
+					</a>
+				
+				</li>
+			
+			<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'index.php">
+						Gestionar config.php
+					</a>
+				
+				</li>
+			
+				<li class="espacio_arriba_3">
+				
+					<a href="'.$ruta2.'index.php">
 						<img class="icono" src="'.$ruta.'img/geo.png"/>
 					</a>
 				
